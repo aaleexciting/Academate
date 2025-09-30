@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dasbor - Academate</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary-color: #7C3AED;
             --primary-light: #F5F3FF;
+            --primary-dark: #6D28D9;
             --danger-color: #EF4444;
             --danger-light: #FEE2E2;
             --warning-color: #F59E0B;
@@ -39,7 +40,7 @@
         }
         
         /* --- Sidebar Navigation --- */
-        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem; }
+        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem; flex-shrink: 0; }
         .sidebar-header { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); text-decoration: none; margin-bottom: 2.5rem; padding: 0 0.5rem; }
         .nav-menu { list-style: none; flex-grow: 1; }
         .nav-item a { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; }
@@ -47,7 +48,7 @@
         .nav-item a.active { background-color: var(--primary-color); color: #fff; font-weight: 600; }
         .nav-item a svg { width: 20px; height: 20px; margin-right: 1rem; }
         .logout-button { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; background-color: transparent; border: none; width: 100%; font-family: 'Inter', sans-serif; font-size: 1rem; cursor: pointer; }
-        .logout-button:hover { background-color: #FEE2E2; color: #EF4444; }
+        .logout-button:hover { background-color: var(--danger-light); color: var(--danger-color); }
         
         /* --- Main Content Area --- */
         .main-content { flex-grow: 1; padding: 2rem 3rem; overflow-y: auto; }
@@ -55,25 +56,83 @@
         .header h1 { font-size: 2.25rem; font-weight: 700; }
         .header p { color: var(--text-muted); font-size: 1.1rem; margin-top: 0.25rem;}
         
-        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: flex-start; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 350px; gap: 2rem; align-items: flex-start; }
         .main-column, .side-column { display: flex; flex-direction: column; gap: 2rem; }
-        .section-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .section-title { font-size: 1.5rem; font-weight: 600; }
         .dashboard-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; }
 
-        /* Joined Classes Section */
-        .joined-classes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
-        .class-card-sm { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.25rem; text-decoration: none; color: var(--text-dark); display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; }
-        .class-card-sm:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
-        .class-card-sm .icon { width: 48px; height: 48px; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.5rem; color: #fff; font-weight: 600; }
-        .class-card-sm h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; }
-        .class-card-sm p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem; flex-grow: 1; }
-        .class-card-sm .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        /* Class Carousel Section */
+        .class-carousel-wrapper { position: relative; }
+        .class-carousel { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding-bottom: 1rem; margin-bottom: -1rem; }
+        .class-carousel::-webkit-scrollbar { display: none; }
+        .class-card-lg {
+            flex: 0 0 300px; /* Do not grow or shrink, base width 300px */
+            scroll-snap-align: start;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .class-card-lg:hover { transform: translateY(-4px); box-shadow: 0 8px_20px rgba(0,0,0,0.06); }
+        .class-card-lg .icon { width: 48px; height: 48px; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; font-size: 1.5rem; color: #fff; font-weight: 600; }
+        .class-card-lg h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .class-card-lg p { font-size: 0.9rem; color: var(--text-muted); flex-grow: 1; }
+        .class-card-lg .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
         .member-avatars { display: flex; }
-        .member-avatars img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--card-bg); margin-left: -10px; object-fit: cover; }
+        .member-avatars img { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--card-bg); margin-left: -12px; object-fit: cover; }
         .member-avatars img:first-child { margin-left: 0; }
-        .arrow-icon { color: var(--primary-color); background-color: var(--primary-light); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .carousel-nav { display: flex; gap: 0.5rem; }
+        .carousel-btn { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
+        .carousel-btn:hover { background-color: var(--primary-light); color: var(--primary-color); }
+        .carousel-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* Deadlines Section */
+        /* Upcoming Class Section */
+        .upcoming-class-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: #fff;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .upcoming-class-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+        .upcoming-header { font-size: 0.9rem; font-weight: 500; opacity: 0.8; }
+        .upcoming-body h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .upcoming-body p { opacity: 0.9; font-size: 1rem; }
+        .upcoming-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 1rem; margin-top: 0.5rem; }
+        .time-display { font-size: 1.25rem; font-weight: 600; }
+        .countdown-display { font-size: 0.875rem; font-weight: 500; opacity: 0.8; text-align: right; }
+
+        /* Other Upcoming Classes */
+        .other-upcoming-list { display: flex; flex-direction: column; gap: 1rem; }
+        .upcoming-class-item-sm { display: flex; align-items: center; gap: 1.5rem; background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 1rem 1.5rem; border-radius: 0.75rem; transition: all 0.2s ease; }
+        .upcoming-class-item-sm:hover { border-color: var(--primary-color); box-shadow: 0 4px 10px rgba(0,0,0,0.05); transform: translateY(-2px); }
+        .upcoming-class-item-sm .date-display { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 60px; flex-shrink: 0; text-align: center; }
+        .upcoming-class-item-sm .day-name { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+        .upcoming-class-item-sm .day-number { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); line-height: 1.2; }
+        .upcoming-class-item-sm .class-info { flex-grow: 1; }
+        .upcoming-class-item-sm .class-info h4 { font-weight: 600; font-size: 1rem; margin-bottom: 0.2rem; }
+        .upcoming-class-item-sm .class-info p { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* Deadlines Section (Right Sidebar) */
         #deadline-list { list-style: none; }
         .deadline-item { display: block; text-decoration: none; color: inherit; border-radius: 0.75rem; }
         .deadline-item-content { display: flex; align-items: center; gap: 1rem; padding: 1rem 0.5rem; }
@@ -82,45 +141,30 @@
         .deadline-details { flex-grow: 1; }
         .deadline-details h4 { font-weight: 600; margin-bottom: 0.1rem; }
         .deadline-details p { font-size: 0.875rem; color: var(--text-muted); }
-        .task-description-indicator { color: var(--text-muted); flex-shrink: 0; }
         .due-date { font-size: 0.875rem; font-weight: 500; padding: 0.25rem 0.6rem; border-radius: 99px; }
-        .due-date.normal { color: var(--text-muted); background-color: var(--bg-body); }
         .due-date.soon { color: var(--warning-color); background-color: var(--warning-light); }
         .due-date.urgent { color: var(--danger-color); background-color: var(--danger-light); }
-        .due-date.overdue { color: var(--danger-color); background-color: var(--danger-light); }
 
-
-        /* Profile Card */
+        /* Profile Card & Calendar (Right Sidebar) */
         .profile-card { text-align: center; }
-        .profile-img-wrapper { position: relative; display: inline-block; margin-bottom: 1rem; }
-        .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 0 0 1px var(--border-color); }
-        .edit-profile-btn { position: absolute; bottom: 0; right: 0; background-color: var(--card-bg); border-radius: 50%; padding: 0.4rem; line-height: 0; border: 1px solid var(--border-color); color: var(--text-light); transition: all .2s; }
-        .edit-profile-btn:hover { color: var(--primary-color); border-color: var(--primary-color); }
+        .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 0 0 1px var(--border-color); margin-bottom: 1rem; }
         #profile-card-name { font-size: 1.25rem; font-weight: 600; }
         #profile-card-email { color: var(--text-muted); font-size: 0.9rem; }
-
-        /* Calendar */
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .calendar-header h4 { font-size: 1.1rem; font-weight: 600; }
-        .calendar-nav button { background: none; border: none; cursor: pointer; padding: 0.5rem; color: var(--text-muted); border-radius: 50%; line-height: 0; transition: background-color .2s; }
-        .calendar-nav button:hover { background-color: var(--bg-body); }
+        #month-year { font-size: 1.1rem; font-weight: 600; }
         #calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; text-align: center; }
         .calendar-day-name { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); padding-bottom: 0.5rem; }
         .calendar-day { font-size: 0.875rem; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; position: relative; }
-        .calendar-day.other-month { color: #ccc; }
         .calendar-day.today { background-color: var(--primary-color); color: #fff; font-weight: 600; }
         .calendar-day.has-class::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; border-radius: 50%; background-color: var(--primary-color); }
         .calendar-day.today.has-class::after { background-color: #fff; }
 
-        /* Skeleton Loaders */
+        /* Skeleton Loaders & Empty State */
         @keyframes shimmer { 0% { background-position: -468px 0; } 100% { background-position: 468px 0; } }
         .skeleton { animation: shimmer 1.5s linear infinite; background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%); background-size: 800px 104px; position: relative; border-radius: 0.5rem; }
         .skeleton-text { height: 1em; }
         .skeleton-avatar { width: 80px; height: 80px; border-radius: 50%; }
-        .skeleton-card { height: 190px; }
-        
         .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
-        .empty-state p { margin-bottom: 1rem; }
         .empty-state a { color: var(--primary-color); font-weight: 500; text-decoration: none; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color .2s; }
         .empty-state a:hover { background-color: var(--primary-light); }
     </style>
@@ -131,6 +175,7 @@
         <ul class="nav-menu">
             <li class="nav-item"><a href="dashboard.html" class="active"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>Dasbor</span></a></li>
             <li class="nav-item"><a href="classes.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>Kelas</span></a></li>
+            <li class="nav-item"><a href="task.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8.5 5.5a.5.5 0 0 0-1 0v3.379l-1.854 1.853a.5.5 0 1 0 .708.708L8 9.379V5.5z"/><path d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1H7a.5.5 0 0 1-.5-.5zM8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg><span>Tugas</span></a></li>
             <li class="nav-item"><a href="schedule.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span>Jadwal</span></a></li>
             <li class="nav-item"><a href="notes.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg><span>Catatan</span></a></li>
             <li class="nav-item"><a href="account.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg><span>Akun</span></a></li>
@@ -164,7 +209,8 @@
 
         // --- State Management ---
         let currentCalendarDate = new Date();
-        let classScheduleDays = []; // Cache the schedule days to prevent re-fetching
+        let classScheduleDays = [];
+        let countdownInterval = null;
 
         // --- Auth Guard ---
         onAuthStateChanged(auth, user => {
@@ -179,34 +225,25 @@
         
         // --- Main Initializer ---
         async function initializeDashboard(user) {
-            renderSkeleton(); // Show loading UI immediately
+            renderSkeleton();
             try {
                 const { userData, classesData, allTasks } = await fetchAllDashboardData(user);
                 
-                // Filter out tasks the user has already completed
                 const incompleteTasks = allTasks.filter(task => !task.completedBy?.includes(user.uid));
-                
-                // Cache schedule days for calendar navigation
                 classScheduleDays = [...new Set(classesData.map(c => c.hari))];
 
-                // Render the full UI with the fetched data
                 renderFullDashboard(user, userData, classesData, incompleteTasks);
-                
-                // Attach event listeners to the new DOM elements
                 attachEventListeners();
 
-            } catch (error) {
+            } catch (error)
+            {
                 console.error("Error loading dashboard data:", error);
-                document.getElementById('main-content').innerHTML = `<div class="empty-state">
-                    <p>Oops! Gagal memuat dasbor Anda.</p>
-                    <a href="#" onclick="location.reload()">Coba Lagi</a>
-                </div>`;
+                document.getElementById('main-content').innerHTML = `<div class="empty-state"><p>Oops! Gagal memuat dasbor Anda.</p><a href="#" onclick="location.reload()">Coba Lagi</a></div>`;
             }
         }
         
         // --- Data Fetching ---
         async function fetchAllDashboardData(user) {
-            // Ensure user doc exists
             const userDocRef = doc(db, 'users', user.uid);
             await setDoc(userDocRef, { name: user.displayName, email: user.email, photoURL: user.photoURL }, { merge: true });
             const userDocSnap = await getDoc(userDocRef);
@@ -217,7 +254,6 @@
                 return { userData, classesData: [], allTasks: [] };
             }
 
-            // Fetch all class and task data in parallel
             const classPromises = joinedClassesIds.map(id => getDoc(doc(db, 'classes', id)));
             const taskPromises = joinedClassesIds.map(id => getDocs(query(collection(db, 'classes', id, 'tasks'), where('dueDate', '>=', Timestamp.now()))));
             
@@ -229,14 +265,12 @@
             taskSnapshotsByClass.forEach((taskSnapshot, index) => {
                 const classInfo = classesData[index];
                 if (!classInfo) return;
-                const className = classInfo.namaMataKuliah || 'Unknown';
-                const classId = classInfo.id;
                 taskSnapshot.forEach(taskDoc => {
                     allTasks.push({ 
                         id: taskDoc.id, 
-                        classId: classId, 
+                        classId: classInfo.id, 
                         ...taskDoc.data(), 
-                        className 
+                        className: classInfo.namaMataKuliah || 'Unknown' 
                     });
                 });
             });
@@ -249,15 +283,25 @@
             const mainContent = document.getElementById('main-content');
             mainContent.innerHTML = `
                 <header class="header">
-                    <h1 id="greeting">${getGreeting(user.displayName)}</h1>
-                    <p id="greeting-sub" class="text-muted">Semoga harimu menyenangkan dan produktif.</p>
+                    <h1>${getGreeting(user.displayName)}</h1>
+                    <p>Semoga harimu menyenangkan dan produktif.</p>
                 </header>
                 <div class="dashboard-grid">
                     <div class="main-column">
-                        <section>
-                            <h2 class="section-title">Kelas Anda</h2>
-                            <div id="joined-classes-grid" class="joined-classes-grid"></div>
-                        </section>
+                        <section id="class-carousel-section"></section>
+                        <section id="upcoming-class-section"></section>
+                        <section id="other-upcoming-classes-section"></section>
+                    </div>
+                    <div class="side-column">
+                        <div class="dashboard-card profile-card" id="profile-card"></div>
+                        <div class="dashboard-card">
+                            <div class="calendar-header">
+                                <button id="prev-month-btn" class="carousel-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></button>
+                                <h4 id="month-year"></h4>
+                                <button id="next-month-btn" class="carousel-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></button>
+                            </div>
+                            <div id="calendar-grid"></div>
+                        </div>
                         <section>
                             <h2 class="section-title">Tugas Mendatang</h2>
                             <div class="dashboard-card" id="deadline-list-container">
@@ -265,53 +309,48 @@
                             </div>
                         </section>
                     </div>
-                    <div class="side-column">
-                        <div class="dashboard-card profile-card" id="profile-card"></div>
-                        <div class="dashboard-card">
-                            <div class="calendar-header">
-                                <button id="prev-month-btn" class="calendar-nav"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></button>
-                                <h4 id="month-year"></h4>
-                                <button id="next-month-btn" class="calendar-nav"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></button>
-                            </div>
-                            <div id="calendar-grid"></div>
-                        </div>
-                    </div>
                 </div>`;
 
             renderProfileCard(user);
-
+            renderCalendar(currentCalendarDate, classScheduleDays);
+            
             if (classesData.length > 0) {
-                renderJoinedClasses(classesData);
+                renderClassCarousel(classesData.slice(0, 8));
+                const upcomingClasses = findUpcomingClasses(classesData, 3);
+                renderUpcomingClasses(upcomingClasses);
                 renderUpcomingDeadlines(tasks);
             } else {
                 renderEmptyStates();
             }
-            renderCalendar(currentCalendarDate, classScheduleDays);
         }
 
         function renderProfileCard(user) {
             document.getElementById('profile-card').innerHTML = `
-                <div class="profile-img-wrapper">
-                    <img src="${user.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${user.displayName.charAt(0)}`}" alt="Profile Picture" class="profile-img">
-                    <a href="account.html" class="edit-profile-btn" title="Edit Profil">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>
-                    </a>
-                </div>
-                <h3>${user.displayName}</h3>
-                <p class="text-muted">${user.email}</p>`;
+                <img src="${user.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${user.displayName.charAt(0)}`}" alt="Profile Picture" class="profile-img">
+                <h3 id="profile-card-name">${user.displayName}</h3>
+                <p id="profile-card-email" class="text-muted">${user.email}</p>`;
         }
+        
+        async function renderClassCarousel(classes) {
+            const section = document.getElementById('class-carousel-section');
+            const colors = ['#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#3B82F6', '#EC4899', '#14B8A6', '#F97316'];
 
-        async function renderJoinedClasses(classes) {
-            const grid = document.getElementById('joined-classes-grid');
-            const colors = ['#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#3B82F6'];
-            const memberPromises = [];
+            section.innerHTML = `
+                <div class="section-header">
+                    <h2 class="section-title">Kelas Anda</h2>
+                    <div class="carousel-nav">
+                        <button id="carousel-prev" class="carousel-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></button>
+                        <button id="carousel-next" class="carousel-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></button>
+                    </div>
+                </div>
+                <div class="class-carousel-wrapper">
+                    <div id="class-carousel-container" class="class-carousel"></div>
+                </div>`;
 
-            classes.forEach(c => {
-                (c.members || []).slice(0, 3).forEach(id => {
-                    memberPromises.push(getDoc(doc(db, 'users', id)));
-                });
-            });
+            const container = document.getElementById('class-carousel-container');
             
+            const memberIds = new Set(classes.flatMap(c => (c.members || []).slice(0, 3)));
+            const memberPromises = Array.from(memberIds).map(id => getDoc(doc(db, 'users', id)));
             const memberSnaps = await Promise.all(memberPromises);
             const memberData = memberSnaps.reduce((acc, snap) => {
                 if (snap.exists()) acc[snap.id] = snap.data();
@@ -319,59 +358,191 @@
             }, {});
 
             classes.forEach((c, i) => {
-                const card = document.createElement('a');
-                card.href = `class_page.html?id=${c.id}`;
-                card.className = 'class-card-sm';
-                
                 const memberAvatarsHtml = (c.members || []).slice(0, 3)
-                    .map(id => memberData[id] ? `<img src="${memberData[id].photoURL}" alt="member">` : '')
+                    .map(id => memberData[id] ? `<img src="${memberData[id].photoURL}" alt="member" title="${memberData[id].name}">` : '')
                     .join('');
 
+                const card = document.createElement('a');
+                card.href = `class_page.html?id=${c.id}`;
+                card.className = 'class-card-lg';
                 card.innerHTML = `
                     <div class="icon" style="background-color: ${colors[i % colors.length]}">${c.namaMataKuliah.charAt(0)}</div>
                     <h3>${c.namaMataKuliah}</h3>
                     <p>${c.dosen}</p>
                     <div class="card-footer">
                         <div class="member-avatars">${memberAvatarsHtml}</div>
-                        <div class="arrow-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></div>
+                        <span>${c.hari}, ${c.waktu}</span>
                     </div>`;
-                grid.appendChild(card);
+                container.appendChild(card);
             });
+             if (classes.length > 3) { // Show "View All" if there are more classes than can fit
+                const viewAllCard = document.createElement('a');
+                viewAllCard.href = 'classes.html';
+                viewAllCard.className = 'class-card-lg';
+                viewAllCard.style.cssText = 'align-items: center; justify-content: center; background-color: var(--bg-body);';
+                viewAllCard.innerHTML = `<h3 style="font-size: 1.1rem;">Lihat Semua Kelas &rarr;</h3>`;
+                container.appendChild(viewAllCard);
+            }
         }
         
+        function renderUpcomingClasses(upcomingClasses) {
+            const mainSection = document.getElementById('upcoming-class-section');
+            const otherSection = document.getElementById('other-upcoming-classes-section');
+
+            if (upcomingClasses.length === 0) {
+                mainSection.innerHTML = `<div class="dashboard-card" style="text-align: center; color: var(--text-muted);">Tidak ada kelas yang akan datang dalam waktu dekat.</div>`;
+                otherSection.innerHTML = '';
+                return;
+            }
+
+            const { classData: nextClass, classTime: nextClassTime } = upcomingClasses[0];
+            mainSection.innerHTML = `
+                <div class="section-header">
+                    <h2 class="section-title">Kelas Berikutnya</h2>
+                </div>
+                <div class="upcoming-class-card">
+                    <div class="upcoming-header">${nextClassTime.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
+                    <div class="upcoming-body">
+                        <h2>${nextClass.namaMataKuliah}</h2>
+                        <p>${nextClass.dosen}</p>
+                    </div>
+                    <div class="upcoming-footer">
+                        <div class="time-display">Ruang ${nextClass.ruang} • ${nextClass.waktu}</div>
+                        <div id="countdown-display" class="countdown-display"></div>
+                    </div>
+                </div>
+            `;
+            
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => updateCountdown(nextClassTime), 1000);
+            updateCountdown(nextClassTime);
+
+            const otherClasses = upcomingClasses.slice(1);
+            if (otherClasses.length > 0) {
+                const listHtml = otherClasses.map(item => {
+                    const { classData: cls, classTime } = item;
+                    return `
+                        <div class="upcoming-class-item-sm">
+                            <div class="date-display">
+                                <span class="day-name">${classTime.toLocaleDateString('id-ID', { weekday: 'short' })}</span>
+                                <span class="day-number">${classTime.getDate()}</span>
+                            </div>
+                            <div class="class-info">
+                                <h4>${cls.namaMataKuliah}</h4>
+                                <p>${cls.waktu} • Ruang ${cls.ruang}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                otherSection.innerHTML = `
+                    <div class="other-upcoming-list">
+                        ${listHtml}
+                    </div>
+                `;
+            } else {
+                otherSection.innerHTML = '';
+            }
+        }
+
         function renderUpcomingDeadlines(tasks) {
             const list = document.getElementById('deadline-list');
             list.innerHTML = '';
             if (tasks.length === 0) {
-                list.innerHTML = `<li class="empty-state" style="padding: 1rem 0;"><p>Tidak ada tugas yang akan datang. Santai sejenak!</p></li>`;
+                list.innerHTML = `<li class="empty-state" style="padding: 1rem 0;"><p>Tidak ada tugas.</p></li>`;
                 return;
             }
-            tasks.sort((a, b) => a.dueDate.seconds - b.dueDate.seconds).slice(0, 5).forEach(task => {
+            tasks.sort((a, b) => a.dueDate.seconds - b.dueDate.seconds).slice(0, 4).forEach(task => {
                 const li = document.createElement('li');
                 const dueDateInfo = formatDueDate(task.dueDate);
-                const hasDesc = task.description && task.description.trim() !== '';
-
                 li.innerHTML = `
                     <a href="class_page.html?id=${task.classId}#task-${task.id}" class="deadline-item">
                         <div class="deadline-item-content">
-                            <div class="deadline-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg></div>
+                            <div class="deadline-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" /></svg></div>
                             <div class="deadline-details">
                                 <h4>${task.title}</h4>
                                 <p>${task.className}</p>
                             </div>
                             <span class="due-date ${dueDateInfo.className}">${dueDateInfo.text}</span>
                         </div>
-                    </a>
-                `;
+                    </a>`;
                 list.appendChild(li);
             });
         }
         
-        function renderEmptyStates() {
-            document.getElementById('joined-classes-grid').innerHTML = '<div class="empty-state"><p>Anda belum bergabung dengan kelas.</p><a href="classes.html">Gabung atau Buat Kelas</a></div>';
-            document.getElementById('deadline-list').innerHTML = '<li class="empty-state" style="padding: 1rem 0;"><p>Tidak ada tugas yang akan datang.</p></li>';
+        // --- Event Listeners ---
+        function attachEventListeners() {
+            document.getElementById('prev-month-btn')?.addEventListener('click', () => {
+                currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+                renderCalendar(currentCalendarDate, classScheduleDays);
+            });
+            document.getElementById('next-month-btn')?.addEventListener('click', () => {
+                currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+                renderCalendar(currentCalendarDate, classScheduleDays);
+            });
+
+            // Carousel Navigation
+            const carousel = document.getElementById('class-carousel-container');
+            const prevBtn = document.getElementById('carousel-prev');
+            const nextBtn = document.getElementById('carousel-next');
+            if (carousel) {
+                const scrollAmount = 300 + 24; // Card width + gap
+                prevBtn.addEventListener('click', () => carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' }));
+                nextBtn.addEventListener('click', () => carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' }));
+            }
+        }
+
+        // --- Utility & Helper Functions ---
+        function findUpcomingClasses(classes, count = 3) {
+            const dayMap = { 'Minggu': 0, 'Senin': 1, 'Selasa': 2, 'Rabu': 3, 'Kamis': 4, 'Jumat': 5, 'Sabtu': 6 };
+            const now = new Date();
+            let upcoming = [];
+
+            for (let i = 0; i < 7; i++) {
+                const checkDay = (now.getDay() + i) % 7;
+                const dayName = Object.keys(dayMap).find(key => dayMap[key] === checkDay);
+                
+                const classesOnDay = classes
+                    .filter(c => c.hari === dayName)
+                    .sort((a,b) => a.waktu.localeCompare(b.waktu));
+
+                for (const cls of classesOnDay) {
+                    const [hour, minute] = cls.waktu.split(':').map(Number);
+                    const classTime = new Date();
+                    classTime.setDate(now.getDate() + i);
+                    classTime.setHours(hour, minute, 0, 0);
+
+                    if (classTime > now) {
+                        upcoming.push({ classData: cls, classTime: classTime });
+                    }
+                }
+            }
+            
+            return upcoming.sort((a, b) => a.classTime - b.classTime).slice(0, count);
         }
         
+        function updateCountdown(targetDate) {
+            const countdownEl = document.getElementById('countdown-display');
+            if (!countdownEl) return;
+            const now = new Date();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                countdownEl.textContent = 'Sedang berlangsung';
+                if(countdownInterval) clearInterval(countdownInterval);
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            if (d > 0) countdownEl.textContent = `Mulai dalam ${d} hari ${h} jam`;
+            else if (h > 0) countdownEl.textContent = `Mulai dalam ${h}j ${m}m ${s}d`;
+            else countdownEl.textContent = `Mulai dalam ${m}m ${s}d`;
+        }
+
         function renderCalendar(date, scheduleDays) {
             const grid = document.getElementById('calendar-grid');
             const monthYearEl = document.getElementById('month-year');
@@ -403,20 +574,6 @@
                 grid.appendChild(dayEl);
             }
         }
-        
-        // --- Event Listeners ---
-        function attachEventListeners() {
-            document.getElementById('prev-month-btn')?.addEventListener('click', () => {
-                currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
-                renderCalendar(currentCalendarDate, classScheduleDays);
-            });
-            document.getElementById('next-month-btn')?.addEventListener('click', () => {
-                currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
-                renderCalendar(currentCalendarDate, classScheduleDays);
-            });
-        }
-        
-        // --- Utility Functions ---
         function getGreeting(name) {
             const hour = new Date().getHours();
             const welcomeName = name ? `, ${name.split(' ')[0]}!` : '!';
@@ -425,8 +582,8 @@
             if (hour < 18) return `Selamat Siang${welcomeName}`;
             return `Selamat Malam${welcomeName}`;
         }
-        
         function formatDueDate(dueDate) {
+            if (!dueDate || !dueDate.toDate) return { text: 'Invalid date', className: '' };
             const now = new Date();
             const due = dueDate.toDate();
             now.setHours(0,0,0,0);
@@ -435,38 +592,32 @@
             const diffTime = due.getTime() - now.getTime();
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            if (diffDays < 0) return { text: `Telah lewat`, className: 'overdue' };
+            if (diffDays < 0) return { text: `Telah lewat`, className: 'urgent' };
             if (diffDays === 0) return { text: `Tenggat hari ini`, className: 'urgent' };
             if (diffDays === 1) return { text: `Tenggat besok`, className: 'urgent' };
             if (diffDays <= 7) return { text: `Tenggat ${diffDays} hari lagi`, className: 'soon' };
-            return { text: `Tenggat ${due.toLocaleDateString('id-ID', {day: 'numeric', month: 'short'})}`, className: 'normal' };
+            return { text: `Tenggat ${due.toLocaleDateString('id-ID', {day: 'numeric', month: 'short'})}`, className: '' };
         }
-
+        function renderEmptyStates() {
+            document.getElementById('class-carousel-section').innerHTML = `<div class="section-header"><h2 class="section-title">Kelas Anda</h2></div><div class="empty-state"><p>Anda belum bergabung dengan kelas.</p><a href="classes.html">Gabung atau Buat Kelas</a></div>`;
+            document.getElementById('upcoming-class-section').innerHTML = '';
+            document.getElementById('other-upcoming-classes-section').innerHTML = '';
+            document.getElementById('deadline-list').innerHTML = '<li class="empty-state" style="padding: 1rem 0;"><p>Tidak ada tugas untuk ditampilkan.</p></li>';
+        }
+        
+        // --- Skeleton Loading UI ---
         function renderSkeleton() {
             document.getElementById('main-content').innerHTML = `
-                <header class="header">
-                    <h1 id="greeting" class="skeleton skeleton-text" style="width: 300px;"></h1>
-                    <p id="greeting-sub" class="skeleton skeleton-text" style="width: 250px; margin-top: 1rem;"></p>
-                </header>
+                <header class="header"><div class="skeleton skeleton-text" style="width: 300px; height: 2.25rem;"></div><div class="skeleton skeleton-text" style="width: 250px; margin-top: 1rem;"></div></header>
                 <div class="dashboard-grid">
                     <div class="main-column">
-                        <section>
-                            <h2 class="section-title skeleton skeleton-text" style="width: 150px;"></h2>
-                            <div id="joined-classes-grid" class="joined-classes-grid">
-                                <div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div>
-                            </div>
-                        </section>
-                        <section>
-                            <h2 class="section-title skeleton skeleton-text" style="width: 200px;"></h2>
-                            <div class="dashboard-card"><div id="deadline-list" class="skeleton" style="height: 120px;"></div></div>
-                        </section>
+                        <section><div class="section-header"><div class="skeleton skeleton-text" style="width: 150px;"></div></div><div class="skeleton" style="height: 220px; border-radius: 1rem;"></div></section>
+                        <section><div class="section-header"><div class="skeleton skeleton-text" style="width: 200px;"></div></div><div class="skeleton" style="height: 180px; border-radius: 1rem;"></div></section>
                     </div>
                     <div class="side-column">
-                        <div class="dashboard-card profile-card" id="profile-card"><div class="skeleton skeleton-avatar"></div><div class="skeleton skeleton-text" style="width: 60%; margin-top: 1rem;"></div><div class="skeleton skeleton-text" style="width: 80%; margin-top: 0.5rem;"></div></div>
-                        <div class="dashboard-card">
-                            <div class="calendar-header"><div class="skeleton skeleton-text" style="width: 100%;"></div></div>
-                            <div id="calendar-grid" class="skeleton" style="height: 240px;"></div>
-                        </div>
+                        <div class="dashboard-card"><div style="text-align:center;"><div class="skeleton skeleton-avatar" style="margin:0 auto 1rem;"></div><div class="skeleton skeleton-text" style="width: 60%; margin: auto;"></div></div></div>
+                        <div class="dashboard-card skeleton" style="height: 280px;"></div>
+                        <div class="dashboard-card skeleton" style="height: 200px;"></div>
                     </div>
                 </div>`;
         }
