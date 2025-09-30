@@ -231,7 +231,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot, Timestamp, arrayUnion, arrayRemove, where, getDocs, limit, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot, Timestamp, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
@@ -255,51 +255,21 @@
         
         const mainContent = document.getElementById('main-content');
         
-        onAuthStateChanged(auth, async user => {
+        onAuthStateChanged(auth, user => {
             if (user) {
                 currentUser = user;
                 const params = new URLSearchParams(window.location.search);
                 classId = params.get('id');
-                const joinCode = params.get('join_code');
-
                 if (classId) {
-                    await loadClassPage();
-                } else if (joinCode) {
-                    await joinAndLoadClass(joinCode);
+                    loadClassPage();
                 } else {
-                    mainContent.innerHTML = '<div class="empty-state"><h1>ID atau Kode Kelas tidak ditemukan.</h1></div>';
+                    mainContent.innerHTML = '<div class="empty-state"><h1>ID Kelas tidak ditemukan.</h1></div>';
                 }
             } else {
                 [discussionUnsubscribe, tasksUnsubscribe, notesUnsubscribe].forEach(unsub => unsub && unsub());
                 window.location.replace('auth.html');
             }
         });
-
-        async function joinAndLoadClass(code) {
-             try {
-                const q = query(collection(db, "classes"), where("classCode", "==", code), limit(1));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    mainContent.innerHTML = '<div class="empty-state"><h1>Kelas dengan kode tersebut tidak ditemukan.</h1></div>';
-                    return;
-                }
-                const classDoc = querySnapshot.docs[0];
-                classId = classDoc.id;
-
-                await setDoc(doc(db, 'users', currentUser.uid), { joinedClasses: arrayUnion(classId) }, { merge: true });
-                await updateDoc(doc(db, 'classes', classId), { members: arrayUnion(currentUser.uid) });
-
-                // Clean the URL and reload the page with the class ID
-                const newUrl = `${window.location.pathname}?id=${classId}`;
-                window.history.replaceState({}, '', newUrl);
-                await loadClassPage();
-
-            } catch (error) {
-                console.error("Error joining and loading class:", error);
-                mainContent.innerHTML = '<div class="empty-state"><h1>Gagal bergabung dengan kelas.</h1></div>';
-            }
-        }
         
         document.getElementById('logout-button').addEventListener('click', () => signOut(auth));
         
@@ -361,7 +331,7 @@
                 const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
                 const joinedClasses = userDoc.data().joinedClasses || [];
                 if (!joinedClasses.includes(classId)) {
-                    mainContent.innerHTML = '<div class="empty-state"><h1>Anda tidak memiliki akses ke kelas ini.</h1><p>Jika Anda memiliki kode, gabung melalui halaman Kelas.</p></div>';
+                    mainContent.innerHTML = '<div class="empty-state"><h1>Anda tidak memiliki akses ke kelas ini.</h1></div>';
                     return;
                 }
                 
@@ -704,3 +674,4 @@
     </script>
 </body>
 </html>
+
