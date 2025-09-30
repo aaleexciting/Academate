@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor - Academate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #7C3AED;
+            --primary-light: #F5F3FF;
+            --text-dark: #111827;
+            --text-light: #374151;
+            --text-muted: #6B7280;
+            --bg-body: #F8F7FA;
+            --bg-sidebar: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --border-color: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* --- Sidebar Navigation --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .sidebar-header { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); text-decoration: none; margin-bottom: 2.5rem; padding: 0 0.5rem; }
+        .nav-menu { list-style: none; flex-grow: 1; }
+        .nav-item a { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; }
+        .nav-item a:hover { background-color: var(--primary-light); color: var(--primary-color); }
+        .nav-item a.active { background-color: var(--primary-color); color: #fff; font-weight: 600; }
+        .nav-item a svg { width: 20px; height: 20px; margin-right: 1rem; }
+        .logout-button { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; background-color: transparent; border: none; width: 100%; font-family: 'Inter', sans-serif; font-size: 1rem; cursor: pointer; }
+        .logout-button:hover { background-color: #FEE2E2; color: #EF4444; }
+        
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem 3rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 { font-size: 2.25rem; font-weight: 700; }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .main-column, .side-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .section-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; }
+
+        /* Joined Classes Section */
+        .joined-classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .class-card-sm {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            padding: 1rem;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .class-card-sm:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+        }
+        .class-card-sm .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+        .class-card-sm h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .class-card-sm p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem; }
+        .class-card-sm .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        .member-avatars { display: flex; }
+        .member-avatars img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--card-bg);
+            margin-left: -10px;
+        }
+        .member-avatars img:first-child { margin-left: 0; }
+        .arrow-icon { color: var(--primary-color); background-color: var(--primary-light); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        /* Deadlines Section */
+        .dashboard-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+        }
+        #deadline-list { list-style: none; }
+        .deadline-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 0.5rem; border-radius: 0.75rem; transition: background-color 0.2s; }
+        .deadline-item:hover { background-color: var(--bg-body); }
+        .deadline-icon { width: 40px; height: 40px; border-radius: 0.5rem; background-color: var(--primary-light); color: var(--primary-color); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .deadline-details h4 { font-weight: 600; margin-bottom: 0.1rem; }
+        .deadline-details p { font-size: 0.875rem; color: var(--text-muted); }
+
+        /* Side Column: Profile & Calendar */
+        .profile-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .profile-card-header { position: relative; width: 100%; }
+        .profile-card-header a { position: absolute; top: -0.5rem; right: -0.5rem; color: var(--text-muted); padding: 0.5rem; }
+        .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; border: 3px solid #fff; box-shadow: 0 0 0 1px var(--border-color); }
+        #profile-card-name { font-size: 1.25rem; font-weight: 600; }
+        #profile-card-email { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Calendar */
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .calendar-header h4 { font-size: 1rem; font-weight: 600; }
+        .calendar-nav button { background: none; border: none; cursor: pointer; padding: 0.25rem; color: var(--text-muted); }
+        #calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; text-align: center; }
+        .calendar-day-name { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
+        .calendar-day { font-size: 0.875rem; padding: 0.5rem 0; border-radius: 50%; position: relative; }
+        .calendar-day.other-month { color: var(--text-muted); }
+        .calendar-day.today { background-color: var(--primary-color); color: #fff; font-weight: 600; }
+        .calendar-day.has-class::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background-color: var(--primary-color); }
+        .calendar-day.today.has-class::after { background-color: #fff; }
+
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 2rem auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <a href="dashboard.html" class="sidebar-header">Academate</a>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="dashboard.html" class="active"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>Dasbor</span></a></li>
+            <li class="nav-item"><a href="classes.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>Kelas</span></a></li>
+            <li class="nav-item"><a href="schedule.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span>Jadwal</span></a></li>
+            <li class="nav-item"><a href="notes.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg><span>Catatan</span></a></li>
+            <li class="nav-item"><a href="account.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg><span>Akun</span></a></li>
+        </ul>
+        <button class="logout-button" id="logout-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span>Keluar</span></button>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div>
+                <h1 id="greeting">Selamat Pagi!</h1>
+                <p class="text-muted">Semoga harimu menyenangkan.</p>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="main-column">
+                <section>
+                    <h2 class="section-title">Kelas Anda</h2>
+                    <div id="joined-classes-grid" class="joined-classes-grid">
+                        <div class="loader"></div>
+                    </div>
+                </section>
+                <section>
+                    <h2 class="section-title">Tugas Mendatang</h2>
+                    <div class="dashboard-card">
+                        <ul id="deadline-list">
+                            <div class="loader"></div>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+            <div class="side-column">
+                <div class="dashboard-card profile-card">
+                    <div class="profile-card-header">
+                        <a href="account.html" title="Pengaturan Akun">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" /></svg>
+                        </a>
+                        <img src="https://placehold.co/80x80/E5E7EB/6B7280?text=A" alt="Profile Picture" class="profile-img" id="profile-card-img">
+                    </div>
+                    <h3 id="profile-card-name">Memuat...</h3>
+                    <p id="profile-card-email">Memuat...</p>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="calendar-header">
+                        <button id="prev-month-btn">&lt;</button>
+                        <h4 id="month-year"></h4>
+                        <button id="next-month-btn">&gt;</button>
+                    </div>
+                    <div id="calendar-grid"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, query, where, Timestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
+            authDomain: "acadmte.firebaseapp.com",
+            projectId: "acadmte",
+            storageBucket: "acadmte.appspot.com",
+            messagingSenderId: "547286858993",
+            appId: "1:547286858993:web:b83de49e7eb1cc35a67d50",
+            measurementId: "G-ZEFYD7F650"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- Auth Guard & Data Loading ---
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                loadDashboardData(user);
+            } else {
+                window.location.replace('auth.html');
+            }
+        });
+        
+        document.getElementById('logout-button').addEventListener('click', () => signOut(auth));
+        
+        // --- Main Data Loading Function ---
+        async function loadDashboardData(user) {
+            try {
+                // ROBUST FIX: Ensure user document in Firestore is created/updated on load
+                const userDocRef = doc(db, 'users', user.uid);
+                await setDoc(userDocRef, {
+                    name: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL
+                }, { merge: true });
+
+                const userDocSnap = await getDoc(userDocRef);
+                const userData = userDocSnap.data();
+
+                // 1. Render UI elements with user data
+                renderUserInfo(user);
+                renderGreeting(user.displayName);
+                
+                // 2. Fetch joined classes and their related data
+                const userClasses = userData.joinedClasses || [];
+                
+                if (userClasses.length === 0) {
+                    renderEmptyStates();
+                    renderCalendar(new Date(), []); // Render empty calendar
+                    return;
+                }
+
+                const classPromises = userClasses.map(classId => getDoc(doc(db, 'classes', classId)));
+                const taskPromises = userClasses.map(classId => getDocs(query(collection(db, 'classes', classId, 'tasks'), where('dueDate', '>=', Timestamp.now()))));
+
+                const classSnapshots = await Promise.all(classPromises);
+                const taskSnapshotsByClass = await Promise.all(taskPromises);
+                
+                const classesData = classSnapshots.map(snap => ({ id: snap.id, ...snap.data() })).filter(c => c.namaMataKuliah);
+                
+                const allTasks = [];
+                taskSnapshotsByClass.forEach((taskSnapshot, index) => {
+                    const className = classesData[index]?.namaMataKuliah || 'Unknown Class';
+                    taskSnapshot.forEach(taskDoc => allTasks.push({ ...taskDoc.data(), className }));
+                });
+                
+                // 3. Render dynamic content
+                renderJoinedClasses(classesData);
+                renderUpcomingDeadlines(allTasks);
+                
+                const scheduleDays = [...new Set(classesData.map(c => c.hari))];
+                renderCalendar(new Date(), scheduleDays);
+
+
+            } catch (error) {
+                console.error("Error loading dashboard data:", error);
+                document.getElementById('joined-classes-grid').innerHTML = '<p class="empty-state">Gagal memuat kelas.</p>';
+                document.getElementById('deadline-list').innerHTML = '<p class="empty-state">Gagal memuat tugas.</p>';
+            }
+        }
+
+        // --- Rendering Functions ---
+        function renderUserInfo(user) {
+            document.getElementById('profile-card-img').src = user.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${user.displayName.charAt(0)}`;
+            document.getElementById('profile-card-name').textContent = user.displayName;
+            document.getElementById('profile-card-email').textContent = user.email;
+        }
+
+        function renderGreeting(name) {
+            const hour = new Date().getHours();
+            const welcomeName = name ? `, ${name.split(' ')[0]}!` : '!';
+            let greeting = 'Selamat Datang';
+            if (hour < 12) greeting = 'Selamat Pagi';
+            else if (hour < 18) greeting = 'Selamat Siang';
+            else greeting = 'Selamat Malam';
+            document.getElementById('greeting').textContent = greeting + welcomeName;
+        }
+
+        async function renderJoinedClasses(classes) {
+            const grid = document.getElementById('joined-classes-grid');
+            grid.innerHTML = '';
+            
+            // Define some colors for the class icons
+            const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+
+            for (let i = 0; i < classes.length; i++) {
+                const c = classes[i];
+                const card = document.createElement('a');
+                card.href = `class_page.html?id=${c.id}`;
+                card.className = 'class-card-sm';
+                
+                let memberAvatarsHtml = '';
+                if (c.members && c.members.length > 0) {
+                     // Fetch first 3 members for avatars
+                    const memberIds = c.members.slice(0, 3);
+                    const memberPromises = memberIds.map(id => getDoc(doc(db, 'users', id)));
+                    const memberSnaps = await Promise.all(memberPromises);
+                    const memberAvatars = memberSnaps.map(snap => snap.exists() ? snap.data().photoURL : null).filter(Boolean);
+                    
+                    memberAvatarsHtml = memberAvatars.map(url => `<img src="${url}" alt="member">`).join('');
+                }
+
+                card.innerHTML = `
+                    <div class="icon" style="background-color: ${colors[i % colors.length]}">${c.namaMataKuliah.charAt(0)}</div>
+                    <h3>${c.namaMataKuliah}</h3>
+                    <p>${c.dosen}</p>
+                    <div class="card-footer">
+                        <div class="member-avatars">${memberAvatarsHtml}</div>
+                        <div class="arrow-icon">&rarr;</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+        }
+        
+        function renderUpcomingDeadlines(tasks) {
+            const list = document.getElementById('deadline-list');
+            list.innerHTML = '';
+            if (tasks.length === 0) {
+                list.innerHTML = `<li class="empty-state"><p>Tidak ada tugas yang akan datang.</p></li>`;
+                return;
+            }
+            tasks.sort((a, b) => a.dueDate.seconds - b.dueDate.seconds).slice(0, 5).forEach(task => {
+                const li = document.createElement('li');
+                li.className = 'deadline-item';
+                const dueDate = task.dueDate.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                li.innerHTML = `
+                    <div class="deadline-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+                    </div>
+                    <div class="deadline-details">
+                        <h4>${task.title}</h4>
+                        <p>${task.className} &bull; Tenggat: ${dueDate}</p>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function renderEmptyStates() {
+            document.getElementById('joined-classes-grid').innerHTML = '<div class="empty-state"><p>Anda belum bergabung dengan kelas.</p></div>';
+            document.getElementById('deadline-list').innerHTML = '<div class="empty-state"><p>Tidak ada tugas.</p></div>';
+        }
+        
+        // --- Calendar Logic ---
+        let currentCalendarDate = new Date();
+        const indonesianDaysMap = { 'Senin': 1, 'Selasa': 2, 'Rabu': 3, 'Kamis': 4, 'Jumat': 5, 'Sabtu': 6, 'Minggu': 0 };
+
+        function renderCalendar(date, classDays) {
+            const grid = document.getElementById('calendar-grid');
+            const monthYearEl = document.getElementById('month-year');
+            grid.innerHTML = '';
+            
+            const month = date.getMonth();
+            const year = date.getFullYear();
+            monthYearEl.textContent = date.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+            
+            const firstDayOfMonth = new Date(year, month, 1);
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const startingDay = (firstDayOfMonth.getDay() + 6) % 7; // 0 = Senin
+            
+            // Day names
+            ['S', 'S', 'R', 'K', 'J', 'S', 'M'].forEach(day => {
+                const dayNameEl = document.createElement('div');
+                dayNameEl.className = 'calendar-day-name';
+                dayNameEl.textContent = day;
+                grid.appendChild(dayNameEl);
+            });
+            
+            // Blank days
+            for (let i = 0; i < startingDay; i++) {
+                grid.appendChild(document.createElement('div'));
+            }
+
+            // Month days
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                dayEl.textContent = i;
+                
+                const currentDate = new Date(year, month, i);
+                const today = new Date();
+
+                if (currentDate.toDateString() === today.toDateString()) {
+                    dayEl.classList.add('today');
+                }
+                
+                // Check if this day has a class
+                const dayOfWeek = currentDate.getDay(); // 0=Minggu, 1=Senin..
+                const dayName = Object.keys(indonesianDaysMap).find(key => indonesianDaysMap[key] === dayOfWeek);
+
+                if (classDays.includes(dayName)) {
+                    dayEl.classList.add('has-class');
+                }
+                
+                grid.appendChild(dayEl);
+            }
+        }
+        
+        document.getElementById('prev-month-btn').addEventListener('click', () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            loadDashboardData(auth.currentUser); // Reload all data to get correct schedule days
+        });
+        
+        document.getElementById('next-month-btn').addEventListener('click', () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            loadDashboardData(auth.currentUser);
+        });
+
+    </script>
+</body>
+</html>
+

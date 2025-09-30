@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Kelas - Academate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #7C3AED;
+            --primary-light: #F5F3FF;
+            --text-dark: #111827;
+            --text-light: #374151;
+            --text-muted: #6B7280;
+            --bg-body: #F8F7FA;
+            --bg-sidebar: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --border-color: #E5E7EB;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* --- Sidebar (reused) --- */
+        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem; }
+        .sidebar-header { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); text-decoration: none; margin-bottom: 2.5rem; padding: 0 0.5rem; }
+        .nav-menu { list-style: none; flex-grow: 1; }
+        .nav-item a { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; }
+        .nav-item a:hover { background-color: var(--primary-light); color: var(--primary-color); }
+        .nav-item a.active { background-color: var(--primary-color); color: #fff; font-weight: 600; }
+        .nav-item a svg { width: 20px; height: 20px; margin-right: 1rem; }
+        .logout-button { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; background-color: transparent; border: none; width: 100%; font-family: 'Inter', sans-serif; font-size: 1rem; cursor: pointer; }
+        .logout-button:hover { background-color: #FEE2E2; color: #EF4444; }
+        
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .class-header {
+            padding: 2rem 3rem;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+        }
+        .class-header h1 { font-size: 2rem; font-weight: 700; }
+        .class-header p { color: var(--text-muted); }
+
+        .class-body {
+            flex-grow: 1;
+            padding: 2rem 3rem;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .main-column, .side-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .content-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+        
+        .card-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; }
+
+        /* Discussion Feed */
+        #discussion-feed {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column-reverse; /* Newest messages at the bottom */
+        }
+        #discussion-list { list-style: none; }
+        .message-item { display: flex; gap: 1rem; margin-bottom: 1rem; }
+        .message-avatar { width: 36px; height: 36px; border-radius: 50%; background-color: var(--border-color); flex-shrink: 0; }
+        .message-content strong { display: block; font-weight: 600; }
+        .message-content span { font-size: 0.8rem; color: var(--text-muted); margin-left: 0.5rem; }
+        .message-content p { margin-top: 0.25rem; }
+
+        #discussion-form { display: flex; gap: 1rem; }
+        #discussion-input { flex-grow: 1; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; }
+        #discussion-form button { padding: 0.75rem 1rem; background-color: var(--primary-color); color: #fff; border: none; border-radius: 0.5rem; cursor: pointer; }
+        
+        /* Tasks List */
+        #task-list { list-style: none; }
+        .task-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
+        .task-item:last-child { border-bottom: none; }
+        .task-item h4 { font-weight: 500; }
+        .task-item .due-date { font-size: 0.9rem; color: var(--text-muted); }
+        #add-task-btn { width: 100%; padding: 0.75rem; margin-top: 1rem; border: 1px dashed var(--border-color); background: transparent; color: var(--text-muted); border-radius: 0.5rem; cursor: pointer; }
+
+        /* Shared Notes */
+        #shared-notes-list { list-style: none; max-height: 400px; overflow-y: auto; }
+        .note-card { padding: 1rem; border-radius: 0.5rem; background-color: var(--bg-body); margin-bottom: 1rem; }
+        .note-card h4 { font-weight: 600; margin-bottom: 0.25rem; }
+        .note-card p { font-size: 0.9rem; white-space: pre-wrap; }
+        .note-card small { font-size: 0.8rem; color: var(--text-muted); }
+
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 3rem auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .empty-state { text-align: center; color: var(--text-muted); padding: 2rem 0; }
+        
+        /* Add Task Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal { background: #fff; padding: 2rem; border-radius: 1rem; width: 90%; max-width: 400px; }
+        .modal h2 { margin-bottom: 1.5rem; }
+        .modal-form { display: flex; flex-direction: column; gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input { padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
+        .modal-btn { padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer; }
+        #confirm-add-task-btn { background-color: var(--primary-color); color: #fff; }
+        #cancel-add-task-btn { background-color: var(--border-color); }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <a href="dashboard.html" class="sidebar-header">Academate</a>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="dashboard.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>Dasbor</span></a></li>
+            <li class="nav-item"><a href="classes.html" class="active"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>Kelas</span></a></li>
+            <li class="nav-item"><a href="schedule.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span>Jadwal</span></a></li>
+            <li class="nav-item"><a href="notes.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg><span>Catatan</span></a></li>
+            <li class="nav-item"><a href="account.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg><span>Akun</span></a></li>
+        </ul>
+        <button class="logout-button" id="logout-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span>Keluar</span></button>
+    </aside>
+
+    <main class="main-content" id="main-content">
+        <div class="loader"></div>
+    </main>
+
+    <div class="modal-overlay" id="add-task-modal">
+        <div class="modal">
+            <h2>Tambah Tugas Baru</h2>
+            <form id="add-task-form" class="modal-form">
+                <div class="form-group">
+                    <label for="task-title">Judul Tugas</label>
+                    <input type="text" id="task-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="task-due-date">Tenggat Waktu</label>
+                    <input type="date" id="task-due-date" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn" id="cancel-add-task-btn">Batal</button>
+                    <button type="submit" class="modal-btn" id="confirm-add-task-btn">Tambah</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
+            authDomain: "acadmte.firebaseapp.com",
+            projectId: "acadmte",
+            storageBucket: "acadmte.appspot.com",
+            messagingSenderId: "547286858993",
+            appId: "1:547286858993:web:b83de49e7eb1cc35a67d50",
+            measurementId: "G-ZEFYD7F650"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let classId = null;
+        let discussionUnsubscribe = null, tasksUnsubscribe = null, notesUnsubscribe = null;
+        
+        const mainContent = document.getElementById('main-content');
+        const addTaskModal = document.getElementById('add-task-modal');
+        const addTaskForm = document.getElementById('add-task-form');
+
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                currentUser = user;
+                const params = new URLSearchParams(window.location.search);
+                classId = params.get('id');
+                if (classId) {
+                    loadClassPage();
+                } else {
+                    mainContent.innerHTML = '<div class="empty-state"><h1>ID Kelas tidak ditemukan.</h1></div>';
+                }
+            } else {
+                [discussionUnsubscribe, tasksUnsubscribe, notesUnsubscribe].forEach(unsub => unsub && unsub());
+                window.location.replace('auth.html');
+            }
+        });
+        
+        document.getElementById('logout-button').addEventListener('click', () => signOut(auth));
+
+        async function loadClassPage() {
+            try {
+                const classDocRef = doc(db, 'classes', classId);
+                const classDocSnap = await getDoc(classDocRef);
+
+                if (!classDocSnap.exists()) {
+                    mainContent.innerHTML = '<div class="empty-state"><h1>Kelas tidak ditemukan.</h1></div>';
+                    return;
+                }
+                
+                const classData = classDocSnap.data();
+                
+                // Security check: ensure user is a member of the class
+                const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+                const joinedClasses = userDoc.data().joinedClasses || [];
+                if (!joinedClasses.includes(classId)) {
+                    mainContent.innerHTML = '<div class="empty-state"><h1>Anda tidak memiliki akses ke kelas ini.</h1></div>';
+                    return;
+                }
+
+                renderPageLayout(classData);
+                attachListeners();
+
+            } catch (error) {
+                console.error("Error loading class page: ", error);
+                mainContent.innerHTML = '<div class="empty-state"><h1>Gagal memuat halaman kelas.</h1></div>';
+            }
+        }
+        
+        function renderPageLayout(data) {
+             mainContent.innerHTML = `
+                <header class="class-header">
+                    <h1 id="class-name">${data.namaMataKuliah}</h1>
+                    <p id="class-lecturer">${data.dosen} • ${data.hari}, ${data.waktu} • Ruang ${data.ruang}</p>
+                </header>
+                <div class="class-body">
+                    <div class="main-column">
+                        <div class="content-card">
+                            <h2 class="card-title">Diskusi Kelas</h2>
+                            <div id="discussion-feed"><ul id="discussion-list"><div class="loader"></div></ul></div>
+                            <form id="discussion-form">
+                                <input type="text" id="discussion-input" placeholder="Ketik pesan..." required>
+                                <button type="submit">Kirim</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="side-column">
+                        <div class="content-card">
+                            <h2 class="card-title">Tugas</h2>
+                            <ul id="task-list"><div class="loader"></div></ul>
+                            <button id="add-task-btn">+ Tambah Tugas</button>
+                        </div>
+                        <div class="content-card">
+                            <h2 class="card-title">Catatan Bersama</h2>
+                            <ul id="shared-notes-list"><div class="loader"></div></ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function attachListeners() {
+            // Discussion form
+            const discussionForm = document.getElementById('discussion-form');
+            discussionForm.addEventListener('submit', handleAddMessage);
+            
+            // Task modal
+            document.getElementById('add-task-btn').addEventListener('click', () => addTaskModal.style.display = 'flex');
+            document.getElementById('cancel-add-task-btn').addEventListener('click', () => addTaskModal.style.display = 'none');
+            addTaskForm.addEventListener('submit', handleAddTask);
+
+            // Firestore listeners
+            listenForDiscussions();
+            listenForTasks();
+            listenForSharedNotes();
+        }
+
+        // --- Discussion Logic ---
+        function listenForDiscussions() {
+            const q = query(collection(db, 'classes', classId, 'discussions'), orderBy('createdAt', 'desc'));
+            discussionUnsubscribe = onSnapshot(q, (snapshot) => {
+                const list = document.getElementById('discussion-list');
+                list.innerHTML = '';
+                if (snapshot.empty) {
+                    list.innerHTML = '<div class="empty-state">Belum ada diskusi.</div>';
+                }
+                snapshot.forEach(doc => {
+                    const msg = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'message-item';
+                    const time = msg.createdAt ? msg.createdAt.toDate().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '';
+                    li.innerHTML = `
+                        <img class="message-avatar" src="${msg.senderPhotoURL || 'https://placehold.co/36x36'}" alt="Avatar">
+                        <div class="message-content">
+                            <strong>${msg.senderName}</strong><span>${time}</span>
+                            <p>${msg.text}</p>
+                        </div>
+                    `;
+                    list.appendChild(li);
+                });
+            });
+        }
+        
+        async function handleAddMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('discussion-input');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            try {
+                // ROBUST FIX: Use the currentUser object directly as the primary source of truth.
+                // This ensures the sender's name and photo are always correct at the time of posting,
+                // even if the Firestore document hasn't been created or updated yet.
+                await addDoc(collection(db, 'classes', classId, 'discussions'), {
+                    text: text,
+                    senderId: currentUser.uid,
+                    senderName: currentUser.displayName || 'Anonymous',
+                    senderPhotoURL: currentUser.photoURL || null,
+                    createdAt: serverTimestamp()
+                });
+                input.value = '';
+            } catch (error) {
+                console.error("Error sending message:", error);
+            }
+        }
+        
+        // --- Task Logic ---
+        function listenForTasks() {
+            const q = query(collection(db, 'classes', classId, 'tasks'), orderBy('dueDate', 'asc'));
+            tasksUnsubscribe = onSnapshot(q, (snapshot) => {
+                const list = document.getElementById('task-list');
+                list.innerHTML = '';
+                if (snapshot.empty) {
+                    list.innerHTML = '<div class="empty-state">Tidak ada tugas.</div>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const task = doc.data();
+                    const dueDate = task.dueDate.toDate();
+                    const formattedDate = dueDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
+                    const li = document.createElement('li');
+                    li.className = 'task-item';
+                    li.innerHTML = `
+                        <h4>${task.title}</h4>
+                        <span class="due-date">${formattedDate}</span>
+                    `;
+                    list.appendChild(li);
+                });
+            });
+        }
+        
+        async function handleAddTask(e) {
+            e.preventDefault();
+            const title = document.getElementById('task-title').value;
+            const dueDateStr = document.getElementById('task-due-date').value;
+            if (!title || !dueDateStr) return;
+            
+            const dueDate = new Date(dueDateStr);
+            
+            try {
+                await addDoc(collection(db, 'classes', classId, 'tasks'), {
+                    title: title,
+                    dueDate: Timestamp.fromDate(dueDate),
+                    createdAt: serverTimestamp()
+                });
+                addTaskForm.reset();
+                addTaskModal.style.display = 'none';
+            } catch (error) {
+                console.error("Error adding task:", error);
+            }
+        }
+
+        // --- Shared Notes Logic ---
+        function listenForSharedNotes() {
+            const q = query(collection(db, 'classes', classId, 'sharedNotes'), orderBy('sharedAt', 'desc'));
+            notesUnsubscribe = onSnapshot(q, (snapshot) => {
+                const list = document.getElementById('shared-notes-list');
+                list.innerHTML = '';
+                 if (snapshot.empty) {
+                    list.innerHTML = '<div class="empty-state">Belum ada catatan.</div>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const note = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'note-card';
+                    li.innerHTML = `
+                        <h4>${note.title}</h4>
+                        <p>${note.body.substring(0, 150)}...</p>
+                        <small>Dibagikan oleh ${note.sharedBy}</small>
+                    `;
+                    list.appendChild(li);
+                });
+            });
+        }
+
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catatan Pribadi - Academate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #7C3AED;
+            --primary-light: #F5F3FF;
+            --text-dark: #111827;
+            --text-light: #374151;
+            --text-muted: #6B7280;
+            --bg-body: #F8F7FA;
+            --bg-sidebar: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --border-color: #E5E7EB;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* --- Sidebar (reused) --- */
+        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem; }
+        .sidebar-header { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); text-decoration: none; margin-bottom: 2.5rem; padding: 0 0.5rem; }
+        .nav-menu { list-style: none; flex-grow: 1; }
+        .nav-item a { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; }
+        .nav-item a:hover { background-color: var(--primary-light); color: var(--primary-color); }
+        .nav-item a.active { background-color: var(--primary-color); color: #fff; font-weight: 600; }
+        .nav-item a svg { width: 20px; height: 20px; margin-right: 1rem; }
+        .logout-button { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; background-color: transparent; border: none; width: 100%; font-family: 'Inter', sans-serif; font-size: 1rem; cursor: pointer; }
+        .logout-button:hover { background-color: #FEE2E2; color: #EF4444; }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Notes List Panel */
+        .notes-list-panel {
+            width: 320px;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-sidebar);
+        }
+
+        .notes-list-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .notes-list-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .new-note-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .new-note-btn:hover { background-color: #6D28D9; }
+
+        #notes-list {
+            list-style: none;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .note-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .note-item:hover { background-color: var(--bg-body); }
+        .note-item.active { background-color: var(--primary-light); }
+        .note-item h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .note-item p { font-size: 0.875rem; color: var(--text-muted); }
+
+        /* Note Editor Panel */
+        .note-editor-panel {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .editor-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .save-btn { background-color: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+        .save-btn:hover { background-color: #6D28D9; }
+        .save-btn:disabled { background-color: #A78BFA; cursor: not-allowed; }
+        .share-btn { background-color: transparent; color: var(--text-light); border-color: var(--border-color); }
+        .share-btn:hover { background-color: var(--bg-body); }
+        .delete-btn { background-color: transparent; color: #EF4444; }
+        .delete-btn:hover { background-color: #FEE2E2; }
+        
+        #note-title-input {
+            width: 100%;
+            border: none;
+            font-size: 2rem;
+            font-weight: 700;
+            padding: 0.5rem 0;
+            margin-bottom: 1rem;
+            background: transparent;
+        }
+        #note-title-input:focus, #note-body-textarea:focus { outline: none; }
+
+        #note-body-textarea {
+            width: 100%;
+            flex-grow: 1;
+            border: none;
+            font-size: 1rem;
+            line-height: 1.7;
+            resize: none;
+            background: transparent;
+        }
+        
+        #editor-placeholder { text-align: center; padding-top: 10vh; color: var(--text-muted); }
+        #editor-placeholder svg { width: 60px; height: 60px; margin-bottom: 1rem; }
+        #editor-container { display: none; flex-direction: column; height: 100%; }
+
+        /* Share Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal { background: #fff; padding: 2rem; border-radius: 1rem; width: 90%; max-width: 400px; }
+        .modal h2 { margin-bottom: 1.5rem; }
+        .modal label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .modal select { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; margin-bottom: 1.5rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; }
+        .modal-btn { padding: 0.6rem 1.2rem; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer; }
+        #confirm-share-btn { background-color: var(--primary-color); color: #fff; }
+        #cancel-share-btn { background-color: var(--border-color); }
+
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 2rem auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <a href="dashboard.html" class="sidebar-header">Academate</a>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="dashboard.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>Dasbor</span></a></li>
+            <li class="nav-item"><a href="classes.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>Kelas</span></a></li>
+            <li class="nav-item"><a href="schedule.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span>Jadwal</span></a></li>
+            <li class="nav-item"><a href="notes.html" class="active"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg><span>Catatan</span></a></li>
+            <li class="nav-item"><a href="account.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg><span>Akun</span></a></li>
+        </ul>
+        <button class="logout-button" id="logout-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span>Keluar</span></button>
+    </aside>
+
+    <main class="main-content">
+        <div class="notes-list-panel">
+            <div class="notes-list-header">
+                <h1>Catatan Saya</h1>
+                <button class="new-note-btn" id="new-note-btn">Buat Catatan Baru</button>
+            </div>
+            <ul id="notes-list">
+                <div class="loader"></div>
+            </ul>
+        </div>
+        <div class="note-editor-panel">
+             <div id="editor-placeholder">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+                <h2>Pilih catatan untuk dilihat atau buat yang baru.</h2>
+            </div>
+            <div id="editor-container">
+                <div class="editor-header">
+                    <button class="editor-btn delete-btn" id="delete-note-btn">Hapus</button>
+                    <button class="editor-btn share-btn" id="share-note-btn">Bagikan</button>
+                    <button class="editor-btn save-btn" id="save-note-btn">Simpan</button>
+                </div>
+                <input type="text" id="note-title-input" placeholder="Judul Catatan...">
+                <textarea id="note-body-textarea" placeholder="Tuliskan catatanmu di sini..."></textarea>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="share-modal">
+        <div class="modal">
+            <h2>Bagikan Catatan ke Kelas</h2>
+            <label for="class-select">Pilih Kelas:</label>
+            <select id="class-select">
+                <option>Memuat kelas...</option>
+            </select>
+            <div class="modal-actions">
+                <button class="modal-btn" id="cancel-share-btn">Batal</button>
+                <button class="modal-btn" id="confirm-share-btn">Bagikan</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
+            authDomain: "acadmte.firebaseapp.com",
+            projectId: "acadmte",
+            storageBucket: "acadmte.appspot.com",
+            messagingSenderId: "547286858993",
+            appId: "1:547286858993:web:b83de49e7eb1cc35a67d50",
+            measurementId: "G-ZEFYD7F650"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let currentNoteId = null;
+        let notesUnsubscribe = null; // To detach listener on logout
+
+        // --- DOM Elements ---
+        const notesListEl = document.getElementById('notes-list');
+        const newNoteBtn = document.getElementById('new-note-btn');
+        const editorPlaceholder = document.getElementById('editor-placeholder');
+        const editorContainer = document.getElementById('editor-container');
+        const noteTitleInput = document.getElementById('note-title-input');
+        const noteBodyTextarea = document.getElementById('note-body-textarea');
+        const saveNoteBtn = document.getElementById('save-note-btn');
+        const deleteNoteBtn = document.getElementById('delete-note-btn');
+        const shareNoteBtn = document.getElementById('share-note-btn');
+        const shareModal = document.getElementById('share-modal');
+        const classSelect = document.getElementById('class-select');
+        const cancelShareBtn = document.getElementById('cancel-share-btn');
+        const confirmShareBtn = document.getElementById('confirm-share-btn');
+        const logoutButton = document.getElementById('logout-button');
+
+        // --- Auth Guard ---
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                currentUser = user;
+                listenForNotes(user.uid);
+            } else {
+                if (notesUnsubscribe) notesUnsubscribe();
+                window.location.replace('auth.html');
+            }
+        });
+
+        logoutButton.addEventListener('click', () => signOut(auth));
+
+        // --- Realtime Notes Listener ---
+        function listenForNotes(userId) {
+            const notesCollection = collection(db, 'users', userId, 'notes');
+            const q = query(notesCollection, orderBy('updatedAt', 'desc'));
+
+            notesUnsubscribe = onSnapshot(q, (snapshot) => {
+                notesListEl.innerHTML = ''; // Clear list
+                if (snapshot.empty) {
+                    notesListEl.innerHTML = '<p style="padding: 1.5rem; color: var(--text-muted);">Belum ada catatan.</p>';
+                } else {
+                    snapshot.forEach(doc => {
+                        const note = doc.data();
+                        const li = document.createElement('li');
+                        li.className = 'note-item';
+                        li.dataset.id = doc.id;
+                        li.innerHTML = `
+                            <h3>${note.title || 'Tanpa Judul'}</h3>
+                            <p>${note.body ? note.body.substring(0, 40) + '...' : 'Tidak ada konten'}</p>
+                        `;
+                        li.addEventListener('click', () => handleNoteSelect(doc.id, note));
+                        notesListEl.appendChild(li);
+                    });
+                    if(currentNoteId) {
+                        const activeItem = notesListEl.querySelector(`[data-id="${currentNoteId}"]`);
+                        if(activeItem) activeItem.classList.add('active');
+                    }
+                }
+            }, (error) => {
+                console.error("Error listening for notes:", error);
+                notesListEl.innerHTML = '<p>Gagal memuat catatan.</p>';
+            });
+        }
+
+        // --- Note Selection & Editor UI ---
+        function handleNoteSelect(noteId, noteData) {
+            currentNoteId = noteId;
+            noteTitleInput.value = noteData.title;
+            noteBodyTextarea.value = noteData.body;
+            
+            editorPlaceholder.style.display = 'none';
+            editorContainer.style.display = 'flex';
+            
+            document.querySelectorAll('.note-item').forEach(item => item.classList.remove('active'));
+            notesListEl.querySelector(`[data-id="${noteId}"]`).classList.add('active');
+        }
+
+        newNoteBtn.addEventListener('click', () => {
+            currentNoteId = null;
+            noteTitleInput.value = '';
+            noteBodyTextarea.value = '';
+            
+            editorPlaceholder.style.display = 'none';
+            editorContainer.style.display = 'flex';
+            noteTitleInput.focus();
+            document.querySelectorAll('.note-item').forEach(item => item.classList.remove('active'));
+        });
+
+        // --- CRUD Operations ---
+        saveNoteBtn.addEventListener('click', async () => {
+            if (!currentUser) return;
+            
+            const title = noteTitleInput.value.trim();
+            const body = noteBodyTextarea.value.trim();
+
+            if (!title && !body) {
+                alert("Catatan tidak boleh kosong.");
+                return;
+            }
+
+            saveNoteBtn.disabled = true;
+            saveNoteBtn.textContent = 'Menyimpan...';
+
+            try {
+                const noteData = {
+                    title: title || 'Tanpa Judul',
+                    body: body,
+                    updatedAt: serverTimestamp()
+                };
+
+                if (currentNoteId) {
+                    // Update existing note
+                    const noteRef = doc(db, 'users', currentUser.uid, 'notes', currentNoteId);
+                    await updateDoc(noteRef, noteData);
+                } else {
+                    // Create new note
+                    noteData.createdAt = serverTimestamp();
+                    const notesCollection = collection(db, 'users', currentUser.uid, 'notes');
+                    const newDocRef = await addDoc(notesCollection, noteData);
+                    currentNoteId = newDocRef.id; // Set current id to the new note
+                }
+            } catch (error) {
+                console.error("Error saving note: ", error);
+                alert("Gagal menyimpan catatan.");
+            } finally {
+                saveNoteBtn.disabled = false;
+                saveNoteBtn.textContent = 'Simpan';
+            }
+        });
+
+        deleteNoteBtn.addEventListener('click', async () => {
+            if (!currentNoteId || !currentUser) return;
+            if (!confirm("Apakah Anda yakin ingin menghapus catatan ini?")) return;
+            
+            try {
+                await deleteDoc(doc(db, 'users', currentUser.uid, 'notes', currentNoteId));
+                currentNoteId = null;
+                noteTitleInput.value = '';
+                noteBodyTextarea.value = '';
+                editorContainer.style.display = 'none';
+                editorPlaceholder.style.display = 'block';
+            } catch (error) {
+                console.error("Error deleting note: ", error);
+                alert("Gagal menghapus catatan.");
+            }
+        });
+
+        // --- Share Functionality ---
+        shareNoteBtn.addEventListener('click', async () => {
+            if (!currentNoteId || !currentUser) {
+                alert("Silakan simpan catatan terlebih dahulu sebelum membagikannya.");
+                return;
+            }
+            
+            try {
+                const userDocSnap = await getDoc(doc(db, 'users', currentUser.uid));
+                const joinedClassesIds = userDocSnap.data().joinedClasses || [];
+
+                if(joinedClassesIds.length === 0) {
+                    alert("Anda harus bergabung dengan kelas terlebih dahulu untuk bisa berbagi catatan.");
+                    return;
+                }
+
+                const classPromises = joinedClassesIds.map(id => getDoc(doc(db, 'classes', id)));
+                const classSnapshots = await Promise.all(classPromises);
+                
+                classSelect.innerHTML = ''; // Clear previous options
+                classSnapshots.forEach(snap => {
+                    if (snap.exists()) {
+                        const classData = snap.data();
+                        const option = document.createElement('option');
+                        option.value = snap.id;
+                        option.textContent = classData.namaMataKuliah;
+                        classSelect.appendChild(option);
+                    }
+                });
+                shareModal.style.display = 'flex';
+
+            } catch (error) {
+                console.error("Error preparing to share note:", error);
+                alert("Gagal memuat daftar kelas.");
+            }
+        });
+
+        cancelShareBtn.addEventListener('click', () => shareModal.style.display = 'none');
+        
+        confirmShareBtn.addEventListener('click', async () => {
+            const selectedClassId = classSelect.value;
+            if (!selectedClassId || !currentNoteId || !currentUser) return;
+            
+            confirmShareBtn.disabled = true;
+            confirmShareBtn.textContent = "Membagikan...";
+
+            try {
+                const noteRef = doc(db, 'users', currentUser.uid, 'notes', currentNoteId);
+                const noteSnap = await getDoc(noteRef);
+                
+                if (noteSnap.exists()) {
+                    const noteData = noteSnap.data();
+
+                    await addDoc(collection(db, 'classes', selectedClassId, 'sharedNotes'), {
+                        title: noteData.title,
+                        body: noteData.body,
+                        // ROBUST FIX: Use the displayName from the auth object directly.
+                        sharedBy: currentUser.displayName || 'Seorang Pengguna',
+                        sharedAt: serverTimestamp()
+                    });
+                    
+                    alert("Catatan berhasil dibagikan!");
+                    shareModal.style.display = 'none';
+                } else {
+                    alert("Catatan tidak ditemukan untuk dibagikan.");
+                }
+            } catch (error) {
+                console.error("Error sharing note:", error);
+                alert("Gagal membagikan catatan.");
+            } finally {
+                confirmShareBtn.disabled = false;
+                confirmShareBtn.textContent = "Bagikan";
+            }
+        });
+    </script>
+</body>
+</html>
+
