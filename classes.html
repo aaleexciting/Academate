@@ -15,7 +15,7 @@
             --text-dark: #111827;
             --text-light: #374151;
             --text-muted: #6B7280;
-            --bg-body: #F8F7FA;
+            --bg-body: #F9FAFB;
             --bg-sidebar: #FFFFFF;
             --card-bg: #FFFFFF;
             --border-color: #E5E7EB;
@@ -61,21 +61,34 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .header h1 { font-size: 2.25rem; font-weight: 700; }
 
-        .btn-primary {
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
             padding: 0.75rem 1.5rem;
-            background-color: var(--primary-color);
-            color: #fff;
             border: none;
             border-radius: 0.5rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
         }
+        .btn-primary { background-color: var(--primary-color); color: #fff; }
         .btn-primary:hover { background-color: #6D28D9; }
+        .btn-secondary { background-color: var(--primary-light); color: var(--primary-color); }
+        .btn-secondary:hover { background-color: #E9D5FF; }
 
         .section-title {
             font-size: 1.5rem;
@@ -87,100 +100,102 @@
 
         .class-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 3rem;
         }
         
         .class-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 1rem;
-            padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
-        .class-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
-        .class-card p { color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem; }
-        .class-card .details { flex-grow: 1; display: flex; flex-direction: column; gap: 0.5rem; }
-        .class-card .card-footer { 
-            margin-top: 1.5rem; 
-            display: flex; 
-            justify-content: flex-end;
+        .class-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.07);
+        }
+        .class-card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .class-card-header h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .class-card-header p { color: var(--text-muted); font-size: 0.9rem; }
+        
+        .class-card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+        .class-card-body .detail-item {
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            color: var(--text-light);
+        }
+        .class-card-body .detail-item svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            flex-shrink: 0;
         }
         
+        .class-card-footer { 
+            padding: 1rem 1.5rem; 
+            display: flex; 
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--bg-body);
+            border-top: 1px solid var(--border-color);
+        }
+        .member-avatars { display: flex; }
+        .member-avatars img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--card-bg); margin-left: -10px; object-fit: cover; }
+        .member-avatars img:first-child { margin-left: 0; }
+
+        .footer-actions { display: flex; gap: 0.5rem; }
         .btn-icon {
-            background: transparent;
-            border: none;
+            background-color: #fff;
+            border: 1px solid var(--border-color);
             cursor: pointer;
             color: var(--text-muted);
-            padding: 0.5rem;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.2s, color 0.2s;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
         }
         .btn-icon:hover {
-            background-color: var(--bg-body);
-            color: var(--text-dark);
-        }
-        
-        .btn-secondary {
-            padding: 0.5rem 1rem;
-            background-color: transparent;
+            background-color: var(--primary-light);
             color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            border-radius: 0.5rem;
-            font-weight: 500;
-            cursor: pointer;
-            text-decoration: none;
-            text-align: center;
-            transition: background-color 0.2s, color 0.2s;
-        }
-        .btn-secondary:hover { background-color: var(--primary-light); }
-        
-        .join-section {
-             margin-bottom: 3rem;
+            border-color: var(--primary-color);
         }
 
-        .join-code-bar {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            padding: 0.5rem;
-            padding-left: 1rem;
-        }
-        .join-code-bar input {
-            flex-grow: 1;
-            border: none;
-            font-size: 1rem;
-            background: transparent;
-            padding: 0.75rem 0.5rem;
-        }
-        .join-code-bar input:focus { outline: none; }
-        .join-code-bar button { flex-shrink: 0; }
-        
-        /* Modal for creating a class */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal { background: #fff; padding: 2rem; border-radius: 1rem; width: 90%; max-width: 500px; }
-        .modal h2 { margin-bottom: 1.5rem; }
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(17, 24, 39, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal { background: #fff; padding: 2rem; border-radius: 1rem; width: 90%; max-width: 550px; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateY(20px) scale(0.98); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+        .modal h2 { margin-bottom: 0.5rem; font-size: 1.5rem; }
+        .modal .modal-subtitle { color: var(--text-muted); margin-bottom: 1.5rem; }
+
         .modal-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .form-group { display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: 1 / -1; }
         .form-group label { margin-bottom: 0.5rem; font-weight: 500; }
-        .form-group input, .form-group select { padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; }
+        .form-group input, .form-group select { padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-size: 1rem; font-family: 'Inter', sans-serif; }
+        
         .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; grid-column: 1 / -1; }
-        .modal-btn { padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer; }
-        #confirm-create-btn { background-color: var(--primary-color); color: #fff; }
-        #cancel-create-btn { background-color: var(--border-color); }
+        .modal-btn { padding: 0.75rem 1.5rem; }
+        #confirm-create-btn, #join-by-code-btn { background-color: var(--primary-color); color: #fff; }
+        #cancel-create-btn, #cancel-join-btn { background-color: var(--border-color); }
 
         /* Share Modal */
         #share-class-modal .modal { max-width: 450px; }
@@ -203,21 +218,19 @@
             padding: 0.5rem;
             background: transparent;
             border: none;
-        }
-        .code-display input { color: var(--text-dark); }
-        .code-display button {
-            background-color: var(--primary-light);
-            color: var(--primary-color);
-            border: none;
-            border-radius: 0.25rem;
-            padding: 0.5rem 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
+            color: var(--text-dark);
         }
         #close-share-modal-btn { width: 100%; margin-top: 1rem; background-color: var(--border-color); }
+        #copy-code-btn, #copy-link-btn {
+            background-color: var(--primary-light); color: var(--primary-color); border: none;
+            border-radius: 0.25rem; padding: 0.5rem 0.75rem; font-weight: 500; cursor: pointer;
+        }
         
-        .empty-state, .info-state { text-align: center; padding: 2rem; color: var(--text-muted); }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 2rem auto; }
+        .empty-state { text-align: center; padding: 4rem 2rem; background-color: var(--card-bg); border-radius: 1rem; border: 2px dashed var(--border-color); }
+        .empty-state h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .empty-state p { color: var(--text-muted); margin-bottom: 1.5rem; }
+        
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 5rem auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     </style>
@@ -235,31 +248,15 @@
         <button class="logout-button" id="logout-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span>Keluar</span></button>
     </aside>
 
-    <main class="main-content">
-        <header class="header">
-            <h1>Kelola Kelas</h1>
-            <button class="btn-primary" id="create-class-btn">Buat Kelas Baru</button>
-        </header>
-        
-        <section id="joined-classes-section">
-            <h2 class="section-title">Kelas yang Diikuti</h2>
-            <div class="class-grid" id="joined-classes-grid">
-                <div class="loader"></div>
-            </div>
-        </section>
-
-        <section class="join-section">
-            <h2 class="section-title">Gabung dengan Kelas</h2>
-            <div class="join-code-bar">
-                <input type="text" id="class-code-input" placeholder="Masukkan kode kelas...">
-                <button class="btn-primary" id="join-by-code-btn">Gabung</button>
-            </div>
-        </section>
+    <main class="main-content" id="main-content">
+        <div class="loader"></div>
     </main>
 
+    <!-- Modals -->
     <div class="modal-overlay" id="create-class-modal">
         <div class="modal">
             <h2>Buat Kelas Baru</h2>
+            <p class="modal-subtitle">Isi detail di bawah ini untuk membuat kelas baru untuk Anda dan teman-teman Anda.</p>
             <form id="create-class-form" class="modal-form">
                 <div class="form-group full-width">
                     <label for="namaMataKuliah">Nama Mata Kuliah</label>
@@ -269,61 +266,41 @@
                     <label for="dosen">Dosen</label>
                     <input type="text" id="dosen" required>
                 </div>
-                <div class="form-group">
-                    <label for="sks">SKS</label>
-                    <input type="number" id="sks" required min="1" max="6">
-                </div>
-                <div class="form-group">
-                    <label for="ruang">Ruang</label>
-                    <input type="text" id="ruang" required>
-                </div>
-                <div class="form-group">
-                    <label for="hari">Hari</label>
-                    <select id="hari" required>
-                        <option value="Senin">Senin</option>
-                        <option value="Selasa">Selasa</option>
-                        <option value="Rabu">Rabu</option>
-                        <option value="Kamis">Kamis</option>
-                        <option value="Jumat">Jumat</option>
-                        <option value="Sabtu">Sabtu</option>
-                        <option value="Minggu">Minggu</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="waktu">Waktu Mulai</label>
-                    <input type="time" id="waktu" required>
-                </div>
-                <div class="form-group">
-                    <label for="waktuSelesai">Waktu Selesai</label>
-                    <input type="time" id="waktuSelesai" required>
-                </div>
+                <div class="form-group"><label for="sks">SKS</label><input type="number" id="sks" required min="1" max="6"></div>
+                <div class="form-group"><label for="ruang">Ruang</label><input type="text" id="ruang" required></div>
+                <div class="form-group"><label for="hari">Hari</label><select id="hari" required><option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option><option value="Sabtu">Sabtu</option><option value="Minggu">Minggu</option></select></div>
+                <div class="form-group"><label for="waktu">Waktu Mulai</label><input type="time" id="waktu" required></div>
+                <div class="form-group"><label for="waktuSelesai">Waktu Selesai</label><input type="time" id="waktuSelesai" required></div>
                 <div class="modal-actions">
-                    <button type="button" class="modal-btn" id="cancel-create-btn">Batal</button>
-                    <button type="submit" class="modal-btn" id="confirm-create-btn">Buat Kelas</button>
+                    <button type="button" class="btn modal-btn" id="cancel-create-btn">Batal</button>
+                    <button type="submit" class="btn modal-btn" id="confirm-create-btn">Buat Kelas</button>
                 </div>
             </form>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="join-class-modal">
+        <div class="modal">
+            <h2>Gabung dengan Kelas</h2>
+            <p class="modal-subtitle">Masukkan kode unik yang diberikan oleh teman atau dosen Anda untuk bergabung.</p>
+            <div class="form-group full-width">
+                 <label for="class-code-input">Kode Kelas</label>
+                 <input type="text" id="class-code-input" placeholder="Contoh: ABCD-1234">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn modal-btn" id="cancel-join-btn">Batal</button>
+                <button type="button" class="btn modal-btn" id="join-by-code-btn">Gabung</button>
+            </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="share-class-modal">
         <div class="modal">
             <h2>Bagikan Kelas</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Bagikan kode ini atau link di bawah agar temanmu bisa bergabung.</p>
-            <div class="share-info">
-                <label>Kode Kelas</label>
-                <div class="code-display">
-                    <span id="share-class-code"></span>
-                    <button id="copy-code-btn">Salin</button>
-                </div>
-            </div>
-             <div class="share-info">
-                <label>Link Undangan</label>
-                <div class="code-display">
-                    <input type="text" id="share-class-link" readonly>
-                    <button id="copy-link-btn">Salin</button>
-                </div>
-            </div>
-            <button class="modal-btn" id="close-share-modal-btn">Tutup</button>
+            <p class="modal-subtitle">Bagikan kode atau link di bawah agar temanmu bisa bergabung.</p>
+            <div class="share-info"><label>Kode Kelas</label><div class="code-display"><span id="share-class-code"></span><button id="copy-code-btn">Salin</button></div></div>
+            <div class="share-info"><label>Link Undangan</label><div class="code-display"><input type="text" id="share-class-link" readonly><button id="copy-link-btn">Salin</button></div></div>
+            <button class="btn modal-btn" id="close-share-modal-btn">Tutup</button>
         </div>
     </div>
 
@@ -348,75 +325,100 @@
 
         let currentUser = null;
         let joinedClassIds = [];
-
-        // --- DOM Elements ---
-        const joinedClassesGrid = document.getElementById('joined-classes-grid');
-        const classCodeInput = document.getElementById('class-code-input');
-        const joinByCodeBtn = document.getElementById('join-by-code-btn');
-        const createClassBtn = document.getElementById('create-class-btn');
-        const createClassModal = document.getElementById('create-class-modal');
-        const createClassForm = document.getElementById('create-class-form');
-        const cancelCreateBtn = document.getElementById('cancel-create-btn');
-        const confirmCreateBtn = document.getElementById('confirm-create-btn');
-        const logoutButton = document.getElementById('logout-button');
-        const shareClassModal = document.getElementById('share-class-modal');
+        const classColors = ['#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#3B82F6', '#EC4899'];
         
-        // --- Auth Guard & Initial Load ---
+        const mainContent = document.getElementById('main-content');
+        
         onAuthStateChanged(auth, user => {
             if (user) {
                 currentUser = user;
-                loadJoinedClasses();
+                initializePage();
             } else {
                 window.location.replace('auth.html');
             }
         });
+        
+        async function initializePage() {
+            renderPageLayout();
+            await loadJoinedClasses();
+            handleUrlParams();
+        }
 
-        logoutButton.addEventListener('click', () => signOut(auth));
-
-        // --- Load User's Classes ---
         async function loadJoinedClasses() {
+            const classGrid = document.getElementById('class-grid-container');
+            classGrid.innerHTML = '<div class="loader"></div>';
             try {
                 const userDocRef = doc(db, 'users', currentUser.uid);
                 const userDocSnap = await getDoc(userDocRef);
 
                 if (userDocSnap.exists()) {
                     joinedClassIds = userDocSnap.data().joinedClasses || [];
-                    renderJoinedClasses();
+                    await renderJoinedClasses();
+                } else {
+                    renderEmptyState();
                 }
             } catch (error) {
                 console.error("Error loading joined classes: ", error);
-                joinedClassesGrid.innerHTML = '<div class="empty-state">Gagal memuat kelas Anda.</div>';
+                classGrid.innerHTML = '<div class="empty-state"><h2>Gagal Memuat Kelas</h2><p>Terjadi kesalahan saat mengambil data kelas Anda. Silakan coba lagi.</p></div>';
             }
         }
         
         async function renderJoinedClasses() {
-            joinedClassesGrid.innerHTML = '';
+            const classGrid = document.getElementById('class-grid-container');
+            classGrid.innerHTML = '';
             if (joinedClassIds.length === 0) {
-                joinedClassesGrid.innerHTML = '<div class="empty-state">Anda belum bergabung dengan kelas manapun.</div>';
+                renderEmptyState();
                 return;
             }
 
             const classPromises = joinedClassIds.map(id => getDoc(doc(db, 'classes', id)));
             const classSnapshots = await Promise.all(classPromises);
             
-            joinedClassesGrid.innerHTML = ''; // Clear again before populating
-            classSnapshots.forEach(snap => {
-                if (snap.exists()) {
+            for(const [index, snap] of classSnapshots.entries()) {
+                 if (snap.exists()) {
                     const classData = snap.data();
-                    const card = createClassCard(snap.id, classData);
-                    joinedClassesGrid.appendChild(card);
+                    const color = classColors[index % classColors.length];
+                    const card = await createClassCard(snap.id, classData, color);
+                    classGrid.appendChild(card);
                 }
+            }
+        }
+        
+        // --- Event Listeners ---
+        function attachPageEventListeners() {
+            document.getElementById('logout-button').addEventListener('click', () => signOut(auth));
+            
+            const createClassBtn = document.getElementById('create-class-btn');
+            const joinClassBtn = document.getElementById('join-class-btn');
+            const createClassModal = document.getElementById('create-class-modal');
+            const joinClassModal = document.getElementById('join-class-modal');
+
+            createClassBtn.addEventListener('click', () => createClassModal.style.display = 'flex');
+            joinClassBtn.addEventListener('click', () => joinClassModal.style.display = 'flex');
+
+            document.getElementById('cancel-create-btn').addEventListener('click', () => createClassModal.style.display = 'none');
+            document.getElementById('cancel-join-btn').addEventListener('click', () => joinClassModal.style.display = 'none');
+            document.getElementById('close-share-modal-btn').addEventListener('click', () => document.getElementById('share-class-modal').style.display = 'none');
+
+            document.getElementById('create-class-form').addEventListener('submit', handleCreateClass);
+            document.getElementById('join-by-code-btn').addEventListener('click', handleJoinByCode);
+            
+            document.getElementById('copy-code-btn').addEventListener('click', (e) => {
+                const code = document.getElementById('share-class-code').textContent;
+                copyToClipboard(code, e.target);
+            });
+            document.getElementById('copy-link-btn').addEventListener('click', (e) => {
+                const link = document.getElementById('share-class-link').value;
+                copyToClipboard(link, e.target);
             });
         }
         
-        // --- Create Class ---
-        createClassBtn.addEventListener('click', () => createClassModal.style.display = 'flex');
-        cancelCreateBtn.addEventListener('click', () => createClassModal.style.display = 'none');
-        
-        createClassForm.addEventListener('submit', async (e) => {
+        // --- Class Actions ---
+        async function handleCreateClass(e) {
             e.preventDefault();
-            confirmCreateBtn.disabled = true;
-            confirmCreateBtn.textContent = 'Membuat...';
+            const confirmBtn = document.getElementById('confirm-create-btn');
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Membuat...';
             
             try {
                 const namaMK = document.getElementById('namaMataKuliah').value;
@@ -431,45 +433,43 @@
                     ruang: document.getElementById('ruang').value,
                     hari: document.getElementById('hari').value,
                     waktu: document.getElementById('waktu').value,
-                    waktuSelesai: document.getElementById('waktuSelesai').value, // Added end time
+                    waktuSelesai: document.getElementById('waktuSelesai').value,
                     classCode: classCode, 
                     creatorId: currentUser.uid,
                     createdAt: serverTimestamp(),
                     members: [currentUser.uid]
                 };
                 
-                const classesCollection = collection(db, 'classes');
-                const newClassDocRef = await addDoc(classesCollection, newClassData);
+                const newClassDocRef = await addDoc(collection(db, 'classes'), newClassData);
                 
-                // Add class to user's joinedClasses
-                const userDocRef = doc(db, 'users', currentUser.uid);
-                await setDoc(userDocRef, {
+                await setDoc(doc(db, 'users', currentUser.uid), {
                     joinedClasses: arrayUnion(newClassDocRef.id)
                 }, { merge: true });
                 
-                createClassForm.reset();
-                createClassModal.style.display = 'none';
-                loadJoinedClasses(); // Refresh list
+                document.getElementById('create-class-form').reset();
+                document.getElementById('create-class-modal').style.display = 'none';
+                await loadJoinedClasses();
                 
             } catch (error) {
                 console.error("Error creating class: ", error);
                 alert("Gagal membuat kelas. Silakan coba lagi.");
             } finally {
-                confirmCreateBtn.disabled = false;
-                confirmCreateBtn.textContent = 'Buat Kelas';
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Buat Kelas';
             }
-        });
+        }
         
-        // --- Join Class by Code ---
-        joinByCodeBtn.addEventListener('click', async () => {
-            const code = classCodeInput.value.trim().toUpperCase();
+        async function handleJoinByCode() {
+            const codeInput = document.getElementById('class-code-input');
+            const joinBtn = document.getElementById('join-by-code-btn');
+            const code = codeInput.value.trim().toUpperCase();
             if (!code) {
                 alert("Silakan masukkan kode kelas.");
                 return;
             }
 
-            joinByCodeBtn.disabled = true;
-            joinByCodeBtn.textContent = 'Mencari...';
+            joinBtn.disabled = true;
+            joinBtn.textContent = 'Mencari...';
 
             try {
                 const q = query(collection(db, "classes"), where("classCode", "==", code), limit(1));
@@ -490,100 +490,116 @@
                 
                 await joinClass(classId);
                 alert("Berhasil bergabung dengan kelas!");
-                classCodeInput.value = '';
+                codeInput.value = '';
+                document.getElementById('join-class-modal').style.display = 'none';
 
             } catch (error) {
                 console.error("Error joining with code: ", error);
                 alert("Terjadi kesalahan saat mencoba bergabung dengan kelas.");
             } finally {
-                joinByCodeBtn.disabled = false;
-                joinByCodeBtn.textContent = 'Gabung';
+                joinBtn.disabled = false;
+                joinBtn.textContent = 'Gabung';
             }
-        });
+        }
         
         async function joinClass(classId) {
             try {
-                const userDocRef = doc(db, 'users', currentUser.uid);
-                await setDoc(userDocRef, { joinedClasses: arrayUnion(classId) }, { merge: true });
-                
-                const classDocRef = doc(db, 'classes', classId);
-                await updateDoc(classDocRef, { members: arrayUnion(currentUser.uid) });
-                
+                await setDoc(doc(db, 'users', currentUser.uid), { joinedClasses: arrayUnion(classId) }, { merge: true });
+                await updateDoc(doc(db, 'classes', classId), { members: arrayUnion(currentUser.uid) });
                 await loadJoinedClasses();
-                
             } catch (error) {
                 console.error("Error joining class: ", error);
                 throw new Error("Gagal menyimpan data bergabung kelas.");
             }
         }
         
-        // --- Helper Function ---
-        function createClassCard(id, data) {
+        function handleUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            const joinCode = params.get('join_code');
+            if (joinCode) {
+                document.getElementById('join-class-modal').style.display = 'flex';
+                document.getElementById('class-code-input').value = joinCode;
+                // Clean the URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+        // --- UI Rendering & Helpers ---
+        function renderPageLayout() {
+            mainContent.innerHTML = `
+                <header class="header">
+                    <h1>Kelas Saya</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" id="join-class-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.043.435c.44-.22.956-.22 1.396 0l6.363 3.181c.44.22.68.715.524 1.154l-2.11 6.332c-.156.44-.68.743-1.154.587l-6.363-3.181c-.44-.22-.68-.715-.524-1.154l2.11-6.332a.807.807 0 0 1 .524-.587zM4.157 7.02l-2.11 6.332c-.156.44.084.934.524 1.154l6.363 3.181c.44.22.956.22 1.396 0l2.11-6.332c.156-.44-.084-.934-.524-1.154L4.744 6.435a.807.807 0 0 0-.587.587z"/><path d="M4.157 6.02a.807.807 0 0 0-.587-.587L.458 2.252C.018 2.032-.122 1.538.034 1.1l2.11-6.332a.807.807 0 0 1 1.154-.587l6.363 3.181a.807.807 0 0 1 .587.587l2.11 6.332a.807.807 0 0 1-1.154.587L4.157 6.02z"/></svg><span>Gabung Kelas</span></button>
+                        <button class="btn btn-primary" id="create-class-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg><span>Buat Kelas</span></button>
+                    </div>
+                </header>
+                <div id="class-grid-container" class="class-grid"></div>
+            `;
+            attachPageEventListeners();
+        }
+        
+        function renderEmptyState() {
+             document.getElementById('class-grid-container').innerHTML = `<div class="empty-state">
+                <h2>Anda Belum Memiliki Kelas</h2>
+                <p>Mulai dengan membuat kelas baru untuk mata kuliah Anda, atau gabung dengan kelas yang sudah ada menggunakan kode.</p>
+            </div>`;
+        }
+
+        async function createClassCard(id, data, color) {
             const card = document.createElement('div');
             card.className = 'class-card';
-            
-            // Updated schedule text to include end time if it exists
-            const scheduleText = data.waktuSelesai 
-                ? `${data.hari}, ${data.waktu} - ${data.waktuSelesai}` 
-                : `${data.hari}, ${data.waktu}`;
+            card.style.borderTop = `4px solid ${color}`;
+
+            const memberPromises = (data.members || []).slice(0, 3).map(uid => getDoc(doc(db, 'users', uid)));
+            const memberDocs = await Promise.all(memberPromises);
+            const memberAvatarsHtml = memberDocs
+                .map(snap => snap.exists() ? `<img src="${snap.data().photoURL}" alt="member" title="${snap.data().name}">` : '')
+                .join('');
 
             card.innerHTML = `
-                <div class="details">
+                <div class="class-card-header">
                     <h3>${data.namaMataKuliah}</h3>
                     <p>${data.dosen}</p>
-                    <span><strong>Jadwal:</strong> ${scheduleText}</span>
-                    <span><strong>Ruang:</strong> ${data.ruang}</span>
-                    <span><strong>SKS:</strong> ${data.sks}</span>
                 </div>
-                <div class="card-footer">
-                    <button class="btn-icon share-btn" title="Bagikan Kelas">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 4.186m0-4.186c.114.058.223.125.328.204m-9.341 8.55c-1.42.342-2.375-1.03-1.61-2.438l5.16-9.17c.764-1.358 2.46-1.358 3.224 0l5.16 9.17c.765 1.408-.19 2.78-1.61 2.438a2.25 2.25 0 00-1.806.949M8.25 12a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0z" /></svg>
-                    </button>
-                    <a href="class_page.html?id=${id}" class="btn-secondary">Lihat Kelas</a>
+                <div class="class-card-body">
+                    <div class="detail-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4 1.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 4 1.75ZM12 1.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 12 1.75Z" /><path d="M12.5 5h-9a.5.5 0 0 0-.5.5v1.586a1 1 0 0 0 .293.707l.646.647.001.001a1 1 0 0 0 .707.293h6.706a1 1 0 0 0 .707-.293l.647-.647a1 1 0 0 0 .293-.707V5.5a.5.5 0 0 0-.5-.5Zm-10-1A1.5 1.5 0 0 1 4 2.5h8A1.5 1.5 0 0 1 13.5 4v8a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 2.5 12V4Z" /></svg><span>${data.hari}, ${data.waktu} - ${data.waktuSelesai || ''}</span></div>
+                    <div class="detail-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="m9.03 2.22 5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 0 1-1.06-1.06L12.44 9H2.75a.75.75 0 0 1 0-1.5h9.69L7.97 3.28a.75.75 0 0 1 1.06-1.06Z" /></svg><span>Ruang ${data.ruang}</span></div>
+                    <div class="detail-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M3.5 2A1.5 1.5 0 0 0 2 3.5v9A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 12.5 2h-9ZM8 8a.75.75 0 0 1-.75.75h-2a.75.75 0 0 1 0-1.5h2A.75.75 0 0 1 8 8ZM9.25 5.5a.75.75 0 0 0-1.5 0v4a.75.75 0 0 0 1.5 0v-4ZM12 8a.75.75 0 0 1-.75.75h-2a.75.75 0 0 1 0-1.5h2A.75.75 0 0 1 12 8Z" /></svg><span>${data.sks} SKS</span></div>
+                </div>
+                <div class="class-card-footer">
+                    <div class="member-avatars">${memberAvatarsHtml}</div>
+                    <div class="footer-actions">
+                        <button class="btn-icon share-btn" title="Bagikan Kelas"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg></button>
+                        <a href="class_page.html?id=${id}" class="btn btn-primary" style="padding: 0.5rem 1rem;">Lihat Kelas</a>
+                    </div>
                 </div>
             `;
             
-            const shareBtn = card.querySelector('.share-btn');
-            shareBtn.addEventListener('click', () => showShareModal(id, data.classCode));
-
+            card.querySelector('.share-btn').addEventListener('click', () => showShareModal(id, data.classCode));
             return card;
         }
 
         function showShareModal(classId, classCode) {
-            const shareCodeEl = document.getElementById('share-class-code');
-            const shareLinkEl = document.getElementById('share-class-link');
-            
-            shareCodeEl.textContent = classCode;
-            shareLinkEl.value = `${window.location.origin}/class_page.html?id=${classId}`;
-            
-            shareClassModal.style.display = 'flex';
+            document.getElementById('share-class-code').textContent = classCode;
+            const link = `${window.location.origin}${window.location.pathname}?join_code=${classCode}`;
+            document.getElementById('share-class-link').value = link;
+            document.getElementById('share-class-modal').style.display = 'flex';
         }
-
-        document.getElementById('close-share-modal-btn').addEventListener('click', () => {
-            shareClassModal.style.display = 'none';
-        });
 
         function copyToClipboard(text, buttonEl) {
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = buttonEl.textContent;
                 buttonEl.textContent = 'Disalin!';
+                buttonEl.style.backgroundColor = 'var(--success-light)';
+                buttonEl.style.color = 'var(--success-color)';
                 setTimeout(() => {
                     buttonEl.textContent = originalText;
-                }, 1500);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
+                    buttonEl.style.backgroundColor = '';
+                    buttonEl.style.color = '';
+                }, 2000);
+            }).catch(err => console.error('Failed to copy: ', err));
         }
-
-        document.getElementById('copy-code-btn').addEventListener('click', (e) => {
-            const code = document.getElementById('share-class-code').textContent;
-            copyToClipboard(code, e.target);
-        });
-
-        document.getElementById('copy-link-btn').addEventListener('click', (e) => {
-            const link = document.getElementById('share-class-link').value;
-            copyToClipboard(link, e.target);
-        });
 
     </script>
 </body>

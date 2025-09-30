@@ -74,14 +74,67 @@
         .search-bar input { flex-grow: 1; border: none; background: transparent; font-size: 1rem; outline: none; }
         
         #notes-list { list-style: none; overflow-y: auto; flex-grow: 1; }
-        .note-item { padding: 1.25rem 1.5rem; cursor: pointer; border-bottom: 1px solid var(--border-color); }
-        .note-item:hover { background-color: var(--bg-body); }
+        .note-item, .shared-note-item { padding: 1.25rem 1.5rem; cursor: pointer; border-bottom: 1px solid var(--border-color); }
+        .note-item:hover, .shared-note-item:hover { background-color: var(--bg-body); }
         .note-item.active { background-color: var(--primary-light); border-right: 3px solid var(--primary-color); }
-        .note-item h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .note-item p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.75rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .note-item-footer { display: flex; justify-content: space-between; align-items: center; }
-        .note-date { font-size: 0.75rem; color: var(--text-muted); }
+        .note-item h3, .shared-note-item h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .note-item p, .shared-note-item p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.75rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .note-item-footer, .shared-note-footer { display: flex; justify-content: space-between; align-items: center; }
+        .note-date, .shared-note-author { font-size: 0.75rem; color: var(--text-muted); }
         .shared-tag { background-color: #E9D5FF; color: var(--primary-color); font-size: 0.75rem; font-weight: 500; padding: 0.2rem 0.5rem; border-radius: 0.25rem; }
+
+        /* Shared Notes Section */
+        .class-notes-section {
+            border-top: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+
+        .class-notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem 1.5rem;
+        }
+
+        .class-notes-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .class-notes-toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .class-notes-section.collapsed .class-notes-toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        #class-notes-list {
+            list-style: none;
+            max-height: 300px; /* or any height you prefer */
+            overflow-y: auto;
+            display: block;
+        }
+
+        .class-notes-section.collapsed #class-notes-list {
+            display: none;
+        }
+
+        .shared-note-item .class-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+        .class-color-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
 
         /* Note Editor Panel */
         .note-editor-panel { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
@@ -148,7 +201,7 @@
     <main class="main-content">
         <div class="notes-list-panel">
             <div class="notes-list-header">
-                <h1>Semua Catatan</h1>
+                <h1>Catatan Saya</h1>
                 <button class="new-note-btn" id="new-note-btn">Buat Catatan Baru</button>
             </div>
             <div class="search-bar-wrapper">
@@ -160,6 +213,18 @@
             <ul id="notes-list">
                 <div class="loader"></div>
             </ul>
+
+            <div class="class-notes-section collapsed">
+                <div class="class-notes-header">
+                    <h2>Catatan Kelas</h2>
+                    <svg class="class-notes-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                    </svg>
+                </div>
+                <ul id="class-notes-list">
+                    <!-- Shared notes will be populated here by JavaScript -->
+                </ul>
+            </div>
         </div>
         <div class="note-editor-panel">
              <div id="editor-placeholder">
@@ -201,7 +266,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, arrayUnion, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
              apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
@@ -223,9 +288,14 @@
         let preselectedClassId = null;
         let quill;
         let allNotes = []; // Cache for search
+        let sharedNotesUnsubscribes = [];
+        let classDataCache = {};
+        const classColors = ['#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#3B82F6', '#EC4899'];
+
 
         // --- DOM Elements ---
         const notesListEl = document.getElementById('notes-list');
+        const classNotesListEl = document.getElementById('class-notes-list');
         const searchInput = document.getElementById('search-input');
         const newNoteBtn = document.getElementById('new-note-btn');
         const editorPlaceholder = document.getElementById('editor-placeholder');
@@ -241,6 +311,8 @@
         const cancelShareBtn = document.getElementById('cancel-share-btn');
         const confirmShareBtn = document.getElementById('confirm-share-btn');
         const logoutButton = document.getElementById('logout-button');
+        const classNotesSection = document.querySelector('.class-notes-section');
+        const classNotesHeader = document.querySelector('.class-notes-header');
 
         // --- Initialize Quill ---
         const toolbarOptions = [
@@ -261,8 +333,10 @@
                 currentUser = user;
                 checkForRedirect(); 
                 listenForNotes(user.uid);
+                loadAndListenForSharedNotes(user.uid);
             } else {
                 if (notesUnsubscribe) notesUnsubscribe();
+                sharedNotesUnsubscribes.forEach(unsub => unsub());
                 window.location.replace('auth.html');
             }
         });
@@ -271,6 +345,9 @@
         logoutButton.addEventListener('click', () => signOut(auth));
         newNoteBtn.addEventListener('click', handleNewNote);
         searchInput.addEventListener('input', handleSearch);
+        classNotesHeader.addEventListener('click', () => {
+            classNotesSection.classList.toggle('collapsed');
+        });
 
         function checkForRedirect() {
             const params = new URLSearchParams(window.location.search);
@@ -302,6 +379,7 @@
                 const li = document.createElement('li');
                 li.className = 'note-item';
                 li.dataset.id = noteData.id;
+                li.dataset.type = 'personal';
 
                 const isShared = noteData.sharedTo && noteData.sharedTo.length > 0;
                 
@@ -313,7 +391,7 @@
                         ${isShared ? '<span class="shared-tag">Dibagikan</span>' : ''}
                     </div>
                 `;
-                li.addEventListener('click', () => handleNoteSelect(noteData.id));
+                li.addEventListener('click', () => handleNoteSelect(noteData.id, 'personal'));
                 notesListEl.appendChild(li);
             });
              if (currentNoteId) {
@@ -322,6 +400,82 @@
             }
         }
         
+        async function loadAndListenForSharedNotes(userId) {
+            const userDoc = await getDoc(doc(db, 'users', userId));
+            if (!userDoc.exists()) return;
+
+            const joinedClasses = userDoc.data().joinedClasses || [];
+            if (joinedClasses.length === 0) {
+                classNotesListEl.innerHTML = '<p style="padding: 1.5rem; text-align: center; color: var(--text-muted);">Gabung kelas untuk melihat catatan bersama.</p>';
+                return;
+            }
+            
+            const classDocs = await Promise.all(joinedClasses.map(id => getDoc(doc(db, 'classes', id))));
+            classDocs.forEach((classDoc, index) => {
+                if(classDoc.exists()) {
+                    classDataCache[classDoc.id] = { ...classDoc.data(), color: classColors[index % classColors.length] };
+                }
+            });
+
+
+            sharedNotesUnsubscribes.forEach(unsub => unsub()); // Unsubscribe from previous listeners
+            sharedNotesUnsubscribes = [];
+
+            let allSharedNotes = [];
+
+            joinedClasses.forEach(classId => {
+                const q = query(collection(db, 'classes', classId, 'sharedNotes'), orderBy('sharedAt', 'desc'));
+                const unsubscribe = onSnapshot(q, (snapshot) => {
+                    const classNotes = snapshot.docs.map(d => ({
+                        id: d.id,
+                        classId: classId,
+                        ...d.data()
+                    }));
+
+                    allSharedNotes = allSharedNotes.filter(note => note.classId !== classId).concat(classNotes);
+                    allSharedNotes.sort((a, b) => b.sharedAt.toMillis() - a.sharedAt.toMillis());
+
+                    renderSharedNotes(allSharedNotes);
+                });
+                sharedNotesUnsubscribes.push(unsubscribe);
+            });
+        }
+
+        function renderSharedNotes(notes) {
+            classNotesListEl.innerHTML = '';
+             if (notes.length === 0) {
+                classNotesListEl.innerHTML = '<p style="padding: 1.5rem; text-align: center; color: var(--text-muted);">Belum ada catatan dibagikan di kelas Anda.</p>';
+                return;
+            }
+
+            notes.forEach(noteData => {
+                const classInfo = classDataCache[noteData.classId];
+                if(!classInfo) return;
+
+                const li = document.createElement('li');
+                li.className = 'shared-note-item';
+                li.dataset.id = noteData.id;
+                li.dataset.classId = noteData.classId;
+                li.dataset.type = 'shared';
+                
+                li.innerHTML = `
+                    <h3>${noteData.title || 'Tanpa Judul'}</h3>
+                    <p>${noteData.body ? noteData.body.substring(0, 100) + '...' : 'Tidak ada konten'}</p>
+                    <div class="shared-note-footer">
+                        <span class="shared-note-author">Oleh: ${noteData.sharedBy}</span>
+                    </div>
+                     <div class="class-info">
+                        <span class="class-color-dot" style="background-color: ${classInfo.color};"></span>
+                        <span>${classInfo.namaMataKuliah}</span>
+                    </div>
+                `;
+
+                li.addEventListener('click', () => handleNoteSelect(noteData.id, 'shared', noteData.classId));
+                classNotesListEl.appendChild(li);
+            });
+        }
+
+
         function handleSearch() {
             const searchTerm = searchInput.value.toLowerCase();
             const filteredNotes = allNotes.filter(note => 
@@ -331,32 +485,53 @@
             renderNotesList(filteredNotes);
         }
         
-        function handleNoteSelect(noteId) {
-            const noteData = allNotes.find(n => n.id === noteId);
-            if (!noteData) return;
-
+        async function handleNoteSelect(noteId, type, classId = null) {
             currentNoteId = noteId;
-            noteTitleInput.value = noteData.title;
-            
-            // **FIX**: Parse the JSON string from Firestore before loading into Quill
-            try {
-                const content = JSON.parse(noteData.contentDelta || '[]');
-                quill.setContents(content);
-            } catch (e) {
-                console.error("Error parsing note content:", e);
-                quill.setText('Gagal memuat konten catatan.');
+
+            if (type === 'personal') {
+                const noteData = allNotes.find(n => n.id === noteId);
+                if (!noteData) return;
+
+                noteTitleInput.value = noteData.title;
+                try {
+                    const content = JSON.parse(noteData.contentDelta || '[]');
+                    quill.setContents(content);
+                } catch (e) {
+                    quill.setText('Gagal memuat konten catatan.');
+                }
+                noteMetaEl.textContent = `Terakhir diperbarui: ${noteData.updatedAt.toDate().toLocaleString('id-ID')}`;
+                
+                // Show personal note edit controls
+                ['save-note-btn', 'delete-note-btn', 'share-note-btn'].forEach(id => document.getElementById(id).style.display = 'flex');
+                noteTitleInput.readOnly = false;
+                quill.enable();
+
+            } else if (type === 'shared') {
+                const noteRef = doc(db, 'classes', classId, 'sharedNotes', noteId);
+                const noteSnap = await getDoc(noteRef);
+                if (!noteSnap.exists()) return;
+                const noteData = noteSnap.data();
+
+                noteTitleInput.value = noteData.title;
+                quill.setText(noteData.body);
+                noteMetaEl.textContent = `Dibagikan oleh ${noteData.sharedBy} pada ${noteData.sharedAt.toDate().toLocaleString('id-ID')}`;
+                
+                // Hide edit controls for shared notes
+                ['save-note-btn', 'delete-note-btn', 'share-note-btn'].forEach(id => document.getElementById(id).style.display = 'none');
+                noteTitleInput.readOnly = true;
+                quill.disable();
             }
-            
-            noteMetaEl.textContent = `Terakhir diperbarui: ${noteData.updatedAt.toDate().toLocaleString('id-ID')}`;
+
             updateWordCount();
 
             editorPlaceholder.style.display = 'none';
             editorContainer.style.display = 'flex';
             
-            document.querySelectorAll('.note-item').forEach(item => item.classList.remove('active'));
-            const activeItem = notesListEl.querySelector(`[data-id="${noteId}"]`);
+            document.querySelectorAll('.note-item, .shared-note-item').forEach(item => item.classList.remove('active'));
+            const activeItem = document.querySelector(`[data-id="${noteId}"][data-type="${type}"]`);
             if (activeItem) activeItem.classList.add('active');
         }
+
         
         function handleNewNote() {
             currentNoteId = null;
@@ -369,6 +544,10 @@
             editorContainer.style.display = 'flex';
             noteTitleInput.focus();
             document.querySelectorAll('.note-item').forEach(item => item.classList.remove('active'));
+            
+            ['save-note-btn', 'delete-note-btn', 'share-note-btn'].forEach(id => document.getElementById(id).style.display = 'flex');
+            noteTitleInput.readOnly = false;
+            quill.enable();
         }
 
         // Quill word counter
@@ -398,7 +577,6 @@
             try {
                 const noteData = {
                     title: title || 'Tanpa Judul',
-                    // **FIX**: Stringify the Delta object before saving to Firestore
                     contentDelta: JSON.stringify(contentDelta),
                     plainText: plainText,
                     updatedAt: serverTimestamp()
@@ -495,12 +673,17 @@
                 
                 if (noteSnap.exists()) {
                     const noteData = noteSnap.data();
-                    await addDoc(collection(db, 'classes', selectedClassId, 'sharedNotes'), {
+                    const sharedNotePayload = {
+                        originalNoteId: currentNoteId,
+                        originalOwnerId: currentUser.uid,
                         title: noteData.title,
                         body: noteData.plainText,
                         sharedBy: currentUser.displayName || 'Anonymous',
+                        sharedByPhotoURL: currentUser.photoURL || null,
                         sharedAt: serverTimestamp()
-                    });
+                    };
+
+                    await addDoc(collection(db, 'classes', selectedClassId, 'sharedNotes'), sharedNotePayload);
                     
                     // Mark note as shared
                     await updateDoc(noteRef, {
@@ -522,4 +705,3 @@
     </script>
 </body>
 </html>
-
