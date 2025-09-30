@@ -12,20 +12,20 @@
         :root {
             --primary-color: #7C3AED;
             --primary-light: #F5F3FF;
+            --danger-color: #EF4444;
+            --danger-light: #FEE2E2;
+            --warning-color: #F59E0B;
+            --warning-light: #FEF3C7;
             --text-dark: #111827;
             --text-light: #374151;
             --text-muted: #6B7280;
-            --bg-body: #F8F7FA;
+            --bg-body: #F9FAFB;
             --bg-sidebar: #FFFFFF;
             --card-bg: #FFFFFF;
             --border-color: #E5E7EB;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -39,16 +39,7 @@
         }
         
         /* --- Sidebar Navigation --- */
-        .sidebar {
-            width: 260px;
-            background-color: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            padding: 1.5rem;
-            transition: transform 0.3s ease-in-out;
-        }
-        
+        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem; }
         .sidebar-header { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); text-decoration: none; margin-bottom: 2.5rem; padding: 0 0.5rem; }
         .nav-menu { list-style: none; flex-grow: 1; }
         .nav-item a { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; }
@@ -59,123 +50,79 @@
         .logout-button:hover { background-color: #FEE2E2; color: #EF4444; }
         
         /* --- Main Content Area --- */
-        .main-content {
-            flex-grow: 1;
-            padding: 2rem 3rem;
-            overflow-y: auto;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
+        .main-content { flex-grow: 1; padding: 2rem 3rem; overflow-y: auto; }
+        .header { margin-bottom: 2.5rem; }
         .header h1 { font-size: 2.25rem; font-weight: 700; }
+        .header p { color: var(--text-muted); font-size: 1.1rem; margin-top: 0.25rem;}
         
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            align-items: flex-start;
-        }
-
-        .main-column, .side-column {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
+        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: flex-start; }
+        .main-column, .side-column { display: flex; flex-direction: column; gap: 2rem; }
         .section-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .dashboard-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; }
 
         /* Joined Classes Section */
-        .joined-classes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .class-card-sm {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 1.25rem;
-            padding: 1rem;
-            text-decoration: none;
-            color: var(--text-dark);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .class-card-sm:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.05);
-        }
-        .class-card-sm .icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-            color: #fff;
-        }
+        .joined-classes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
+        .class-card-sm { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.25rem; text-decoration: none; color: var(--text-dark); display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; }
+        .class-card-sm:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .class-card-sm .icon { width: 48px; height: 48px; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.5rem; color: #fff; font-weight: 600; }
         .class-card-sm h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; }
-        .class-card-sm p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem; }
+        .class-card-sm p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem; flex-grow: 1; }
         .class-card-sm .card-footer { display: flex; justify-content: space-between; align-items: center; }
         .member-avatars { display: flex; }
-        .member-avatars img {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 2px solid var(--card-bg);
-            margin-left: -10px;
-        }
+        .member-avatars img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--card-bg); margin-left: -10px; object-fit: cover; }
         .member-avatars img:first-child { margin-left: 0; }
         .arrow-icon { color: var(--primary-color); background-color: var(--primary-light); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
         /* Deadlines Section */
-        .dashboard-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 1.25rem;
-            padding: 1.5rem;
-        }
         #deadline-list { list-style: none; }
-        .deadline-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 0.5rem; border-radius: 0.75rem; transition: background-color 0.2s; }
-        .deadline-item:hover { background-color: var(--bg-body); }
+        .deadline-item { display: block; text-decoration: none; color: inherit; border-radius: 0.75rem; }
+        .deadline-item-content { display: flex; align-items: center; gap: 1rem; padding: 1rem 0.5rem; }
+        .deadline-item:hover .deadline-item-content { background-color: var(--bg-body); }
         .deadline-icon { width: 40px; height: 40px; border-radius: 0.5rem; background-color: var(--primary-light); color: var(--primary-color); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .deadline-details { flex-grow: 1; }
         .deadline-details h4 { font-weight: 600; margin-bottom: 0.1rem; }
         .deadline-details p { font-size: 0.875rem; color: var(--text-muted); }
+        .task-description-indicator { color: var(--text-muted); flex-shrink: 0; }
+        .due-date { font-size: 0.875rem; font-weight: 500; padding: 0.25rem 0.6rem; border-radius: 99px; }
+        .due-date.normal { color: var(--text-muted); background-color: var(--bg-body); }
+        .due-date.soon { color: var(--warning-color); background-color: var(--warning-light); }
+        .due-date.urgent { color: var(--danger-color); background-color: var(--danger-light); }
+        .due-date.overdue { color: var(--danger-color); background-color: var(--danger-light); }
 
-        /* Side Column: Profile & Calendar */
-        .profile-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        .profile-card-header { position: relative; width: 100%; }
-        .profile-card-header a { position: absolute; top: -0.5rem; right: -0.5rem; color: var(--text-muted); padding: 0.5rem; }
-        .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; border: 3px solid #fff; box-shadow: 0 0 0 1px var(--border-color); }
+
+        /* Profile Card */
+        .profile-card { text-align: center; }
+        .profile-img-wrapper { position: relative; display: inline-block; margin-bottom: 1rem; }
+        .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 0 0 1px var(--border-color); }
+        .edit-profile-btn { position: absolute; bottom: 0; right: 0; background-color: var(--card-bg); border-radius: 50%; padding: 0.4rem; line-height: 0; border: 1px solid var(--border-color); color: var(--text-light); transition: all .2s; }
+        .edit-profile-btn:hover { color: var(--primary-color); border-color: var(--primary-color); }
         #profile-card-name { font-size: 1.25rem; font-weight: 600; }
         #profile-card-email { color: var(--text-muted); font-size: 0.9rem; }
 
         /* Calendar */
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .calendar-header h4 { font-size: 1rem; font-weight: 600; }
-        .calendar-nav button { background: none; border: none; cursor: pointer; padding: 0.25rem; color: var(--text-muted); }
+        .calendar-header h4 { font-size: 1.1rem; font-weight: 600; }
+        .calendar-nav button { background: none; border: none; cursor: pointer; padding: 0.5rem; color: var(--text-muted); border-radius: 50%; line-height: 0; transition: background-color .2s; }
+        .calendar-nav button:hover { background-color: var(--bg-body); }
         #calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; text-align: center; }
-        .calendar-day-name { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
-        .calendar-day { font-size: 0.875rem; padding: 0.5rem 0; border-radius: 50%; position: relative; }
-        .calendar-day.other-month { color: var(--text-muted); }
+        .calendar-day-name { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); padding-bottom: 0.5rem; }
+        .calendar-day { font-size: 0.875rem; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; position: relative; }
+        .calendar-day.other-month { color: #ccc; }
         .calendar-day.today { background-color: var(--primary-color); color: #fff; font-weight: 600; }
-        .calendar-day.has-class::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background-color: var(--primary-color); }
+        .calendar-day.has-class::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; border-radius: 50%; background-color: var(--primary-color); }
         .calendar-day.today.has-class::after { background-color: #fff; }
 
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 2rem auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Skeleton Loaders */
+        @keyframes shimmer { 0% { background-position: -468px 0; } 100% { background-position: 468px 0; } }
+        .skeleton { animation: shimmer 1.5s linear infinite; background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%); background-size: 800px 104px; position: relative; border-radius: 0.5rem; }
+        .skeleton-text { height: 1em; }
+        .skeleton-avatar { width: 80px; height: 80px; border-radius: 50%; }
+        .skeleton-card { height: 190px; }
+        
         .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
-
+        .empty-state p { margin-bottom: 1rem; }
+        .empty-state a { color: var(--primary-color); font-weight: 500; text-decoration: none; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color .2s; }
+        .empty-state a:hover { background-color: var(--primary-light); }
     </style>
 </head>
 <body>
@@ -191,53 +138,8 @@
         <button class="logout-button" id="logout-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span>Keluar</span></button>
     </aside>
 
-    <main class="main-content">
-        <header class="header">
-            <div>
-                <h1 id="greeting">Selamat Pagi!</h1>
-                <p class="text-muted">Semoga harimu menyenangkan.</p>
-            </div>
-        </header>
-
-        <div class="dashboard-grid">
-            <div class="main-column">
-                <section>
-                    <h2 class="section-title">Kelas Anda</h2>
-                    <div id="joined-classes-grid" class="joined-classes-grid">
-                        <div class="loader"></div>
-                    </div>
-                </section>
-                <section>
-                    <h2 class="section-title">Tugas Mendatang</h2>
-                    <div class="dashboard-card">
-                        <ul id="deadline-list">
-                            <div class="loader"></div>
-                        </ul>
-                    </div>
-                </section>
-            </div>
-            <div class="side-column">
-                <div class="dashboard-card profile-card">
-                    <div class="profile-card-header">
-                        <a href="account.html" title="Pengaturan Akun">
-                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" /></svg>
-                        </a>
-                        <img src="https://placehold.co/80x80/E5E7EB/6B7280?text=A" alt="Profile Picture" class="profile-img" id="profile-card-img">
-                    </div>
-                    <h3 id="profile-card-name">Memuat...</h3>
-                    <p id="profile-card-email">Memuat...</p>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="calendar-header">
-                        <button id="prev-month-btn">&lt;</button>
-                        <h4 id="month-year"></h4>
-                        <button id="next-month-btn">&gt;</button>
-                    </div>
-                    <div id="calendar-grid"></div>
-                </div>
-            </div>
-        </div>
+    <main class="main-content" id="main-content">
+        <!-- JS will inject skeleton/content here -->
     </main>
 
     <!-- Firebase SDK -->
@@ -260,10 +162,14 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- Auth Guard & Data Loading ---
+        // --- State Management ---
+        let currentCalendarDate = new Date();
+        let classScheduleDays = []; // Cache the schedule days to prevent re-fetching
+
+        // --- Auth Guard ---
         onAuthStateChanged(auth, user => {
             if (user) {
-                loadDashboardData(user);
+                initializeDashboard(user);
             } else {
                 window.location.replace('auth.html');
             }
@@ -271,102 +177,155 @@
         
         document.getElementById('logout-button').addEventListener('click', () => signOut(auth));
         
-        // --- Main Data Loading Function ---
-        async function loadDashboardData(user) {
+        // --- Main Initializer ---
+        async function initializeDashboard(user) {
+            renderSkeleton(); // Show loading UI immediately
             try {
-                // ROBUST FIX: Ensure user document in Firestore is created/updated on load
-                const userDocRef = doc(db, 'users', user.uid);
-                await setDoc(userDocRef, {
-                    name: user.displayName,
-                    email: user.email,
-                    photoURL: user.photoURL
-                }, { merge: true });
+                const { userData, classesData, allTasks } = await fetchAllDashboardData(user);
+                
+                // Filter out tasks the user has already completed
+                const incompleteTasks = allTasks.filter(task => !task.completedBy?.includes(user.uid));
+                
+                // Cache schedule days for calendar navigation
+                classScheduleDays = [...new Set(classesData.map(c => c.hari))];
 
-                const userDocSnap = await getDoc(userDocRef);
-                const userData = userDocSnap.data();
-
-                // 1. Render UI elements with user data
-                renderUserInfo(user);
-                renderGreeting(user.displayName);
+                // Render the full UI with the fetched data
+                renderFullDashboard(user, userData, classesData, incompleteTasks);
                 
-                // 2. Fetch joined classes and their related data
-                const userClasses = userData.joinedClasses || [];
-                
-                if (userClasses.length === 0) {
-                    renderEmptyStates();
-                    renderCalendar(new Date(), []); // Render empty calendar
-                    return;
-                }
-
-                const classPromises = userClasses.map(classId => getDoc(doc(db, 'classes', classId)));
-                const taskPromises = userClasses.map(classId => getDocs(query(collection(db, 'classes', classId, 'tasks'), where('dueDate', '>=', Timestamp.now()))));
-
-                const classSnapshots = await Promise.all(classPromises);
-                const taskSnapshotsByClass = await Promise.all(taskPromises);
-                
-                const classesData = classSnapshots.map(snap => ({ id: snap.id, ...snap.data() })).filter(c => c.namaMataKuliah);
-                
-                const allTasks = [];
-                taskSnapshotsByClass.forEach((taskSnapshot, index) => {
-                    const className = classesData[index]?.namaMataKuliah || 'Unknown Class';
-                    taskSnapshot.forEach(taskDoc => allTasks.push({ ...taskDoc.data(), className }));
-                });
-                
-                // 3. Render dynamic content
-                renderJoinedClasses(classesData);
-                renderUpcomingDeadlines(allTasks);
-                
-                const scheduleDays = [...new Set(classesData.map(c => c.hari))];
-                renderCalendar(new Date(), scheduleDays);
-
+                // Attach event listeners to the new DOM elements
+                attachEventListeners();
 
             } catch (error) {
                 console.error("Error loading dashboard data:", error);
-                document.getElementById('joined-classes-grid').innerHTML = '<p class="empty-state">Gagal memuat kelas.</p>';
-                document.getElementById('deadline-list').innerHTML = '<p class="empty-state">Gagal memuat tugas.</p>';
+                document.getElementById('main-content').innerHTML = `<div class="empty-state">
+                    <p>Oops! Gagal memuat dasbor Anda.</p>
+                    <a href="#" onclick="location.reload()">Coba Lagi</a>
+                </div>`;
             }
         }
+        
+        // --- Data Fetching ---
+        async function fetchAllDashboardData(user) {
+            // Ensure user doc exists
+            const userDocRef = doc(db, 'users', user.uid);
+            await setDoc(userDocRef, { name: user.displayName, email: user.email, photoURL: user.photoURL }, { merge: true });
+            const userDocSnap = await getDoc(userDocRef);
+            const userData = userDocSnap.data();
+            const joinedClassesIds = userData.joinedClasses || [];
 
-        // --- Rendering Functions ---
-        function renderUserInfo(user) {
-            document.getElementById('profile-card-img').src = user.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${user.displayName.charAt(0)}`;
-            document.getElementById('profile-card-name').textContent = user.displayName;
-            document.getElementById('profile-card-email').textContent = user.email;
+            if (joinedClassesIds.length === 0) {
+                return { userData, classesData: [], allTasks: [] };
+            }
+
+            // Fetch all class and task data in parallel
+            const classPromises = joinedClassesIds.map(id => getDoc(doc(db, 'classes', id)));
+            const taskPromises = joinedClassesIds.map(id => getDocs(query(collection(db, 'classes', id, 'tasks'), where('dueDate', '>=', Timestamp.now()))));
+            
+            const [classSnapshots, taskSnapshotsByClass] = await Promise.all([Promise.all(classPromises), Promise.all(taskPromises)]);
+            
+            const classesData = classSnapshots.map(snap => ({ id: snap.id, ...snap.data() })).filter(c => c.namaMataKuliah);
+
+            const allTasks = [];
+            taskSnapshotsByClass.forEach((taskSnapshot, index) => {
+                const classInfo = classesData[index];
+                if (!classInfo) return;
+                const className = classInfo.namaMataKuliah || 'Unknown';
+                const classId = classInfo.id;
+                taskSnapshot.forEach(taskDoc => {
+                    allTasks.push({ 
+                        id: taskDoc.id, 
+                        classId: classId, 
+                        ...taskDoc.data(), 
+                        className 
+                    });
+                });
+            });
+
+            return { userData, classesData, allTasks };
         }
 
-        function renderGreeting(name) {
-            const hour = new Date().getHours();
-            const welcomeName = name ? `, ${name.split(' ')[0]}!` : '!';
-            let greeting = 'Selamat Datang';
-            if (hour < 12) greeting = 'Selamat Pagi';
-            else if (hour < 18) greeting = 'Selamat Siang';
-            else greeting = 'Selamat Malam';
-            document.getElementById('greeting').textContent = greeting + welcomeName;
+        // --- UI Rendering ---
+        function renderFullDashboard(user, userData, classesData, tasks) {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <header class="header">
+                    <h1 id="greeting">${getGreeting(user.displayName)}</h1>
+                    <p id="greeting-sub" class="text-muted">Semoga harimu menyenangkan dan produktif.</p>
+                </header>
+                <div class="dashboard-grid">
+                    <div class="main-column">
+                        <section>
+                            <h2 class="section-title">Kelas Anda</h2>
+                            <div id="joined-classes-grid" class="joined-classes-grid"></div>
+                        </section>
+                        <section>
+                            <h2 class="section-title">Tugas Mendatang</h2>
+                            <div class="dashboard-card" id="deadline-list-container">
+                                <ul id="deadline-list"></ul>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="side-column">
+                        <div class="dashboard-card profile-card" id="profile-card"></div>
+                        <div class="dashboard-card">
+                            <div class="calendar-header">
+                                <button id="prev-month-btn" class="calendar-nav"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></button>
+                                <h4 id="month-year"></h4>
+                                <button id="next-month-btn" class="calendar-nav"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></button>
+                            </div>
+                            <div id="calendar-grid"></div>
+                        </div>
+                    </div>
+                </div>`;
+
+            renderProfileCard(user);
+
+            if (classesData.length > 0) {
+                renderJoinedClasses(classesData);
+                renderUpcomingDeadlines(tasks);
+            } else {
+                renderEmptyStates();
+            }
+            renderCalendar(currentCalendarDate, classScheduleDays);
+        }
+
+        function renderProfileCard(user) {
+            document.getElementById('profile-card').innerHTML = `
+                <div class="profile-img-wrapper">
+                    <img src="${user.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${user.displayName.charAt(0)}`}" alt="Profile Picture" class="profile-img">
+                    <a href="account.html" class="edit-profile-btn" title="Edit Profil">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>
+                    </a>
+                </div>
+                <h3>${user.displayName}</h3>
+                <p class="text-muted">${user.email}</p>`;
         }
 
         async function renderJoinedClasses(classes) {
             const grid = document.getElementById('joined-classes-grid');
-            grid.innerHTML = '';
-            
-            // Define some colors for the class icons
-            const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+            const colors = ['#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#3B82F6'];
+            const memberPromises = [];
 
-            for (let i = 0; i < classes.length; i++) {
-                const c = classes[i];
+            classes.forEach(c => {
+                (c.members || []).slice(0, 3).forEach(id => {
+                    memberPromises.push(getDoc(doc(db, 'users', id)));
+                });
+            });
+            
+            const memberSnaps = await Promise.all(memberPromises);
+            const memberData = memberSnaps.reduce((acc, snap) => {
+                if (snap.exists()) acc[snap.id] = snap.data();
+                return acc;
+            }, {});
+
+            classes.forEach((c, i) => {
                 const card = document.createElement('a');
                 card.href = `class_page.html?id=${c.id}`;
                 card.className = 'class-card-sm';
                 
-                let memberAvatarsHtml = '';
-                if (c.members && c.members.length > 0) {
-                     // Fetch first 3 members for avatars
-                    const memberIds = c.members.slice(0, 3);
-                    const memberPromises = memberIds.map(id => getDoc(doc(db, 'users', id)));
-                    const memberSnaps = await Promise.all(memberPromises);
-                    const memberAvatars = memberSnaps.map(snap => snap.exists() ? snap.data().photoURL : null).filter(Boolean);
-                    
-                    memberAvatarsHtml = memberAvatars.map(url => `<img src="${url}" alt="member">`).join('');
-                }
+                const memberAvatarsHtml = (c.members || []).slice(0, 3)
+                    .map(id => memberData[id] ? `<img src="${memberData[id].photoURL}" alt="member">` : '')
+                    .join('');
 
                 card.innerHTML = `
                     <div class="icon" style="background-color: ${colors[i % colors.length]}">${c.namaMataKuliah.charAt(0)}</div>
@@ -374,107 +333,143 @@
                     <p>${c.dosen}</p>
                     <div class="card-footer">
                         <div class="member-avatars">${memberAvatarsHtml}</div>
-                        <div class="arrow-icon">&rarr;</div>
-                    </div>
-                `;
+                        <div class="arrow-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></div>
+                    </div>`;
                 grid.appendChild(card);
-            }
+            });
         }
         
         function renderUpcomingDeadlines(tasks) {
             const list = document.getElementById('deadline-list');
             list.innerHTML = '';
             if (tasks.length === 0) {
-                list.innerHTML = `<li class="empty-state"><p>Tidak ada tugas yang akan datang.</p></li>`;
+                list.innerHTML = `<li class="empty-state" style="padding: 1rem 0;"><p>Tidak ada tugas yang akan datang. Santai sejenak!</p></li>`;
                 return;
             }
             tasks.sort((a, b) => a.dueDate.seconds - b.dueDate.seconds).slice(0, 5).forEach(task => {
                 const li = document.createElement('li');
-                li.className = 'deadline-item';
-                const dueDate = task.dueDate.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                const dueDateInfo = formatDueDate(task.dueDate);
+                const hasDesc = task.description && task.description.trim() !== '';
+
                 li.innerHTML = `
-                    <div class="deadline-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
-                    </div>
-                    <div class="deadline-details">
-                        <h4>${task.title}</h4>
-                        <p>${task.className} &bull; Tenggat: ${dueDate}</p>
-                    </div>
+                    <a href="class_page.html?id=${task.classId}#task-${task.id}" class="deadline-item">
+                        <div class="deadline-item-content">
+                            <div class="deadline-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg></div>
+                            <div class="deadline-details">
+                                <h4>${task.title}</h4>
+                                <p>${task.className}</p>
+                            </div>
+                            <span class="due-date ${dueDateInfo.className}">${dueDateInfo.text}</span>
+                        </div>
+                    </a>
                 `;
                 list.appendChild(li);
             });
         }
-
+        
         function renderEmptyStates() {
-            document.getElementById('joined-classes-grid').innerHTML = '<div class="empty-state"><p>Anda belum bergabung dengan kelas.</p></div>';
-            document.getElementById('deadline-list').innerHTML = '<div class="empty-state"><p>Tidak ada tugas.</p></div>';
+            document.getElementById('joined-classes-grid').innerHTML = '<div class="empty-state"><p>Anda belum bergabung dengan kelas.</p><a href="classes.html">Gabung atau Buat Kelas</a></div>';
+            document.getElementById('deadline-list').innerHTML = '<li class="empty-state" style="padding: 1rem 0;"><p>Tidak ada tugas yang akan datang.</p></li>';
         }
         
-        // --- Calendar Logic ---
-        let currentCalendarDate = new Date();
-        const indonesianDaysMap = { 'Senin': 1, 'Selasa': 2, 'Rabu': 3, 'Kamis': 4, 'Jumat': 5, 'Sabtu': 6, 'Minggu': 0 };
-
-        function renderCalendar(date, classDays) {
+        function renderCalendar(date, scheduleDays) {
             const grid = document.getElementById('calendar-grid');
             const monthYearEl = document.getElementById('month-year');
-            grid.innerHTML = '';
+            if(!grid || !monthYearEl) return;
             
-            const month = date.getMonth();
-            const year = date.getFullYear();
+            grid.innerHTML = '';
+            const month = date.getMonth(), year = date.getFullYear();
             monthYearEl.textContent = date.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
             
             const firstDayOfMonth = new Date(year, month, 1);
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const startingDay = (firstDayOfMonth.getDay() + 6) % 7; // 0 = Senin
+            const startingDay = (firstDayOfMonth.getDay() + 6) % 7;
             
-            // Day names
-            ['S', 'S', 'R', 'K', 'J', 'S', 'M'].forEach(day => {
-                const dayNameEl = document.createElement('div');
-                dayNameEl.className = 'calendar-day-name';
-                dayNameEl.textContent = day;
-                grid.appendChild(dayNameEl);
-            });
-            
-            // Blank days
-            for (let i = 0; i < startingDay; i++) {
-                grid.appendChild(document.createElement('div'));
-            }
+            ['S', 'S', 'R', 'K', 'J', 'S', 'M'].forEach(day => grid.innerHTML += `<div class="calendar-day-name">${day}</div>`);
+            for (let i = 0; i < startingDay; i++) grid.innerHTML += '<div></div>';
 
-            // Month days
+            const today = new Date();
+            const indonesianDaysMap = { 'Senin': 1, 'Selasa': 2, 'Rabu': 3, 'Kamis': 4, 'Jumat': 5, 'Sabtu': 6, 'Minggu': 0 };
+
             for (let i = 1; i <= daysInMonth; i++) {
                 const dayEl = document.createElement('div');
                 dayEl.className = 'calendar-day';
                 dayEl.textContent = i;
-                
                 const currentDate = new Date(year, month, i);
-                const today = new Date();
-
-                if (currentDate.toDateString() === today.toDateString()) {
-                    dayEl.classList.add('today');
-                }
+                if (currentDate.toDateString() === today.toDateString()) dayEl.classList.add('today');
                 
-                // Check if this day has a class
-                const dayOfWeek = currentDate.getDay(); // 0=Minggu, 1=Senin..
-                const dayName = Object.keys(indonesianDaysMap).find(key => indonesianDaysMap[key] === dayOfWeek);
-
-                if (classDays.includes(dayName)) {
-                    dayEl.classList.add('has-class');
-                }
-                
+                const dayName = Object.keys(indonesianDaysMap).find(key => indonesianDaysMap[key] === currentDate.getDay());
+                if (scheduleDays.includes(dayName)) dayEl.classList.add('has-class');
                 grid.appendChild(dayEl);
             }
         }
         
-        document.getElementById('prev-month-btn').addEventListener('click', () => {
-            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
-            loadDashboardData(auth.currentUser); // Reload all data to get correct schedule days
-        });
+        // --- Event Listeners ---
+        function attachEventListeners() {
+            document.getElementById('prev-month-btn')?.addEventListener('click', () => {
+                currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+                renderCalendar(currentCalendarDate, classScheduleDays);
+            });
+            document.getElementById('next-month-btn')?.addEventListener('click', () => {
+                currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+                renderCalendar(currentCalendarDate, classScheduleDays);
+            });
+        }
         
-        document.getElementById('next-month-btn').addEventListener('click', () => {
-            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
-            loadDashboardData(auth.currentUser);
-        });
+        // --- Utility Functions ---
+        function getGreeting(name) {
+            const hour = new Date().getHours();
+            const welcomeName = name ? `, ${name.split(' ')[0]}!` : '!';
+            if (hour < 4) return `Selamat Malam${welcomeName}`;
+            if (hour < 12) return `Selamat Pagi${welcomeName}`;
+            if (hour < 18) return `Selamat Siang${welcomeName}`;
+            return `Selamat Malam${welcomeName}`;
+        }
+        
+        function formatDueDate(dueDate) {
+            const now = new Date();
+            const due = dueDate.toDate();
+            now.setHours(0,0,0,0);
+            due.setHours(0,0,0,0);
+            
+            const diffTime = due.getTime() - now.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+            if (diffDays < 0) return { text: `Telah lewat`, className: 'overdue' };
+            if (diffDays === 0) return { text: `Tenggat hari ini`, className: 'urgent' };
+            if (diffDays === 1) return { text: `Tenggat besok`, className: 'urgent' };
+            if (diffDays <= 7) return { text: `Tenggat ${diffDays} hari lagi`, className: 'soon' };
+            return { text: `Tenggat ${due.toLocaleDateString('id-ID', {day: 'numeric', month: 'short'})}`, className: 'normal' };
+        }
+
+        function renderSkeleton() {
+            document.getElementById('main-content').innerHTML = `
+                <header class="header">
+                    <h1 id="greeting" class="skeleton skeleton-text" style="width: 300px;"></h1>
+                    <p id="greeting-sub" class="skeleton skeleton-text" style="width: 250px; margin-top: 1rem;"></p>
+                </header>
+                <div class="dashboard-grid">
+                    <div class="main-column">
+                        <section>
+                            <h2 class="section-title skeleton skeleton-text" style="width: 150px;"></h2>
+                            <div id="joined-classes-grid" class="joined-classes-grid">
+                                <div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div>
+                            </div>
+                        </section>
+                        <section>
+                            <h2 class="section-title skeleton skeleton-text" style="width: 200px;"></h2>
+                            <div class="dashboard-card"><div id="deadline-list" class="skeleton" style="height: 120px;"></div></div>
+                        </section>
+                    </div>
+                    <div class="side-column">
+                        <div class="dashboard-card profile-card" id="profile-card"><div class="skeleton skeleton-avatar"></div><div class="skeleton skeleton-text" style="width: 60%; margin-top: 1rem;"></div><div class="skeleton skeleton-text" style="width: 80%; margin-top: 0.5rem;"></div></div>
+                        <div class="dashboard-card">
+                            <div class="calendar-header"><div class="skeleton skeleton-text" style="width: 100%;"></div></div>
+                            <div id="calendar-grid" class="skeleton" style="height: 240px;"></div>
+                        </div>
+                    </div>
+                </div>`;
+        }
     </script>
 </body>
 </html>

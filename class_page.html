@@ -12,6 +12,10 @@
         :root {
             --primary-color: #7C3AED;
             --primary-light: #F5F3FF;
+            --danger-color: #EF4444;
+            --danger-light: #FEE2E2;
+            --warning-color: #F59E0B;
+            --warning-light: #FEF3C7;
             --text-dark: #111827;
             --text-light: #374151;
             --text-muted: #6B7280;
@@ -22,6 +26,8 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -55,6 +61,7 @@
             padding: 2rem 3rem;
             border-bottom: 1px solid var(--border-color);
             background-color: var(--card-bg);
+            flex-shrink: 0;
         }
         .class-header h1 { font-size: 2rem; font-weight: 700; }
         .class-header p { color: var(--text-muted); }
@@ -66,73 +73,107 @@
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 2rem;
+            align-items: start;
         }
 
-        .main-column, .side-column {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-        
-        .content-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            padding: 1.5rem;
-        }
-        
-        .card-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .main-column, .side-column { display: flex; flex-direction: column; gap: 2rem; }
+        .content-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; }
+        .card-title { font-size: 1.25rem; font-weight: 600; }
+        .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .btn-sm-primary { background-color: var(--primary-light); color: var(--primary-color); padding: 0.4rem 0.8rem; border-radius: 0.5rem; text-decoration: none; font-weight: 500; font-size: 0.875rem; transition: background-color .2s; }
+        .btn-sm-primary:hover { background-color: #E9D5FF; }
 
         /* Discussion Feed */
-        #discussion-feed {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 1rem;
-            display: flex;
-            flex-direction: column-reverse; /* Newest messages at the bottom */
-        }
+        #discussion-feed { max-height: 400px; overflow-y: auto; margin-bottom: 1rem; display: flex; flex-direction: column-reverse; }
         #discussion-list { list-style: none; }
         .message-item { display: flex; gap: 1rem; margin-bottom: 1rem; }
-        .message-avatar { width: 36px; height: 36px; border-radius: 50%; background-color: var(--border-color); flex-shrink: 0; }
+        .message-avatar { width: 36px; height: 36px; border-radius: 50%; background-color: var(--border-color); flex-shrink: 0; object-fit: cover; }
         .message-content strong { display: block; font-weight: 600; }
         .message-content span { font-size: 0.8rem; color: var(--text-muted); margin-left: 0.5rem; }
         .message-content p { margin-top: 0.25rem; }
-
         #discussion-form { display: flex; gap: 1rem; }
         #discussion-input { flex-grow: 1; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; }
         #discussion-form button { padding: 0.75rem 1rem; background-color: var(--primary-color); color: #fff; border: none; border-radius: 0.5rem; cursor: pointer; }
         
         /* Tasks List */
         #task-list { list-style: none; }
-        .task-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
+        .task-item { border-bottom: 1px solid var(--border-color); transition: opacity .3s ease; }
         .task-item:last-child { border-bottom: none; }
-        .task-item h4 { font-weight: 500; }
-        .task-item .due-date { font-size: 0.9rem; color: var(--text-muted); }
-        #add-task-btn { width: 100%; padding: 0.75rem; margin-top: 1rem; border: 1px dashed var(--border-color); background: transparent; color: var(--text-muted); border-radius: 0.5rem; cursor: pointer; }
+        
+        .task-item.done { opacity: 0.6; }
+        .task-item.done h4 { text-decoration: line-through; color: var(--text-muted); }
+
+        .task-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; cursor: pointer; }
+        .task-title-wrapper { display: flex; align-items: center; gap: 1rem; flex-grow: 1; }
+        .task-checkbox { width: 20px; height: 20px; border: 2px solid var(--border-color); border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+        .task-checkbox:hover { border-color: var(--primary-color); }
+        .task-item.done .task-checkbox { background-color: var(--primary-color); border-color: var(--primary-color); }
+        .task-checkbox svg { color: #fff; transform: scale(0); transition: transform .2s; }
+        .task-item.done .task-checkbox svg { transform: scale(1); }
+
+        .task-header h4 { font-weight: 600; transition: all .3s ease; }
+        .task-meta { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+        .due-date { font-size: 0.875rem; font-weight: 500; padding: 0.25rem 0.6rem; border-radius: 99px; }
+        .due-date.normal { color: var(--text-muted); background-color: var(--bg-body); }
+        .due-date.soon { color: var(--warning-color); background-color: var(--warning-light); }
+        .due-date.urgent { color: var(--danger-color); background-color: var(--danger-light); }
+        .due-date.overdue { color: var(--danger-color); background-color: var(--danger-light); }
+
+        .task-toggle-icon { transition: transform 0.3s ease; color: var(--text-muted); }
+        .task-item.expanded .task-toggle-icon { transform: rotate(180deg); }
+        .task-details { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .task-item.expanded .task-details { max-height: 500px; padding-bottom: 1.25rem; }
+        .task-description { font-size: 0.95rem; line-height: 1.6; color: var(--text-light); white-space: pre-wrap; padding-left: 36px; margin-bottom: 1rem; }
+        .task-footer { padding-left: 36px; display: flex; justify-content: space-between; align-items: center; }
+        .task-creator { font-size: 0.8rem; color: var(--text-muted); }
+        .delete-task-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 0.25rem; font-size: 0.8rem; padding: 0.25rem; border-radius: 0.25rem; }
+        .delete-task-btn:hover { color: var(--danger-color); background-color: var(--danger-light); }
+        .completion-info { margin-top: 1rem; padding-left: 36px; }
+        .completion-info strong { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+        .completed-avatars { display: flex; }
+        .completed-avatars img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #fff; margin-left: -8px; object-fit: cover; }
+        .completed-avatars img:first-child { margin-left: 0; }
+
+        #add-task-btn { width: 100%; padding: 0.75rem; margin-top: 1rem; border: 1px dashed var(--border-color); background: transparent; color: var(--text-muted); border-radius: 0.5rem; cursor: pointer; font-weight: 500; }
 
         /* Shared Notes */
         #shared-notes-list { list-style: none; max-height: 400px; overflow-y: auto; }
-        .note-card { padding: 1rem; border-radius: 0.5rem; background-color: var(--bg-body); margin-bottom: 1rem; }
-        .note-card h4 { font-weight: 600; margin-bottom: 0.25rem; }
-        .note-card p { font-size: 0.9rem; white-space: pre-wrap; }
-        .note-card small { font-size: 0.8rem; color: var(--text-muted); }
+        .note-card { padding: 1rem; border-radius: 0.75rem; background-color: var(--bg-body); margin-bottom: 1rem; cursor: pointer; transition: background-color .2s, transform .2s; border: 1px solid var(--bg-body); }
+        .note-card:hover { background-color: var(--primary-light); border-color: var(--primary-color); transform: translateY(-2px); }
+        .note-card h4 { font-weight: 600; margin-bottom: 0.25rem; color: var(--text-dark); }
+        .note-card p { font-size: 0.9rem; white-space: pre-wrap; color: var(--text-light); }
+        .note-card small { font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 0.75rem; }
 
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 3rem auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .empty-state { text-align: center; color: var(--text-muted); padding: 2rem 0; }
         
-        /* Add Task Modal */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal { background: #fff; padding: 2rem; border-radius: 1rem; width: 90%; max-width: 400px; }
-        .modal h2 { margin-bottom: 1.5rem; }
+        /* -- Modals -- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal { background: #fff; padding: 2rem; border-radius: 1rem; width: 90%; max-width: 500px; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal h2 { margin-bottom: 1rem; font-size: 1.5rem; }
         .modal-form { display: flex; flex-direction: column; gap: 1rem; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { margin-bottom: 0.5rem; font-weight: 500; }
-        .form-group input { padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; }
+        .form-group input, .form-group textarea { padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-family: 'Inter', sans-serif; font-size: 1rem; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
         .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
         .modal-btn { padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer; }
         #confirm-add-task-btn { background-color: var(--primary-color); color: #fff; }
         #cancel-add-task-btn { background-color: var(--border-color); }
+
+        /* Read Note Modal */
+        #read-note-modal .modal { max-width: 650px; text-align: left; }
+        #read-note-modal #read-note-title { margin-bottom: 0.5rem; }
+        #read-note-modal .note-meta { color: var(--text-muted); margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; font-size: 0.9rem; }
+        #read-note-modal .note-meta strong { color: var(--text-dark); }
+        #read-note-modal .modal-content { max-height: 60vh; overflow-y: auto; line-height: 1.7; color: var(--text-light); }
+        #read-note-modal .modal-content p { white-space: pre-wrap; }
+        #read-note-modal .modal-footer { margin-top: 2rem; display: flex; justify-content: flex-end; }
+        #read-note-close-btn { background-color: var(--primary-color); color: #fff; }
     </style>
 </head>
 <body>
@@ -160,11 +201,15 @@
                     <label for="task-title">Judul Tugas</label>
                     <input type="text" id="task-title" required>
                 </div>
-                <div class="form-group">
+                 <div class="form-group">
                     <label for="task-due-date">Tenggat Waktu</label>
                     <input type="date" id="task-due-date" required>
                 </div>
-                <div class="modal-actions">
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="task-description">Deskripsi (Opsional)</label>
+                    <textarea id="task-description" rows="4"></textarea>
+                </div>
+                <div class="modal-actions" style="grid-column: 1 / -1;">
                     <button type="button" class="modal-btn" id="cancel-add-task-btn">Batal</button>
                     <button type="submit" class="modal-btn" id="confirm-add-task-btn">Tambah</button>
                 </div>
@@ -172,10 +217,21 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="read-note-modal">
+        <div class="modal">
+            <h2 id="read-note-title"></h2>
+            <div class="note-meta" id="read-note-meta"></div>
+            <div class="modal-content" id="read-note-body"></div>
+            <div class="modal-footer">
+                <button class="modal-btn" id="read-note-close-btn">Tutup</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot, Timestamp, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
@@ -193,12 +249,12 @@
 
         let currentUser = null;
         let classId = null;
+        let membersCache = {};
+        let classMemberCount = 0;
         let discussionUnsubscribe = null, tasksUnsubscribe = null, notesUnsubscribe = null;
         
         const mainContent = document.getElementById('main-content');
-        const addTaskModal = document.getElementById('add-task-modal');
-        const addTaskForm = document.getElementById('add-task-form');
-
+        
         onAuthStateChanged(auth, user => {
             if (user) {
                 currentUser = user;
@@ -216,6 +272,49 @@
         });
         
         document.getElementById('logout-button').addEventListener('click', () => signOut(auth));
+        
+        mainContent.addEventListener('click', (e) => {
+            const taskHeader = e.target.closest('.task-header');
+            if(taskHeader) {
+                const checkbox = e.target.closest('.task-checkbox');
+                if (checkbox) {
+                    handleToggleTask(checkbox.dataset.taskId);
+                } else {
+                    const taskItem = taskHeader.closest('.task-item');
+                    if(taskItem && taskItem.querySelector('.task-details')) {
+                        taskItem.classList.toggle('expanded');
+                    }
+                }
+                return;
+            }
+
+            const deleteTaskBtn = e.target.closest('.delete-task-btn');
+            if (deleteTaskBtn) {
+                handleDeleteTask(deleteTaskBtn.dataset.taskId);
+                return;
+            }
+
+            const addTaskBtn = e.target.closest('#add-task-btn');
+            if (addTaskBtn) {
+                document.getElementById('add-task-modal').style.display = 'flex';
+                return;
+            }
+
+            const noteCard = e.target.closest('.note-card');
+            if (noteCard) {
+                const { title, body, author, date } = noteCard.dataset;
+                showReadNoteModal(title, body, author, date);
+                return;
+            }
+
+            const shareNewNoteBtn = e.target.closest('#share-new-note-btn');
+            if (shareNewNoteBtn) {
+                e.preventDefault();
+                window.location.href = `notes.html?share_to=${classId}`;
+                return;
+            }
+        });
+
 
         async function loadClassPage() {
             try {
@@ -229,16 +328,20 @@
                 
                 const classData = classDocSnap.data();
                 
-                // Security check: ensure user is a member of the class
                 const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
                 const joinedClasses = userDoc.data().joinedClasses || [];
                 if (!joinedClasses.includes(classId)) {
                     mainContent.innerHTML = '<div class="empty-state"><h1>Anda tidak memiliki akses ke kelas ini.</h1></div>';
                     return;
                 }
+                
+                await cacheClassMembers(classData.members || []);
 
                 renderPageLayout(classData);
-                attachListeners();
+                attachStaticListeners();
+                attachFirestoreListeners();
+                
+                handleUrlFragment();
 
             } catch (error) {
                 console.error("Error loading class page: ", error);
@@ -246,11 +349,23 @@
             }
         }
         
+        async function cacheClassMembers(memberIds) {
+            classMemberCount = memberIds.length;
+            const memberPromises = memberIds.map(id => getDoc(doc(db, 'users', id)));
+            const memberDocs = await Promise.all(memberPromises);
+            membersCache = memberDocs.reduce((acc, docSnap) => {
+                if (docSnap.exists()) {
+                    acc[docSnap.id] = docSnap.data();
+                }
+                return acc;
+            }, {});
+        }
+        
         function renderPageLayout(data) {
              mainContent.innerHTML = `
                 <header class="class-header">
                     <h1 id="class-name">${data.namaMataKuliah}</h1>
-                    <p id="class-lecturer">${data.dosen} • ${data.hari}, ${data.waktu} • Ruang ${data.ruang}</p>
+                    <p id="class-lecturer">${data.dosen} • ${data.hari}, ${data.waktu} - ${data.waktuSelesai || ''}</p>
                 </header>
                 <div class="class-body">
                     <div class="main-column">
@@ -258,7 +373,7 @@
                             <h2 class="card-title">Diskusi Kelas</h2>
                             <div id="discussion-feed"><ul id="discussion-list"><div class="loader"></div></ul></div>
                             <form id="discussion-form">
-                                <input type="text" id="discussion-input" placeholder="Ketik pesan..." required>
+                                <input type="text" id="discussion-input" placeholder="Ketik pesan..." required autocomplete="off">
                                 <button type="submit">Kirim</button>
                             </form>
                         </div>
@@ -267,10 +382,13 @@
                         <div class="content-card">
                             <h2 class="card-title">Tugas</h2>
                             <ul id="task-list"><div class="loader"></div></ul>
-                            <button id="add-task-btn">+ Tambah Tugas</button>
+                            <button id="add-task-btn">+ Tambah Tugas Baru</button>
                         </div>
                         <div class="content-card">
-                            <h2 class="card-title">Catatan Bersama</h2>
+                            <div class="card-header-flex">
+                                <h2 class="card-title">Catatan Bersama</h2>
+                                <a href="#" id="share-new-note-btn" class="btn-sm-primary">Bagikan Catatan</a>
+                            </div>
                             <ul id="shared-notes-list"><div class="loader"></div></ul>
                         </div>
                     </div>
@@ -278,30 +396,48 @@
             `;
         }
 
-        function attachListeners() {
-            // Discussion form
+        function attachStaticListeners() {
             const discussionForm = document.getElementById('discussion-form');
-            discussionForm.addEventListener('submit', handleAddMessage);
+            if(discussionForm) discussionForm.addEventListener('submit', handleAddMessage);
             
-            // Task modal
-            document.getElementById('add-task-btn').addEventListener('click', () => addTaskModal.style.display = 'flex');
+            const addTaskModal = document.getElementById('add-task-modal');
             document.getElementById('cancel-add-task-btn').addEventListener('click', () => addTaskModal.style.display = 'none');
-            addTaskForm.addEventListener('submit', handleAddTask);
+            document.getElementById('add-task-form').addEventListener('submit', handleAddTask);
+            
+            const readNoteModal = document.getElementById('read-note-modal');
+            document.getElementById('read-note-close-btn').addEventListener('click', () => readNoteModal.style.display = 'none');
+        }
 
-            // Firestore listeners
+        function attachFirestoreListeners() {
             listenForDiscussions();
             listenForTasks();
             listenForSharedNotes();
         }
+        
+        function formatDueDate(dueDate) {
+            const now = new Date();
+            const due = dueDate.toDate();
+            now.setHours(0,0,0,0);
+            due.setHours(0,0,0,0);
+            
+            const diffTime = due.getTime() - now.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        // --- Discussion Logic ---
+            if (diffDays < 0) return { text: `Telah lewat`, className: 'overdue' };
+            if (diffDays === 0) return { text: `Tenggat hari ini`, className: 'urgent' };
+            if (diffDays === 1) return { text: `Tenggat besok`, className: 'urgent' };
+            if (diffDays <= 7) return { text: `Tenggat ${diffDays} hari lagi`, className: 'soon' };
+            return { text: `Tenggat ${due.toLocaleDateString('id-ID', {day: 'numeric', month: 'short'})}`, className: 'normal' };
+        }
+
         function listenForDiscussions() {
             const q = query(collection(db, 'classes', classId, 'discussions'), orderBy('createdAt', 'desc'));
             discussionUnsubscribe = onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('discussion-list');
+                if (!list) return;
                 list.innerHTML = '';
                 if (snapshot.empty) {
-                    list.innerHTML = '<div class="empty-state">Belum ada diskusi.</div>';
+                    list.innerHTML = '<div class="empty-state">Belum ada diskusi. Mulai percakapan!</div>';
                 }
                 snapshot.forEach(doc => {
                     const msg = doc.data();
@@ -326,10 +462,8 @@
             const text = input.value.trim();
             if (!text) return;
             
+            input.disabled = true;
             try {
-                // ROBUST FIX: Use the currentUser object directly as the primary source of truth.
-                // This ensures the sender's name and photo are always correct at the time of posting,
-                // even if the Firestore document hasn't been created or updated yet.
                 await addDoc(collection(db, 'classes', classId, 'discussions'), {
                     text: text,
                     senderId: currentUser.uid,
@@ -340,81 +474,204 @@
                 input.value = '';
             } catch (error) {
                 console.error("Error sending message:", error);
+            } finally {
+                input.disabled = false;
+                input.focus();
             }
         }
         
-        // --- Task Logic ---
         function listenForTasks() {
             const q = query(collection(db, 'classes', classId, 'tasks'), orderBy('dueDate', 'asc'));
             tasksUnsubscribe = onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('task-list');
+                if (!list) return;
                 list.innerHTML = '';
                 if (snapshot.empty) {
-                    list.innerHTML = '<div class="empty-state">Tidak ada tugas.</div>';
+                    list.innerHTML = '<div class="empty-state" style="padding: 1rem 0;">Tidak ada tugas.</div>';
                     return;
                 }
                 snapshot.forEach(doc => {
                     const task = doc.data();
-                    const dueDate = task.dueDate.toDate();
-                    const formattedDate = dueDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
+                    const isDone = task.completedBy && task.completedBy.includes(currentUser.uid);
+                    const dueDateInfo = formatDueDate(task.dueDate);
+                    const isCreator = task.creatorId === currentUser.uid;
+
+                    let completedAvatarsHTML = '';
+                    if(task.completedBy && task.completedBy.length > 0) {
+                        completedAvatarsHTML = task.completedBy.map(userId => {
+                            const user = membersCache[userId];
+                            return user ? `<img src="${user.photoURL}" title="${user.name}" alt="${user.name}">` : '';
+                        }).join('');
+                    }
+
+                    const detailsHTML = `
+                        <div class="task-details">
+                            ${task.description ? `<p class="task-description">${task.description.replace(/\n/g, '<br>')}</p>` : ''}
+                            <div class="completion-info">
+                                <strong>${task.completedBy?.length || 0} dari ${classMemberCount} selesai</strong>
+                                <div class="completed-avatars">${completedAvatarsHTML}</div>
+                            </div>
+                            <div class="task-footer">
+                                <span class="task-creator">Dibuat oleh ${task.creatorName || 'N/A'}</span>
+                                ${isCreator ? `<button class="delete-task-btn" data-task-id="${doc.id}"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg> Hapus</button>` : ''}
+                            </div>
+                        </div>`;
+                    
                     const li = document.createElement('li');
-                    li.className = 'task-item';
+                    li.className = `task-item ${isDone ? 'done' : ''}`;
+                    li.id = `task-${doc.id}`;
                     li.innerHTML = `
-                        <h4>${task.title}</h4>
-                        <span class="due-date">${formattedDate}</span>
+                        <div class="task-header">
+                            <div class="task-title-wrapper">
+                                <div class="task-checkbox" data-task-id="${doc.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>
+                                </div>
+                                <h4>${task.title}</h4>
+                            </div>
+                            <div class="task-meta">
+                                <span class="due-date ${dueDateInfo.className}">${dueDateInfo.text}</span>
+                                <svg class="task-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </div>
+                        </div>
+                        ${detailsHTML}
                     `;
                     list.appendChild(li);
                 });
             });
+        }
+        
+        async function handleToggleTask(taskId) {
+            if (!taskId || !currentUser) return;
+            const taskRef = doc(db, 'classes', classId, 'tasks', taskId);
+            const taskItem = document.getElementById(`task-${taskId}`);
+            const isDone = taskItem.classList.contains('done');
+
+            try {
+                if (isDone) {
+                    await updateDoc(taskRef, { completedBy: arrayRemove(currentUser.uid) });
+                } else {
+                    await updateDoc(taskRef, { completedBy: arrayUnion(currentUser.uid) });
+                }
+            } catch (error) {
+                console.error("Error updating task status:", error);
+                alert("Gagal memperbarui status tugas.");
+            }
         }
         
         async function handleAddTask(e) {
             e.preventDefault();
             const title = document.getElementById('task-title').value;
             const dueDateStr = document.getElementById('task-due-date').value;
+            const description = document.getElementById('task-description').value;
+
             if (!title || !dueDateStr) return;
             
             const dueDate = new Date(dueDateStr);
-            
+            const confirmBtn = document.getElementById('confirm-add-task-btn');
+            confirmBtn.disabled = true;
+
             try {
                 await addDoc(collection(db, 'classes', classId, 'tasks'), {
                     title: title,
+                    description: description,
                     dueDate: Timestamp.fromDate(dueDate),
-                    createdAt: serverTimestamp()
+                    createdAt: serverTimestamp(),
+                    creatorId: currentUser.uid,
+                    creatorName: currentUser.displayName,
+                    completedBy: []
                 });
-                addTaskForm.reset();
-                addTaskModal.style.display = 'none';
+                document.getElementById('add-task-form').reset();
+                document.getElementById('add-task-modal').style.display = 'none';
             } catch (error) {
                 console.error("Error adding task:", error);
+                alert("Gagal menambahkan tugas.");
+            } finally {
+                confirmBtn.disabled = false;
             }
         }
 
-        // --- Shared Notes Logic ---
+        async function handleDeleteTask(taskId) {
+            if (!taskId) return;
+            if (confirm("Apakah Anda yakin ingin menghapus tugas ini untuk semua anggota kelas?")) {
+                try {
+                    await deleteDoc(doc(db, 'classes', classId, 'tasks', taskId));
+                } catch (error) {
+                    console.error("Error deleting task: ", error);
+                    alert("Gagal menghapus tugas.");
+                }
+            }
+        }
+
         function listenForSharedNotes() {
             const q = query(collection(db, 'classes', classId, 'sharedNotes'), orderBy('sharedAt', 'desc'));
             notesUnsubscribe = onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('shared-notes-list');
+                if(!list) return;
                 list.innerHTML = '';
                  if (snapshot.empty) {
-                    list.innerHTML = '<div class="empty-state">Belum ada catatan.</div>';
+                    list.innerHTML = '<div class="empty-state" style="padding: 1rem 0;">Belum ada catatan bersama.</div>';
                     return;
                 }
                 snapshot.forEach(doc => {
                     const note = doc.data();
                     const li = document.createElement('li');
                     li.className = 'note-card';
+                    
+                    li.dataset.title = note.title;
+                    li.dataset.body = note.body;
+                    li.dataset.author = note.sharedBy;
+                    if (note.sharedAt) {
+                        li.dataset.date = note.sharedAt.toDate().toLocaleDateString('id-ID', {
+                            day: 'numeric', month: 'long', year: 'numeric'
+                        });
+                    }
+
                     li.innerHTML = `
                         <h4>${note.title}</h4>
-                        <p>${note.body.substring(0, 150)}...</p>
-                        <small>Dibagikan oleh ${note.sharedBy}</small>
+                        <p>${note.body.substring(0, 100)}${note.body.length > 100 ? '...' : ''}</p>
+                        <small>Oleh ${note.sharedBy}</small>
                     `;
                     list.appendChild(li);
                 });
             });
         }
+        
+        function showReadNoteModal(title, body, author, date) {
+            document.getElementById('read-note-title').textContent = title;
+            document.getElementById('read-note-meta').innerHTML = `Dibagikan oleh <strong>${author}</strong> pada ${date}`;
+            document.getElementById('read-note-body').innerHTML = `<p>${body.replace(/\n/g, '<br>')}</p>`;
+            document.getElementById('read-note-modal').style.display = 'flex';
+        }
+
+        function handleUrlFragment() {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#task-')) {
+                setTimeout(() => {
+                    const targetTaskId = hash.substring(1);
+                    const targetTaskElement = document.getElementById(targetTaskId);
+                    if (targetTaskElement) {
+                        const classBody = document.querySelector('.class-body');
+                        
+                        const taskCard = targetTaskElement.closest('.content-card');
+                        if (taskCard) {
+                             classBody.scrollTo({
+                                top: taskCard.offsetTop - 20,
+                                behavior: 'smooth'
+                            });
+                        }
+
+                        targetTaskElement.classList.add('expanded');
+                        targetTaskElement.style.transition = 'background-color 0.5s ease-in-out';
+                        targetTaskElement.style.backgroundColor = 'var(--primary-light)';
+                        setTimeout(() => {
+                            targetTaskElement.style.backgroundColor = '';
+                        }, 2500);
+                    }
+                }, 700);
+            }
+        }
 
     </script>
 </body>
 </html>
-
 

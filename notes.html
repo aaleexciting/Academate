@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Quill.js CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
     <style>
         :root {
             --primary-color: #7C3AED;
@@ -15,7 +18,7 @@
             --text-dark: #111827;
             --text-light: #374151;
             --text-muted: #6B7280;
-            --bg-body: #F8F7FA;
+            --bg-body: #F9FAFB;
             --bg-sidebar: #FFFFFF;
             --card-bg: #FFFFFF;
             --border-color: #E5E7EB;
@@ -34,7 +37,7 @@
             overflow: hidden;
         }
         
-        /* --- Sidebar (reused) --- */
+        /* --- Sidebar --- */
         .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem; }
         .sidebar-header { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); text-decoration: none; margin-bottom: 2.5rem; padding: 0 0.5rem; }
         .nav-menu { list-style: none; flex-grow: 1; }
@@ -46,127 +49,80 @@
         .logout-button:hover { background-color: #FEE2E2; color: #EF4444; }
 
         /* --- Main Content --- */
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            overflow: hidden;
-        }
+        .main-content { flex-grow: 1; display: flex; overflow: hidden; }
 
         /* Notes List Panel */
         .notes-list-panel {
-            width: 320px;
+            width: 350px;
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            background-color: var(--bg-sidebar);
+            background-color: #FFFFFF;
         }
-
         .notes-list-header {
             padding: 1.5rem;
             border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
         }
-        
-        .notes-list-header h1 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .new-note-btn {
-            width: 100%;
-            padding: 0.75rem;
-            background-color: var(--primary-color);
-            color: #fff;
-            border: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
+        .notes-list-header h1 { font-size: 1.75rem; margin-bottom: 1rem; }
+        .new-note-btn { width: 100%; padding: 0.75rem; background-color: var(--primary-color); color: #fff; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
         .new-note-btn:hover { background-color: #6D28D9; }
-
-        #notes-list {
-            list-style: none;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-
-        .note-item {
-            padding: 1rem 1.5rem;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border-color);
-        }
+        
+        .search-bar-wrapper { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); }
+        .search-bar { display: flex; align-items: center; background-color: var(--bg-body); border-radius: 0.5rem; padding: 0.5rem 0.75rem; }
+        .search-bar svg { color: var(--text-muted); margin-right: 0.5rem; }
+        .search-bar input { flex-grow: 1; border: none; background: transparent; font-size: 1rem; outline: none; }
+        
+        #notes-list { list-style: none; overflow-y: auto; flex-grow: 1; }
+        .note-item { padding: 1.25rem 1.5rem; cursor: pointer; border-bottom: 1px solid var(--border-color); }
         .note-item:hover { background-color: var(--bg-body); }
-        .note-item.active { background-color: var(--primary-light); }
-        .note-item h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .note-item p { font-size: 0.875rem; color: var(--text-muted); }
+        .note-item.active { background-color: var(--primary-light); border-right: 3px solid var(--primary-color); }
+        .note-item h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .note-item p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.75rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .note-item-footer { display: flex; justify-content: space-between; align-items: center; }
+        .note-date { font-size: 0.75rem; color: var(--text-muted); }
+        .shared-tag { background-color: #E9D5FF; color: var(--primary-color); font-size: 0.75rem; font-weight: 500; padding: 0.2rem 0.5rem; border-radius: 0.25rem; }
 
         /* Note Editor Panel */
-        .note-editor-panel {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 1.5rem 2rem;
-            overflow-y: auto;
-        }
-        
+        .note-editor-panel { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        #editor-placeholder { text-align: center; padding-top: 20vh; color: var(--text-muted); margin: auto; }
+        #editor-placeholder svg { width: 80px; height: 80px; margin-bottom: 1rem; }
+        #editor-container { display: none; flex-direction: column; height: 100%; }
+
         .editor-header {
             display: flex;
             justify-content: flex-end;
             align-items: center;
             gap: 1rem;
-            padding-bottom: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1rem 2rem;
             border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
         }
-
-        .editor-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: all 0.2s;
-        }
-
+        .editor-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
         .save-btn { background-color: var(--primary-color); color: #fff; border-color: var(--primary-color); }
         .save-btn:hover { background-color: #6D28D9; }
         .save-btn:disabled { background-color: #A78BFA; cursor: not-allowed; }
-        .share-btn { background-color: transparent; color: var(--text-light); border-color: var(--border-color); }
+        .share-btn { background-color: transparent; color: var(--text-light); border: 1px solid var(--border-color); }
         .share-btn:hover { background-color: var(--bg-body); }
-        .delete-btn { background-color: transparent; color: #EF4444; }
+        .delete-btn { color: #EF4444; }
         .delete-btn:hover { background-color: #FEE2E2; }
         
-        #note-title-input {
-            width: 100%;
-            border: none;
-            font-size: 2rem;
-            font-weight: 700;
-            padding: 0.5rem 0;
-            margin-bottom: 1rem;
-            background: transparent;
-        }
-        #note-title-input:focus, #note-body-textarea:focus { outline: none; }
-
-        #note-body-textarea {
-            width: 100%;
-            flex-grow: 1;
-            border: none;
-            font-size: 1rem;
-            line-height: 1.7;
-            resize: none;
-            background: transparent;
-        }
+        .title-wrapper { padding: 1rem 2rem 0; }
+        #note-title-input { width: 100%; border: none; font-size: 2rem; font-weight: 700; padding: 0.5rem 0; background: transparent; outline: none; }
+        #note-meta { color: var(--text-muted); font-size: 0.8rem; padding: 0 2rem 0.5rem; }
         
-        #editor-placeholder { text-align: center; padding-top: 10vh; color: var(--text-muted); }
-        #editor-placeholder svg { width: 60px; height: 60px; margin-bottom: 1rem; }
-        #editor-container { display: none; flex-direction: column; height: 100%; }
+        #quill-editor-container { flex-grow: 1; overflow-y: auto; position: relative; }
+        #quill-editor { height: 100%; }
+        .ql-container.ql-snow { border: none !important; }
+        .ql-editor { font-size: 16px; line-height: 1.7; padding: 1.5rem 2rem; }
+        .ql-toolbar.ql-snow { border: none !important; border-bottom: 1px solid var(--border-color) !important; padding: 12px 2rem; }
 
-        /* Share Modal */
+        #word-count { text-align: right; padding: 0.5rem 2rem; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border-color); }
+        
+        /* Modals & Loaders */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal { background: #fff; padding: 2rem; border-radius: 1rem; width: 90%; max-width: 400px; }
         .modal h2 { margin-bottom: 1.5rem; }
-        .modal label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
-        .modal select { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; margin-bottom: 1.5rem; }
         .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; }
         .modal-btn { padding: 0.6rem 1.2rem; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer; }
         #confirm-share-btn { background-color: var(--primary-color); color: #fff; }
@@ -174,7 +130,6 @@
 
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 2rem auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
     </style>
 </head>
 <body>
@@ -193,8 +148,14 @@
     <main class="main-content">
         <div class="notes-list-panel">
             <div class="notes-list-header">
-                <h1>Catatan Saya</h1>
+                <h1>Semua Catatan</h1>
                 <button class="new-note-btn" id="new-note-btn">Buat Catatan Baru</button>
+            </div>
+            <div class="search-bar-wrapper">
+                <div class="search-bar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+                    <input type="text" id="search-input" placeholder="Cari catatan...">
+                </div>
             </div>
             <ul id="notes-list">
                 <div class="loader"></div>
@@ -207,12 +168,18 @@
             </div>
             <div id="editor-container">
                 <div class="editor-header">
-                    <button class="editor-btn delete-btn" id="delete-note-btn">Hapus</button>
-                    <button class="editor-btn share-btn" id="share-note-btn">Bagikan</button>
-                    <button class="editor-btn save-btn" id="save-note-btn">Simpan</button>
+                    <button class="editor-btn delete-btn" id="delete-note-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg><span>Hapus</span></button>
+                    <button class="editor-btn share-btn" id="share-note-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg><span>Bagikan</span></button>
+                    <button class="editor-btn save-btn" id="save-note-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8.036A5.53 5.53 0 0 1 7.583 4h.834a5.53 5.53 0 0 1 5.083 4.036.5.5 0 0 0 .917-.402A6.53 6.53 0 0 0 8.417 3H7.583A6.53 6.53 0 0 0 1.583 7.634a.5.5 0 0 0 .917.402z"/><path d="m9.22 10.323.333 1.665a.5.5 0 0 0 .94.004l1.463-3.657a.5.5 0 0 0-.825-.632l-3.32 2.37a.5.5 0 0 0 .004.94zm-2.48-1.55L4.935 9.14a.5.5 0 0 0-.632.825l2.37 3.32a.5.5 0 0 0 .94-.004l1.665-.333a.5.5 0 0 0 .004-.94l-3.657-1.463z"/></svg><span>Simpan</span></button>
                 </div>
-                <input type="text" id="note-title-input" placeholder="Judul Catatan...">
-                <textarea id="note-body-textarea" placeholder="Tuliskan catatanmu di sini..."></textarea>
+                <div class="title-wrapper">
+                    <input type="text" id="note-title-input" placeholder="Judul Catatan...">
+                </div>
+                 <div id="note-meta"></div>
+                <div id="quill-editor-container">
+                    <div id="quill-editor"></div>
+                </div>
+                <div id="word-count">0 kata</div>
             </div>
         </div>
     </main>
@@ -221,23 +188,23 @@
         <div class="modal">
             <h2>Bagikan Catatan ke Kelas</h2>
             <label for="class-select">Pilih Kelas:</label>
-            <select id="class-select">
-                <option>Memuat kelas...</option>
-            </select>
+            <select id="class-select"></select>
             <div class="modal-actions">
-                <button class="modal-btn" id="cancel-share-btn">Batal</button>
-                <button class="modal-btn" id="confirm-share-btn">Bagikan</button>
+                <button type="button" class="modal-btn" id="cancel-share-btn">Batal</button>
+                <button type="button" class="modal-btn" id="confirm-share-btn">Bagikan</button>
             </div>
         </div>
     </div>
-
+    
+    <!-- Quill.js JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
+             apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
             authDomain: "acadmte.firebaseapp.com",
             projectId: "acadmte",
             storageBucket: "acadmte.appspot.com",
@@ -252,15 +219,20 @@
 
         let currentUser = null;
         let currentNoteId = null;
-        let notesUnsubscribe = null; // To detach listener on logout
+        let notesUnsubscribe = null; 
+        let preselectedClassId = null;
+        let quill;
+        let allNotes = []; // Cache for search
 
         // --- DOM Elements ---
         const notesListEl = document.getElementById('notes-list');
+        const searchInput = document.getElementById('search-input');
         const newNoteBtn = document.getElementById('new-note-btn');
         const editorPlaceholder = document.getElementById('editor-placeholder');
         const editorContainer = document.getElementById('editor-container');
         const noteTitleInput = document.getElementById('note-title-input');
-        const noteBodyTextarea = document.getElementById('note-body-textarea');
+        const noteMetaEl = document.getElementById('note-meta');
+        const wordCountEl = document.getElementById('word-count');
         const saveNoteBtn = document.getElementById('save-note-btn');
         const deleteNoteBtn = document.getElementById('delete-note-btn');
         const shareNoteBtn = document.getElementById('share-note-btn');
@@ -270,84 +242,152 @@
         const confirmShareBtn = document.getElementById('confirm-share-btn');
         const logoutButton = document.getElementById('logout-button');
 
-        // --- Auth Guard ---
+        // --- Initialize Quill ---
+        const toolbarOptions = [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['clean']
+        ];
+        quill = new Quill('#quill-editor', {
+            modules: { toolbar: toolbarOptions },
+            theme: 'snow',
+            placeholder: 'Tuliskan catatanmu di sini...',
+        });
+
+        // --- Auth & Initial Load ---
         onAuthStateChanged(auth, user => {
             if (user) {
                 currentUser = user;
+                checkForRedirect(); 
                 listenForNotes(user.uid);
             } else {
                 if (notesUnsubscribe) notesUnsubscribe();
                 window.location.replace('auth.html');
             }
         });
-
+        
+        // --- Event Listeners ---
         logoutButton.addEventListener('click', () => signOut(auth));
+        newNoteBtn.addEventListener('click', handleNewNote);
+        searchInput.addEventListener('input', handleSearch);
 
-        // --- Realtime Notes Listener ---
-        function listenForNotes(userId) {
-            const notesCollection = collection(db, 'users', userId, 'notes');
-            const q = query(notesCollection, orderBy('updatedAt', 'desc'));
-
-            notesUnsubscribe = onSnapshot(q, (snapshot) => {
-                notesListEl.innerHTML = ''; // Clear list
-                if (snapshot.empty) {
-                    notesListEl.innerHTML = '<p style="padding: 1.5rem; color: var(--text-muted);">Belum ada catatan.</p>';
-                } else {
-                    snapshot.forEach(doc => {
-                        const note = doc.data();
-                        const li = document.createElement('li');
-                        li.className = 'note-item';
-                        li.dataset.id = doc.id;
-                        li.innerHTML = `
-                            <h3>${note.title || 'Tanpa Judul'}</h3>
-                            <p>${note.body ? note.body.substring(0, 40) + '...' : 'Tidak ada konten'}</p>
-                        `;
-                        li.addEventListener('click', () => handleNoteSelect(doc.id, note));
-                        notesListEl.appendChild(li);
-                    });
-                    if(currentNoteId) {
-                        const activeItem = notesListEl.querySelector(`[data-id="${currentNoteId}"]`);
-                        if(activeItem) activeItem.classList.add('active');
-                    }
-                }
-            }, (error) => {
-                console.error("Error listening for notes:", error);
-                notesListEl.innerHTML = '<p>Gagal memuat catatan.</p>';
-            });
+        function checkForRedirect() {
+            const params = new URLSearchParams(window.location.search);
+            preselectedClassId = params.get('share_to');
+            if(preselectedClassId) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+                handleNewNote();
+            }
         }
 
-        // --- Note Selection & Editor UI ---
-        function handleNoteSelect(noteId, noteData) {
+        function listenForNotes(userId) {
+            const q = query(collection(db, 'users', userId, 'notes'), orderBy('updatedAt', 'desc'));
+            notesUnsubscribe = onSnapshot(q, (snapshot) => {
+                allNotes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderNotesList(allNotes);
+            }, (error) => {
+                console.error("Error listening for notes:", error);
+                notesListEl.innerHTML = '<p class="empty-state">Gagal memuat catatan.</p>';
+            });
+        }
+        
+        function renderNotesList(notes) {
+            notesListEl.innerHTML = '';
+            if (notes.length === 0) {
+                notesListEl.innerHTML = '<p style="padding: 1.5rem; text-align: center; color: var(--text-muted);">Belum ada catatan.</p>';
+                return;
+            }
+            notes.forEach(noteData => {
+                const li = document.createElement('li');
+                li.className = 'note-item';
+                li.dataset.id = noteData.id;
+
+                const isShared = noteData.sharedTo && noteData.sharedTo.length > 0;
+                
+                li.innerHTML = `
+                    <h3>${noteData.title || 'Tanpa Judul'}</h3>
+                    <p>${noteData.plainText ? noteData.plainText.substring(0, 100) + '...' : 'Tidak ada konten'}</p>
+                    <div class="note-item-footer">
+                        <span class="note-date">${noteData.updatedAt ? noteData.updatedAt.toDate().toLocaleDateString('id-ID') : ''}</span>
+                        ${isShared ? '<span class="shared-tag">Dibagikan</span>' : ''}
+                    </div>
+                `;
+                li.addEventListener('click', () => handleNoteSelect(noteData.id));
+                notesListEl.appendChild(li);
+            });
+             if (currentNoteId) {
+                const activeItem = notesListEl.querySelector(`[data-id="${currentNoteId}"]`);
+                if (activeItem) activeItem.classList.add('active');
+            }
+        }
+        
+        function handleSearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredNotes = allNotes.filter(note => 
+                note.title.toLowerCase().includes(searchTerm) || 
+                (note.plainText && note.plainText.toLowerCase().includes(searchTerm))
+            );
+            renderNotesList(filteredNotes);
+        }
+        
+        function handleNoteSelect(noteId) {
+            const noteData = allNotes.find(n => n.id === noteId);
+            if (!noteData) return;
+
             currentNoteId = noteId;
             noteTitleInput.value = noteData.title;
-            noteBodyTextarea.value = noteData.body;
             
+            // **FIX**: Parse the JSON string from Firestore before loading into Quill
+            try {
+                const content = JSON.parse(noteData.contentDelta || '[]');
+                quill.setContents(content);
+            } catch (e) {
+                console.error("Error parsing note content:", e);
+                quill.setText('Gagal memuat konten catatan.');
+            }
+            
+            noteMetaEl.textContent = `Terakhir diperbarui: ${noteData.updatedAt.toDate().toLocaleString('id-ID')}`;
+            updateWordCount();
+
             editorPlaceholder.style.display = 'none';
             editorContainer.style.display = 'flex';
             
             document.querySelectorAll('.note-item').forEach(item => item.classList.remove('active'));
-            notesListEl.querySelector(`[data-id="${noteId}"]`).classList.add('active');
+            const activeItem = notesListEl.querySelector(`[data-id="${noteId}"]`);
+            if (activeItem) activeItem.classList.add('active');
         }
-
-        newNoteBtn.addEventListener('click', () => {
+        
+        function handleNewNote() {
             currentNoteId = null;
             noteTitleInput.value = '';
-            noteBodyTextarea.value = '';
-            
+            quill.setContents([]);
+            noteMetaEl.textContent = 'Catatan baru';
+            updateWordCount();
+
             editorPlaceholder.style.display = 'none';
             editorContainer.style.display = 'flex';
             noteTitleInput.focus();
             document.querySelectorAll('.note-item').forEach(item => item.classList.remove('active'));
-        });
+        }
 
+        // Quill word counter
+        quill.on('text-change', () => updateWordCount());
+        function updateWordCount() {
+            const text = quill.getText().trim();
+            const wordCount = text.length > 0 ? text.split(/\s+/).length : 0;
+            wordCountEl.textContent = `${wordCount} kata`;
+        }
+        
         // --- CRUD Operations ---
         saveNoteBtn.addEventListener('click', async () => {
             if (!currentUser) return;
             
             const title = noteTitleInput.value.trim();
-            const body = noteBodyTextarea.value.trim();
+            const contentDelta = quill.getContents();
+            const plainText = quill.getText();
 
-            if (!title && !body) {
+            if (!title && plainText.trim().length === 0) {
                 alert("Catatan tidak boleh kosong.");
                 return;
             }
@@ -358,39 +398,41 @@
             try {
                 const noteData = {
                     title: title || 'Tanpa Judul',
-                    body: body,
+                    // **FIX**: Stringify the Delta object before saving to Firestore
+                    contentDelta: JSON.stringify(contentDelta),
+                    plainText: plainText,
                     updatedAt: serverTimestamp()
                 };
 
-                if (currentNoteId) {
-                    // Update existing note
-                    const noteRef = doc(db, 'users', currentUser.uid, 'notes', currentNoteId);
-                    await updateDoc(noteRef, noteData);
-                } else {
-                    // Create new note
+                const isNewNote = !currentNoteId;
+                if (isNewNote) {
                     noteData.createdAt = serverTimestamp();
-                    const notesCollection = collection(db, 'users', currentUser.uid, 'notes');
-                    const newDocRef = await addDoc(notesCollection, noteData);
-                    currentNoteId = newDocRef.id; // Set current id to the new note
+                    const newDocRef = await addDoc(collection(db, 'users', currentUser.uid, 'notes'), noteData);
+                    currentNoteId = newDocRef.id;
+                } else {
+                    await updateDoc(doc(db, 'users', currentUser.uid, 'notes', currentNoteId), noteData);
                 }
+                noteMetaEl.textContent = `Tersimpan pada ${new Date().toLocaleTimeString('id-ID')}`;
+
+                if (isNewNote && preselectedClassId) {
+                    shareNoteBtn.click();
+                }
+
             } catch (error) {
                 console.error("Error saving note: ", error);
                 alert("Gagal menyimpan catatan.");
             } finally {
                 saveNoteBtn.disabled = false;
-                saveNoteBtn.textContent = 'Simpan';
+                saveNoteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8.036A5.53 5.53 0 0 1 7.583 4h.834a5.53 5.53 0 0 1 5.083 4.036.5.5 0 0 0 .917-.402A6.53 6.53 0 0 0 8.417 3H7.583A6.53 6.53 0 0 0 1.583 7.634a.5.5 0 0 0 .917.402z"/><path d="m9.22 10.323.333 1.665a.5.5 0 0 0 .94.004l1.463-3.657a.5.5 0 0 0-.825-.632l-3.32 2.37a.5.5 0 0 0 .004.94zm-2.48-1.55L4.935 9.14a.5.5 0 0 0-.632.825l2.37 3.32a.5.5 0 0 0 .94-.004l1.665-.333a.5.5 0 0 0 .004-.94l-3.657-1.463z"/></svg><span>Simpan</span>`;
             }
         });
 
         deleteNoteBtn.addEventListener('click', async () => {
-            if (!currentNoteId || !currentUser) return;
-            if (!confirm("Apakah Anda yakin ingin menghapus catatan ini?")) return;
+            if (!currentNoteId || !currentUser || !confirm("Apakah Anda yakin ingin menghapus catatan ini?")) return;
             
             try {
                 await deleteDoc(doc(db, 'users', currentUser.uid, 'notes', currentNoteId));
                 currentNoteId = null;
-                noteTitleInput.value = '';
-                noteBodyTextarea.value = '';
                 editorContainer.style.display = 'none';
                 editorPlaceholder.style.display = 'block';
             } catch (error) {
@@ -405,38 +447,40 @@
                 alert("Silakan simpan catatan terlebih dahulu sebelum membagikannya.");
                 return;
             }
+            shareModal.style.display = 'flex';
+            classSelect.innerHTML = '<option>Memuat kelas...</option>';
             
             try {
                 const userDocSnap = await getDoc(doc(db, 'users', currentUser.uid));
                 const joinedClassesIds = userDocSnap.data().joinedClasses || [];
-
-                if(joinedClassesIds.length === 0) {
-                    alert("Anda harus bergabung dengan kelas terlebih dahulu untuk bisa berbagi catatan.");
+                if (joinedClassesIds.length === 0) {
+                    classSelect.innerHTML = '<option>Anda belum gabung kelas</option>';
                     return;
                 }
 
                 const classPromises = joinedClassesIds.map(id => getDoc(doc(db, 'classes', id)));
                 const classSnapshots = await Promise.all(classPromises);
                 
-                classSelect.innerHTML = ''; // Clear previous options
+                classSelect.innerHTML = '';
                 classSnapshots.forEach(snap => {
                     if (snap.exists()) {
-                        const classData = snap.data();
-                        const option = document.createElement('option');
-                        option.value = snap.id;
-                        option.textContent = classData.namaMataKuliah;
-                        classSelect.appendChild(option);
+                        classSelect.innerHTML += `<option value="${snap.id}">${snap.data().namaMataKuliah}</option>`;
                     }
                 });
-                shareModal.style.display = 'flex';
-
+                
+                if (preselectedClassId) {
+                    classSelect.value = preselectedClassId;
+                }
             } catch (error) {
-                console.error("Error preparing to share note:", error);
-                alert("Gagal memuat daftar kelas.");
+                console.error("Error loading classes for sharing:", error);
+                classSelect.innerHTML = '<option>Gagal memuat kelas</option>';
             }
         });
 
-        cancelShareBtn.addEventListener('click', () => shareModal.style.display = 'none');
+        cancelShareBtn.addEventListener('click', () => {
+            shareModal.style.display = 'none';
+            preselectedClassId = null;
+        });
         
         confirmShareBtn.addEventListener('click', async () => {
             const selectedClassId = classSelect.value;
@@ -451,19 +495,21 @@
                 
                 if (noteSnap.exists()) {
                     const noteData = noteSnap.data();
-
                     await addDoc(collection(db, 'classes', selectedClassId, 'sharedNotes'), {
                         title: noteData.title,
-                        body: noteData.body,
-                        // ROBUST FIX: Use the displayName from the auth object directly.
-                        sharedBy: currentUser.displayName || 'Seorang Pengguna',
+                        body: noteData.plainText,
+                        sharedBy: currentUser.displayName || 'Anonymous',
                         sharedAt: serverTimestamp()
+                    });
+                    
+                    // Mark note as shared
+                    await updateDoc(noteRef, {
+                        sharedTo: arrayUnion(selectedClassId)
                     });
                     
                     alert("Catatan berhasil dibagikan!");
                     shareModal.style.display = 'none';
-                } else {
-                    alert("Catatan tidak ditemukan untuk dibagikan.");
+                    preselectedClassId = null;
                 }
             } catch (error) {
                 console.error("Error sharing note:", error);

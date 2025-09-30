@@ -19,14 +19,11 @@
             --bg-sidebar: #FFFFFF;
             --card-bg: #FFFFFF;
             --border-color: #E5E7EB;
-            --hour-height: 60px; /* Represents 60 minutes */
+            --danger-color: #EF4444;
+            --hour-height: 60px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -39,26 +36,9 @@
             overflow: hidden;
         }
         
-        /* --- Sidebar (reused from dashboard) --- */
-        .sidebar {
-            width: 260px;
-            background-color: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            padding: 1.5rem;
-            transition: transform 0.3s ease-in-out;
-        }
-        
-        .sidebar-header {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-decoration: none;
-            margin-bottom: 2.5rem;
-            padding: 0 0.5rem;
-        }
-
+        /* --- Sidebar (reused) --- */
+        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem; }
+        .sidebar-header { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); text-decoration: none; margin-bottom: 2.5rem; padding: 0 0.5rem; }
         .nav-menu { list-style: none; flex-grow: 1; }
         .nav-item a { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; }
         .nav-item a:hover { background-color: var(--primary-light); color: var(--primary-color); }
@@ -76,143 +56,63 @@
             overflow: hidden;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
         .header h1 { font-size: 2.25rem; font-weight: 700; }
         
-        .profile { display: flex; align-items: center; gap: 1rem; }
-        .profile-name { font-weight: 600; text-align: right; }
-        .profile-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background-color: var(--border-color); }
+        /* --- Robust Calendar --- */
+        .calendar-wrapper { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .calendar-header { display: grid; grid-template-columns: 60px repeat(7, 1fr); text-align: center; font-weight: 600; color: var(--text-light); padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .day-name.today { color: var(--primary-color); font-weight: 700; }
         
-        /* --- Calendar --- */
-        .calendar-container {
-            flex-grow: 1;
-            overflow: auto;
-            position: relative;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: 50px repeat(7, 1fr);
-            min-width: 900px;
-        }
+        .calendar-body { flex-grow: 1; overflow: auto; position: relative; display: flex; }
         
-        .time-column {
-            display: flex;
-            flex-direction: column;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
+        .time-column { flex-shrink: 0; width: 60px; }
+        .time-label { height: var(--hour-height); text-align: right; padding-right: 10px; font-size: 0.8rem; color: var(--text-muted); position: relative; }
+        .time-label span { position: relative; top: -0.6em; }
         
-        .time-label {
-            height: var(--hour-height);
-            text-align: right;
-            padding-right: 0.5rem;
-            position: relative;
-        }
-
-        .time-label:not(:first-child)::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 10px;
-            right: 0;
-            height: 1px;
-            background-color: transparent; /* Changed to transparent, lines are now in day-column */
-        }
-        
-        .time-label span {
-            position: relative;
-            top: -0.5em; /* Nudge text up to align with lines */
-        }
-
-        .day-column {
-            position: relative;
-            border-left: 1px solid var(--border-color);
-        }
-        
-        .day-header {
-            text-align: center;
-            font-weight: 600;
-            padding: 0.75rem 0;
-            position: sticky;
-            top: 0;
-            background-color: var(--bg-body);
-            z-index: 10;
-        }
-        
-        .day-header.today {
-            color: var(--primary-color);
-        }
-
-        .day-content {
-            position: relative;
-            height: calc(var(--hour-height) * 14); /* 7am to 9pm = 14 hours */
-            background-image: linear-gradient(to bottom, var(--border-color) 1px, transparent 1px);
-            background-size: 100% var(--hour-height);
-        }
+        .grid-container { flex-grow: 1; display: grid; grid-template-columns: repeat(7, 1fr); position: relative; }
+        .day-column { border-left: 1px solid var(--border-color); position: relative; background-image: linear-gradient(to bottom, var(--border-color) 1px, transparent 1px); background-size: 100% var(--hour-height); }
+        .day-column:first-child { border-left: none; }
         
         .class-block {
             position: absolute;
-            left: 4px;
-            right: 4px;
-            background-color: var(--primary-light);
-            border-left: 3px solid var(--primary-color);
-            border-radius: 4px;
+            left: 5px;
+            right: 5px;
+            border-radius: 6px;
             padding: 0.5rem;
             overflow: hidden;
             transition: all 0.2s ease;
-            cursor: pointer;
+            text-decoration: none;
         }
+        .class-block:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); z-index: 5; }
+        .class-block h3 { font-size: 0.875rem; font-weight: 600; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .class-block p { font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0.8; }
         
-        .class-block:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            z-index: 5;
+        .current-time-indicator {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--danger-color);
+            z-index: 10;
+            display: none; /* Hidden by default, shown by JS */
+            pointer-events: none;
         }
-        
-        .class-block h3 {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .class-block p {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .current-time-indicator::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: -4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--danger-color);
+            border: 2px solid #fff;
         }
 
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 5rem auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
         .empty-state { text-align: center; padding: 4rem 1rem; color: var(--text-muted); }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; flex-direction: row; justify-content: space-between; align-items: center; padding: 1rem; border-right: none; border-bottom: 1px solid var(--border-color); }
-            .sidebar-header { margin-bottom: 0; }
-            .nav-menu { display: flex; gap: 0.5rem; }
-            .nav-item a { padding: 0.5rem; margin-bottom: 0; }
-            .nav-item a span, .logout-button span { display: none; }
-            .nav-item a svg, .logout-button svg { margin: 0; }
-            .main-content { padding: 1.5rem; }
-            .header h1 { font-size: 1.75rem; }
-        }
-
     </style>
 </head>
 <body>
@@ -228,21 +128,12 @@
         <button class="logout-button" id="logout-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span>Keluar</span></button>
     </aside>
 
-    <main class="main-content">
+    <main class="main-content" id="main-container">
         <header class="header">
-            <div>
-                <h1>Jadwal Mingguan</h1>
-                <p class="text-muted">Jadwal Anda, dibuat secara otomatis.</p>
-            </div>
-             <div class="profile">
-                <span class="profile-name" id="user-name">Memuat...</span>
-                <img src="https://placehold.co/48x48/E5E7EB/6B7280?text=A" alt="Profile Picture" class="profile-img" id="user-photo">
-            </div>
+            <h1>Jadwal Mingguan</h1>
         </header>
-        
-        <div class="calendar-container" id="calendar-container">
-            <div class="loader"></div>
-            <!-- Calendar will be generated by JS -->
+        <div class="calendar-wrapper" id="calendar-container">
+             <div class="loader"></div>
         </div>
     </main>
 
@@ -265,38 +156,28 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        
+        let timeIndicatorInterval = null;
 
         // --- Auth Guard & Data Loading ---
         onAuthStateChanged(auth, user => {
             if (user) {
                 loadScheduleData(user);
             } else {
+                if (timeIndicatorInterval) clearInterval(timeIndicatorInterval);
                 window.location.replace('auth.html');
             }
         });
         
-        // --- DOM Elements ---
-        const userNameEl = document.getElementById('user-name');
-        const userPhotoEl = document.getElementById('user-photo');
-        const logoutButton = document.getElementById('logout-button');
-        const calendarContainer = document.getElementById('calendar-container');
-
-        // --- Logout ---
-        logoutButton.addEventListener('click', () => signOut(auth));
+        document.getElementById('logout-button').addEventListener('click', () => signOut(auth));
 
         // --- Main Data Loading Function ---
         async function loadScheduleData(user) {
+            const calendarContainer = document.getElementById('calendar-container');
             try {
                 const userDocRef = doc(db, 'users', user.uid);
                 const userDocSnap = await getDoc(userDocRef);
-
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    userNameEl.textContent = userData.name || 'Pengguna';
-                    userPhotoEl.src = userData.photoURL || `https://placehold.co/48x48/E5E7EB/6B7280?text=${(userData.name || 'A').charAt(0)}`;
-                }
-
-                const joinedClassesIds = userDocSnap.data().joinedClasses || [];
+                const joinedClassesIds = userDocSnap.exists() ? userDocSnap.data().joinedClasses || [] : [];
                 
                 if (joinedClassesIds.length === 0) {
                     renderEmptyCalendar();
@@ -305,7 +186,9 @@
                 
                 const classPromises = joinedClassesIds.map(id => getDoc(doc(db, 'classes', id)));
                 const classSnapshots = await Promise.all(classPromises);
-                const classesData = classSnapshots.map(snap => snap.data()).filter(Boolean);
+                const classesData = classSnapshots
+                    .map(snap => ({ id: snap.id, ...snap.data() }))
+                    .filter(c => c.namaMataKuliah);
                 
                 renderCalendar(classesData);
 
@@ -315,88 +198,147 @@
             }
         }
         
-        // --- Calendar Rendering Logic ---
+        // --- Calendar Rendering ---
         function renderCalendar(classes) {
-            calendarContainer.innerHTML = ''; // Clear loader
-            
-            const calendarGrid = document.createElement('div');
-            calendarGrid.className = 'calendar-grid';
+            const calendarContainer = document.getElementById('calendar-container');
+            calendarContainer.innerHTML = ''; 
 
+            // Define colors for classes
+            const classColors = [
+                { bg: '#F5F3FF', border: '#8B5CF6' }, { bg: '#D1FAE5', border: '#10B981' },
+                { bg: '#FEF3C7', border: '#F59E0B' }, { bg: '#FEE2E2', border: '#EF4444' },
+                { bg: '#DBEAFE', border: '#3B82F6' }, { bg: '#FCE7F3', border: '#EC4899' }
+            ];
+            
+            // Build main structure
+            const header = document.createElement('div');
+            header.className = 'calendar-header';
+            header.innerHTML = `<div></div>`; // Spacer for time column
+            
+            const body = document.createElement('div');
+            body.className = 'calendar-body';
+            
             const timeColumn = document.createElement('div');
             timeColumn.className = 'time-column';
-
-            // Generate time labels from 7 AM to 8 PM
-            for (let hour = 7; hour <= 21; hour++) {
-                const timeLabel = document.createElement('div');
-                timeLabel.className = 'time-label';
-                if (hour <= 20) { // Don't show label for the last hour's top line
-                    timeLabel.innerHTML = `<span>${hour.toString().padStart(2, '0')}:00</span>`;
-                }
-                timeColumn.appendChild(timeLabel);
+            for (let hour = 7; hour <= 20; hour++) {
+                timeColumn.innerHTML += `<div class="time-label"><span>${hour.toString().padStart(2, '0')}:00</span></div>`;
             }
-            calendarGrid.appendChild(timeColumn);
+
+            const gridContainer = document.createElement('div');
+            gridContainer.className = 'grid-container';
 
             const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-            const todayIndex = (new Date().getDay() + 6) % 7; // 0=Senin, 1=Selasa...
+            const todayIndex = (new Date().getDay() + 6) % 7;
 
             days.forEach((dayName, index) => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = `day-name ${index === todayIndex ? 'today' : ''}`;
+                dayHeader.textContent = dayName;
+                header.appendChild(dayHeader);
+
                 const dayColumn = document.createElement('div');
                 dayColumn.className = 'day-column';
-                dayColumn.id = `day-${dayName}`;
-
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'day-header';
-                if(index === todayIndex) dayHeader.classList.add('today');
-                dayHeader.textContent = dayName;
-                
-                const dayContent = document.createElement('div');
-                dayContent.className = 'day-content';
-
-                dayColumn.appendChild(dayHeader);
-                dayColumn.appendChild(dayContent);
-                calendarGrid.appendChild(dayColumn);
+                dayColumn.dataset.day = dayName;
+                gridContainer.appendChild(dayColumn);
             });
 
-            calendarContainer.appendChild(calendarGrid);
+            body.append(timeColumn, gridContainer);
+            calendarContainer.append(header, body);
             
             // Place class blocks
-            classes.forEach(c => {
-                const dayEl = document.getElementById(`day-${c.hari}`);
-                if (!dayEl) return; // Skip if day is invalid
-                
-                const dayContentEl = dayEl.querySelector('.day-content');
-                
+            classes.forEach((c, index) => {
+                const dayCol = gridContainer.querySelector(`[data-day="${c.hari}"]`);
+                if (!dayCol || !c.waktu) return;
+
                 const [startHour, startMinute] = c.waktu.split(':').map(Number);
-                const durationMinutes = (c.sks || 2) * 50; // Assume 2 SKS if not provided, 50 mins per SKS
+                let durationMinutes = (c.sks || 2) * 50;
+
+                if (c.waktuSelesai) {
+                    const [endHour, endMinute] = c.waktuSelesai.split(':').map(Number);
+                    durationMinutes = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+                }
                 
+                if (durationMinutes <= 0) return;
+
                 const startOffsetMinutes = (startHour - 7) * 60 + startMinute;
                 
-                // Calculate position and height
-                const top = (startOffsetMinutes / 60) * 60; // 60px per hour
+                const top = (startOffsetMinutes / 60) * 60;
                 const height = (durationMinutes / 60) * 60;
-
-                const classBlock = document.createElement('div');
+                
+                const classBlock = document.createElement('a');
+                classBlock.href = `class_page.html?id=${c.id}`;
                 classBlock.className = 'class-block';
                 classBlock.style.top = `${top}px`;
                 classBlock.style.height = `${height}px`;
+
+                const color = classColors[index % classColors.length];
+                classBlock.style.backgroundColor = color.bg;
+                classBlock.style.borderLeft = `3px solid ${color.border}`;
                 
+                const timeText = c.waktuSelesai ? `${c.waktu} - ${c.waktuSelesai}` : c.waktu;
                 classBlock.innerHTML = `
                     <h3>${c.namaMataKuliah}</h3>
-                    <p>${c.waktu}</p>
-                    <p>Ruang ${c.ruang}</p>
+                    <p style="color: ${color.border}; font-weight: 500;">${timeText}</p>
+                    <p style="color: ${color.border};">Ruang ${c.ruang}</p>
                 `;
-                
-                dayContentEl.appendChild(classBlock);
+                dayCol.appendChild(classBlock);
             });
+            
+            setupCurrentTimeIndicator();
+        }
+
+        function setupCurrentTimeIndicator() {
+            if (timeIndicatorInterval) clearInterval(timeIndicatorInterval);
+
+            const gridContainer = document.querySelector('.grid-container');
+            if (!gridContainer) return;
+
+            let indicator = document.querySelector('.current-time-indicator');
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.className = 'current-time-indicator';
+                gridContainer.appendChild(indicator);
+            }
+            
+            const updatePosition = () => {
+                const now = new Date();
+                const todayIndex = (now.getDay() + 6) % 7;
+                const dayColumns = gridContainer.querySelectorAll('.day-column');
+                if (todayIndex >= dayColumns.length) {
+                    indicator.style.display = 'none';
+                    return;
+                }
+
+                const currentMinutes = (now.getHours() - 7) * 60 + now.getMinutes();
+                if (currentMinutes < 0 || currentMinutes > 14 * 60) {
+                     indicator.style.display = 'none';
+                     return;
+                }
+
+                indicator.style.display = 'block';
+                indicator.style.top = `${(currentMinutes / 60) * 60}px`;
+                indicator.style.left = `${dayColumns[todayIndex].offsetLeft}px`;
+                indicator.style.width = `${dayColumns[todayIndex].offsetWidth}px`;
+            };
+            
+            updatePosition();
+            // Scroll to current time on initial load
+            const initialTop = parseFloat(indicator.style.top);
+            if (!isNaN(initialTop)) {
+                const calendarBody = document.querySelector('.calendar-body');
+                const viewportHeight = calendarBody.clientHeight;
+                calendarBody.scrollTop = initialTop - (viewportHeight / 3);
+            }
+
+            timeIndicatorInterval = setInterval(updatePosition, 60000); // Update every minute
         }
         
         function renderEmptyCalendar() {
-             calendarContainer.innerHTML = `<div class="empty-state">
+             document.getElementById('calendar-container').innerHTML = `<div class="empty-state">
                 <h2>Jadwal Anda masih kosong.</h2>
                 <p>Bergabunglah dengan sebuah kelas untuk melihat jadwal Anda di sini.</p>
             </div>`;
         }
-
     </script>
 </body>
 </html>

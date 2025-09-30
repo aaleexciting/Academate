@@ -290,8 +290,12 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="waktu">Waktu</label>
+                    <label for="waktu">Waktu Mulai</label>
                     <input type="time" id="waktu" required>
+                </div>
+                <div class="form-group">
+                    <label for="waktuSelesai">Waktu Selesai</label>
+                    <input type="time" id="waktuSelesai" required>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="modal-btn" id="cancel-create-btn">Batal</button>
@@ -427,7 +431,8 @@
                     ruang: document.getElementById('ruang').value,
                     hari: document.getElementById('hari').value,
                     waktu: document.getElementById('waktu').value,
-                    classCode: classCode, // Add unique code
+                    waktuSelesai: document.getElementById('waktuSelesai').value, // Added end time
+                    classCode: classCode, 
                     creatorId: currentUser.uid,
                     createdAt: serverTimestamp(),
                     members: [currentUser.uid]
@@ -517,11 +522,16 @@
             const card = document.createElement('div');
             card.className = 'class-card';
             
+            // Updated schedule text to include end time if it exists
+            const scheduleText = data.waktuSelesai 
+                ? `${data.hari}, ${data.waktu} - ${data.waktuSelesai}` 
+                : `${data.hari}, ${data.waktu}`;
+
             card.innerHTML = `
                 <div class="details">
                     <h3>${data.namaMataKuliah}</h3>
                     <p>${data.dosen}</p>
-                    <span><strong>Jadwal:</strong> ${data.hari}, ${data.waktu}</span>
+                    <span><strong>Jadwal:</strong> ${scheduleText}</span>
                     <span><strong>Ruang:</strong> ${data.ruang}</span>
                     <span><strong>SKS:</strong> ${data.sks}</span>
                 </div>
@@ -578,4 +588,3 @@
     </script>
 </body>
 </html>
-
