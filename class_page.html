@@ -59,7 +59,12 @@
     .header{display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border)}
     .header-left{display:flex; align-items:center; gap:12px}
     .header-title-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap;}
-    .header-title{margin:0; font-size:20px}
+    .header-title{margin:0; font-size:20px; display: flex; align-items: center;}
+    .header-icon {
+        width: 44px; height: 44px; border-radius: 12px;
+        background: var(--bubble); display: grid; place-items: center;
+        font-size: 24px; flex-shrink: 0; margin-right: 8px;
+    }
     .header-sub{margin:4px 0 0; color:var(--muted); font-size:13px; width: 100%;}
     .header-right{display:flex; align-items:center; gap:10px}
     .icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:18px;transition:.2s}
@@ -80,7 +85,7 @@
 
     /* Member List in Modal */
     .member-popup-list { list-style: none; margin: 0; padding: 0 4px; max-height: 50vh; overflow-y: auto; }
-    .member-popup-item { display: flex; align-items: center; gap: 12px; padding: 10px 8px; border-radius: 8px; }
+    .member-popup-item { display: flex; align-items: center; gap: 12px; padding: 10px 8px; border-radius: 8px; cursor: pointer; }
     .member-popup-item:hover { background-color: var(--bg); }
     .member-popup-item .avatar { width: 40px; height: 40px; border: none; flex-shrink: 0; }
     .member-popup-item-info { min-width: 0; }
@@ -114,7 +119,7 @@
     .m.me{grid-template-columns:1fr auto}
     .m.me .ava{order:2}
     .m.me .bubble{order:1; justify-self:end; background:var(--bubble-me); color:var(--bubble-me-text)}
-    .ava{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+    .ava{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.05); cursor: pointer;}
     .bubble{max-width:min(640px, 85%); background:var(--bubble); border:1px solid var(--border); padding:10px 12px; border-radius:14px; box-shadow:0 1px 3px rgba(0,0,0,.04); line-height:1.55}
     .meta{display:flex; align-items:center; gap:8px; font-size:11px; color:var(--muted); margin-top:6px}
     .m.me .meta { color: rgba(255, 255, 255, 0.75); }
@@ -258,7 +263,7 @@
 
     .m-form { display: flex; flex-direction: column; gap: 14px; }
     .m-form label { font-weight: 600; font-size: 14px; color: var(--text); }
-    .m-form input, .m-form textarea {
+    .m-form input, .m-form textarea, .m-form select {
       width: 100%;
       padding: 10px 14px;
       border: 1px solid var(--border);
@@ -267,7 +272,7 @@
       background: var(--bg);
       transition: border-color .2s, box-shadow .2s;
     }
-    .m-form input:focus, .m-form textarea:focus {
+    .m-form input:focus, .m-form textarea:focus, .m-form select:focus {
         outline: none;
         border-color: var(--primary);
         box-shadow: 0 0 0 3px #6f6cff3b;
@@ -287,6 +292,26 @@
     .m-btn.primary:hover { background: var(--primary-2); }
     .m-btn.ghost { border-color: var(--border); background: transparent; color: var(--muted); }
     .m-btn.ghost:hover { background: var(--bg); color: var(--text); }
+
+    /* Profile Modal CSS */
+    .profile-card-banner { height: 120px; background-size: cover; background-position: center; }
+    .profile-card-body { padding: 16px; text-align: center; position: relative; }
+    .profile-card-avatar {
+        width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
+        border: 4px solid var(--surface); position: absolute;
+        top: 0; left: 50%; transform: translate(-50%, -50%);
+    }
+    .profile-card-info { padding-top: 45px; }
+    .profile-card-info h3 { margin: 0; font-size: 20px; }
+    .profile-card-info p { margin: 4px 0 12px; color: var(--muted); }
+    .profile-card-details { font-size: 13px; text-align: left; padding: 0 8px; }
+    .detail-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .detail-item i { color: var(--muted); }
+    .profile-card-socials { display: flex; justify-content: center; gap: 12px; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; }
+    .social-btn {
+        width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+        background: var(--bg); color: var(--text); font-size: 22px; text-decoration: none;
+    }
   </style>
 </head>
 <body data-page="classes">
@@ -316,86 +341,10 @@
     <!-- Main (fixed grid rows: header + content that fills) -->
     <section class="main" id="main">
       <!-- Top header -->
-      <div class="header">
-        <div class="header-left">
-          <button class="icon-btn" id="back-btn" title="Kembali" aria-label="Kembali"><i class="ri-arrow-left-line"></i></button>
-          <div>
-            <div class="header-title-wrapper">
-                <h2 class="header-title" id="class-title">Memuat Kelas…</h2>
-                <div id="class-members-display" class="class-members-display">
-                  <!-- Avatars will be injected here by JS -->
-                </div>
-            </div>
-            <p class="header-sub" id="class-sub">—</p>
-          </div>
-        </div>
-        <div class="header-right">
-          <button class="icon-btn" id="refresh-btn" title="Segarkan" aria-label="Segarkan"><i class="ri-refresh-line"></i></button>
-          <img id="avatar-top" class="avatar" src="https://placehold.co/80x80" alt="Profile"/>
-        </div>
-      </div>
+      <header class="header" id="header"></header>
 
       <!-- FIXED Content area (always expanded) -->
-      <div class="content" id="content" role="main" aria-live="polite">
-        <!-- LEFT: Discussion (fills column height) -->
-        <div class="card" id="discussion-card">
-          <div class="card-body">
-            <div class="card-head">
-              <h3 class="card-title">Diskusi Kelas</h3>
-              <div style="display:flex; gap:8px; align-items:center">
-                <span id="presence" class="header-sub">— online</span>
-                <button class="btn" id="jump-latest"><i class="ri-arrow-down-line"></i> Terbaru</button>
-              </div>
-            </div>
-
-            <div class="chat-wrapper">
-              <div id="discussion-feed" class="feed" aria-label="Utas diskusi">
-                <div class="loader"></div>
-              </div>
-
-              <div class="composer">
-                <div class="tools">
-                  <button class="i-btn" id="attach-btn" title="Lampirkan" aria-label="Lampirkan">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-                  </button>
-                  <button class="i-btn" id="emoji-btn" title="Emoji" aria-label="Emoji">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
-                  </button>
-                  <input id="file-input" type="file" accept="image/*" hidden>
-                </div>
-                <textarea id="discussion-input" placeholder="Ketik pesan… Gunakan @ untuk menyebut teman" rows="1"></textarea>
-                <button id="send-btn" class="btn primary"><i class="ri-send-plane-2-line"></i> Kirim</button>
-              </div>
-            </div>
-            <div id="typing" class="typing" aria-live="polite" hidden>Beberapa orang sedang mengetik…</div>
-          </div>
-        </div>
-
-        <!-- RIGHT: Tasks + Notes (columns scroll independently) -->
-        <div class="side-panel">
-          <div class="card">
-            <div class="card-body" style="min-height:0">
-              <div class="card-head"><h3 class="card-title">Tugas</h3></div>
-              <ul id="task-list" class="tasks" aria-label="Daftar tugas">
-                <div class="loader"></div>
-              </ul>
-              <button id="add-task-btn" class="btn primary full"><i class="ri-add-line"></i> Tambah Tugas Baru</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-body" style="min-height:0">
-              <div class="card-head">
-                <h3 class="card-title">Catatan Bersama</h3>
-                <button id="add-note-btn" class="btn primary"><i class="ri-add-line"></i> Tambah</button>
-              </div>
-              <ul id="shared-notes-list" class="notes" aria-label="Catatan bersama">
-                <div class="loader"></div>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="content" id="content" role="main" aria-live="polite"></div>
     </section>
   </div>
 
@@ -458,12 +407,52 @@
       </div>
     </div>
   </div>
+  
+  <!-- Class Settings Modal (Admin Only) -->
+  <div class="overlay" id="settings-modal">
+    <div class="modal" style="width:min(95vw, 520px);">
+      <h2>Pengaturan Kelas</h2>
+      <form id="settings-form" class="m-form">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <input type="text" id="settings-icon" style="font-size: 24px; text-align: center; width: 60px; padding: 10px 0;" maxlength="2">
+          <input type="text" id="settings-name" placeholder="Nama Mata Kuliah" required style="flex: 1;">
+        </div>
+        <input type="text" id="settings-lecturer" placeholder="Dosen" required>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+          <input type="text" id="settings-room" placeholder="Ruang">
+          <input type="number" id="settings-sks" placeholder="SKS" min="1" max="6">
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+          <select id="settings-day">
+            <option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option>
+          </select>
+          <input type="time" id="settings-start-time">
+          <input type="time" id="settings-end-time">
+        </div>
+        <div class="m-foot" style="justify-content: space-between;">
+            <button type="button" class="m-btn" id="delete-class-btn" style="color:var(--danger); border-color: #ffd2d2;">Hapus Kelas</button>
+            <div>
+              <button type="button" class="m-btn ghost" data-close-modal>Batal</button>
+              <button type="submit" class="m-btn primary">Simpan Perubahan</button>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Profile Lookup Modal -->
+  <div class="overlay" id="profile-modal">
+      <div class="modal" id="profile-modal-content" style="padding: 0; width: min(95vw, 400px); overflow: hidden;">
+          <!-- Profile content will be injected by JS here -->
+      </div>
+  </div>
 
   <!-- ===== PAGE SCRIPT ===== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot, Timestamp, arrayUnion, arrayRemove, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot, Timestamp, arrayUnion, arrayRemove, limit, startAfter, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
@@ -478,11 +467,17 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const storage = getStorage(app);
 
-    let currentUser = null, classId = null, membersCache = {}, classMemberCount = 0;
+    let currentUser = null, classId = null, membersCache = {}, classCreatorId = null, classMemberCount = 0;
     let discussionUnsub = null, tasksUnsub = null, notesUnsub = null;
     const VISIBLE_AVATARS = 5; 
     let listenersAttached = false;
+    const BANNERS = {
+      'banner1': 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max',
+      'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max',
+      'banner3': 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max'
+    };
 
     const $ = (id)=>document.getElementById(id);
 
@@ -494,8 +489,8 @@
         return; 
       }
       currentUser = user;
-      $('avatar-top').src = user.photoURL || 'https://placehold.co/80x80';
-      
+      renderInitialStructureAndSkeletons();
+
       const params = new URLSearchParams(location.search); 
       classId = params.get('id');
       if (!classId) { 
@@ -518,13 +513,35 @@
         if (!classSnap.exists()){ renderEmpty('Kelas tidak ditemukan.'); return; }
         
         const data = classSnap.data();
+        classCreatorId = data.creatorId;
         const userDoc = await getDoc(doc(db,'users',currentUser.uid));
         if (!(userDoc.data()?.joinedClasses||[]).includes(classId)){ renderEmpty('Anda tidak memiliki akses ke kelas ini.'); return; }
 
         await cacheMembers(data.members || []);
 
-        $('class-title').textContent = data.namaMataKuliah;
-        $('class-sub').textContent = `${data.dosen} • ${data.hari}, ${data.waktu} - ${data.waktuSelesai || ''}`;
+        $('header').innerHTML = `
+          <div class="header-left">
+            <button class="icon-btn" id="back-btn" title="Kembali" aria-label="Kembali"><i class="ri-arrow-left-line"></i></button>
+            <div>
+              <div class="header-title-wrapper">
+                  <h2 class="header-title" id="class-title"><div class="header-icon">${data.classIcon || '📚'}</div> ${data.namaMataKuliah}</h2>
+                  <div id="class-members-display" class="class-members-display"></div>
+              </div>
+              <p class="header-sub" id="class-sub">${data.dosen} • ${data.hari}, ${data.waktu} - ${data.waktuSelesai || ''}</p>
+            </div>
+          </div>
+          <div class="header-right">
+            <button class="icon-btn" id="settings-btn" title="Pengaturan Kelas" style="display: none;"><i class="ri-settings-3-line"></i></button>
+            <button class="icon-btn" id="refresh-btn" title="Segarkan" aria-label="Segarkan"><i class="ri-refresh-line"></i></button>
+            <a href="account.html" title="Akun Anda">
+              <img id="avatar-top" class="avatar" src="${currentUser.photoURL || 'https://placehold.co/80x80'}" alt="Profile"/>
+            </a>
+          </div>
+        `;
+        
+        if (currentUser.uid === classCreatorId) {
+            $('settings-btn').style.display = 'grid';
+        }
 
         renderClassMembers();
         
@@ -579,14 +596,17 @@
         }
         
         members.forEach(member => {
+            const isCreator = member.id === classCreatorId;
             const li = el('li', { class: 'member-popup-item' });
+            li.dataset.userId = member.id;
             const photo = member.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${(member.name || 'A').charAt(0)}`;
             li.innerHTML = `
                 <img src="${photo}" alt="${member.name}" class="avatar">
                 <div class="member-popup-item-info">
-                    <h4>${member.name || 'Pengguna'}</h4>
-                    <p>${member.email || ''}</p>
+                    <h4>${member.name || 'Pengguna'} ${isCreator ? '<span style="font-size: 11px; color: var(--primary); background: var(--bubble); padding: 2px 6px; border-radius: 6px;">Admin</span>' : ''}</h4>
+                    <p>${member.university || 'Universitas belum diatur'}</p>
                 </div>
+                ${!isCreator && currentUser.uid === classCreatorId ? '<button class="m-btn ghost" data-kick-uid="' + member.id + '" style="margin-left: auto; padding: 6px 10px;">Keluarkan</button>' : ''}
             `;
             popupList.appendChild(li);
         });
@@ -595,7 +615,7 @@
     function renderTask(id,t,ul){
       const isDone = t.completedBy?.includes(currentUser.uid);
       const due = formatDue(t.dueDate);
-      const isCreator = t.creatorId === currentUser.uid;
+      const isClassAdmin = classCreatorId === currentUser.uid;
       const li = document.createElement('li'); li.className = `task ${isDone?'done':''}`; li.id = `task-${id}`;
       const avatars = (t.completedBy||[]).map(uid=>{
         const u = membersCache[uid]; return u?`<img src="${u.photoURL}" title="${u.displayName || u.name}" alt="${u.displayName || u.name}">`:'';
@@ -621,7 +641,7 @@
               <div class="who">${(t.completedBy?.length||0)} dari ${classMemberCount} selesai</div>
               <div class="pp-row">${avatars}</div>
             </div>
-            ${isCreator ? `<button class="del" data-id="${id}" aria-label="Hapus tugas"><i class="ri-delete-bin-6-line"></i> Hapus</button>`:''}
+            ${isClassAdmin ? `<button class="del" data-id="${id}" aria-label="Hapus tugas"><i class="ri-delete-bin-6-line"></i> Hapus</button>`:''}
           </div>
         </div>`;
       ul.appendChild(li);
@@ -630,7 +650,7 @@
     function renderMsg(m){
       const isMe = m.senderId === currentUser?.uid;
       const wrap = el('div',{class:'m'+(isMe?' me':'')});
-      const ava = el('img',{class:'ava',src: m.senderPhotoURL || 'https://placehold.co/80x80', alt: m.senderName || 'avatar'});
+      const ava = el('img',{class:'ava',src: m.senderPhotoURL || 'https://placehold.co/80x80', alt: m.senderName || 'avatar', 'data-user-id': m.senderId});
       const bubble = el('div',{class:'bubble'});
       const sender = el('div',{class:'sender'}, m.senderName || 'Anonymous');
       const msgContent = m.text ? m.text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : (m.image ? `<img class="msg-img" src="${m.image}" alt="lampiran">` : '');
@@ -640,6 +660,81 @@
       bubble.append(sender,msg,meta);
       if (isMe){ wrap.append(bubble, ava); } else { wrap.append(ava, bubble); }
       return wrap;
+    }
+
+    function renderInitialStructureAndSkeletons() {
+        $('header').innerHTML = `
+            <div class="header-left" style="gap: 12px; align-items: center;">
+                <div class="skeleton" style="width: 38px; height: 38px; border-radius: 50%;"></div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="skeleton" style="height: 24px; width: 200px;"></div>
+                    <div class="skeleton" style="height: 16px; width: 250px;"></div>
+                </div>
+            </div>
+            <div class="header-right" style="gap: 10px; align-items: center;">
+                <div class="skeleton" style="width: 38px; height: 38px; border-radius: 50%;"></div>
+                <div class="skeleton" style="width: 40px; height: 40px; border-radius: 50%;"></div>
+            </div>`;
+
+        $('content').innerHTML = `
+        <!-- LEFT: Discussion -->
+        <div class="card" id="discussion-card">
+          <div class="card-body">
+            <div class="card-head">
+              <h3 class="card-title">Diskusi Kelas</h3>
+              <div style="display:flex; gap:8px; align-items:center">
+                <span id="presence" class="header-sub">— online</span>
+                <button class="btn" id="jump-latest"><i class="ri-arrow-down-line"></i> Terbaru</button>
+              </div>
+            </div>
+            <div class="chat-wrapper">
+              <div id="discussion-feed" class="feed" aria-label="Utas diskusi">
+                <div class="loader"></div>
+              </div>
+
+              <div class="composer">
+                <div class="tools">
+                  <button class="i-btn" id="attach-btn" title="Lampirkan" aria-label="Lampirkan">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                  </button>
+                  <button class="i-btn" id="emoji-btn" title="Emoji" aria-label="Emoji">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                  </button>
+                  <input id="file-input" type="file" accept="image/*" hidden>
+                </div>
+                <textarea id="discussion-input" placeholder="Ketik pesan… Gunakan @ untuk menyebut teman" rows="1"></textarea>
+                <button id="send-btn" class="btn primary"><i class="ri-send-plane-2-line"></i> Kirim</button>
+              </div>
+            </div>
+            <div id="typing" class="typing" aria-live="polite" hidden>Beberapa orang sedang mengetik…</div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Tasks + Notes -->
+        <div class="side-panel">
+          <div class="card">
+            <div class="card-body" style="min-height:0">
+              <div class="card-head"><h3 class="card-title">Tugas</h3></div>
+              <ul id="task-list" class="tasks" aria-label="Daftar tugas">
+                <div class="loader"></div>
+              </ul>
+              <button id="add-task-btn" class="btn primary full"><i class="ri-add-line"></i> Tambah Tugas Baru</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body" style="min-height:0">
+              <div class="card-head">
+                <h3 class="card-title">Catatan Bersama</h3>
+                <button id="add-note-btn" class="btn primary"><i class="ri-add-line"></i> Tambah</button>
+              </div>
+              <ul id="shared-notes-list" class="notes" aria-label="Catatan bersama">
+                <div class="loader"></div>
+              </ul>
+            </div>
+          </div>
+        </div>
+        `;
     }
     
     // --- Real-time Listeners ---
@@ -693,24 +788,19 @@
 
     // --- Event Handlers & Actions ---
     function attachEventListeners() {
-        // Main page actions
-        $('back-btn').addEventListener('click', ()=> history.length > 1 ? history.back() : location.assign('classes.html'));
-        $('refresh-btn').addEventListener('click', ()=> location.reload());
         document.querySelectorAll('.logout').forEach(btn => btn.addEventListener('click', () => signOut(auth)));
         
-        // Modals
-        $('class-members-display').addEventListener('click', () => $('member-list-modal').classList.add('show'));
-        $('add-task-btn').addEventListener('click', () => $('add-task-modal').classList.add('show'));
-        document.querySelectorAll('[data-close-modal]').forEach(btn => {
-            btn.addEventListener('click', () => btn.closest('.overlay').classList.remove('show'));
-        });
-        document.querySelectorAll('.overlay').forEach(overlay => {
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) overlay.classList.remove('show');
-            });
+        // Modal close listeners using event delegation
+        document.body.addEventListener('click', (e) => {
+            const closeModalButton = e.target.closest('[data-close-modal]');
+            const overlay = e.target.closest('.overlay');
+            if (closeModalButton || (overlay && e.target === overlay)) {
+                (closeModalButton || e.target).closest('.overlay').classList.remove('show');
+            }
         });
 
         // Forms & Dynamic Content
+        $('add-task-btn').addEventListener('click', () => $('add-task-modal').classList.add('show'));
         $('add-task-form').addEventListener('submit', addTask);
         $('add-note-btn').addEventListener('click', () => location.href = `notes.html?share_to=${classId}`);
         $('task-list').addEventListener('click', handleTaskListClick);
@@ -718,13 +808,54 @@
         // Chat Composer
         const ta = $('discussion-input');
         $('send-btn').addEventListener('click', () => addMessage());
+        $('jump-latest').addEventListener('click', () => {
+            const feed = $('discussion-feed');
+            feed.scrollTo({ top: feed.scrollHeight, behavior: 'smooth' });
+        });
+        $('emoji-btn').addEventListener('click', () => {
+            ta.value += '👍';
+            ta.focus();
+        });
+        $('attach-btn').addEventListener('click', () => $('file-input').click());
+        $('file-input').addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                uploadImage(e.target.files[0]);
+            }
+        });
+
         ta.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); addMessage(); }});
         ['input','focus'].forEach(evt=> ta.addEventListener(evt, () => {
             ta.style.height = 'auto'; 
             ta.style.height = Math.min(ta.scrollHeight, window.innerHeight*0.34) + 'px';
         }));
-        
-        // Window resize
+
+        // Main page actions (event delegation on header)
+        $('header').addEventListener('click', (e) => {
+            if (e.target.closest('#back-btn')) history.length > 1 ? history.back() : location.assign('classes.html');
+            if (e.target.closest('#refresh-btn')) location.reload();
+            if (e.target.closest('#class-members-display')) $('member-list-modal').classList.add('show');
+            if (e.target.closest('#settings-btn')) {
+                getDoc(doc(db, 'classes', classId)).then(classSnap => {
+                    if (classSnap.exists()) openSettingsModal(classSnap.data());
+                });
+            }
+        });
+
+        // Profile Lookup Delegation
+        $('content').addEventListener('click', (e) => {
+            const userId = e.target.dataset.userId;
+            if (userId) showProfileModal(userId);
+        });
+        $('member-popup-list').addEventListener('click', (e) => {
+            const listItem = e.target.closest('.member-popup-item');
+            if (listItem && listItem.dataset.userId && !e.target.dataset.kickUid) {
+                showProfileModal(listItem.dataset.userId);
+            }
+        });
+        $('member-popup-list').addEventListener('click', handleKickMember);
+        $('settings-form').addEventListener('submit', saveSettings);
+        $('delete-class-btn').addEventListener('click', deleteClass);
+
         window.addEventListener('resize', () => {
           fixVH();
           updatePlaceholder();
@@ -796,24 +927,140 @@
       }
     }
 
-    async function addMessage(){
+    async function addMessage(imageUrl = null){
       const ta = $('discussion-input');
       const text = (ta.value||'').trim();
-      if (!text) return;
+      if (!text && !imageUrl) return;
+
       ta.disabled = true; $('send-btn').disabled = true;
       try{
         await addDoc(collection(db,'classes',classId,'discussions'),{
-          text: text,
+          text: text || null,
+          image: imageUrl || null,
           senderId: currentUser.uid,
           senderName: currentUser.displayName || 'Anonymous',
           senderPhotoURL: currentUser.photoURL || null,
           createdAt: serverTimestamp()
         });
-        ta.value=''; ta.dispatchEvent(new Event('input')); // Recalculate height
+        ta.value=''; ta.dispatchEvent(new Event('input'));
       }catch(e){ console.error("Gagal kirim pesan:", e); alert('Gagal mengirim pesan.'); }
       finally{ ta.disabled=false; $('send-btn').disabled=false; ta.focus(); }
     }
     
+    async function uploadImage(file) {
+        if (!file.type.startsWith('image/')) {
+            alert('Hanya file gambar yang diizinkan.');
+            return;
+        }
+        const filePath = `class_attachments/${classId}/${currentUser.uid}_${Date.now()}_${file.name}`;
+        const fileRef = ref(storage, filePath);
+        try {
+            await uploadBytes(fileRef, file);
+            const url = await getDownloadURL(fileRef);
+            await addMessage(url);
+        } catch (error) {
+            console.error('Gagal mengunggah gambar:', error);
+            alert('Gagal mengunggah gambar.');
+        }
+    }
+
+    function openSettingsModal(classData) {
+        $('settings-icon').value = classData.classIcon || '📚';
+        $('settings-name').value = classData.namaMataKuliah || '';
+        $('settings-lecturer').value = classData.dosen || '';
+        $('settings-room').value = classData.ruang || '';
+        $('settings-sks').value = classData.sks || '';
+        $('settings-day').value = classData.hari || 'Senin';
+        $('settings-start-time').value = classData.waktu || '';
+        $('settings-end-time').value = classData.waktuSelesai || '';
+        $('settings-modal').classList.add('show');
+    }
+
+    async function handleKickMember(e) {
+        const kickButton = e.target.closest('[data-kick-uid]');
+        if (kickButton) {
+            const userIdToKick = kickButton.dataset.kickUid;
+            const memberName = membersCache[userIdToKick]?.name || 'anggota ini';
+            if (await showConfirm(`Anda yakin ingin mengeluarkan ${memberName} dari kelas?`)) {
+                try {
+                    const batch = writeBatch(db);
+                    batch.update(doc(db, 'classes', classId), { members: arrayRemove(userIdToKick) });
+                    batch.update(doc(db, 'users', userIdToKick), { joinedClasses: arrayRemove(classId) });
+                    await batch.commit();
+                    
+                    delete membersCache[userIdToKick];
+                    renderClassMembers();
+                } catch (err) {
+                    console.error("Gagal mengeluarkan anggota:", err);
+                    alert("Gagal mengeluarkan anggota.");
+                }
+            }
+        }
+    }
+
+    async function saveSettings(e) {
+        e.preventDefault();
+        const settings = {
+            classIcon: $('settings-icon').value,
+            namaMataKuliah: $('settings-name').value,
+            dosen: $('settings-lecturer').value,
+            ruang: $('settings-room').value,
+            sks: Number($('settings-sks').value),
+            hari: $('settings-day').value,
+            waktu: $('settings-start-time').value,
+            waktuSelesai: $('settings-end-time').value,
+        };
+        try {
+            await updateDoc(doc(db, 'classes', classId), settings);
+            $('settings-modal').classList.remove('show');
+            loadClass(); 
+        } catch (err) { console.error("Gagal menyimpan pengaturan:", err); alert("Gagal menyimpan pengaturan."); }
+    }
+
+    async function deleteClass() {
+        if (await showConfirm('PERINGATAN: Anda akan menghapus kelas ini secara permanen untuk semua anggota. Semua data terkait akan hilang. Aksi ini tidak dapat dibatalkan.')) {
+            try {
+                await deleteDoc(doc(db, 'classes', classId));
+                alert('Kelas telah dihapus.');
+                window.location.assign('classes.html');
+            } catch (err) {
+                console.error("Gagal menghapus kelas:", err);
+                alert("Gagal menghapus kelas.");
+            }
+        }
+    }
+    
+    async function showProfileModal(userId) {
+        const userDoc = await getDoc(doc(db, 'users', userId));
+        if (!userDoc.exists()) return;
+        const u = userDoc.data();
+        const bannerUrl = BANNERS[u.bannerId] || BANNERS['banner1'];
+        const avatarUrl = u.photoURL || `https://placehold.co/90x90/E5E7EB/6B7280?text=${(u.name || 'A').charAt(0)}`;
+
+        $('profile-modal-content').innerHTML = `
+            <div class="profile-card-banner" style="background-image: url(${bannerUrl})"></div>
+            <div class="profile-card-body">
+                <img src="${avatarUrl}" alt="${u.name}" class="profile-card-avatar">
+                <div class="profile-card-info">
+                    <h3>${u.name || 'Pengguna'}</h3>
+                    <p>${u.major || 'Jurusan belum diatur'} di ${u.university || 'Universitas belum diatur'}</p>
+                    <div class="profile-card-details">
+                        <div class="detail-item"><i class="ri-mail-line"></i><span>${u.email}</span></div>
+                        <div class="detail-item"><i class="ri-book-open-line"></i><span>${u.semester ? `Semester ${u.semester}` : 'Semester belum diatur'}</span></div>
+                    </div>
+                    <div class="profile-card-socials">
+                        ${u.instagramUrl ? `<a href="${u.instagramUrl}" target="_blank" class="social-btn"><i class="ri-instagram-line"></i></a>` : ''}
+                        ${u.spotifyUrl ? `<a href="${u.spotifyUrl}" target="_blank" class="social-btn"><i class="ri-spotify-line"></i></a>` : ''}
+                    </div>
+                </div>
+            </div>
+            <div class="m-foot" style="background: var(--bg); padding: 12px 16px;">
+                <button class="m-btn primary" data-close-modal>Tutup</button>
+            </div>
+        `;
+        $('profile-modal').classList.add('show');
+    }
+
     function showNoteModal(data){
       $('read-note-title').textContent = data.title || '—';
       const dateString = data.sharedAt ? data.sharedAt.toDate().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
@@ -861,7 +1108,7 @@
         const confirmModal = el('div', { class: 'modal' });
         const msgEl = el('p', {style: "line-height:1.6;"}, message);
         const footEl = el('div', { class: 'm-foot' });
-        const yesBtn = el('button', { class: 'm-btn primary' }, 'Ya, Hapus');
+        const yesBtn = el('button', { class: 'm-btn primary' }, 'Ya, Lanjutkan');
         const noBtn = el('button', { class: 'm-btn ghost' }, 'Batal');
         
         footEl.append(noBtn, yesBtn);
@@ -869,8 +1116,13 @@
         confirmOverlay.append(confirmModal);
         document.body.appendChild(confirmOverlay);
 
-        yesBtn.onclick = () => { resolve(true); confirmOverlay.remove(); };
-        noBtn.onclick = () => { resolve(false); confirmOverlay.remove(); };
+        const close = (result) => {
+            resolve(result);
+            confirmOverlay.remove();
+        };
+
+        yesBtn.onclick = () => close(true);
+        noBtn.onclick = () => close(false);
       });
     }
   </script>
