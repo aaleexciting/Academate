@@ -43,20 +43,54 @@
       .nav a{display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; color:var(--muted); text-decoration:none; font-weight:500; transition:.2s}
       .nav a i{font-size:20px}
       .nav a:hover{background:#F3F2FF; color:var(--primary)}
-      .nav a.active{background:var(--primary); color:#fff; box-shadow:0 8px 20px rgba(111,108,255,.25)}
-      .logout{margin-top:auto}
+      .nav a.active{background:var(--primary); color:#fff; box-shadow:0 8px 20px rgba(111,108,255,.3)}
+      .spacer{flex:1}
+      .sidebar-footer { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); }
+      .sidebar-logout-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; background: transparent; border: 1px solid var(--border); color: var(--muted); font-weight: 600; cursor: pointer; transition: .2s; }
+      .sidebar-logout-btn:hover { background: #fde2e2; border-color: #f7b2b2; color: #c82424; }
+      .sidebar-links { text-align: center; margin-top: 16px; display: flex; justify-content: center; gap: 16px; }
+      .sidebar-links a { font-size: 12px; color: var(--muted); text-decoration: none; }
+      .sidebar-links a:hover { text-decoration: underline; }
+      .copyright { font-size: 11px; color: #C0C3D2; text-align: center; margin-top: 12px; }
     }
 
     /* Main layout: FIXED expanded content (no layout jump) */
     .main{display:grid; grid-template-rows:auto 1fr; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; height:100%; min-height:0}
     .header{display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border)}
     .header-left{display:flex; align-items:center; gap:12px}
+    .header-title-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap;}
     .header-title{margin:0; font-size:20px}
-    .header-sub{margin:0; color:var(--muted); font-size:13px}
+    .header-sub{margin:4px 0 0; color:var(--muted); font-size:13px; width: 100%;}
     .header-right{display:flex; align-items:center; gap:10px}
     .icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:18px;transition:.2s}
     .icon-btn:hover{color:var(--primary); border-color:#d8d8e0}
     .avatar{width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--border)}
+
+    /* Member Display in Header */
+    .class-members-display { display: flex; align-items: center; cursor: pointer; }
+    .member-avatar-stack { display: flex; }
+    .member-avatar-stack .avatar-sm { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--surface); margin-left: -10px; object-fit: cover; transition: transform .2s; }
+    .member-avatar-stack .avatar-sm:first-child { margin-left: 0; }
+    .class-members-display:hover .avatar-sm { transform: translateY(-2px); }
+    .more-members { width: 28px; height: 28px; border-radius: 50%; background: var(--bubble); border: 2px solid var(--surface); margin-left: -10px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--primary); }
+    @media (max-width: 900px) {
+        .header-title-wrapper { flex-direction: row; align-items: center; gap: 12px; }
+        .header-sub { width: auto; margin-top: 0; }
+    }
+
+    /* Member List in Modal */
+    .member-popup-list { list-style: none; margin: 0; padding: 0 4px; max-height: 50vh; overflow-y: auto; }
+    .member-popup-item { display: flex; align-items: center; gap: 12px; padding: 10px 8px; border-radius: 8px; }
+    .member-popup-item:hover { background-color: var(--bg); }
+    .member-popup-item .avatar { width: 40px; height: 40px; border: none; flex-shrink: 0; }
+    .member-popup-item-info { min-width: 0; }
+    .member-popup-item-info h4 { font-size: 14px; margin: 0 0 2px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .member-popup-item-info p { font-size: 12px; margin: 0; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .member-popup-list { scrollbar-width: thin; scrollbar-color: var(--primary-2) transparent; }
+    .member-popup-list::-webkit-scrollbar { width: 6px; }
+    .member-popup-list::-webkit-scrollbar-track { background: transparent; }
+    .member-popup-list::-webkit-scrollbar-thumb { background-color: var(--primary-2); border-radius: 20px; }
+
 
     /* CONTENT: fixed grid that fills remaining height */
     .content{display:grid; grid-template-columns:1fr; gap:18px; padding:18px; height:100%; min-height:0}
@@ -90,7 +124,6 @@
     /* Composer: sticky, auto-grow textarea, attach & emoji */
     .composer{display:flex; align-items:flex-end; gap:10px; background:var(--surface); border-top:1px solid var(--border); padding-top:10px}
     .composer .tools{display:flex; align-items:center; gap:6px}
-    /* TWEAK 3: Align composer items */
     .i-btn{width:44px;height:44px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:18px}
     .composer textarea{flex:1; resize:none; max-height:34dvh; min-height:44px; padding:12px 14px; border:1px solid var(--border); border-radius:12px; font:inherit; line-height:1.5; overflow:auto;}
     .composer button{height:44px; padding:12px 14px; border:none; border-radius:12px; background:var(--primary); color:#fff; font-weight:700; cursor:pointer}
@@ -132,13 +165,13 @@
     .note small{display:block; color:var(--muted); margin-top:8px}
     
     /* ===== MODERN SCROLLBAR (REVISED) ===== */
-    .nav, .feed, #read-note-body {
+    .nav, .feed, #read-note-body, .member-popup-list {
       scrollbar-width: thin; scrollbar-color: var(--primary-2) transparent;
     }
-    .nav::-webkit-scrollbar, .feed::-webkit-scrollbar, #read-note-body::-webkit-scrollbar { width: 8px; }
-    .nav::-webkit-scrollbar-track, .feed::-webkit-scrollbar-track, #read-note-body::-webkit-scrollbar-track { background: transparent; }
-    .nav::-webkit-scrollbar-thumb, .feed::-webkit-scrollbar-thumb, #read-note-body::-webkit-scrollbar-thumb { background-color: var(--primary-2); border-radius: 20px; }
-    .nav::-webkit-scrollbar-thumb:hover, .feed::-webkit-scrollbar-thumb:hover, #read-note-body::-webkit-scrollbar-thumb:hover { background-color: var(--primary); }
+    .nav::-webkit-scrollbar, .feed::-webkit-scrollbar, #read-note-body::-webkit-scrollbar, .member-popup-list::-webkit-scrollbar { width: 8px; }
+    .nav::-webkit-scrollbar-track, .feed::-webkit-scrollbar-track, #read-note-body::-webkit-scrollbar-track, .member-popup-list::-webkit-scrollbar-track { background: transparent; }
+    .nav::-webkit-scrollbar-thumb, .feed::-webkit-scrollbar-thumb, #read-note-body::-webkit-scrollbar-thumb, .member-popup-list::-webkit-scrollbar-thumb { background-color: var(--primary-2); border-radius: 20px; }
+    .nav::-webkit-scrollbar-thumb:hover, .feed::-webkit-scrollbar-thumb:hover, #read-note-body::-webkit-scrollbar-thumb:hover, .member-popup-list::-webkit-scrollbar-thumb:hover { background-color: var(--primary); }
     .tasks, .notes, .composer textarea { -ms-overflow-style: none; scrollbar-width: none; }
     .tasks::-webkit-scrollbar, .notes::-webkit-scrollbar, .composer textarea::-webkit-scrollbar { display: none; }
     body { scrollbar-width: thin; scrollbar-color: var(--primary-2) var(--bg); }
@@ -154,7 +187,7 @@
 
     /* Mobile bottom nav */
     .mnav{position:fixed; left:0; right:0; bottom:0; height:70px; background:rgba(255,255,255,.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; z-index:40}
-    .mnav a{display:flex; flex-direction:column; align-items:center; gap:4px; text-decoration:none; color:var(--muted); font-size:10px; font-weight:600}
+    .mnav a{display:flex; flex-direction:column; align-items:center; gap:4px; text-decoration:none; color:var(--muted); font-size:10px; font-weight:500}
     .mnav a i{font-size:20px}
     .mnav a.active{color:var(--primary)}
     @media (min-width:901px){ .mnav{display:none} }
@@ -198,12 +231,13 @@
       backdrop-filter: blur(5px);
       -webkit-backdrop-filter: blur(5px);
       z-index: 100;
-      display: flex;
+      display: none; /* Changed to none */
       align-items: center;
       justify-content: center;
       padding: 16px;
       animation: fade-in 0.2s ease;
     }
+    .overlay.show { display: flex; } /* New class to show */
     @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
     
     .modal {
@@ -257,16 +291,26 @@
 </head>
 <body data-page="classes">
   <div class="app">
-    <!-- Sidebar (desktop) -->
-    <aside class="sidebar">
-      <div class="brand"><div class="logo"></div> Academate</div>
+    <!-- Sidebar (desktop) - UPDATED TO MATCH DASHBOARD -->
+    <aside class="sidebar" aria-label="Navigasi utama">
+      <div class="brand"><div class="logo" aria-hidden="true"></div>Academate</div>
       <nav class="nav">
-        <a href="dashboard.html"><i class="ri-layout-grid-line"></i><span>Dasbor</span></a>
-        <a href="classes.html" class="active"><i class="ri-book-2-line"></i><span>Kelas</span></a>
-        <a href="schedule.html"><i class="ri-calendar-line"></i><span>Jadwal</span></a>
-        <a href="notes.html"><i class="ri-file-text-line"></i><span>Catatan</span></a>
-        <a href="account.html" class="logout"><i class="ri-user-3-line"></i><span>Akun</span></a>
+        <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+        <a href="classes.html" class="active"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+        <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+        <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+        <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
       </nav>
+      <div class="spacer"></div>
+      <div class="sidebar-footer">
+        <button class="sidebar-logout-btn logout" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
+        <div class="sidebar-links">
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+        <p class="copyright">&copy; 2025 Academate</p>
+      </div>
     </aside>
 
     <!-- Main (fixed grid rows: header + content that fills) -->
@@ -276,7 +320,12 @@
         <div class="header-left">
           <button class="icon-btn" id="back-btn" title="Kembali" aria-label="Kembali"><i class="ri-arrow-left-line"></i></button>
           <div>
-            <h2 class="header-title" id="class-title">Memuat Kelas…</h2>
+            <div class="header-title-wrapper">
+                <h2 class="header-title" id="class-title">Memuat Kelas…</h2>
+                <div id="class-members-display" class="class-members-display">
+                  <!-- Avatars will be injected here by JS -->
+                </div>
+            </div>
             <p class="header-sub" id="class-sub">—</p>
           </div>
         </div>
@@ -306,7 +355,6 @@
 
               <div class="composer">
                 <div class="tools">
-                  <!-- TWEAK 1: Use SVG icons for a lighter look -->
                   <button class="i-btn" id="attach-btn" title="Lampirkan" aria-label="Lampirkan">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
                   </button>
@@ -339,7 +387,6 @@
             <div class="card-body" style="min-height:0">
               <div class="card-head">
                 <h3 class="card-title">Catatan Bersama</h3>
-                <!-- TWEAK 2: Change button to 'Tambah' -->
                 <button id="add-note-btn" class="btn primary"><i class="ri-add-line"></i> Tambah</button>
               </div>
               <ul id="shared-notes-list" class="notes" aria-label="Catatan bersama">
@@ -352,17 +399,17 @@
     </section>
   </div>
 
-  <!-- Mobile bottom nav -->
+  <!-- Mobile bottom nav - UPDATED TO MATCH DASHBOARD -->
   <nav class="mnav">
-    <a href="dashboard.html"><i class="ri-layout-grid-line"></i><span>Dasbor</span></a>
-    <a href="classes.html" class="active"><i class="ri-book-2-line"></i><span>Kelas</span></a>
-    <a href="schedule.html"><i class="ri-calendar-line"></i><span>Jadwal</span></a>
-    <a href="notes.html"><i class="ri-file-text-line"></i><span>Catatan</span></a>
-    <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+    <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+    <a href="classes.html" class="active"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+    <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+    <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+    <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
   <!-- Add Task Modal -->
-  <div class="overlay" id="add-task-modal" style="display:none">
+  <div class="overlay" id="add-task-modal">
     <div class="modal">
       <h2>Tambah Tugas Baru</h2>
       <form id="add-task-form" class="m-form">
@@ -379,21 +426,35 @@
           <textarea id="task-description-input" rows="4" placeholder="Detail tugas…"></textarea>
         </div>
         <div class="m-foot">
-          <button type="button" class="m-btn ghost" id="cancel-add-task-btn">Batal</button>
+          <button type="button" class="m-btn ghost" data-close-modal>Batal</button>
           <button type="submit" class="m-btn primary" id="confirm-add-task-btn">Tambah</button>
         </div>
       </form>
     </div>
   </div>
+  
+  <!-- Member List Modal -->
+  <div class="overlay" id="member-list-modal">
+      <div class="modal" style="width:min(95vw, 420px);">
+        <h2>Anggota Kelas</h2>
+        <ul id="member-popup-list" class="member-popup-list">
+          <!-- Member items will be injected by JS -->
+        </ul>
+        <div class="m-foot">
+          <button class="m-btn primary" data-close-modal>Tutup</button>
+        </div>
+      </div>
+  </div>
+
 
   <!-- Read Note Modal -->
-  <div class="overlay" id="read-note-modal" style="display:none">
+  <div class="overlay" id="read-note-modal">
     <div class="modal" style="width:min(92vw,680px)">
       <h2 id="read-note-title">—</h2>
       <div id="read-note-meta" style="color:var(--muted); border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:14px"></div>
       <div id="read-note-body" style="max-height:60vh; overflow:auto; line-height:1.7; color:#3a3d4a"></div>
       <div class="m-foot">
-        <button class="m-btn primary" id="read-note-close-btn">Tutup</button>
+        <button class="m-btn primary" data-close-modal>Tutup</button>
       </div>
     </div>
   </div>
@@ -420,44 +481,42 @@
 
     let currentUser = null, classId = null, membersCache = {}, classMemberCount = 0;
     let discussionUnsub = null, tasksUnsub = null, notesUnsub = null;
+    const VISIBLE_AVATARS = 5; 
+    let listenersAttached = false;
 
     const $ = (id)=>document.getElementById(id);
 
-    window.addEventListener('resize', fixVH); fixVH();
-    function fixVH(){ document.documentElement.style.setProperty('--vh', window.innerHeight + 'px'); }
-
-    // TWEAK 3: Function to dynamically change placeholder text based on screen size
-    function updatePlaceholder() {
-      const input = $('discussion-input');
-      if (!input) return;
-      if (window.innerWidth <= 600) { // Mobile breakpoint
-        input.placeholder = "Ketik pesan…";
-      } else {
-        input.placeholder = "Ketik pesan… Gunakan @ untuk menyebut teman";
-      }
-    }
-    window.addEventListener('resize', updatePlaceholder); // Update on resize
-
+    // --- App Initialization ---
     onAuthStateChanged(auth, async (user) => {
-      if (!user) { cleanup(); window.location.replace('auth.html'); return; }
+      if (!user) { 
+        cleanup(); 
+        window.location.replace('auth.html'); 
+        return; 
+      }
       currentUser = user;
       $('avatar-top').src = user.photoURL || 'https://placehold.co/80x80';
-      const params = new URLSearchParams(location.search); classId = params.get('id');
-      if (!classId) { renderEmpty('ID Kelas tidak ditemukan.'); return; }
+      
+      const params = new URLSearchParams(location.search); 
+      classId = params.get('id');
+      if (!classId) { 
+        renderEmpty('ID Kelas tidak ditemukan.'); 
+        return; 
+      }
 
-      updatePlaceholder(); // Set initial placeholder on load
+      if (!listenersAttached) {
+          attachEventListeners();
+          listenersAttached = true;
+      }
       
       await loadClass();
     });
-
-    function cleanup(){ [discussionUnsub,tasksUnsub,notesUnsub].forEach(u=>u && u()); }
-    $('back-btn').addEventListener('click', ()=> history.length>1?history.back():location.assign('classes.html'));
-    $('refresh-btn').addEventListener('click', ()=> location.reload());
-
+    
+    // --- Core Data Loading ---
     async function loadClass(){
       try{
         const classSnap = await getDoc(doc(db,'classes',classId));
         if (!classSnap.exists()){ renderEmpty('Kelas tidak ditemukan.'); return; }
+        
         const data = classSnap.data();
         const userDoc = await getDoc(doc(db,'users',currentUser.uid));
         if (!(userDoc.data()?.joinedClasses||[]).includes(classId)){ renderEmpty('Anda tidak memiliki akses ke kelas ini.'); return; }
@@ -467,10 +526,17 @@
         $('class-title').textContent = data.namaMataKuliah;
         $('class-sub').textContent = `${data.dosen} • ${data.hari}, ${data.waktu} - ${data.waktuSelesai || ''}`;
 
+        renderClassMembers();
+        
+        // Start real-time listeners
+        cleanup(); // Cleanup previous listeners before attaching new ones
         listenDiscussions();
         listenTasks();
         listenNotes();
-      }catch(e){ console.error(e); renderEmpty('Gagal memuat halaman kelas.'); }
+      }catch(e){ 
+        console.error("Gagal memuat kelas:", e); 
+        renderEmpty('Gagal memuat halaman kelas.'); 
+      }
     }
 
     async function cacheMembers(ids){
@@ -479,147 +545,51 @@
       membersCache = snaps.reduce((m,s)=> (s.exists() && (m[s.id]=s.data()), m), {});
     }
 
-    let latestDoc = null; let fetchingMore = false;
+    // --- UI Rendering ---
+    function renderClassMembers() {
+        const displayContainer = $('class-members-display');
+        const popupList = $('member-popup-list');
+        if (!displayContainer || !popupList) return;
 
-    function listenDiscussions(){
-      const qRef = query(collection(db,'classes',classId,'discussions'), orderBy('createdAt','desc'), limit(30));
-      discussionUnsub = onSnapshot(qRef, (snap)=>{
-        const feed = $('discussion-feed'); if (!feed) return;
-        feed.innerHTML = '';
-        let lastDay = '';
-        latestDoc = snap.docs[snap.docs.length - 1] || null;
-        const docs = snap.docs.slice().reverse();
-        docs.forEach(d => {
-          const m = d.data();
-          const created = m.createdAt?.toDate?.() || new Date();
-          const dayKey = created.toDateString();
-          if (dayKey !== lastDay){
-            feed.appendChild(el('div',{class:'day-divider'}, created.toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'})));
-            lastDay = dayKey;
-          }
-          feed.appendChild(renderMsg(m));
+        displayContainer.innerHTML = '';
+        popupList.innerHTML = '';
+
+        const memberIds = Object.keys(membersCache);
+        const members = memberIds.map(id => ({ id, ...membersCache[id] }));
+
+        const avatarStack = el('div', { class: 'member-avatar-stack' });
+        const visibleMembers = members.slice(0, VISIBLE_AVATARS);
+        
+        visibleMembers.forEach(member => {
+            const avatar = el('img', {
+                class: 'avatar-sm',
+                src: member.photoURL || `https://placehold.co/40x40/E5E7EB/6B7280?text=${(member.name || 'A').charAt(0)}`,
+                alt: member.name || 'Anggota',
+                title: member.name || 'Anggota'
+            });
+            avatarStack.appendChild(avatar);
         });
-        if (!fetchingMore) {
-          requestAnimationFrame(()=> feed.scrollTop = feed.scrollHeight);
+        
+        displayContainer.appendChild(avatarStack);
+
+        if (members.length > VISIBLE_AVATARS) {
+            const moreCount = members.length - VISIBLE_AVATARS;
+            const moreEl = el('div', { class: 'more-members' }, `+${moreCount}`);
+            displayContainer.appendChild(moreEl);
         }
-      });
-
-      $('discussion-feed').addEventListener('scroll', async (e)=>{
-        const elFeed = e.currentTarget; if (elFeed.scrollTop > 40 || fetchingMore || !latestDoc) return;
-        fetchingMore = true;
-        const qMore = query(collection(db,'classes',classId,'discussions'), orderBy('createdAt','desc'), startAfter(latestDoc), limit(30));
-        const more = await (await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')).getDocs(qMore);
-        if (!more.empty){ latestDoc = more.docs[more.docs.length-1]; prependMessages(elFeed, more.docs.reverse().map(d=>d.data())); }
-        fetchingMore = false;
-      });
-
-      $('jump-latest').addEventListener('click', ()=> {
-        const feed = $('discussion-feed'); feed.scrollTop = feed.scrollHeight;
-      });
-
-      let typingTimer;
-      $('discussion-input').addEventListener('input', ()=>{
-        $('typing').hidden = false;
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(()=> $('typing').hidden = true, 1200);
-      });
-
-      const ta = $('discussion-input');
-      function autoGrow(){ ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, window.innerHeight*0.34) + 'px'; }
-      ['input','focus'].forEach(evt=> ta.addEventListener(evt, autoGrow));
-
-      $('emoji-btn').addEventListener('click', ()=> insertAtCursor(ta,'🙂'));
-      $('attach-btn').addEventListener('click', ()=> $('file-input').click());
-      $('file-input').addEventListener('change', (e)=>{
-        const file = e.target.files?.[0]; if (!file) return;
-        const reader = new FileReader(); reader.onload = ()=> addMessage(undefined, reader.result);
-        reader.readAsDataURL(file);
-        e.target.value = '';
-      });
-
-      $('send-btn').addEventListener('click', ()=> addMessage());
-      $('discussion-input').addEventListener('keydown', (e)=>{
-        if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); addMessage(); }
-      });
-    }
-
-    function renderMsg(m){
-      const isMe = m.senderId === currentUser?.uid;
-      const wrap = el('div',{class:'m'+(isMe?' me':'')});
-      const ava = el('img',{class:'ava',src: m.senderPhotoURL || 'https://placehold.co/80x80', alt: m.senderName || 'avatar'});
-      const bubble = el('div',{class:'bubble'});
-      const sender = el('div',{class:'sender'}, m.senderName || 'Anonymous');
-      const msgContent = m.text ? m.text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : (m.image ? `<img class="msg-img" src="${m.image}" alt="lampiran">` : '');
-      const msg = el('div',{}, msgContent);
-      const time = m.createdAt?.toDate?.() || new Date();
-      const meta = el('div',{class:'meta'}, time.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}));
-      bubble.append(sender,msg,meta);
-      if (isMe){ wrap.append(bubble, ava); } else { wrap.append(ava, bubble); }
-      return wrap;
-    }
-
-    function prependMessages(feed, arr){
-      const top = feed.scrollHeight - feed.scrollTop;
-      arr.forEach(m => feed.insertBefore(renderMsg(m), feed.firstChild));
-      requestAnimationFrame(()=> feed.scrollTop = feed.scrollHeight - top);
-    }
-
-    async function addMessage(_, imageData){
-      const ta = $('discussion-input');
-      const text = (ta.value||'').trim();
-      if (!text && !imageData) return;
-      ta.disabled = true; $('send-btn').disabled = true;
-      try{
-        await addDoc(collection(db,'classes',classId,'discussions'),{
-          text: text || null,
-          image: imageData || null,
-          senderId: currentUser.uid,
-          senderName: currentUser.displayName || 'Anonymous',
-          senderPhotoURL: currentUser.photoURL || null,
-          createdAt: serverTimestamp()
+        
+        members.forEach(member => {
+            const li = el('li', { class: 'member-popup-item' });
+            const photo = member.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${(member.name || 'A').charAt(0)}`;
+            li.innerHTML = `
+                <img src="${photo}" alt="${member.name}" class="avatar">
+                <div class="member-popup-item-info">
+                    <h4>${member.name || 'Pengguna'}</h4>
+                    <p>${member.email || ''}</p>
+                </div>
+            `;
+            popupList.appendChild(li);
         });
-        ta.value=''; autoGrow();
-      }catch(e){ console.error(e); alert('Gagal mengirim pesan.'); }
-      finally{ ta.disabled=false; $('send-btn').disabled=false; ta.focus(); }
-    }
-
-    function insertAtCursor(elm, txt){
-      const start = elm.selectionStart, end = elm.selectionEnd;
-      const before = elm.value.substring(0,start), after = elm.value.substring(end);
-      elm.value = before + txt + after; elm.selectionStart = elm.selectionEnd = start + txt.length; elm.dispatchEvent(new Event('input')); elm.focus();
-    }
-
-    // ---- Tasks (FIXED & REFACTORED) ----
-    function listenTasks(){
-      const qRef = query(collection(db,'classes',classId,'tasks'), orderBy('dueDate','asc'));
-      tasksUnsub = onSnapshot(qRef,(snap)=>{
-        const ul = $('task-list'); ul.innerHTML='';
-        if (snap.empty){ ul.innerHTML = '<div class="empty">Tidak ada tugas.</div>'; return; }
-        snap.forEach(d=> renderTask(d.id, d.data(), ul));
-      });
-      
-      // Listener for the static "Add Task" button
-      $('add-task-btn').addEventListener('click', () => {
-        $('add-task-modal').style.display = 'flex';
-      });
-
-      // Event delegation on the list for dynamic task items (toggle, delete)
-      $('task-list').addEventListener('click', (e) => {
-        const cb = e.target.closest('.checkbox');
-        if (cb) {
-          toggleTask(cb.dataset.id);
-          return;
-        }
-        const del = e.target.closest('.del');
-        if (del) {
-          deleteTask(del.dataset.id);
-          return;
-        }
-      });
-      
-      // Listeners for the modal buttons
-      $('cancel-add-task-btn').addEventListener('click', ()=> $('add-task-modal').style.display='none');
-      $('add-task-form').addEventListener('submit', addTask);
     }
 
     function renderTask(id,t,ul){
@@ -655,56 +625,55 @@
           </div>
         </div>`;
       ul.appendChild(li);
-      li.querySelector('.task-h').addEventListener('click', (e)=> {
-        if(!e.target.closest('.checkbox')) {
-            li.classList.toggle('expanded');
-        }
+    }
+    
+    function renderMsg(m){
+      const isMe = m.senderId === currentUser?.uid;
+      const wrap = el('div',{class:'m'+(isMe?' me':'')});
+      const ava = el('img',{class:'ava',src: m.senderPhotoURL || 'https://placehold.co/80x80', alt: m.senderName || 'avatar'});
+      const bubble = el('div',{class:'bubble'});
+      const sender = el('div',{class:'sender'}, m.senderName || 'Anonymous');
+      const msgContent = m.text ? m.text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : (m.image ? `<img class="msg-img" src="${m.image}" alt="lampiran">` : '');
+      const msg = el('div',{}, msgContent);
+      const time = m.createdAt?.toDate?.() || new Date();
+      const meta = el('div',{class:'meta'}, time.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}));
+      bubble.append(sender,msg,meta);
+      if (isMe){ wrap.append(bubble, ava); } else { wrap.append(ava, bubble); }
+      return wrap;
+    }
+    
+    // --- Real-time Listeners ---
+    function listenDiscussions(){
+      const qRef = query(collection(db,'classes',classId,'discussions'), orderBy('createdAt','desc'), limit(30));
+      discussionUnsub = onSnapshot(qRef, (snap)=>{
+        const feed = $('discussion-feed'); if (!feed) return;
+        feed.innerHTML = '';
+        let lastDay = '';
+        let latestDoc = snap.docs[snap.docs.length - 1] || null;
+        const docs = snap.docs.slice().reverse();
+        docs.forEach(d => {
+          const m = d.data();
+          const created = m.createdAt?.toDate?.() || new Date();
+          const dayKey = created.toDateString();
+          if (dayKey !== lastDay){
+            feed.appendChild(el('div',{class:'day-divider'}, created.toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'})));
+            lastDay = dayKey;
+          }
+          feed.appendChild(renderMsg(m));
+        });
+        requestAnimationFrame(()=> feed.scrollTop = feed.scrollHeight);
       });
     }
 
-    function formatDue(ts){
-      const now = new Date(); const due = ts?.toDate?.() || new Date();
-      now.setHours(0,0,0,0); due.setHours(0,0,0,0);
-      const diff = Math.ceil((due-now)/(1000*60*60*24));
-      if (diff < 0) return {text:'Telah lewat', cls:'overdue'};
-      if (diff === 0) return {text:'Tenggat hari ini', cls:'urgent'};
-      if (diff === 1) return {text:'Tenggat besok', cls:'urgent'};
-      if (diff <= 7) return {text:`Tenggat ${diff} hari lagi`, cls:'soon'};
-      return {text: due.toLocaleDateString('id-ID',{day:'numeric',month:'short'}), cls:'normal'};
+    function listenTasks(){
+      const qRef = query(collection(db,'classes',classId,'tasks'), orderBy('dueDate','asc'));
+      tasksUnsub = onSnapshot(qRef,(snap)=>{
+        const ul = $('task-list'); ul.innerHTML='';
+        if (snap.empty){ ul.innerHTML = '<div class="empty">Tidak ada tugas.</div>'; return; }
+        snap.forEach(d=> renderTask(d.id, d.data(), ul));
+      });
     }
 
-    async function toggleTask(id){
-      const ref = doc(db,'classes',classId,'tasks',id);
-      const li = $('task-'+id), done = li?.classList.contains('done');
-      try{ await updateDoc(ref, done? {completedBy: arrayRemove(currentUser.uid)} : {completedBy: arrayUnion(currentUser.uid)}); }
-      catch(e){ console.error(e); alert('Gagal memperbarui status tugas.'); }
-    }
-
-    async function addTask(e){
-      e.preventDefault();
-      const title = $('task-title-input').value.trim();
-      const dateStr = $('task-due-date-input').value; const desc = $('task-description-input').value.trim();
-      if (!title || !dateStr) return;
-      $('confirm-add-task-btn').disabled = true;
-      try{
-        await addDoc(collection(db,'classes',classId,'tasks'),{
-          title, description: desc||null, dueDate: Timestamp.fromDate(new Date(dateStr)),
-          createdAt: serverTimestamp(), creatorId: currentUser.uid, creatorName: currentUser.displayName||'—', completedBy: []
-        });
-        $('add-task-form').reset(); $('add-task-modal').style.display='none';
-      }catch(e){ console.error(e); alert('Gagal menambahkan tugas.'); }
-      finally{ $('confirm-add-task-btn').disabled=false; }
-    }
-
-    async function deleteTask(id){
-      // Using a custom modal instead of confirm()
-      if (await showConfirm('Hapus tugas ini untuk semua anggota kelas?')) {
-        try{ await deleteDoc(doc(db,'classes',classId,'tasks',id)); }
-        catch(e){ console.error(e); alert('Gagal menghapus tugas.'); }
-      }
-    }
-
-    // ---- Shared Notes (FIXED) ----
     function listenNotes(){
       const qRef = query(collection(db,'classes',classId,'sharedNotes'), orderBy('sharedAt','desc'));
       notesUnsub = onSnapshot(qRef,(snap)=>{
@@ -712,28 +681,162 @@
         if (snap.empty){ ul.innerHTML = '<div class="empty">Belum ada catatan bersama.</div>'; return; }
         snap.forEach(d=>{
           const n = d.data();
-          const li = document.createElement('li'); li.className='note';
-          li.dataset.title = n.title; li.dataset.body = n.body; li.dataset.author = n.sharedBy;
-          li.dataset.date = n.sharedAt? n.sharedAt.toDate().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
+          const li = el('li',{class:'note'});
           const safeTitle = (n.title || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
           const safeBody = (n.body || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
           li.innerHTML = `<h4>${safeTitle}</h4><p>${safeBody.substring(0,120)}${safeBody.length>120?'…':''}</p><small>Oleh ${n.sharedBy}</small>`;
-          li.addEventListener('click', ()=> showNote(li.dataset));
+          li.addEventListener('click', ()=> showNoteModal(n));
           ul.appendChild(li);
         });
       });
-      $('add-note-btn').addEventListener('click', (e)=>{ e.preventDefault(); location.href = `notes.html?share_to=${classId}`; });
-      $('read-note-close-btn').addEventListener('click', ()=> $('read-note-modal').style.display='none');
     }
 
-    function showNote(data){
+    // --- Event Handlers & Actions ---
+    function attachEventListeners() {
+        // Main page actions
+        $('back-btn').addEventListener('click', ()=> history.length > 1 ? history.back() : location.assign('classes.html'));
+        $('refresh-btn').addEventListener('click', ()=> location.reload());
+        document.querySelectorAll('.logout').forEach(btn => btn.addEventListener('click', () => signOut(auth)));
+        
+        // Modals
+        $('class-members-display').addEventListener('click', () => $('member-list-modal').classList.add('show'));
+        $('add-task-btn').addEventListener('click', () => $('add-task-modal').classList.add('show'));
+        document.querySelectorAll('[data-close-modal]').forEach(btn => {
+            btn.addEventListener('click', () => btn.closest('.overlay').classList.remove('show'));
+        });
+        document.querySelectorAll('.overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.classList.remove('show');
+            });
+        });
+
+        // Forms & Dynamic Content
+        $('add-task-form').addEventListener('submit', addTask);
+        $('add-note-btn').addEventListener('click', () => location.href = `notes.html?share_to=${classId}`);
+        $('task-list').addEventListener('click', handleTaskListClick);
+        
+        // Chat Composer
+        const ta = $('discussion-input');
+        $('send-btn').addEventListener('click', () => addMessage());
+        ta.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); addMessage(); }});
+        ['input','focus'].forEach(evt=> ta.addEventListener(evt, () => {
+            ta.style.height = 'auto'; 
+            ta.style.height = Math.min(ta.scrollHeight, window.innerHeight*0.34) + 'px';
+        }));
+        
+        // Window resize
+        window.addEventListener('resize', () => {
+          fixVH();
+          updatePlaceholder();
+        });
+        fixVH();
+        updatePlaceholder();
+    }
+    
+    function handleTaskListClick(e) {
+        const taskHeader = e.target.closest('.task-h');
+        const checkbox = e.target.closest('.checkbox');
+        const deleteBtn = e.target.closest('.del');
+
+        if (checkbox) {
+            toggleTask(checkbox.dataset.id);
+            return;
+        }
+        if (deleteBtn) {
+            deleteTask(deleteBtn.dataset.id);
+            return;
+        }
+        if (taskHeader) {
+            taskHeader.parentElement.classList.toggle('expanded');
+        }
+    }
+
+    async function addTask(e){
+      e.preventDefault();
+      const title = $('task-title-input').value.trim();
+      const dateStr = $('task-due-date-input').value; 
+      const desc = $('task-description-input').value.trim();
+      if (!title || !dateStr) return;
+      
+      $('confirm-add-task-btn').disabled = true;
+      try{
+        await addDoc(collection(db,'classes',classId,'tasks'),{
+          title, description: desc||null, dueDate: Timestamp.fromDate(new Date(dateStr)),
+          createdAt: serverTimestamp(), creatorId: currentUser.uid, creatorName: currentUser.displayName||'—', completedBy: []
+        });
+        $('add-task-form').reset(); 
+        $('add-task-modal').classList.remove('show');
+      }catch(err){ 
+        console.error("Gagal menambah tugas:", err); 
+        alert('Gagal menambahkan tugas.'); 
+      } finally { 
+        $('confirm-add-task-btn').disabled = false; 
+      }
+    }
+
+    async function toggleTask(id){
+      const ref = doc(db, 'classes', classId, 'tasks', id);
+      const taskDoc = await getDoc(ref);
+      if (!taskDoc.exists()) return;
+      const isDone = (taskDoc.data().completedBy || []).includes(currentUser.uid);
+      try {
+        await updateDoc(ref, {
+          completedBy: isDone ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        });
+      } catch (e) {
+        console.error("Gagal update tugas:", e);
+        alert('Gagal memperbarui status tugas.');
+      }
+    }
+
+    async function deleteTask(id){
+      if (await showConfirm('Hapus tugas ini untuk semua anggota kelas? Aksi ini tidak dapat dibatalkan.')) {
+        try{ await deleteDoc(doc(db,'classes',classId,'tasks',id)); }
+        catch(e){ console.error("Gagal hapus tugas:",e); alert('Gagal menghapus tugas.'); }
+      }
+    }
+
+    async function addMessage(){
+      const ta = $('discussion-input');
+      const text = (ta.value||'').trim();
+      if (!text) return;
+      ta.disabled = true; $('send-btn').disabled = true;
+      try{
+        await addDoc(collection(db,'classes',classId,'discussions'),{
+          text: text,
+          senderId: currentUser.uid,
+          senderName: currentUser.displayName || 'Anonymous',
+          senderPhotoURL: currentUser.photoURL || null,
+          createdAt: serverTimestamp()
+        });
+        ta.value=''; ta.dispatchEvent(new Event('input')); // Recalculate height
+      }catch(e){ console.error("Gagal kirim pesan:", e); alert('Gagal mengirim pesan.'); }
+      finally{ ta.disabled=false; $('send-btn').disabled=false; ta.focus(); }
+    }
+    
+    function showNoteModal(data){
       $('read-note-title').textContent = data.title || '—';
-      $('read-note-meta').innerHTML = `Dibagikan oleh <strong>${data.author||'—'}</strong> ${data.date?`pada ${data.date}`:''}`;
+      const dateString = data.sharedAt ? data.sharedAt.toDate().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
+      $('read-note-meta').innerHTML = `Dibagikan oleh <strong>${data.sharedBy||'—'}</strong> ${dateString?`pada ${dateString}`:''}`;
       $('read-note-body').innerHTML = `<p>${(data.body||'').replace(/\n/g,'<br>')}</p>`;
-      $('read-note-modal').style.display='flex';
+      $('read-note-modal').classList.add('show');
     }
 
-    // ---- helpers ----
+    // --- Helper Functions ---
+    function cleanup(){ 
+      if(discussionUnsub) discussionUnsub();
+      if(tasksUnsub) tasksUnsub();
+      if(notesUnsub) notesUnsub();
+    }
+
+    function updatePlaceholder() {
+      const input = $('discussion-input');
+      if (!input) return;
+      if (window.innerWidth <= 600) input.placeholder = "Ketik pesan…";
+      else input.placeholder = "Ketik pesan… Gunakan @ untuk menyebut teman";
+    }
+
+    function fixVH(){ document.documentElement.style.setProperty('--vh', window.innerHeight + 'px'); }
     function renderEmpty(msg){ $('content').innerHTML = `<div class="empty">${msg}</div>`; }
     function el(tag, attrs={}, children){
       const e = document.createElement(tag);
@@ -741,12 +844,22 @@
       if (children != null) e.innerHTML = children; return e;
     }
     
-    // Custom confirm modal helper
+    function formatDue(ts){
+      const now = new Date(); const due = ts?.toDate?.() || new Date();
+      now.setHours(0,0,0,0); due.setHours(0,0,0,0);
+      const diff = Math.ceil((due-now)/(1000*60*60*24));
+      if (diff < 0) return {text:'Telah lewat', cls:'overdue'};
+      if (diff === 0) return {text:'Tenggat hari ini', cls:'urgent'};
+      if (diff === 1) return {text:'Tenggat besok', cls:'urgent'};
+      if (diff <= 7) return {text:`Tenggat ${diff} hari`, cls:'soon'};
+      return {text: due.toLocaleDateString('id-ID',{day:'numeric',month:'short'}), cls:'normal'};
+    }
+
     function showConfirm(message) {
       return new Promise(resolve => {
-        const confirmOverlay = el('div', { class: 'overlay' });
+        const confirmOverlay = el('div', { class: 'overlay show' });
         const confirmModal = el('div', { class: 'modal' });
-        const msgEl = el('p', {}, message);
+        const msgEl = el('p', {style: "line-height:1.6;"}, message);
         const footEl = el('div', { class: 'm-foot' });
         const yesBtn = el('button', { class: 'm-btn primary' }, 'Ya, Hapus');
         const noBtn = el('button', { class: 'm-btn ghost' }, 'Batal');
@@ -760,9 +873,6 @@
         noBtn.onclick = () => { resolve(false); confirmOverlay.remove(); };
       });
     }
-
-    // Global actions
-    document.querySelector('.logout')?.addEventListener('click', (e)=>{ e.preventDefault(); signOut(auth); });
   </script>
 </body>
 </html>
