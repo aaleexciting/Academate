@@ -1,646 +1,573 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catatan - Academate</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Quill.js CSS -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catatan — Academate</title>
 
-    <style>
-        :root {
-            --primary-color: #7C3AED;
-            --primary-light: #F5F3FF;
-            --text-dark: #111827;
-            --text-light: #374151;
-            --text-muted: #6B7280;
-            --bg-body: #F9FAFB;
-            --bg-sidebar: #FFFFFF;
-            --card-bg: #FFFFFF;
-            --border-color: #E5E7EB;
-        }
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+  <!-- Quill -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+  <style>
+    :root{
+      --bg:#F7F7FA;--surface:#fff;--text:#1E1F24;--muted:#6C6F7F;--primary:#6F6CFF;--primary-2:#8B7CFF;--border:#ECECF1;--shadow:0 6px 24px rgba(30,31,36,.07);--radius:18px;--sidebar-w:280px;--content-max:1320px;--gap:18px;
+      --success:#10B981;--warn:#F59E0B;--danger:#EF4444;--info:#3B82F6;
+    }
+    html,body{height:100%}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px;padding-bottom:80px}
+    a{color:inherit}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-dark);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        /* --- Sidebar --- */
-        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem; }
-        .sidebar-header { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); text-decoration: none; margin-bottom: 2.5rem; padding: 0 0.5rem; }
-        .nav-menu { list-style: none; flex-grow: 1; }
-        .nav-item a { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; }
-        .nav-item a:hover { background-color: var(--primary-light); color: var(--primary-color); }
-        .nav-item a.active { background-color: var(--primary-color); color: #fff; font-weight: 600; }
-        .nav-item a svg { width: 20px; height: 20px; margin-right: 1rem; }
-        .logout-button { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; background-color: transparent; border: none; width: 100%; font-family: 'Inter', sans-serif; font-size: 1rem; cursor: pointer; }
-        .logout-button:hover { background-color: #FEE2E2; color: #EF4444; }
+    /* App Shell */
+    .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
+    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .main-content{padding:var(--gap);width:100%}
 
-        /* --- Main Content --- */
-        .main-content { flex-grow: 1; display: flex; overflow: hidden; }
+    /* Sidebar */
+    .sidebar{display:none}
+    @media (min-width:901px){
+      body{padding-bottom:0}
+      .app{display:grid;grid-template-columns:var(--sidebar-w) minmax(0,1fr);gap:24px}
+      .sidebar{display:flex;flex-direction:column;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+      .brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:22px;margin-bottom:18px}
+      .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#8B7CFF,#6AC9FF)}
+      .nav{display:flex;flex-direction:column;gap:8px;overflow:auto;padding-right:2px}
+      .nav a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:var(--muted);text-decoration:none;font-weight:500;transition:.2s}
+      .nav a i{font-size:20px}
+      .nav a:hover{background:#F3F2FF;color:var(--primary)}
+      .nav a.active{background:var(--primary);color:#fff;box-shadow:0 8px 20px rgba(111,108,255,.3)}
+      .spacer{flex:1}
+      .sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
+      .sidebar-logout-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--muted);font-weight:600;cursor:pointer;transition:.2s}
+      .sidebar-logout-btn:hover{background:#fde2e2;border-color:#f7b2b2;color:#c82424}
+      .sidebar-links{text-align:center;margin-top:16px;display:flex;justify-content:center;gap:16px}
+      .sidebar-links a{font-size:12px;color:var(--muted);text-decoration:none}
+      .sidebar-links a:hover{text-decoration:underline}
+      .copyright{font-size:11px;color:#C0C3D2;text-align:center;margin-top:12px}
+    }
 
-        /* Notes List Panel */
-        .notes-list-panel {
-            width: 380px;
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            background-color: #FFFFFF;
-        }
-        .notes-list-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            flex-shrink: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .notes-list-header h1 { font-size: 1.5rem; }
-        .new-note-btn { padding: 0.6rem 1rem; background-color: var(--primary-color); color: #fff; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer; transition: background-color 0.2s; display: flex; align-items: center; gap: 0.5rem; }
-        .new-note-btn:hover { background-color: #6D28D9; }
-        
-        .notes-list-controls { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); }
-        .search-bar { display: flex; align-items: center; background-color: var(--bg-body); border-radius: 0.5rem; padding: 0.5rem 0.75rem; margin-bottom: 1rem; }
-        .search-bar svg { color: var(--text-muted); margin-right: 0.5rem; }
-        .search-bar input { flex-grow: 1; border: none; background: transparent; font-size: 1rem; outline: none; }
-        .tabs { display: flex; background-color: var(--bg-body); border-radius: 0.5rem; padding: 0.25rem; }
-        .tab-btn { flex: 1; padding: 0.5rem; border: none; background-color: transparent; border-radius: 0.375rem; cursor: pointer; font-weight: 500; color: var(--text-light); transition: all 0.2s ease; }
-        .tab-btn.active { background-color: #fff; color: var(--primary-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    /* Header */
+    .header{margin-top:var(--gap);margin-bottom:24px}
+    .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .header-brand{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+    .header-actions{display:flex;gap:8px}
+    .header-actions .icon-btn{width:38px;height:38px;font-size:18px}
+    .header-main{display:flex;justify-content:space-between;align-items:center;gap:16px}
+    .header-main h1{font-size:22px;margin:0}
+    .header-main p{color:var(--muted);margin:4px 0 0;font-size:14px}
+    .header-avatar-link{text-decoration:none}
+    .header-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0}
+    .header-toolbar{display:none}
 
-        #notes-list-container { list-style: none; overflow-y: auto; flex-grow: 1; }
-        .note-item, .shared-note-item { padding: 1.25rem 1.5rem; cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background-color 0.2s; }
-        .note-item.active, .shared-note-item.active { background-color: var(--primary-light); }
-        .note-item h3, .shared-note-item h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .note-item .note-excerpt, .shared-note-item .note-excerpt { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.75rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        .note-footer { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted); }
-        .shared-tag { background-color: #E9D5FF; color: var(--primary-color); font-weight: 500; padding: 0.2rem 0.5rem; border-radius: 99px; }
-        .shared-note-meta { display: flex; align-items: center; gap: 0.5rem; }
-        .class-color-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-        .class-name { font-weight: 500; }
-        
-        /* Note Panel (Editor or Reader) */
-        .note-panel { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        #editor-placeholder { text-align: center; padding-top: 20vh; color: var(--text-muted); margin: auto; }
-        #editor-placeholder svg { width: 80px; height: 80px; margin-bottom: 1rem; }
-        
-        /* Editor View */
-        #editor-container { display: none; flex-direction: column; height: 100%; }
-        .editor-header { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; padding: 1rem 2rem; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
-        .editor-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
-        .save-btn { background-color: var(--primary-color); color: #fff; border-color: var(--primary-color); }
-        .save-btn:hover { background-color: #6D28D9; }
-        .save-btn:disabled { background-color: #A78BFA; cursor: not-allowed; }
-        .share-btn { background-color: transparent; color: var(--text-light); border: 1px solid var(--border-color); }
-        .share-btn:hover { background-color: var(--bg-body); }
-        .delete-btn { color: #EF4444; }
-        .delete-btn:hover { background-color: #FEE2E2; }
-        .title-wrapper { padding: 1rem 2rem 0; }
-        #note-title-input { width: 100%; border: none; font-size: 2rem; font-weight: 700; padding: 0.5rem 0; background: transparent; outline: none; }
-        #note-meta { color: var(--text-muted); font-size: 0.8rem; padding: 0 2rem 0.5rem; }
-        #quill-editor-container { flex-grow: 1; overflow-y: auto; position: relative; }
-        #quill-editor { height: 100%; }
-        .ql-container.ql-snow { border: none !important; }
-        .ql-editor { font-size: 16px; line-height: 1.7; padding: 1.5rem 2rem; }
-        .ql-toolbar.ql-snow { border: none !important; border-bottom: 1px solid var(--border-color) !important; padding: 12px 2rem; }
-        #word-count { text-align: right; padding: 0.5rem 2rem; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border-color); }
-        
-        /* Reader View for Shared Notes */
-        #reader-container { display: none; flex-direction: column; height: 100%; }
-        .reader-header { padding: 2rem 3rem; border-bottom: 1px solid var(--border-color); background-color: var(--card-bg); }
-        .reader-header h2 { font-size: 2.25rem; font-weight: 700; margin-bottom: 0.75rem; }
-        .reader-meta { display: flex; align-items: center; gap: 1rem; color: var(--text-muted); }
-        .reader-meta-item { display: flex; align-items: center; gap: 0.5rem; }
-        .reader-meta-item svg { width: 16px; height: 16px; }
-        .reader-body { flex-grow: 1; overflow-y: auto; padding: 2rem 3rem; font-size: 17px; line-height: 1.8; max-width: 800px; margin: 0 auto; width: 100%; }
-        .reader-body p { white-space: pre-wrap; }
-        
-        /* Modals & Loaders */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal { background: #fff; padding: 2rem; border-radius: 1rem; width: 90%; max-width: 400px; }
-        .modal h2 { margin-bottom: 1.5rem; }
-        .form-group { display: flex; flex-direction: column; margin-bottom: 1rem; }
-        .form-group label { margin-bottom: 0.5rem; font-weight: 500; }
-        .form-group select { padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-size: 1rem; }
-        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
-        .modal-btn { padding: 0.6rem 1.2rem; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer; }
-        #confirm-share-btn { background-color: var(--primary-color); color: #fff; }
-        #cancel-share-btn { background-color: var(--border-color); }
+    /* Desktop toolbar */
+    @media (min-width:901px){
+      .main-content{max-width:min(var(--content-max),calc(100vw - var(--sidebar-w) - 120px));margin:0 auto}
+      .header{display:flex;justify-content:space-between;align-items:center}
+      .header-top,.header-avatar-link,.header-actions{display:none}
+      .header-main{display:block}
+      .header-main h1{font-size:26px}
+      .header-main p{font-size:15px;margin-top:6px}
+      .header-toolbar{display:flex;align-items:center;gap:12px}
+      .search-bar{position:relative}
+      .search-bar input{width:320px;padding:12px 16px 12px 44px;border-radius:12px;border:1px solid var(--border);background:var(--bg);outline:none;transition:.2s}
+      .search-bar input:focus{border-color:var(--primary);background:var(--surface)}
+      .search-bar i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted)}
+    }
 
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 2rem auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+    /* Mobile nav */
+    .mobile-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;height:70px;padding:0 10px;z-index:1000}
+    .mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);text-decoration:none;font-size:10px;font-weight:500;padding:8px;border-radius:8px}
+    .mobile-nav a i{font-size:20px}
+    .mobile-nav a.active{color:var(--primary)}
+    @media (min-width:901px){.mobile-nav{display:none}}
+
+    /* Page layout */
+    .page{display:grid;grid-template-columns:380px minmax(0,1fr);gap:18px}
+    @media (max-width:900px){
+      .page{grid-template-columns:1fr}
+      .sticky{position:sticky;top:10px;z-index:2}
+    }
+
+    .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+
+    /* List Panel */
+    .list-top{display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid var(--border)}
+    .list-top h2{margin:0;font-size:18px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
+    .btn:hover{border-color:#d8d8e0}
+    .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
+    .btn-secondary{background:#F3F2FF;color:var(--primary);border-color:#E7E6FF}
+
+    .list-controls{padding:12px;border-bottom:1px solid var(--border)}
+    .search{position:relative}
+    .search input{width:100%;padding:10px 12px 10px 40px;border-radius:12px;border:1px solid var(--border);background:var(--bg);outline:none}
+    .search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+    .tabs{display:flex;gap:6px;margin-top:10px;background:#F2F3FF;border:1px solid #E7E6FF;border-radius:12px;padding:4px}
+    .tab{flex:1;padding:8px 10px;background:transparent;border:none;border-radius:10px;font-weight:600;color:var(--muted);cursor:pointer}
+    .tab.active{background:#fff;color:var(--primary);box-shadow:0 2px 10px rgba(111,108,255,.15)}
+
+    .tag-strip{display:flex;gap:8px;overflow:auto;padding:10px 2px 2px}
+    .tag-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:#fff;border-radius:999px;padding:6px 10px;font-size:12px;color:var(--muted);white-space:nowrap;cursor:pointer}
+    .tag-chip.active{background:#F3F2FF;color:var(--primary);border-color:#E7E6FF}
+
+    .list{max-height:calc(100dvh - 330px);overflow:auto}
+    .item{padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer}
+    .item h4{margin:0 0 6px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .item .excerpt{color:var(--muted);font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .item .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px;color:var(--muted);font-size:12px;gap:10px;flex-wrap:wrap}
+    .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:11px}
+    .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+    .item.active{background:#F3F2FF}
+
+    /* Editor/Reader Panel */
+    .editor{display:none;flex-direction:column;height:calc(100dvh - 230px)}
+    .editor-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border)}
+    .toolbar-left{display:flex;gap:8px;align-items:center}
+    .toolbar-right{display:flex;gap:8px;align-items:center}
+    .icon-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:18px}
+    .icon-btn:hover{color:var(--primary);border-color:#d8d8e0}
+
+    .titlewrap{padding:10px 14px;border-bottom:1px solid var(--border)}
+    #note-title{width:100%;border:none;outline:none;font-size:22px;font-weight:700;background:transparent}
+    .meta{padding:0 14px 8px;color:var(--muted);font-size:12px}
+
+    .tag-editor{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    .tag-editor .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:12px}
+    .tag-editor .chip button{border:none;background:transparent;cursor:pointer;color:var(--muted)}
+    .tag-selector{position:relative}
+    .tag-selector button{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:#fff;cursor:pointer;font-weight:600}
+    .tag-dropdown{position:absolute;top:110%;left:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);min-width:220px;display:none;z-index:10}
+    .tag-dropdown .opt{display:flex;align-items:center;gap:8px;padding:8px 10px;cursor:pointer}
+    .tag-dropdown .opt:hover{background:#F7F7FA}
+
+    #ql-wrap{flex:1;overflow:auto}
+    .ql-toolbar.ql-snow{border:none;border-bottom:1px solid var(--border);padding:10px 14px}
+    .ql-container.ql-snow{border:none}
+    .ql-editor{font-size:16px;line-height:1.8;padding:18px 24px;max-width:900px;margin:0 auto}
+
+    .word{border-top:1px solid var(--border);padding:8px 14px;color:var(--muted);font-size:12px;text-align:right}
+
+    .reader{display:none;flex-direction:column;height:calc(100dvh - 230px)}
+    .reader-head{padding:24px 28px;border-bottom:1px solid var(--border);background:var(--surface)}
+    .reader-head h2{margin:0 0 6px;font-size:26px}
+    .reader-meta{display:flex;gap:12px;color:var(--muted);font-size:13px;flex-wrap:wrap}
+    .reader-tags{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+    .reader-body{flex:1;overflow:auto;padding:24px 28px}
+    .reader-body article{max-width:900px;margin:0 auto;font-size:17px;line-height:1.9}
+
+    .placeholder{display:grid;place-items:center;padding:80px 20px;color:var(--muted)}
+
+    /* Read Comfort toggles */
+    .serif .ql-editor{font-family:Georgia, "Times New Roman", serif}
+    .wide .ql-editor, .wide .reader-body article{max-width:1200px}
+    .focus .sidebar, .focus .mobile-nav, .focus .list{display:none}
+    .focus .page{grid-template-columns:1fr}
+
+    /* Mobile extras */
+    @media (max-width:900px){
+      .fab{position:fixed;right:18px;bottom:90px;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--primary);color:#fff;border:none;box-shadow:0 10px 24px rgba(111,108,255,.35);z-index:1001}
+      .editor{height:calc(100dvh - 180px)}
+      .reader{height:calc(100dvh - 180px)}
+    }
+  </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <a href="dashboard.html" class="sidebar-header">Academate</a>
-        <ul class="nav-menu">
-            <li class="nav-item"><a href="dashboard.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>Dasbor</span></a></li>
-            <li class="nav-item"><a href="classes.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>Kelas</span></a></li>
-            <li class="nav-item"><a href="schedule.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span>Jadwal</span></a></li>
-            <li class="nav-item"><a href="notes.html" class="active"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg><span>Catatan</span></a></li>
-            <li class="nav-item"><a href="account.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg><span>Akun</span></a></li>
-        </ul>
-        <button class="logout-button" id="logout-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span>Keluar</span></button>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Navigasi utama">
+      <div class="brand"><div class="logo" aria-hidden="true"></div>Academate</div>
+      <nav class="nav">
+        <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+        <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+        <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+        <a class="active" href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+        <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+      </nav>
+      <div class="spacer"></div>
+      <div class="sidebar-footer">
+        <button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
+        <div class="sidebar-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a></div>
+        <p class="copyright">&copy; 2025 Academate</p>
+      </div>
     </aside>
 
-    <main class="main-content">
-        <div class="notes-list-panel">
-            <div class="notes-list-header">
-                <h1>Catatan</h1>
-                <button class="new-note-btn" id="new-note-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
-                    <span>Baru</span>
-                </button>
+    <!-- Main -->
+    <main class="main">
+      <div class="main-content">
+        <header class="header">
+          <div class="header-top">
+            <div class="header-brand">Academate</div>
+            <div class="header-actions">
+              <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
+              <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
             </div>
-            <div class="notes-list-controls">
-                <div class="search-bar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
-                    <input type="text" id="search-input" placeholder="Cari catatan...">
-                </div>
-                <div class="tabs">
-                    <button class="tab-btn active" data-tab="personal">Catatan Saya</button>
-                    <button class="tab-btn" data-tab="shared">Catatan Kelas</button>
-                </div>
+          </div>
+          <div class="header-main">
+            <div>
+              <h1>Catatan</h1>
+              <p>Lebih terorganisir: tag per mata kuliah, filter cepat, dan pengalaman mobile yang mantap.</p>
             </div>
-            <ul id="notes-list-container">
-                <div class="loader"></div>
-            </ul>
-        </div>
-        <div class="note-panel">
-             <div id="editor-placeholder">
-                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
-                <h2>Pilih catatan untuk dilihat atau buat yang baru.</h2>
+            <a href="account.html" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
+          </div>
+          <div class="header-toolbar">
+            <div class="search-bar">
+              <i class="ri-search-line"></i>
+              <input id="global-search" type="text" placeholder="Cari judul/konten catatan...">
+            </div>
+            <button class="icon-btn" id="new-note-btn" title="Catatan Baru"><i class="ri-add-line"></i></button>
+          </div>
+        </header>
+
+        <div class="page">
+          <!-- List panel -->
+          <section class="panel sticky">
+            <div class="list-top">
+              <h2>Daftar Catatan</h2>
+              <button class="btn btn-primary" id="new-note-btn-2"><i class="ri-add-line"></i><span>Baru</span></button>
+            </div>
+            <div class="list-controls">
+              <div class="search"><i class="ri-search-line"></i><input id="search-input" placeholder="Cari catatan..."></div>
+              <div class="tabs">
+                <button class="tab active" data-tab="personal">Catatan Saya</button>
+                <button class="tab" data-tab="shared">Catatan Kelas</button>
+              </div>
+              <div id="tag-strip" class="tag-strip" aria-label="Filter berdasarkan mata kuliah"></div>
+            </div>
+            <div id="notes-list" class="list" aria-live="polite"></div>
+          </section>
+
+          <!-- Editor/Reader panel -->
+          <section class="panel">
+            <div id="placeholder" class="placeholder"><div>
+              <i class="ri-quill-pen-line" style="font-size:68px"></i>
+              <h3>Pilih catatan untuk dibaca atau buat yang baru</h3>
+            </div></div>
+
+            <!-- Editor -->
+            <div id="editor" class="editor">
+              <div class="editor-toolbar">
+                <div class="toolbar-left">
+                  <button id="toggle-serif" class="icon-btn" title="Mode Serif"><i class="ri-font-size-2"></i></button>
+                  <button id="toggle-wide" class="icon-btn" title="Lebar Konten Lebih Besar"><i class="ri-page-separator"></i></button>
+                  <button id="toggle-focus" class="icon-btn" title="Fokus (sembunyikan daftar)"><i class="ri-focus-2-line"></i></button>
+                </div>
+                <div class="toolbar-right">
+                  <div class="tag-selector">
+                    <button id="add-tag-btn" type="button"><i class="ri-price-tag-3-line"></i> Tag Kelas</button>
+                    <div id="tag-dropdown" class="tag-dropdown"></div>
+                  </div>
+                  <button id="share-btn" class="btn"><i class="ri-share-forward-line"></i><span>Bagikan</span></button>
+                  <button id="delete-btn" class="btn" style="color:#EF4444;border-color:#F5C2C2"><i class="ri-delete-bin-6-line"></i><span>Hapus</span></button>
+                  <button id="save-btn" class="btn btn-primary"><i class="ri-save-3-line"></i><span>Simpan</span></button>
+                </div>
+              </div>
+              <div class="titlewrap"><input id="note-title" placeholder="Judul Catatan..."></div>
+              <div class="meta"><span id="note-meta">Catatan baru</span></div>
+              <div class="tag-editor">
+                <div id="tag-chips"></div>
+              </div>
+              <div id="ql-wrap"><div id="quill"></div></div>
+              <div class="word"><span id="word-count">0 kata</span></div>
             </div>
 
-            <div id="editor-container">
-                <div class="editor-header">
-                    <button class="editor-btn delete-btn" id="delete-note-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg><span>Hapus</span></button>
-                    <button class="editor-btn share-btn" id="share-note-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg><span>Bagikan</span></button>
-                    <button class="editor-btn save-btn" id="save-note-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8.036A5.53 5.53 0 0 1 7.583 4h.834a5.53 5.53 0 0 1 5.083 4.036.5.5 0 0 0 .917-.402A6.53 6.53 0 0 0 8.417 3H7.583A6.53 6.53 0 0 0 1.583 7.634a.5.5 0 0 0 .917.402z"/><path d="m9.22 10.323.333 1.665a.5.5 0 0 0 .94.004l1.463-3.657a.5.5 0 0 0-.825-.632l-3.32 2.37a.5.5 0 0 0 .004.94zm-2.48-1.55L4.935 9.14a.5.5 0 0 0-.632.825l2.37 3.32a.5.5 0 0 0 .94-.004l1.665-.333a.5.5 0 0 0 .004-.94l-3.657-1.463z"/></svg><span>Simpan</span></button>
+            <!-- Reader (read-only) -->
+            <div id="reader" class="reader">
+              <div class="reader-head">
+                <h2 id="reader-title">—</h2>
+                <div class="reader-meta">
+                  <span id="reader-author"></span>
+                  <span id="reader-class"></span>
+                  <span id="reader-date"></span>
                 </div>
-                <div class="title-wrapper">
-                    <input type="text" id="note-title-input" placeholder="Judul Catatan...">
-                </div>
-                 <div id="note-meta"></div>
-                <div id="quill-editor-container">
-                    <div id="quill-editor"></div>
-                </div>
-                <div id="word-count">0 kata</div>
+                <div id="reader-tags" class="reader-tags"></div>
+              </div>
+              <div class="reader-body">
+                <article id="reader-article"></article>
+              </div>
             </div>
-
-            <div id="reader-container">
-                <div class="reader-header">
-                    <h2 id="reader-title"></h2>
-                    <div class="reader-meta">
-                        <div id="reader-author" class="reader-meta-item"></div>
-                        <div id="reader-class" class="reader-meta-item"></div>
-                        <div id="reader-date" class="reader-meta-item"></div>
-                    </div>
-                </div>
-                <div class="reader-body">
-                    <p id="reader-content"></p>
-                </div>
-            </div>
+          </section>
         </div>
+      </div>
     </main>
+  </div>
 
-    <div class="modal-overlay" id="share-modal">
-        <div class="modal">
-            <h2>Bagikan Catatan ke Kelas</h2>
-            <div class="form-group">
-                <label for="class-select">Pilih Kelas:</label>
-                <select id="class-select"></select>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="modal-btn" id="cancel-share-btn">Batal</button>
-                <button type="button" class="modal-btn" id="confirm-share-btn">Bagikan</button>
-            </div>
-        </div>
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav">
+    <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+    <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+    <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+    <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+    <a class="active" href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+  </nav>
+
+  <!-- Share Modal -->
+  <div class="modal-overlay" id="share-modal" style="display:none;position:fixed;inset:0;background:rgba(17,24,39,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);align-items:center;justify-content:center;z-index:1000">
+    <div class="modal" style="background:#fff;padding:20px;border-radius:16px;width:90%;max-width:420px;box-shadow:var(--shadow)">
+      <h3 style="margin:0 0 8px">Bagikan ke Kelas</h3>
+      <p style="color:var(--muted);margin:0 0 12px">Pilih kelas tujuan:</p>
+      <select id="share-class" style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface)"></select>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button id="share-cancel" class="btn">Batal</button>
+        <button id="share-confirm" class="btn btn-primary">Bagikan</button>
+      </div>
     </div>
-    
-    <!-- Quill.js JS -->
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, arrayUnion, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  </div>
 
-        const firebaseConfig = {
-             apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
-            authDomain: "acadmte.firebaseapp.com",
-            projectId: "acadmte",
-            storageBucket: "acadmte.appspot.com",
-            messagingSenderId: "547286858993",
-            appId: "1:547286858993:web:b83de49e7eb1cc35a67d50",
-            measurementId: "G-ZEFYD7F650"
-        };
+  <button class="fab" id="fab" title="Catatan Baru" style="display:none"><i class="ri-add-line"></i></button>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // --- State Management ---
-        let currentUser = null;
-        let currentNoteId = null;
-        let currentNoteType = 'personal'; // 'personal' or 'shared'
-        let activeTab = 'personal';
-        let preselectedNote = null; // { noteId, classId } from URL
-        let preselectedClassId = null; // for sharing from class page
+    const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD7F650" };
 
-        let personalNotesUnsubscribe = null, sharedNotesUnsubscribes = [];
-        let quill;
-        
-        let allPersonalNotes = [], allSharedNotes = [], classDataCache = {};
-        const classColors = ['#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#3B82F6', '#EC4899'];
+    const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
 
-        // --- DOM Elements ---
-        const notesListContainer = document.getElementById('notes-list-container');
-        const searchInput = document.getElementById('search-input');
-        const editorPlaceholder = document.getElementById('editor-placeholder');
-        const editorContainer = document.getElementById('editor-container');
-        const readerContainer = document.getElementById('reader-container');
+    // State
+    let currentUser=null; let activeTab='personal'; let currentNoteId=null; let currentType='personal';
+    let personalUnsub=null; let sharedUnsubs=[]; let quill; let classesCache={}; let allPersonal=[], allShared=[];
+    let activeTagFilters=new Set(); // classIds selected
 
-        // --- Auth & Initial Load ---
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                currentUser = user;
-                initializePage();
-            } else {
-                if (personalNotesUnsubscribe) personalNotesUnsubscribe();
-                sharedNotesUnsubscribes.forEach(unsub => unsub());
-                window.location.replace('auth.html');
-            }
+    const notesList=document.getElementById('notes-list');
+    const searchInput=document.getElementById('search-input');
+    const placeholder=document.getElementById('placeholder');
+    const editor=document.getElementById('editor');
+    const reader=document.getElementById('reader');
+    const noteTitle=document.getElementById('note-title');
+    const noteMeta=document.getElementById('note-meta');
+    const wordCount=document.getElementById('word-count');
+    const tagChips=document.getElementById('tag-chips');
+    const tagDropdown=document.getElementById('tag-dropdown');
+    const tagStrip=document.getElementById('tag-strip');
+
+    // Auth
+    onAuthStateChanged(auth, async (user)=>{
+      if(!user){ window.location.replace('auth.html'); return; }
+      currentUser=user; hydrateAvatar(); initQuill();
+      await loadClasses(); listenPersonal(); listenShared();
+      attachEvents(); renderTagFilters(); renderList();
+      if(window.matchMedia('(max-width:900px)').matches){ document.getElementById('fab').style.display='grid'; }
+    });
+
+    function hydrateAvatar(){
+      const avatar=document.getElementById('header-avatar-img');
+      const name=localStorage.getItem('userDisplayName')||(currentUser?.displayName??'A');
+      const photo=localStorage.getItem('userPhotoURL')||currentUser?.photoURL;
+      if(avatar) avatar.src=photo||`https://placehold.co/80x80/E5E7EB/6B7280?text=${(name||'A').charAt(0)}`;
+    }
+
+    function initQuill(){
+      quill=new Quill('#quill',{ theme:'snow', placeholder:'Tulis catatanmu di sini...', modules:{ toolbar:[[{header:[1,2,3,false]}],["bold","italic","underline"],[{list:'ordered'},{list:'bullet'}],["link"],['clean']] } });
+      quill.on('text-change',()=>{ updateWord(); scheduleAutosave(); });
+    }
+
+    async function loadClasses(){
+      const u=await getDoc(doc(db,'users',currentUser.uid));
+      const joined=(u.exists()? (u.data().joinedClasses||[]):[]);
+      if(!joined.length) return;
+      const snaps=await Promise.all(joined.map(id=>getDoc(doc(db,'classes',id))));
+      snaps.forEach(s=>{ if(s.exists()) classesCache[s.id]=s.data(); });
+      // fill share select
+      const sel=document.getElementById('share-class'); sel.innerHTML='';
+      Object.entries(classesCache).forEach(([id,c])=> sel.insertAdjacentHTML('beforeend',`<option value="${id}">${escapeHTML(c.namaMataKuliah||'Kelas')}</option>`));
+      // build tag dropdown options
+      rebuildTagDropdown();
+    }
+
+    function rebuildTagDropdown(){
+      tagDropdown.innerHTML='';
+      Object.entries(classesCache).forEach(([id,c])=>{
+        const opt=document.createElement('div'); opt.className='opt';
+        opt.innerHTML=`<span class="dot" style="background:${colorFor(id)}"></span><span>${escapeHTML(c.namaMataKuliah||'Kelas')}</span>`;
+        opt.addEventListener('click',()=> addTagToCurrent(id));
+        tagDropdown.appendChild(opt);
+      });
+    }
+
+    function listenPersonal(){
+      const qy=query(collection(db,'users',currentUser.uid,'notes'), orderBy('updatedAt','desc'));
+      personalUnsub=onSnapshot(qy,(snap)=>{
+        allPersonal=snap.docs.map(d=>({id:d.id,tags:[],...d.data()}));
+        // backfill if tags missing
+        allPersonal.forEach(n=>{ if(!Array.isArray(n.tags)) n.tags=[]; });
+        renderList(); if(currentType==='personal'&&currentNoteId){ highlightActive(); updateTagEditor(); }
+      });
+    }
+
+    async function listenShared(){
+      sharedUnsubs.forEach(u=>u()); sharedUnsubs=[]; allShared=[];
+      const u=await getDoc(doc(db,'users',currentUser.uid));
+      const joined=u.exists()? (u.data().joinedClasses||[]):[];
+      const promises=joined.map(cid=> new Promise(resolve=>{
+        const qy=query(collection(db,'classes',cid,'sharedNotes'), orderBy('sharedAt','desc'));
+        const unsub=onSnapshot(qy,(snap)=>{
+          allShared=allShared.filter(n=>n.classId!==cid).concat(snap.docs.map(d=>({id:d.id,classId:cid,...d.data()})));
+          allShared.sort((a,b)=> (b.sharedAt?.toMillis?.()||0)-(a.sharedAt?.toMillis?.()||0));
+          if(activeTab==='shared') renderList(); resolve();
         });
+        sharedUnsubs.push(unsub);
+      }));
+      await Promise.all(promises);
+    }
 
-        function initializePage() {
-            initializeQuill();
-            handleUrlParameters();
-            attachEventListeners();
-            listenForPersonalNotes(currentUser.uid);
-            loadAndListenForSharedNotes(currentUser.uid);
+    function renderTagFilters(){
+      tagStrip.innerHTML='';
+      Object.entries(classesCache).forEach(([id,c])=>{
+        const chip=document.createElement('button'); chip.type='button'; chip.className='tag-chip'; chip.dataset.id=id;
+        chip.innerHTML=`<span class="dot" style="background:${colorFor(id)}"></span>${escapeHTML(c.namaMataKuliah||'Kelas')}`;
+        chip.addEventListener('click',()=>{ if(activeTagFilters.has(id)) activeTagFilters.delete(id); else activeTagFilters.add(id); chip.classList.toggle('active'); renderList(); });
+        tagStrip.appendChild(chip);
+      });
+    }
+
+    function renderList(){
+      const source= activeTab==='personal'? allPersonal: allShared;
+      const q=(searchInput.value||'').toLowerCase();
+      let filtered=source.filter(n=> (n.title||'').toLowerCase().includes(q) || (n.plainText||n.body||'').toLowerCase().includes(q));
+      if(activeTagFilters.size){
+        if(activeTab==='personal') filtered=filtered.filter(n=> (n.tags||[]).some(t=> activeTagFilters.has(t)));
+        else filtered=filtered.filter(n=> activeTagFilters.has(n.classId));
+      }
+      notesList.innerHTML = filtered.length? '' : `<div style="padding:16px;color:var(--muted);text-align:center">Tidak ada catatan.</div>`;
+      filtered.forEach(n=>{
+        const el=document.createElement('div'); el.className='item'; el.dataset.id=n.id; el.dataset.type=activeTab;
+        const pills = (activeTab==='personal' ? (n.tags||[]) : [n.classId]).filter(Boolean).map(cid=>{
+          const name=(classesCache[cid]?.namaMataKuliah)||'Kelas';
+          return `<span class="pill"><span class="dot" style="background:${colorFor(cid)}"></span>${escapeHTML(name)}</span>`;
+        }).join('');
+        if(activeTab==='personal'){
+          el.innerHTML=`<h4>${escapeHTML(n.title||'Tanpa Judul')}</h4>
+            <div class="excerpt">${escapeHTML((n.plainText||'').slice(0,140))}</div>
+            <div class="meta"><span>${formatDate(n.updatedAt)}</span><span style="display:flex;gap:6px;flex-wrap:wrap">${pills}</span></div>`;
+        } else {
+          el.innerHTML=`<h4>${escapeHTML(n.title||'Tanpa Judul')}</h4>
+            <div class="excerpt">${escapeHTML((n.body||'').slice(0,140))}</div>
+            <div class="meta"><span>${formatDate(n.sharedAt)}</span><span style="display:flex;gap:6px;flex-wrap:wrap">${pills}</span></div>`;
         }
+        el.addEventListener('click',()=> openNote(n.id, activeTab, n.classId));
+        notesList.appendChild(el);
+      });
+      highlightActive();
+    }
 
-        function initializeQuill() {
-            quill = new Quill('#quill-editor', {
-                modules: { toolbar: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['clean']
-                ]},
-                theme: 'snow',
-                placeholder: 'Tuliskan catatanmu di sini...',
-            });
-            quill.on('text-change', updateWordCount);
-        }
+    async function openNote(id, type, classId){
+      currentNoteId=id; currentType=type;
+      placeholder.style.display='none';
+      if(type==='personal'){
+        reader.style.display='none'; editor.style.display='flex';
+        const note=allPersonal.find(n=>n.id===id); if(!note) return;
+        noteTitle.value=note.title||''; noteMeta.textContent=`Terakhir diperbarui: ${formatDateTime(note.updatedAt)}`;
+        try{ quill.setContents(JSON.parse(note.contentDelta||'[]')); }catch{ quill.setText(note.plainText||''); }
+        updateWord(); updateTagEditor(note.tags||[]);
+      } else {
+        editor.style.display='none'; reader.style.display='flex';
+        const ref=doc(db,'classes',classId,'sharedNotes',id); const snap=await getDoc(ref); if(!snap.exists()) return;
+        const d=snap.data(); const c=classesCache[classId]||{};
+        document.getElementById('reader-title').textContent = d.title||'Tanpa Judul';
+        document.getElementById('reader-author').textContent = `Oleh ${d.sharedBy||'—'}`;
+        document.getElementById('reader-class').textContent = c.namaMataKuliah||'';
+        document.getElementById('reader-date').textContent = formatDate(d.sharedAt);
+        document.getElementById('reader-article').innerText = (d.body||'');
+        // tags for shared: just the class
+        const rtags=document.getElementById('reader-tags'); rtags.innerHTML = `<span class="pill"><span class="dot" style="background:${colorFor(classId)}"></span>${escapeHTML(c.namaMataKuliah||'Kelas')}</span>`;
+      }
+      highlightActive();
+      if(window.matchMedia('(max-width:900px)').matches){ window.scrollTo({ top:0, behavior:'smooth' }); }
+    }
 
-        function handleUrlParameters() {
-            const params = new URLSearchParams(window.location.search);
-            const noteId = params.get('noteId');
-            const classId = params.get('classId');
-            preselectedClassId = params.get('share_to');
+    function highlightActive(){
+      [...notesList.children].forEach(n=> n.classList.toggle('active', n.dataset.id===currentNoteId && n.dataset.type===currentType));
+    }
 
-            if (noteId && classId) {
-                preselectedNote = { noteId, classId };
-                activeTab = 'shared';
-            }
-            if (preselectedClassId) {
-                handleNewNote();
-            }
+    // Save / Autosave + Tags persistence
+    let saveTimer=null; let saving=false; let pendingTags=[];
+    function scheduleAutosave(){ if(currentType!=='personal') return; if(saveTimer) clearTimeout(saveTimer); saveTimer=setTimeout(()=>saveNote('auto'), 800); }
 
-            // Clean the URL to avoid confusion on reload
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
+    async function saveNote(mode='manual'){
+      if(currentType!=='personal') return; if(saving) return; saving=true;
+      const title=noteTitle.value.trim()||'Tanpa Judul';
+      const payload={ title, contentDelta: JSON.stringify(quill.getContents()), plainText: quill.getText(), updatedAt: serverTimestamp(), tags: pendingTags.slice() };
+      try{
+        if(!currentNoteId){ payload.createdAt=serverTimestamp(); const ref=await addDoc(collection(db,'users',currentUser.uid,'notes'), payload); currentNoteId=ref.id; }
+        else { await updateDoc(doc(db,'users',currentUser.uid,'notes',currentNoteId), payload); }
+        noteMeta.textContent = (mode==='auto')? 'Perubahan disimpan otomatis' : `Tersimpan ${new Date().toLocaleTimeString('id-ID')}`;
+        // refresh list state
+      }catch(e){ console.error(e); alert('Gagal menyimpan catatan'); }
+      finally{ saving=false; }
+    }
 
-        // --- Firestore Listeners ---
-        function listenForPersonalNotes(userId) {
-            const q = query(collection(db, 'users', userId, 'notes'), orderBy('updatedAt', 'desc'));
-            personalNotesUnsubscribe = onSnapshot(q, (snapshot) => {
-                allPersonalNotes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                if (activeTab === 'personal') {
-                    renderNotesList(allPersonalNotes, 'personal');
-                }
-            }, console.error);
-        }
+    function updateTagEditor(tags){
+      pendingTags = Array.isArray(tags)? [...new Set(tags)]: (pendingTags||[]);
+      tagChips.innerHTML='';
+      pendingTags.forEach(cid=>{
+        const name=(classesCache[cid]?.namaMataKuliah)||'Kelas';
+        const chip=document.createElement('span'); chip.className='chip';
+        chip.innerHTML = `<span class="dot" style="background:${colorFor(cid)}"></span>${escapeHTML(name)} <button title="Hapus">✕</button>`;
+        chip.querySelector('button').addEventListener('click',()=>{ pendingTags = pendingTags.filter(x=>x!==cid); updateTagEditor(pendingTags); scheduleAutosave(); });
+        tagChips.appendChild(chip);
+      });
+    }
 
-        async function loadAndListenForSharedNotes(userId) {
-            const userDoc = await getDoc(doc(db, 'users', userId));
-            if (!userDoc.exists()) return;
+    function addTagToCurrent(cid){ if(!pendingTags.includes(cid)){ pendingTags.push(cid); updateTagEditor(pendingTags); scheduleAutosave(); } tagDropdown.style.display='none'; }
 
-            const joinedClasses = userDoc.data().joinedClasses || [];
-            if (joinedClasses.length === 0) {
-                 if(activeTab === 'shared') renderNotesList([], 'shared');
-                 return;
-            }
-            
-            const classDocs = await Promise.all(joinedClasses.map(id => getDoc(doc(db, 'classes', id))));
-            classDocs.forEach((classDoc, index) => {
-                if(classDoc.exists()) {
-                    classDataCache[classDoc.id] = { ...classDoc.data(), color: classColors[index % classColors.length] };
-                }
-            });
+    // Delete & Share
+    async function deleteNote(){ if(!currentNoteId||currentType!=='personal') return; if(!confirm('Hapus catatan ini?')) return; await deleteDoc(doc(db,'users',currentUser.uid,'notes',currentNoteId)); currentNoteId=null; editor.style.display='none'; placeholder.style.display='grid'; }
 
-            sharedNotesUnsubscribes.forEach(unsub => unsub());
-            sharedNotesUnsubscribes = [];
+    function openShareModal(){ if(currentType!=='personal'){ alert('Catatan bersama hanya bisa dibaca.'); return; } if(!currentNoteId){ alert('Simpan catatan terlebih dulu.'); return; } document.getElementById('share-modal').style.display='flex'; }
+    function closeShare(){ document.getElementById('share-modal').style.display='none'; }
+    async function confirmShare(){ const cid=(document.getElementById('share-class').value)||''; if(!cid) return; const note=allPersonal.find(n=>n.id===currentNoteId) || { title: noteTitle.value, plainText: quill.getText() } ; try{
+      await addDoc(collection(db,'classes',cid,'sharedNotes'), { originalNoteId: currentNoteId, originalOwnerId: currentUser.uid, title: note.title||'Tanpa Judul', body: note.plainText||quill.getText()||'', sharedBy: currentUser.displayName||'Anonim', sharedByPhotoURL: currentUser.photoURL||null, sharedAt: serverTimestamp() });
+      await updateDoc(doc(db,'users',currentUser.uid,'notes',currentNoteId), { sharedTo: arrayUnion(cid) });
+      // ensure tag added to note when shared
+      if(!pendingTags.includes(cid)){ pendingTags.push(cid); await updateDoc(doc(db,'users',currentUser.uid,'notes',currentNoteId), { tags: pendingTags }); updateTagEditor(pendingTags); }
+      closeShare();
+    }catch(e){ console.error(e); alert('Gagal membagikan catatan'); } }
 
-            let tempSharedNotes = [];
-            let promises = joinedClasses.map(classId => 
-                new Promise(resolve => {
-                    const q = query(collection(db, 'classes', classId, 'sharedNotes'), orderBy('sharedAt', 'desc'));
-                    const unsubscribe = onSnapshot(q, (snapshot) => {
-                        const classNotes = snapshot.docs.map(d => ({ id: d.id, classId: classId, ...d.data() }));
-                        
-                        // Update the temporary list
-                        tempSharedNotes = tempSharedNotes.filter(note => note.classId !== classId).concat(classNotes);
-                        
-                        // Sort and update the main list
-                        allSharedNotes = [...tempSharedNotes].sort((a, b) => b.sharedAt.toMillis() - a.sharedAt.toMillis());
+    // UI helpers & events
+    function attachEvents(){
+      document.getElementById('logout-button-desktop')?.addEventListener('click',()=>signOut(auth));
+      document.getElementById('new-note-btn').addEventListener('click',newNote);
+      document.getElementById('new-note-btn-2').addEventListener('click',newNote);
+      document.getElementById('fab').addEventListener('click',newNote);
+      document.querySelectorAll('.tab').forEach(b=> b.addEventListener('click',(e)=>{ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); e.currentTarget.classList.add('active'); activeTab=e.currentTarget.dataset.tab; renderList(); placeholder.style.display = (activeTab==='personal'&& !currentNoteId)?'grid':'none'; if(activeTab==='shared'){ editor.style.display='none'; reader.style.display = currentNoteId? 'flex':'none'; }
+      }));
+      searchInput.addEventListener('input',renderList);
+      document.getElementById('global-search')?.addEventListener('input',()=>{ searchInput.value=document.getElementById('global-search').value; renderList(); });
+      document.getElementById('save-btn').addEventListener('click',()=>saveNote('manual'));
+      document.getElementById('delete-btn').addEventListener('click',deleteNote);
+      document.getElementById('share-btn').addEventListener('click',openShareModal);
+      document.getElementById('share-cancel').addEventListener('click',closeShare);
+      document.getElementById('share-confirm').addEventListener('click',confirmShare);
 
-                        if (activeTab === 'shared') {
-                            renderNotesList(allSharedNotes, 'shared');
-                        }
-                        
-                        // If there's a preselected note, open it now that data is loaded
-                        if (preselectedNote && classId === preselectedNote.classId) {
-                            handleNoteSelect(preselectedNote.noteId, 'shared', preselectedNote.classId);
-                            preselectedNote = null; // Consume it
-                        }
-                        resolve();
-                    });
-                    sharedNotesUnsubscribes.push(unsubscribe);
-                })
-            );
-            await Promise.all(promises);
-        }
+      document.getElementById('toggle-serif').addEventListener('click',()=> document.body.classList.toggle('serif'));
+      document.getElementById('toggle-wide').addEventListener('click',()=> document.body.classList.toggle('wide'));
+      document.getElementById('toggle-focus').addEventListener('click',()=> document.body.classList.toggle('focus'));
 
-        // --- UI Rendering ---
-        function renderNotesList(notes, type) {
-            notesListContainer.innerHTML = '';
-            const searchTerm = searchInput.value.toLowerCase();
-            const filteredNotes = notes.filter(note => 
-                (note.title || '').toLowerCase().includes(searchTerm) || 
-                ((note.plainText || note.body || '').toLowerCase().includes(searchTerm))
-            );
+      const selBtn=document.getElementById('add-tag-btn');
+      selBtn.addEventListener('click',()=>{ tagDropdown.style.display = tagDropdown.style.display==='block' ? 'none' : 'block'; });
+      document.addEventListener('click',(e)=>{ if(!e.target.closest('.tag-selector')) tagDropdown.style.display='none'; });
+    }
 
-            if (filteredNotes.length === 0) {
-                notesListContainer.innerHTML = `<p style="padding: 1.5rem; text-align: center; color: var(--text-muted);">Tidak ada catatan ditemukan.</p>`;
-                return;
-            }
+    function newNote(){ currentNoteId=null; currentType='personal'; placeholder.style.display='none'; reader.style.display='none'; editor.style.display='flex'; noteTitle.value=''; quill.setContents([]); noteMeta.textContent='Catatan baru'; updateWord(); pendingTags=[]; updateTagEditor(pendingTags); if(window.matchMedia('(max-width:900px)').matches){ window.scrollTo({ top:0, behavior:'smooth' }); } }
 
-            filteredNotes.forEach(noteData => {
-                const li = document.createElement('li');
-                li.dataset.id = noteData.id;
-                li.dataset.type = type;
+    function updateWord(){ const text=quill.getText().trim(); const n=text? text.split(/\s+/).length:0; wordCount.textContent=`${n} kata`; }
 
-                if (type === 'personal') {
-                    li.className = 'note-item';
-                    const isShared = noteData.sharedTo && noteData.sharedTo.length > 0;
-                    li.innerHTML = `
-                        <h3>${noteData.title || 'Tanpa Judul'}</h3>
-                        <p class="note-excerpt">${noteData.plainText ? noteData.plainText.substring(0, 120) : 'Tidak ada konten'}</p>
-                        <div class="note-footer">
-                            <span>${noteData.updatedAt ? noteData.updatedAt.toDate().toLocaleDateString('id-ID') : ''}</span>
-                            ${isShared ? '<span class="shared-tag">Dibagikan</span>' : ''}
-                        </div>`;
-                    li.addEventListener('click', () => handleNoteSelect(noteData.id, 'personal'));
-                } else {
-                    li.className = 'shared-note-item';
-                    const classInfo = classDataCache[noteData.classId] || {};
-                    li.dataset.classId = noteData.classId;
-                    li.innerHTML = `
-                        <h3>${noteData.title || 'Tanpa Judul'}</h3>
-                        <p class="note-excerpt">${(noteData.body || '').substring(0, 120)}</p>
-                        <div class="note-footer">
-                            <div class="shared-note-meta">
-                                <span class="class-color-dot" style="background-color: ${classInfo.color || '#ccc'};"></span>
-                                <span class="class-name">${classInfo.namaMataKuliah || 'Kelas tidak diketahui'}</span>
-                            </div>
-                            <span>Oleh: ${noteData.sharedBy}</span>
-                        </div>`;
-                    li.addEventListener('click', () => handleNoteSelect(noteData.id, 'shared', noteData.classId));
-                }
-                notesListContainer.appendChild(li);
-            });
+    function colorFor(id){ // deterministic color per class id
+      const colors=['#8B5CF6','#10B981','#F59E0B','#EF4444','#3B82F6','#EC4899','#06B6D4','#84CC16'];
+      let h=0; for(let i=0;i<id.length;i++) h=(h*31 + id.charCodeAt(i))>>>0; return colors[h%colors.length];
+    }
 
-            if (currentNoteId && type === currentNoteType) {
-                const activeItem = notesListContainer.querySelector(`[data-id="${currentNoteId}"]`);
-                if (activeItem) activeItem.classList.add('active');
-            }
-        }
-
-        async function handleNoteSelect(noteId, type, classId = null) {
-            currentNoteId = noteId;
-            currentNoteType = type;
-
-            editorPlaceholder.style.display = 'none';
-            editorContainer.style.display = 'none';
-            readerContainer.style.display = 'none';
-            
-            if (type === 'personal') {
-                const noteData = allPersonalNotes.find(n => n.id === noteId);
-                if (!noteData) return;
-                
-                document.getElementById('note-title-input').value = noteData.title;
-                try {
-                    quill.setContents(JSON.parse(noteData.contentDelta || '[]'));
-                } catch (e) {
-                    quill.setText('Gagal memuat konten.');
-                }
-                document.getElementById('note-meta').textContent = `Terakhir diperbarui: ${noteData.updatedAt.toDate().toLocaleString('id-ID')}`;
-                updateWordCount();
-                editorContainer.style.display = 'flex';
-            } else if (type === 'shared') {
-                const noteRef = doc(db, 'classes', classId, 'sharedNotes', noteId);
-                const noteSnap = await getDoc(noteRef);
-                if (!noteSnap.exists()) return;
-
-                const noteData = noteSnap.data();
-                const classInfo = classDataCache[classId] || {};
-
-                document.getElementById('reader-title').textContent = noteData.title;
-                document.getElementById('reader-author').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg><span>${noteData.sharedBy}</span>`;
-                document.getElementById('reader-class').innerHTML = `<span class="class-color-dot" style="background-color: ${classInfo.color || '#ccc'};"></span><span>${classInfo.namaMataKuliah || ''}</span>`;
-                document.getElementById('reader-date').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18" /></svg><span>${noteData.sharedAt.toDate().toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</span>`;
-                document.getElementById('reader-content').innerHTML = `<p>${noteData.body.replace(/\n/g, '<br>')}</p>`;
-                readerContainer.style.display = 'flex';
-            }
-
-            document.querySelectorAll('.note-item, .shared-note-item').forEach(item => item.classList.remove('active'));
-            const activeItem = notesListContainer.querySelector(`[data-id="${noteId}"][data-type="${type}"]`);
-            if (activeItem) activeItem.classList.add('active');
-        }
-
-        function handleNewNote() {
-            currentNoteId = null;
-            currentNoteType = 'personal';
-            document.getElementById('note-title-input').value = '';
-            quill.setContents([]);
-            document.getElementById('note-meta').textContent = 'Catatan baru';
-            updateWordCount();
-
-            editorPlaceholder.style.display = 'none';
-            readerContainer.style.display = 'none';
-            editorContainer.style.display = 'flex';
-            document.getElementById('note-title-input').focus();
-            
-            document.querySelectorAll('.note-item, .shared-note-item').forEach(item => item.classList.remove('active'));
-        }
-
-        function updateWordCount() {
-            const text = quill.getText().trim();
-            const wordCount = text.length > 0 ? text.split(/\s+/).length : 0;
-            document.getElementById('word-count').textContent = `${wordCount} kata`;
-        }
-        
-        // --- Event Listeners Setup ---
-        function attachEventListeners() {
-            document.getElementById('logout-button').addEventListener('click', () => signOut(auth));
-            document.getElementById('new-note-btn').addEventListener('click', handleNewNote);
-            searchInput.addEventListener('input', () => renderNotesList(activeTab === 'personal' ? allPersonalNotes : allSharedNotes, activeTab));
-            
-            document.querySelector('.tabs').addEventListener('click', (e) => {
-                if(e.target.classList.contains('tab-btn')) {
-                    activeTab = e.target.dataset.tab;
-                    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-                    e.target.classList.add('active');
-                    if (activeTab === 'personal') renderNotesList(allPersonalNotes, 'personal');
-                    else renderNotesList(allSharedNotes, 'shared');
-                }
-            });
-
-            if (preselectedNote) {
-                const sharedTab = document.querySelector('.tab-btn[data-tab="shared"]');
-                if(sharedTab) sharedTab.click();
-            }
-
-            // Editor buttons
-            document.getElementById('save-note-btn').addEventListener('click', saveNote);
-            document.getElementById('delete-note-btn').addEventListener('click', deleteNote);
-            document.getElementById('share-note-btn').addEventListener('click', openShareModal);
-
-            // Share Modal buttons
-            document.getElementById('cancel-share-btn').addEventListener('click', () => document.getElementById('share-modal').style.display = 'none');
-            document.getElementById('confirm-share-btn').addEventListener('click', confirmShare);
-        }
-        
-        // --- CRUD & Actions ---
-        async function saveNote() {
-            if (!currentUser) return;
-            const title = document.getElementById('note-title-input').value.trim();
-            if (!title && quill.getLength() <= 1) { return alert("Catatan tidak boleh kosong."); }
-
-            const btn = document.getElementById('save-note-btn');
-            btn.disabled = true;
-            btn.textContent = 'Menyimpan...';
-
-            try {
-                const noteData = {
-                    title: title || 'Tanpa Judul',
-                    contentDelta: JSON.stringify(quill.getContents()),
-                    plainText: quill.getText(),
-                    updatedAt: serverTimestamp()
-                };
-
-                if (!currentNoteId) {
-                    noteData.createdAt = serverTimestamp();
-                    const newDocRef = await addDoc(collection(db, 'users', currentUser.uid, 'notes'), noteData);
-                    currentNoteId = newDocRef.id;
-                    if (preselectedClassId) openShareModal();
-                } else {
-                    await updateDoc(doc(db, 'users', currentUser.uid, 'notes', currentNoteId), noteData);
-                }
-                document.getElementById('note-meta').textContent = `Tersimpan pada ${new Date().toLocaleTimeString('id-ID')}`;
-            } catch (error) {
-                console.error("Error saving note: ", error);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8.036A5.53 5.53 0 0 1 7.583 4h.834a5.53 5.53 0 0 1 5.083 4.036.5.5 0 0 0 .917-.402A6.53 6.53 0 0 0 8.417 3H7.583A6.53 6.53 0 0 0 1.583 7.634a.5.5 0 0 0 .917.402z"/><path d="m9.22 10.323.333 1.665a.5.5 0 0 0 .94.004l1.463-3.657a.5.5 0 0 0-.825-.632l-3.32 2.37a.5.5 0 0 0 .004.94zm-2.48-1.55L4.935 9.14a.5.5 0 0 0-.632.825l2.37 3.32a.5.5 0 0 0 .94-.004l1.665-.333a.5.5 0 0 0 .004-.94l-3.657-1.463z"/></svg><span>Simpan</span>`;
-            }
-        }
-
-        async function deleteNote() {
-            if (!currentNoteId || !currentUser || !confirm("Yakin ingin menghapus catatan ini?")) return;
-            try {
-                await deleteDoc(doc(db, 'users', currentUser.uid, 'notes', currentNoteId));
-                currentNoteId = null;
-                editorContainer.style.display = 'none';
-                readerContainer.style.display = 'none';
-                editorPlaceholder.style.display = 'block';
-            } catch (error) { console.error("Error deleting note: ", error); }
-        }
-
-        async function openShareModal() {
-            if (!currentNoteId) return alert("Simpan catatan terlebih dahulu.");
-            
-            const classSelect = document.getElementById('class-select');
-            classSelect.innerHTML = '<option>Memuat kelas...</option>';
-            document.getElementById('share-modal').style.display = 'flex';
-            
-            try {
-                const userDocSnap = await getDoc(doc(db, 'users', currentUser.uid));
-                const classIds = userDocSnap.data().joinedClasses || [];
-                if (classIds.length === 0) {
-                    classSelect.innerHTML = '<option>Anda belum gabung kelas</option>'; return;
-                }
-
-                classSelect.innerHTML = Object.entries(classDataCache)
-                    .map(([id, data]) => `<option value="${id}">${data.namaMataKuliah}</option>`).join('');
-                
-                if (preselectedClassId) classSelect.value = preselectedClassId;
-            } catch (error) {
-                console.error("Error loading classes for sharing:", error);
-                classSelect.innerHTML = '<option>Gagal memuat kelas</option>';
-            }
-        }
-
-        async function confirmShare() {
-            const selectedClassId = document.getElementById('class-select').value;
-            if (!selectedClassId || !currentNoteId) return;
-
-            const btn = document.getElementById('confirm-share-btn');
-            btn.disabled = true;
-            btn.textContent = "Membagikan...";
-
-            try {
-                const noteRef = doc(db, 'users', currentUser.uid, 'notes', currentNoteId);
-                const noteSnap = await getDoc(noteRef);
-                
-                if (noteSnap.exists()) {
-                    const noteData = noteSnap.data();
-                    await addDoc(collection(db, 'classes', selectedClassId, 'sharedNotes'), {
-                        originalNoteId: currentNoteId,
-                        originalOwnerId: currentUser.uid,
-                        title: noteData.title,
-                        body: noteData.plainText,
-                        sharedBy: currentUser.displayName || 'Anonymous',
-                        sharedByPhotoURL: currentUser.photoURL || null,
-                        sharedAt: serverTimestamp()
-                    });
-                    await updateDoc(noteRef, { sharedTo: arrayUnion(selectedClassId) });
-                    
-                    document.getElementById('share-modal').style.display = 'none';
-                    preselectedClassId = null;
-                }
-            } catch (error) {
-                console.error("Error sharing note:", error);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "Bagikan";
-            }
-        }
-    </script>
+    function escapeHTML(s){ return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
+    function formatDate(ts){ try{ return ts?.toDate?.().toLocaleDateString('id-ID') || new Date(ts).toLocaleDateString('id-ID'); }catch{ return '—' } }
+    function formatDateTime(ts){ try{ return ts?.toDate?.().toLocaleString('id-ID') || new Date(ts).toLocaleString('id-ID'); }catch{ return '—' } }
+  </script>
 </body>
 </html>

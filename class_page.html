@@ -1,677 +1,769 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-app="academate">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halaman Kelas - Academate</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Academate • Kelas</title>
+  <!-- Fonts & Icons (same as dashboard master) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+
+  <style>
+    /* ===== THEME — identical to dashboard ===== */
+    :root{
+      --bg:#F7F7FA; --surface:#FFFFFF; --text:#1E1F24; --muted:#6C6F7F;
+      --primary:#6F6CFF; --primary-2:#8B7CFF; --border:#ECECF1;
+      --shadow:0 6px 24px rgba(30,31,36,.07);
+      --radius:18px; --sidebar-w:280px; --gap:18px; --content-max:1320px;
+      --bubble:#F6F6FF; --bubble-me:#6F6CFF; --bubble-me-text:#fff;
+      --ok:#10B981; --warn:#F59E0B; --danger:#EF4444;
+    }
+    html,body{height:100%}
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
+      background:var(--bg); color:var(--text); overflow:hidden; font-size:15px;
+    }
+
+    /* App shell */
+    .app{padding:var(--gap); width:100%; max-width:1700px; margin:0 auto; height:100dvh; display:grid; grid-template-rows:1fr}
+    @media (min-width:901px){
+      .app{grid-template-columns:var(--sidebar-w) 1fr; grid-template-rows:1fr; column-gap:24px}
+    }
+
+    /* Sidebar (desktop) */
+    .sidebar{display:none}
+    @media (min-width:901px){
+      .sidebar{display:flex; flex-direction:column; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; height:100%; min-height:0}
+      .brand{display:flex; align-items:center; gap:12px; font-weight:700; font-size:22px; margin-bottom:18px}
+      .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#8B7CFF,#6AC9FF)}
+      .nav{display:flex; flex-direction:column; gap:8px; overflow:auto; padding-right:4px}
+      .nav a{display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; color:var(--muted); text-decoration:none; font-weight:500; transition:.2s}
+      .nav a i{font-size:20px}
+      .nav a:hover{background:#F3F2FF; color:var(--primary)}
+      .nav a.active{background:var(--primary); color:#fff; box-shadow:0 8px 20px rgba(111,108,255,.25)}
+      .logout{margin-top:auto}
+    }
+
+    /* Main layout: FIXED expanded content (no layout jump) */
+    .main{display:grid; grid-template-rows:auto 1fr; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; height:100%; min-height:0}
+    .header{display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border)}
+    .header-left{display:flex; align-items:center; gap:12px}
+    .header-title{margin:0; font-size:20px}
+    .header-sub{margin:0; color:var(--muted); font-size:13px}
+    .header-right{display:flex; align-items:center; gap:10px}
+    .icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:18px;transition:.2s}
+    .icon-btn:hover{color:var(--primary); border-color:#d8d8e0}
+    .avatar{width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--border)}
+
+    /* CONTENT: fixed grid that fills remaining height */
+    .content{display:grid; grid-template-columns:1fr; gap:18px; padding:18px; height:100%; min-height:0}
+    @media (min-width:1100px){ .content{grid-template-columns:2fr 1fr} }
+
+    .card{background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:0 2px 8px rgba(20,20,30,.03); display:flex; flex-direction:column; min-height:0}
+    .card-body{padding:16px; display:flex; flex-direction:column; min-height:0; flex-grow: 1;}
+    .card-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px}
+    .card-title{font-size:16px; font-weight:600; margin:0}
+    .btn{display:inline-flex; align-items:center; gap:8px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--text); padding:8px 12px; cursor:pointer; font-weight:600; text-decoration:none}
+    .btn.primary{background:#F1EEFF; color:var(--primary); border-color:#E3E0FF}
+    .btn.full{width:100%; justify-content:center}
+
+    /* === GROUP DISCUSSION — revamped alignment & scaling === */
+    .chat-wrapper{display:grid; grid-template-rows:1fr auto; gap:12px; min-height:0; flex:1}
+    .feed{position:relative; overflow:auto; padding:8px 12px 8px 0; min-height:0}
+    .day-divider{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:12px; margin:10px 0}
+    .day-divider::before,.day-divider::after{content:""; height:1px; background:var(--border); flex:1}
+
+    .m{display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:end; margin:8px 0}
+    .m.me{grid-template-columns:1fr auto}
+    .m.me .ava{order:2}
+    .m.me .bubble{order:1; justify-self:end; background:var(--bubble-me); color:var(--bubble-me-text)}
+    .ava{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+    .bubble{max-width:min(640px, 85%); background:var(--bubble); border:1px solid var(--border); padding:10px 12px; border-radius:14px; box-shadow:0 1px 3px rgba(0,0,0,.04); line-height:1.55}
+    .meta{display:flex; align-items:center; gap:8px; font-size:11px; color:var(--muted); margin-top:6px}
+    .m.me .meta { color: rgba(255, 255, 255, 0.75); }
+    .sender{font-weight:600; font-size:12px}
+    .msg-img{border-radius:12px; border:1px solid var(--border); max-width:260px; width:100%; height:auto}
+
+    /* Composer: sticky, auto-grow textarea, attach & emoji */
+    .composer{display:flex; align-items:flex-end; gap:10px; background:var(--surface); border-top:1px solid var(--border); padding-top:10px}
+    .composer .tools{display:flex; align-items:center; gap:6px}
+    /* TWEAK 3: Align composer items */
+    .i-btn{width:44px;height:44px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:18px}
+    .composer textarea{flex:1; resize:none; max-height:34dvh; min-height:44px; padding:12px 14px; border:1px solid var(--border); border-radius:12px; font:inherit; line-height:1.5; overflow:auto;}
+    .composer button{height:44px; padding:12px 14px; border:none; border-radius:12px; background:var(--primary); color:#fff; font-weight:700; cursor:pointer}
+    .typing{font-size:12px; color:var(--muted); margin-top:4px}
+
+    /* Better list sections */
+    .tasks{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; overflow:auto}
+    .task{border-top:1px solid var(--border)}
+    .task:first-child{border-top:0}
+    .task-h{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 0; cursor:pointer}
+    .task-left{display:flex; align-items:center; gap:12px; min-width:0}
+    .checkbox{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);display:grid;place-items:center;flex-shrink:0;background:#fff}
+    .task.done .checkbox{background:var(--primary); border-color:var(--primary)}
+    .checkbox i{font-size:14px; color:#fff; opacity:0; transform:scale(.6); transition:.15s}
+    .task.done .checkbox i{opacity:1; transform:scale(1)}
+    .task-title{font-weight:600; white-space:nowrap; text-overflow:ellipsis; overflow:hidden}
+    .due{font-size:11px; padding:4px 8px; border-radius:99px; flex-shrink:0}
+    .due.normal{background:#F5F6FA; color:var(--muted)}
+    .due.soon{background:#FEF3C7; color:#B45309}
+    .due.urgent,.due.overdue{background:#FEE2E2; color:#B91C1C}
+    .expand i{color:var(--muted)}
+    .task-details{max-height:0; overflow:hidden; transition:max-height .3s ease, padding .3s ease}
+    .task.expanded .task-details{max-height:600px; padding-bottom:12px}
+    .task-desc{margin:0 0 10px 32px; color:#3a3d4a; line-height:1.6; white-space:pre-wrap}
+    .task-foot{display:flex; justify-content:space-between; align-items:center; gap:10px; padding-left:32px}
+    .task-foot .who{font-size:12px; color:var(--muted)}
+    .task-foot .del{border:none; background:transparent; color:var(--muted); cursor:pointer; padding:6px 8px; border-radius:8px}
+    .task-foot .del:hover{background:#FEE2E2; color:#B91C1C}
+    .pp-row{display:flex}
+    .pp-row img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin-left:-8px}
+    .pp-row img:first-child{margin-left:0}
+
+    /* Notes */
+    .notes{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; overflow:auto}
+    .note{border:1px solid var(--border); background:#FAFAFF; border-radius:12px; padding:12px; cursor:pointer; transition:.2s}
+    .note:hover{background:#F3F2FF; border-color:#DCD9FF}
+    .note h4{margin:0 0 4px; font-size:14px}
+    .note p{margin:0; color:#3a3d4a; font-size:13px}
+    .note small{display:block; color:var(--muted); margin-top:8px}
     
-    <style>
-        :root {
-            --primary-color: #7C3AED;
-            --primary-light: #F5F3FF;
-            --danger-color: #EF4444;
-            --danger-light: #FEE2E2;
-            --warning-color: #F59E0B;
-            --warning-light: #FEF3C7;
-            --text-dark: #111827;
-            --text-light: #374151;
-            --text-muted: #6B7280;
-            --bg-body: #F8F7FA;
-            --bg-sidebar: #FFFFFF;
-            --card-bg: #FFFFFF;
-            --border-color: #E5E7EB;
-        }
+    /* ===== MODERN SCROLLBAR (REVISED) ===== */
+    .nav, .feed, #read-note-body {
+      scrollbar-width: thin; scrollbar-color: var(--primary-2) transparent;
+    }
+    .nav::-webkit-scrollbar, .feed::-webkit-scrollbar, #read-note-body::-webkit-scrollbar { width: 8px; }
+    .nav::-webkit-scrollbar-track, .feed::-webkit-scrollbar-track, #read-note-body::-webkit-scrollbar-track { background: transparent; }
+    .nav::-webkit-scrollbar-thumb, .feed::-webkit-scrollbar-thumb, #read-note-body::-webkit-scrollbar-thumb { background-color: var(--primary-2); border-radius: 20px; }
+    .nav::-webkit-scrollbar-thumb:hover, .feed::-webkit-scrollbar-thumb:hover, #read-note-body::-webkit-scrollbar-thumb:hover { background-color: var(--primary); }
+    .tasks, .notes, .composer textarea { -ms-overflow-style: none; scrollbar-width: none; }
+    .tasks::-webkit-scrollbar, .notes::-webkit-scrollbar, .composer textarea::-webkit-scrollbar { display: none; }
+    body { scrollbar-width: thin; scrollbar-color: var(--primary-2) var(--bg); }
+    body::-webkit-scrollbar { width: 8px; }
+    body::-webkit-scrollbar-track { background: var(--bg); }
+    body::-webkit-scrollbar-thumb { background: var(--primary-2); border-radius: 20px; }
+    body::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ===== FIX 1: Decouple side panel to fix desktop layout ===== */
+    .side-panel {
+      display: flex; flex-direction: column; gap: var(--gap); min-height: 0;
+    }
 
-        html { scroll-behavior: smooth; }
+    /* Mobile bottom nav */
+    .mnav{position:fixed; left:0; right:0; bottom:0; height:70px; background:rgba(255,255,255,.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; z-index:40}
+    .mnav a{display:flex; flex-direction:column; align-items:center; gap:4px; text-decoration:none; color:var(--muted); font-size:10px; font-weight:600}
+    .mnav a i{font-size:20px}
+    .mnav a.active{color:var(--primary)}
+    @media (min-width:901px){ .mnav{display:none} }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-dark);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        /* --- Sidebar (reused) --- */
-        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem; }
-        .sidebar-header { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); text-decoration: none; margin-bottom: 2.5rem; padding: 0 0.5rem; }
-        .nav-menu { list-style: none; flex-grow: 1; }
-        .nav-item a { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; }
-        .nav-item a:hover { background-color: var(--primary-light); color: var(--primary-color); }
-        .nav-item a.active { background-color: var(--primary-color); color: #fff; font-weight: 600; }
-        .nav-item a svg { width: 20px; height: 20px; margin-right: 1rem; }
-        .logout-button { display: flex; align-items: center; padding: 0.85rem 1rem; text-decoration: none; color: var(--text-light); font-weight: 500; border-radius: 0.5rem; background-color: transparent; border: none; width: 100%; font-family: 'Inter', sans-serif; font-size: 1rem; cursor: pointer; }
-        .logout-button:hover { background-color: #FEE2E2; color: #EF4444; }
-        
-        /* --- Main Content Area --- */
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+    /* Utilities */
+    .skeleton{background:linear-gradient(90deg,#f2f2f6 25%,#fafafd 37%,#f2f2f6 63%); background-size:400% 100%; animation:shimmer 1.2s ease infinite; border-radius:12px}
+    @keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
+    .loader{border:4px solid #f3f3f3;border-top:4px solid var(--primary);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:24px auto}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .empty{color:var(--muted); text-align:center; padding:18px}
 
-        .class-header {
-            padding: 2rem 3rem;
-            border-bottom: 1px solid var(--border-color);
-            background-color: var(--card-bg);
-            flex-shrink: 0;
-        }
-        .class-header h1 { font-size: 2rem; font-weight: 700; }
-        .class-header p { color: var(--text-muted); }
+    /* ===== MOBILE RESPONSIVENESS ===== */
+    @media (max-width: 900px) {
+      body { overflow: auto; }
+      .app { display: block; height: auto; padding-bottom: 88px; }
+      .main { display: block; height: auto; }
+      .content { display: flex; flex-direction: column; height: auto; gap: var(--gap); }
+      .card-body { flex-grow: 0; }
+      #discussion-card { height: 75dvh; display: flex; flex-direction: column; }
+      #discussion-card .card-body { flex-grow: 1; }
+    }
+    @media (max-width: 450px) {
+      .content { padding: 12px; gap: 12px; }
+      .card-body { padding: 12px; }
+      .m { gap: 8px; }
+      .ava { width: 32px; height: 32px; }
+      .bubble { padding: 8px 12px; font-size: 14px; }
+      .sender { font-size: 11px; }
+      .composer { gap: 6px; padding-top: 8px; }
+      .i-btn { width: 42px; height: 42px; } /* Adjust for mobile */
+      .composer textarea { min-height: 42px; font-size: 14px; padding: 10px 12px; }
+      #send-btn { width: 42px; height: 42px; padding: 0; font-size: 0; display: grid; place-items: center; flex-shrink: 0; }
+      #send-btn i { font-size: 20px; margin: 0; }
+    }
 
-        .class-body {
-            flex-grow: 1;
-            padding: 2rem 3rem;
-            overflow-y: auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            align-items: start;
-        }
+    /* ===== MODALS (NEWLY ADDED & FIXED) ===== */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 31, 36, 0.6);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fade-in 0.2s ease;
+    }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      width: min(95vw, 480px);
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modal-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .modal h2 { margin: 0 0 16px; }
+    @keyframes modal-pop {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
 
-        .main-column, .side-column { display: flex; flex-direction: column; gap: 2rem; }
-        .content-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; }
-        .card-title { font-size: 1.25rem; font-weight: 600; }
-        .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .btn-sm-primary { background-color: var(--primary-light); color: var(--primary-color); padding: 0.4rem 0.8rem; border-radius: 0.5rem; text-decoration: none; font-weight: 500; font-size: 0.875rem; transition: background-color .2s; }
-        .btn-sm-primary:hover { background-color: #E9D5FF; }
-
-        /* Discussion Feed */
-        #discussion-feed { max-height: 400px; overflow-y: auto; margin-bottom: 1rem; display: flex; flex-direction: column-reverse; }
-        #discussion-list { list-style: none; }
-        .message-item { display: flex; gap: 1rem; margin-bottom: 1rem; }
-        .message-avatar { width: 36px; height: 36px; border-radius: 50%; background-color: var(--border-color); flex-shrink: 0; object-fit: cover; }
-        .message-content strong { display: block; font-weight: 600; }
-        .message-content span { font-size: 0.8rem; color: var(--text-muted); margin-left: 0.5rem; }
-        .message-content p { margin-top: 0.25rem; }
-        #discussion-form { display: flex; gap: 1rem; }
-        #discussion-input { flex-grow: 1; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; }
-        #discussion-form button { padding: 0.75rem 1rem; background-color: var(--primary-color); color: #fff; border: none; border-radius: 0.5rem; cursor: pointer; }
-        
-        /* Tasks List */
-        #task-list { list-style: none; }
-        .task-item { border-bottom: 1px solid var(--border-color); transition: opacity .3s ease; }
-        .task-item:last-child { border-bottom: none; }
-        
-        .task-item.done { opacity: 0.6; }
-        .task-item.done h4 { text-decoration: line-through; color: var(--text-muted); }
-
-        .task-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; cursor: pointer; }
-        .task-title-wrapper { display: flex; align-items: center; gap: 1rem; flex-grow: 1; }
-        .task-checkbox { width: 20px; height: 20px; border: 2px solid var(--border-color); border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .2s; }
-        .task-checkbox:hover { border-color: var(--primary-color); }
-        .task-item.done .task-checkbox { background-color: var(--primary-color); border-color: var(--primary-color); }
-        .task-checkbox svg { color: #fff; transform: scale(0); transition: transform .2s; }
-        .task-item.done .task-checkbox svg { transform: scale(1); }
-
-        .task-header h4 { font-weight: 600; transition: all .3s ease; }
-        .task-meta { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
-        .due-date { font-size: 0.875rem; font-weight: 500; padding: 0.25rem 0.6rem; border-radius: 99px; }
-        .due-date.normal { color: var(--text-muted); background-color: var(--bg-body); }
-        .due-date.soon { color: var(--warning-color); background-color: var(--warning-light); }
-        .due-date.urgent { color: var(--danger-color); background-color: var(--danger-light); }
-        .due-date.overdue { color: var(--danger-color); background-color: var(--danger-light); }
-
-        .task-toggle-icon { transition: transform 0.3s ease; color: var(--text-muted); }
-        .task-item.expanded .task-toggle-icon { transform: rotate(180deg); }
-        .task-details { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
-        .task-item.expanded .task-details { max-height: 500px; padding-bottom: 1.25rem; }
-        .task-description { font-size: 0.95rem; line-height: 1.6; color: var(--text-light); white-space: pre-wrap; padding-left: 36px; margin-bottom: 1rem; }
-        .task-footer { padding-left: 36px; display: flex; justify-content: space-between; align-items: center; }
-        .task-creator { font-size: 0.8rem; color: var(--text-muted); }
-        .delete-task-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 0.25rem; font-size: 0.8rem; padding: 0.25rem; border-radius: 0.25rem; }
-        .delete-task-btn:hover { color: var(--danger-color); background-color: var(--danger-light); }
-        .completion-info { margin-top: 1rem; padding-left: 36px; }
-        .completion-info strong { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
-        .completed-avatars { display: flex; }
-        .completed-avatars img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #fff; margin-left: -8px; object-fit: cover; }
-        .completed-avatars img:first-child { margin-left: 0; }
-
-        #add-task-btn { width: 100%; padding: 0.75rem; margin-top: 1rem; border: 1px dashed var(--border-color); background: transparent; color: var(--text-muted); border-radius: 0.5rem; cursor: pointer; font-weight: 500; }
-
-        /* Shared Notes */
-        #shared-notes-list { list-style: none; max-height: 400px; overflow-y: auto; }
-        .note-card { padding: 1rem; border-radius: 0.75rem; background-color: var(--bg-body); margin-bottom: 1rem; cursor: pointer; transition: background-color .2s, transform .2s; border: 1px solid var(--bg-body); }
-        .note-card:hover { background-color: var(--primary-light); border-color: var(--primary-color); transform: translateY(-2px); }
-        .note-card h4 { font-weight: 600; margin-bottom: 0.25rem; color: var(--text-dark); }
-        .note-card p { font-size: 0.9rem; white-space: pre-wrap; color: var(--text-light); }
-        .note-card small { font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 0.75rem; }
-
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 3rem auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .empty-state { text-align: center; color: var(--text-muted); padding: 2rem 0; }
-        
-        /* -- Modals -- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .modal { background: #fff; padding: 2rem; border-radius: 1rem; width: 90%; max-width: 500px; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .modal h2 { margin-bottom: 1rem; font-size: 1.5rem; }
-        .modal-form { display: flex; flex-direction: column; gap: 1rem; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { margin-bottom: 0.5rem; font-weight: 500; }
-        .form-group input, .form-group textarea { padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-family: 'Inter', sans-serif; font-size: 1rem; }
-        .form-group textarea { resize: vertical; min-height: 100px; }
-        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
-        .modal-btn { padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer; }
-        #confirm-add-task-btn { background-color: var(--primary-color); color: #fff; }
-        #cancel-add-task-btn { background-color: var(--border-color); }
-
-        /* Read Note Modal */
-        #read-note-modal .modal { max-width: 650px; text-align: left; }
-        #read-note-modal #read-note-title { margin-bottom: 0.5rem; }
-        #read-note-modal .note-meta { color: var(--text-muted); margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; font-size: 0.9rem; }
-        #read-note-modal .note-meta strong { color: var(--text-dark); }
-        #read-note-modal .modal-content { max-height: 60vh; overflow-y: auto; line-height: 1.7; color: var(--text-light); }
-        #read-note-modal .modal-content p { white-space: pre-wrap; }
-        #read-note-modal .modal-footer { margin-top: 2rem; display: flex; justify-content: flex-end; }
-        #read-note-close-btn { background-color: var(--primary-color); color: #fff; }
-    </style>
+    .m-form { display: flex; flex-direction: column; gap: 14px; }
+    .m-form label { font-weight: 600; font-size: 14px; color: var(--text); }
+    .m-form input, .m-form textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font: inherit;
+      background: var(--bg);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .m-form input:focus, .m-form textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px #6f6cff3b;
+    }
+    
+    .m-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+    .m-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .m-btn.primary { background: var(--primary); color: #fff; }
+    .m-btn.primary:hover { background: var(--primary-2); }
+    .m-btn.ghost { border-color: var(--border); background: transparent; color: var(--muted); }
+    .m-btn.ghost:hover { background: var(--bg); color: var(--text); }
+  </style>
 </head>
-<body>
+<body data-page="classes">
+  <div class="app">
+    <!-- Sidebar (desktop) -->
     <aside class="sidebar">
-        <a href="dashboard.html" class="sidebar-header">Academate</a>
-        <ul class="nav-menu">
-            <li class="nav-item"><a href="dashboard.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>Dasbor</span></a></li>
-            <li class="nav-item"><a href="classes.html" class="active"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>Kelas</span></a></li>
-            <li class="nav-item"><a href="schedule.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span>Jadwal</span></a></li>
-            <li class="nav-item"><a href="notes.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg><span>Catatan</span></a></li>
-            <li class="nav-item"><a href="account.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg><span>Akun</span></a></li>
-        </ul>
-        <button class="logout-button" id="logout-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span>Keluar</span></button>
+      <div class="brand"><div class="logo"></div> Academate</div>
+      <nav class="nav">
+        <a href="dashboard.html"><i class="ri-layout-grid-line"></i><span>Dasbor</span></a>
+        <a href="classes.html" class="active"><i class="ri-book-2-line"></i><span>Kelas</span></a>
+        <a href="schedule.html"><i class="ri-calendar-line"></i><span>Jadwal</span></a>
+        <a href="notes.html"><i class="ri-file-text-line"></i><span>Catatan</span></a>
+        <a href="account.html" class="logout"><i class="ri-user-3-line"></i><span>Akun</span></a>
+      </nav>
     </aside>
 
-    <main class="main-content" id="main-content">
-        <div class="loader"></div>
-    </main>
-
-    <div class="modal-overlay" id="add-task-modal">
-        <div class="modal">
-            <h2>Tambah Tugas Baru</h2>
-            <form id="add-task-form" class="modal-form">
-                <div class="form-group">
-                    <label for="task-title">Judul Tugas</label>
-                    <input type="text" id="task-title" required>
-                </div>
-                 <div class="form-group">
-                    <label for="task-due-date">Tenggat Waktu</label>
-                    <input type="date" id="task-due-date" required>
-                </div>
-                <div class="form-group" style="grid-column: 1 / -1;">
-                    <label for="task-description">Deskripsi (Opsional)</label>
-                    <textarea id="task-description" rows="4"></textarea>
-                </div>
-                <div class="modal-actions" style="grid-column: 1 / -1;">
-                    <button type="button" class="modal-btn" id="cancel-add-task-btn">Batal</button>
-                    <button type="submit" class="modal-btn" id="confirm-add-task-btn">Tambah</button>
-                </div>
-            </form>
+    <!-- Main (fixed grid rows: header + content that fills) -->
+    <section class="main" id="main">
+      <!-- Top header -->
+      <div class="header">
+        <div class="header-left">
+          <button class="icon-btn" id="back-btn" title="Kembali" aria-label="Kembali"><i class="ri-arrow-left-line"></i></button>
+          <div>
+            <h2 class="header-title" id="class-title">Memuat Kelas…</h2>
+            <p class="header-sub" id="class-sub">—</p>
+          </div>
         </div>
-    </div>
+        <div class="header-right">
+          <button class="icon-btn" id="refresh-btn" title="Segarkan" aria-label="Segarkan"><i class="ri-refresh-line"></i></button>
+          <img id="avatar-top" class="avatar" src="https://placehold.co/80x80" alt="Profile"/>
+        </div>
+      </div>
 
-    <div class="modal-overlay" id="read-note-modal">
-        <div class="modal">
-            <h2 id="read-note-title"></h2>
-            <div class="note-meta" id="read-note-meta"></div>
-            <div class="modal-content" id="read-note-body"></div>
-            <div class="modal-footer">
-                <button class="modal-btn" id="read-note-close-btn">Tutup</button>
+      <!-- FIXED Content area (always expanded) -->
+      <div class="content" id="content" role="main" aria-live="polite">
+        <!-- LEFT: Discussion (fills column height) -->
+        <div class="card" id="discussion-card">
+          <div class="card-body">
+            <div class="card-head">
+              <h3 class="card-title">Diskusi Kelas</h3>
+              <div style="display:flex; gap:8px; align-items:center">
+                <span id="presence" class="header-sub">— online</span>
+                <button class="btn" id="jump-latest"><i class="ri-arrow-down-line"></i> Terbaru</button>
+              </div>
             </div>
-        </div>
-    </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot, Timestamp, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+            <div class="chat-wrapper">
+              <div id="discussion-feed" class="feed" aria-label="Utas diskusi">
+                <div class="loader"></div>
+              </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
-            authDomain: "acadmte.firebaseapp.com",
-            projectId: "acadmte",
-            storageBucket: "acadmte.appspot.com",
-            messagingSenderId: "547286858993",
-            appId: "1:547286858993:web:b83de49e7eb1cc35a67d50",
-            measurementId: "G-ZEFYD7F650"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        let currentUser = null;
-        let classId = null;
-        let membersCache = {};
-        let classMemberCount = 0;
-        let discussionUnsubscribe = null, tasksUnsubscribe = null, notesUnsubscribe = null;
-        
-        const mainContent = document.getElementById('main-content');
-        
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                currentUser = user;
-                const params = new URLSearchParams(window.location.search);
-                classId = params.get('id');
-                if (classId) {
-                    loadClassPage();
-                } else {
-                    mainContent.innerHTML = '<div class="empty-state"><h1>ID Kelas tidak ditemukan.</h1></div>';
-                }
-            } else {
-                [discussionUnsubscribe, tasksUnsubscribe, notesUnsubscribe].forEach(unsub => unsub && unsub());
-                window.location.replace('auth.html');
-            }
-        });
-        
-        document.getElementById('logout-button').addEventListener('click', () => signOut(auth));
-        
-        mainContent.addEventListener('click', (e) => {
-            const taskHeader = e.target.closest('.task-header');
-            if(taskHeader) {
-                const checkbox = e.target.closest('.task-checkbox');
-                if (checkbox) {
-                    handleToggleTask(checkbox.dataset.taskId);
-                } else {
-                    const taskItem = taskHeader.closest('.task-item');
-                    if(taskItem && taskItem.querySelector('.task-details')) {
-                        taskItem.classList.toggle('expanded');
-                    }
-                }
-                return;
-            }
-
-            const deleteTaskBtn = e.target.closest('.delete-task-btn');
-            if (deleteTaskBtn) {
-                handleDeleteTask(deleteTaskBtn.dataset.taskId);
-                return;
-            }
-
-            const addTaskBtn = e.target.closest('#add-task-btn');
-            if (addTaskBtn) {
-                document.getElementById('add-task-modal').style.display = 'flex';
-                return;
-            }
-
-            const noteCard = e.target.closest('.note-card');
-            if (noteCard) {
-                const { title, body, author, date } = noteCard.dataset;
-                showReadNoteModal(title, body, author, date);
-                return;
-            }
-
-            const shareNewNoteBtn = e.target.closest('#share-new-note-btn');
-            if (shareNewNoteBtn) {
-                e.preventDefault();
-                window.location.href = `notes.html?share_to=${classId}`;
-                return;
-            }
-        });
-
-
-        async function loadClassPage() {
-            try {
-                const classDocRef = doc(db, 'classes', classId);
-                const classDocSnap = await getDoc(classDocRef);
-
-                if (!classDocSnap.exists()) {
-                    mainContent.innerHTML = '<div class="empty-state"><h1>Kelas tidak ditemukan.</h1></div>';
-                    return;
-                }
-                
-                const classData = classDocSnap.data();
-                
-                const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-                const joinedClasses = userDoc.data().joinedClasses || [];
-                if (!joinedClasses.includes(classId)) {
-                    mainContent.innerHTML = '<div class="empty-state"><h1>Anda tidak memiliki akses ke kelas ini.</h1></div>';
-                    return;
-                }
-                
-                await cacheClassMembers(classData.members || []);
-
-                renderPageLayout(classData);
-                attachStaticListeners();
-                attachFirestoreListeners();
-                
-                handleUrlFragment();
-
-            } catch (error) {
-                console.error("Error loading class page: ", error);
-                mainContent.innerHTML = '<div class="empty-state"><h1>Gagal memuat halaman kelas.</h1></div>';
-            }
-        }
-        
-        async function cacheClassMembers(memberIds) {
-            classMemberCount = memberIds.length;
-            const memberPromises = memberIds.map(id => getDoc(doc(db, 'users', id)));
-            const memberDocs = await Promise.all(memberPromises);
-            membersCache = memberDocs.reduce((acc, docSnap) => {
-                if (docSnap.exists()) {
-                    acc[docSnap.id] = docSnap.data();
-                }
-                return acc;
-            }, {});
-        }
-        
-        function renderPageLayout(data) {
-             mainContent.innerHTML = `
-                <header class="class-header">
-                    <h1 id="class-name">${data.namaMataKuliah}</h1>
-                    <p id="class-lecturer">${data.dosen} • ${data.hari}, ${data.waktu} - ${data.waktuSelesai || ''}</p>
-                </header>
-                <div class="class-body">
-                    <div class="main-column">
-                        <div class="content-card">
-                            <h2 class="card-title">Diskusi Kelas</h2>
-                            <div id="discussion-feed"><ul id="discussion-list"><div class="loader"></div></ul></div>
-                            <form id="discussion-form">
-                                <input type="text" id="discussion-input" placeholder="Ketik pesan..." required autocomplete="off">
-                                <button type="submit">Kirim</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="side-column">
-                        <div class="content-card">
-                            <h2 class="card-title">Tugas</h2>
-                            <ul id="task-list"><div class="loader"></div></ul>
-                            <button id="add-task-btn">+ Tambah Tugas Baru</button>
-                        </div>
-                        <div class="content-card">
-                            <div class="card-header-flex">
-                                <h2 class="card-title">Catatan Bersama</h2>
-                                <a href="#" id="share-new-note-btn" class="btn-sm-primary">Bagikan Catatan</a>
-                            </div>
-                            <ul id="shared-notes-list"><div class="loader"></div></ul>
-                        </div>
-                    </div>
+              <div class="composer">
+                <div class="tools">
+                  <!-- TWEAK 1: Use SVG icons for a lighter look -->
+                  <button class="i-btn" id="attach-btn" title="Lampirkan" aria-label="Lampirkan">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                  </button>
+                  <button class="i-btn" id="emoji-btn" title="Emoji" aria-label="Emoji">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                  </button>
+                  <input id="file-input" type="file" accept="image/*" hidden>
                 </div>
-            `;
-        }
+                <textarea id="discussion-input" placeholder="Ketik pesan… Gunakan @ untuk menyebut teman" rows="1"></textarea>
+                <button id="send-btn" class="btn primary"><i class="ri-send-plane-2-line"></i> Kirim</button>
+              </div>
+            </div>
+            <div id="typing" class="typing" aria-live="polite" hidden>Beberapa orang sedang mengetik…</div>
+          </div>
+        </div>
 
-        function attachStaticListeners() {
-            const discussionForm = document.getElementById('discussion-form');
-            if(discussionForm) discussionForm.addEventListener('submit', handleAddMessage);
-            
-            const addTaskModal = document.getElementById('add-task-modal');
-            document.getElementById('cancel-add-task-btn').addEventListener('click', () => addTaskModal.style.display = 'none');
-            document.getElementById('add-task-form').addEventListener('submit', handleAddTask);
-            
-            const readNoteModal = document.getElementById('read-note-modal');
-            document.getElementById('read-note-close-btn').addEventListener('click', () => readNoteModal.style.display = 'none');
-        }
+        <!-- RIGHT: Tasks + Notes (columns scroll independently) -->
+        <div class="side-panel">
+          <div class="card">
+            <div class="card-body" style="min-height:0">
+              <div class="card-head"><h3 class="card-title">Tugas</h3></div>
+              <ul id="task-list" class="tasks" aria-label="Daftar tugas">
+                <div class="loader"></div>
+              </ul>
+              <button id="add-task-btn" class="btn primary full"><i class="ri-add-line"></i> Tambah Tugas Baru</button>
+            </div>
+          </div>
 
-        function attachFirestoreListeners() {
-            listenForDiscussions();
-            listenForTasks();
-            listenForSharedNotes();
+          <div class="card">
+            <div class="card-body" style="min-height:0">
+              <div class="card-head">
+                <h3 class="card-title">Catatan Bersama</h3>
+                <!-- TWEAK 2: Change button to 'Tambah' -->
+                <button id="add-note-btn" class="btn primary"><i class="ri-add-line"></i> Tambah</button>
+              </div>
+              <ul id="shared-notes-list" class="notes" aria-label="Catatan bersama">
+                <div class="loader"></div>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <nav class="mnav">
+    <a href="dashboard.html"><i class="ri-layout-grid-line"></i><span>Dasbor</span></a>
+    <a href="classes.html" class="active"><i class="ri-book-2-line"></i><span>Kelas</span></a>
+    <a href="schedule.html"><i class="ri-calendar-line"></i><span>Jadwal</span></a>
+    <a href="notes.html"><i class="ri-file-text-line"></i><span>Catatan</span></a>
+    <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+  </nav>
+
+  <!-- Add Task Modal -->
+  <div class="overlay" id="add-task-modal" style="display:none">
+    <div class="modal">
+      <h2>Tambah Tugas Baru</h2>
+      <form id="add-task-form" class="m-form">
+        <div>
+          <label for="task-title-input">Judul Tugas</label>
+          <input type="text" id="task-title-input" required />
+        </div>
+        <div>
+          <label for="task-due-date-input">Tenggat Waktu</label>
+          <input type="date" id="task-due-date-input" required />
+        </div>
+        <div>
+          <label for="task-description-input">Deskripsi (Opsional)</label>
+          <textarea id="task-description-input" rows="4" placeholder="Detail tugas…"></textarea>
+        </div>
+        <div class="m-foot">
+          <button type="button" class="m-btn ghost" id="cancel-add-task-btn">Batal</button>
+          <button type="submit" class="m-btn primary" id="confirm-add-task-btn">Tambah</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Read Note Modal -->
+  <div class="overlay" id="read-note-modal" style="display:none">
+    <div class="modal" style="width:min(92vw,680px)">
+      <h2 id="read-note-title">—</h2>
+      <div id="read-note-meta" style="color:var(--muted); border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:14px"></div>
+      <div id="read-note-body" style="max-height:60vh; overflow:auto; line-height:1.7; color:#3a3d4a"></div>
+      <div class="m-foot">
+        <button class="m-btn primary" id="read-note-close-btn">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE SCRIPT ===== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot, Timestamp, arrayUnion, arrayRemove, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
+      authDomain: "acadmte.firebaseapp.com",
+      projectId: "acadmte",
+      storageBucket: "acadmte.appspot.com",
+      messagingSenderId: "547286858993",
+      appId: "1:547286858993:web:b83de49e7eb1cc35a67d50",
+      measurementId: "G-ZEFYD7F650"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null, classId = null, membersCache = {}, classMemberCount = 0;
+    let discussionUnsub = null, tasksUnsub = null, notesUnsub = null;
+
+    const $ = (id)=>document.getElementById(id);
+
+    window.addEventListener('resize', fixVH); fixVH();
+    function fixVH(){ document.documentElement.style.setProperty('--vh', window.innerHeight + 'px'); }
+
+    // TWEAK 3: Function to dynamically change placeholder text based on screen size
+    function updatePlaceholder() {
+      const input = $('discussion-input');
+      if (!input) return;
+      if (window.innerWidth <= 600) { // Mobile breakpoint
+        input.placeholder = "Ketik pesan…";
+      } else {
+        input.placeholder = "Ketik pesan… Gunakan @ untuk menyebut teman";
+      }
+    }
+    window.addEventListener('resize', updatePlaceholder); // Update on resize
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { cleanup(); window.location.replace('auth.html'); return; }
+      currentUser = user;
+      $('avatar-top').src = user.photoURL || 'https://placehold.co/80x80';
+      const params = new URLSearchParams(location.search); classId = params.get('id');
+      if (!classId) { renderEmpty('ID Kelas tidak ditemukan.'); return; }
+
+      updatePlaceholder(); // Set initial placeholder on load
+      
+      await loadClass();
+    });
+
+    function cleanup(){ [discussionUnsub,tasksUnsub,notesUnsub].forEach(u=>u && u()); }
+    $('back-btn').addEventListener('click', ()=> history.length>1?history.back():location.assign('classes.html'));
+    $('refresh-btn').addEventListener('click', ()=> location.reload());
+
+    async function loadClass(){
+      try{
+        const classSnap = await getDoc(doc(db,'classes',classId));
+        if (!classSnap.exists()){ renderEmpty('Kelas tidak ditemukan.'); return; }
+        const data = classSnap.data();
+        const userDoc = await getDoc(doc(db,'users',currentUser.uid));
+        if (!(userDoc.data()?.joinedClasses||[]).includes(classId)){ renderEmpty('Anda tidak memiliki akses ke kelas ini.'); return; }
+
+        await cacheMembers(data.members || []);
+
+        $('class-title').textContent = data.namaMataKuliah;
+        $('class-sub').textContent = `${data.dosen} • ${data.hari}, ${data.waktu} - ${data.waktuSelesai || ''}`;
+
+        listenDiscussions();
+        listenTasks();
+        listenNotes();
+      }catch(e){ console.error(e); renderEmpty('Gagal memuat halaman kelas.'); }
+    }
+
+    async function cacheMembers(ids){
+      classMemberCount = ids.length;
+      const snaps = await Promise.all(ids.map(id => getDoc(doc(db,'users',id))));
+      membersCache = snaps.reduce((m,s)=> (s.exists() && (m[s.id]=s.data()), m), {});
+    }
+
+    let latestDoc = null; let fetchingMore = false;
+
+    function listenDiscussions(){
+      const qRef = query(collection(db,'classes',classId,'discussions'), orderBy('createdAt','desc'), limit(30));
+      discussionUnsub = onSnapshot(qRef, (snap)=>{
+        const feed = $('discussion-feed'); if (!feed) return;
+        feed.innerHTML = '';
+        let lastDay = '';
+        latestDoc = snap.docs[snap.docs.length - 1] || null;
+        const docs = snap.docs.slice().reverse();
+        docs.forEach(d => {
+          const m = d.data();
+          const created = m.createdAt?.toDate?.() || new Date();
+          const dayKey = created.toDateString();
+          if (dayKey !== lastDay){
+            feed.appendChild(el('div',{class:'day-divider'}, created.toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'})));
+            lastDay = dayKey;
+          }
+          feed.appendChild(renderMsg(m));
+        });
+        if (!fetchingMore) {
+          requestAnimationFrame(()=> feed.scrollTop = feed.scrollHeight);
         }
+      });
+
+      $('discussion-feed').addEventListener('scroll', async (e)=>{
+        const elFeed = e.currentTarget; if (elFeed.scrollTop > 40 || fetchingMore || !latestDoc) return;
+        fetchingMore = true;
+        const qMore = query(collection(db,'classes',classId,'discussions'), orderBy('createdAt','desc'), startAfter(latestDoc), limit(30));
+        const more = await (await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')).getDocs(qMore);
+        if (!more.empty){ latestDoc = more.docs[more.docs.length-1]; prependMessages(elFeed, more.docs.reverse().map(d=>d.data())); }
+        fetchingMore = false;
+      });
+
+      $('jump-latest').addEventListener('click', ()=> {
+        const feed = $('discussion-feed'); feed.scrollTop = feed.scrollHeight;
+      });
+
+      let typingTimer;
+      $('discussion-input').addEventListener('input', ()=>{
+        $('typing').hidden = false;
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(()=> $('typing').hidden = true, 1200);
+      });
+
+      const ta = $('discussion-input');
+      function autoGrow(){ ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, window.innerHeight*0.34) + 'px'; }
+      ['input','focus'].forEach(evt=> ta.addEventListener(evt, autoGrow));
+
+      $('emoji-btn').addEventListener('click', ()=> insertAtCursor(ta,'🙂'));
+      $('attach-btn').addEventListener('click', ()=> $('file-input').click());
+      $('file-input').addEventListener('change', (e)=>{
+        const file = e.target.files?.[0]; if (!file) return;
+        const reader = new FileReader(); reader.onload = ()=> addMessage(undefined, reader.result);
+        reader.readAsDataURL(file);
+        e.target.value = '';
+      });
+
+      $('send-btn').addEventListener('click', ()=> addMessage());
+      $('discussion-input').addEventListener('keydown', (e)=>{
+        if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); addMessage(); }
+      });
+    }
+
+    function renderMsg(m){
+      const isMe = m.senderId === currentUser?.uid;
+      const wrap = el('div',{class:'m'+(isMe?' me':'')});
+      const ava = el('img',{class:'ava',src: m.senderPhotoURL || 'https://placehold.co/80x80', alt: m.senderName || 'avatar'});
+      const bubble = el('div',{class:'bubble'});
+      const sender = el('div',{class:'sender'}, m.senderName || 'Anonymous');
+      const msgContent = m.text ? m.text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : (m.image ? `<img class="msg-img" src="${m.image}" alt="lampiran">` : '');
+      const msg = el('div',{}, msgContent);
+      const time = m.createdAt?.toDate?.() || new Date();
+      const meta = el('div',{class:'meta'}, time.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}));
+      bubble.append(sender,msg,meta);
+      if (isMe){ wrap.append(bubble, ava); } else { wrap.append(ava, bubble); }
+      return wrap;
+    }
+
+    function prependMessages(feed, arr){
+      const top = feed.scrollHeight - feed.scrollTop;
+      arr.forEach(m => feed.insertBefore(renderMsg(m), feed.firstChild));
+      requestAnimationFrame(()=> feed.scrollTop = feed.scrollHeight - top);
+    }
+
+    async function addMessage(_, imageData){
+      const ta = $('discussion-input');
+      const text = (ta.value||'').trim();
+      if (!text && !imageData) return;
+      ta.disabled = true; $('send-btn').disabled = true;
+      try{
+        await addDoc(collection(db,'classes',classId,'discussions'),{
+          text: text || null,
+          image: imageData || null,
+          senderId: currentUser.uid,
+          senderName: currentUser.displayName || 'Anonymous',
+          senderPhotoURL: currentUser.photoURL || null,
+          createdAt: serverTimestamp()
+        });
+        ta.value=''; autoGrow();
+      }catch(e){ console.error(e); alert('Gagal mengirim pesan.'); }
+      finally{ ta.disabled=false; $('send-btn').disabled=false; ta.focus(); }
+    }
+
+    function insertAtCursor(elm, txt){
+      const start = elm.selectionStart, end = elm.selectionEnd;
+      const before = elm.value.substring(0,start), after = elm.value.substring(end);
+      elm.value = before + txt + after; elm.selectionStart = elm.selectionEnd = start + txt.length; elm.dispatchEvent(new Event('input')); elm.focus();
+    }
+
+    // ---- Tasks (FIXED & REFACTORED) ----
+    function listenTasks(){
+      const qRef = query(collection(db,'classes',classId,'tasks'), orderBy('dueDate','asc'));
+      tasksUnsub = onSnapshot(qRef,(snap)=>{
+        const ul = $('task-list'); ul.innerHTML='';
+        if (snap.empty){ ul.innerHTML = '<div class="empty">Tidak ada tugas.</div>'; return; }
+        snap.forEach(d=> renderTask(d.id, d.data(), ul));
+      });
+      
+      // Listener for the static "Add Task" button
+      $('add-task-btn').addEventListener('click', () => {
+        $('add-task-modal').style.display = 'flex';
+      });
+
+      // Event delegation on the list for dynamic task items (toggle, delete)
+      $('task-list').addEventListener('click', (e) => {
+        const cb = e.target.closest('.checkbox');
+        if (cb) {
+          toggleTask(cb.dataset.id);
+          return;
+        }
+        const del = e.target.closest('.del');
+        if (del) {
+          deleteTask(del.dataset.id);
+          return;
+        }
+      });
+      
+      // Listeners for the modal buttons
+      $('cancel-add-task-btn').addEventListener('click', ()=> $('add-task-modal').style.display='none');
+      $('add-task-form').addEventListener('submit', addTask);
+    }
+
+    function renderTask(id,t,ul){
+      const isDone = t.completedBy?.includes(currentUser.uid);
+      const due = formatDue(t.dueDate);
+      const isCreator = t.creatorId === currentUser.uid;
+      const li = document.createElement('li'); li.className = `task ${isDone?'done':''}`; li.id = `task-${id}`;
+      const avatars = (t.completedBy||[]).map(uid=>{
+        const u = membersCache[uid]; return u?`<img src="${u.photoURL}" title="${u.displayName || u.name}" alt="${u.displayName || u.name}">`:'';
+      }).join('');
+      const safeTitle = (t.title || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      const safeDesc = (t.description || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+      li.innerHTML = `
+        <div class="task-h">
+          <div class="task-left">
+            <div class="checkbox" data-id="${id}"><i class="ri-check-line"></i></div>
+            <div class="task-title">${safeTitle}</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px">
+            <span class="due ${due.cls}">${due.text}</span>
+            <div class="expand"><i class="ri-arrow-down-s-line"></i></div>
+          </div>
+        </div>
+        <div class="task-details">
+          ${t.description ? `<p class="task-desc">${safeDesc.replace(/\n/g,'<br>')}</p>` : ''}
+          <div class="task-foot">
+            <div>
+              <div class="who">${(t.completedBy?.length||0)} dari ${classMemberCount} selesai</div>
+              <div class="pp-row">${avatars}</div>
+            </div>
+            ${isCreator ? `<button class="del" data-id="${id}" aria-label="Hapus tugas"><i class="ri-delete-bin-6-line"></i> Hapus</button>`:''}
+          </div>
+        </div>`;
+      ul.appendChild(li);
+      li.querySelector('.task-h').addEventListener('click', (e)=> {
+        if(!e.target.closest('.checkbox')) {
+            li.classList.toggle('expanded');
+        }
+      });
+    }
+
+    function formatDue(ts){
+      const now = new Date(); const due = ts?.toDate?.() || new Date();
+      now.setHours(0,0,0,0); due.setHours(0,0,0,0);
+      const diff = Math.ceil((due-now)/(1000*60*60*24));
+      if (diff < 0) return {text:'Telah lewat', cls:'overdue'};
+      if (diff === 0) return {text:'Tenggat hari ini', cls:'urgent'};
+      if (diff === 1) return {text:'Tenggat besok', cls:'urgent'};
+      if (diff <= 7) return {text:`Tenggat ${diff} hari lagi`, cls:'soon'};
+      return {text: due.toLocaleDateString('id-ID',{day:'numeric',month:'short'}), cls:'normal'};
+    }
+
+    async function toggleTask(id){
+      const ref = doc(db,'classes',classId,'tasks',id);
+      const li = $('task-'+id), done = li?.classList.contains('done');
+      try{ await updateDoc(ref, done? {completedBy: arrayRemove(currentUser.uid)} : {completedBy: arrayUnion(currentUser.uid)}); }
+      catch(e){ console.error(e); alert('Gagal memperbarui status tugas.'); }
+    }
+
+    async function addTask(e){
+      e.preventDefault();
+      const title = $('task-title-input').value.trim();
+      const dateStr = $('task-due-date-input').value; const desc = $('task-description-input').value.trim();
+      if (!title || !dateStr) return;
+      $('confirm-add-task-btn').disabled = true;
+      try{
+        await addDoc(collection(db,'classes',classId,'tasks'),{
+          title, description: desc||null, dueDate: Timestamp.fromDate(new Date(dateStr)),
+          createdAt: serverTimestamp(), creatorId: currentUser.uid, creatorName: currentUser.displayName||'—', completedBy: []
+        });
+        $('add-task-form').reset(); $('add-task-modal').style.display='none';
+      }catch(e){ console.error(e); alert('Gagal menambahkan tugas.'); }
+      finally{ $('confirm-add-task-btn').disabled=false; }
+    }
+
+    async function deleteTask(id){
+      // Using a custom modal instead of confirm()
+      if (await showConfirm('Hapus tugas ini untuk semua anggota kelas?')) {
+        try{ await deleteDoc(doc(db,'classes',classId,'tasks',id)); }
+        catch(e){ console.error(e); alert('Gagal menghapus tugas.'); }
+      }
+    }
+
+    // ---- Shared Notes (FIXED) ----
+    function listenNotes(){
+      const qRef = query(collection(db,'classes',classId,'sharedNotes'), orderBy('sharedAt','desc'));
+      notesUnsub = onSnapshot(qRef,(snap)=>{
+        const ul = $('shared-notes-list'); ul.innerHTML='';
+        if (snap.empty){ ul.innerHTML = '<div class="empty">Belum ada catatan bersama.</div>'; return; }
+        snap.forEach(d=>{
+          const n = d.data();
+          const li = document.createElement('li'); li.className='note';
+          li.dataset.title = n.title; li.dataset.body = n.body; li.dataset.author = n.sharedBy;
+          li.dataset.date = n.sharedAt? n.sharedAt.toDate().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
+          const safeTitle = (n.title || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          const safeBody = (n.body || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          li.innerHTML = `<h4>${safeTitle}</h4><p>${safeBody.substring(0,120)}${safeBody.length>120?'…':''}</p><small>Oleh ${n.sharedBy}</small>`;
+          li.addEventListener('click', ()=> showNote(li.dataset));
+          ul.appendChild(li);
+        });
+      });
+      $('add-note-btn').addEventListener('click', (e)=>{ e.preventDefault(); location.href = `notes.html?share_to=${classId}`; });
+      $('read-note-close-btn').addEventListener('click', ()=> $('read-note-modal').style.display='none');
+    }
+
+    function showNote(data){
+      $('read-note-title').textContent = data.title || '—';
+      $('read-note-meta').innerHTML = `Dibagikan oleh <strong>${data.author||'—'}</strong> ${data.date?`pada ${data.date}`:''}`;
+      $('read-note-body').innerHTML = `<p>${(data.body||'').replace(/\n/g,'<br>')}</p>`;
+      $('read-note-modal').style.display='flex';
+    }
+
+    // ---- helpers ----
+    function renderEmpty(msg){ $('content').innerHTML = `<div class="empty">${msg}</div>`; }
+    function el(tag, attrs={}, children){
+      const e = document.createElement(tag);
+      Object.entries(attrs||{}).forEach(([k,v])=> e.setAttribute(k,v));
+      if (children != null) e.innerHTML = children; return e;
+    }
+    
+    // Custom confirm modal helper
+    function showConfirm(message) {
+      return new Promise(resolve => {
+        const confirmOverlay = el('div', { class: 'overlay' });
+        const confirmModal = el('div', { class: 'modal' });
+        const msgEl = el('p', {}, message);
+        const footEl = el('div', { class: 'm-foot' });
+        const yesBtn = el('button', { class: 'm-btn primary' }, 'Ya, Hapus');
+        const noBtn = el('button', { class: 'm-btn ghost' }, 'Batal');
         
-        function formatDueDate(dueDate) {
-            const now = new Date();
-            const due = dueDate.toDate();
-            now.setHours(0,0,0,0);
-            due.setHours(0,0,0,0);
-            
-            const diffTime = due.getTime() - now.getTime();
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        footEl.append(noBtn, yesBtn);
+        confirmModal.append(msgEl, footEl);
+        confirmOverlay.append(confirmModal);
+        document.body.appendChild(confirmOverlay);
 
-            if (diffDays < 0) return { text: `Telah lewat`, className: 'overdue' };
-            if (diffDays === 0) return { text: `Tenggat hari ini`, className: 'urgent' };
-            if (diffDays === 1) return { text: `Tenggat besok`, className: 'urgent' };
-            if (diffDays <= 7) return { text: `Tenggat ${diffDays} hari lagi`, className: 'soon' };
-            return { text: `Tenggat ${due.toLocaleDateString('id-ID', {day: 'numeric', month: 'short'})}`, className: 'normal' };
-        }
+        yesBtn.onclick = () => { resolve(true); confirmOverlay.remove(); };
+        noBtn.onclick = () => { resolve(false); confirmOverlay.remove(); };
+      });
+    }
 
-        function listenForDiscussions() {
-            const q = query(collection(db, 'classes', classId, 'discussions'), orderBy('createdAt', 'desc'));
-            discussionUnsubscribe = onSnapshot(q, (snapshot) => {
-                const list = document.getElementById('discussion-list');
-                if (!list) return;
-                list.innerHTML = '';
-                if (snapshot.empty) {
-                    list.innerHTML = '<div class="empty-state">Belum ada diskusi. Mulai percakapan!</div>';
-                }
-                snapshot.forEach(doc => {
-                    const msg = doc.data();
-                    const li = document.createElement('li');
-                    li.className = 'message-item';
-                    const time = msg.createdAt ? msg.createdAt.toDate().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '';
-                    li.innerHTML = `
-                        <img class="message-avatar" src="${msg.senderPhotoURL || 'https://placehold.co/36x36'}" alt="Avatar">
-                        <div class="message-content">
-                            <strong>${msg.senderName}</strong><span>${time}</span>
-                            <p>${msg.text}</p>
-                        </div>
-                    `;
-                    list.appendChild(li);
-                });
-            });
-        }
-        
-        async function handleAddMessage(e) {
-            e.preventDefault();
-            const input = document.getElementById('discussion-input');
-            const text = input.value.trim();
-            if (!text) return;
-            
-            input.disabled = true;
-            try {
-                await addDoc(collection(db, 'classes', classId, 'discussions'), {
-                    text: text,
-                    senderId: currentUser.uid,
-                    senderName: currentUser.displayName || 'Anonymous',
-                    senderPhotoURL: currentUser.photoURL || null,
-                    createdAt: serverTimestamp()
-                });
-                input.value = '';
-            } catch (error) {
-                console.error("Error sending message:", error);
-            } finally {
-                input.disabled = false;
-                input.focus();
-            }
-        }
-        
-        function listenForTasks() {
-            const q = query(collection(db, 'classes', classId, 'tasks'), orderBy('dueDate', 'asc'));
-            tasksUnsubscribe = onSnapshot(q, (snapshot) => {
-                const list = document.getElementById('task-list');
-                if (!list) return;
-                list.innerHTML = '';
-                if (snapshot.empty) {
-                    list.innerHTML = '<div class="empty-state" style="padding: 1rem 0;">Tidak ada tugas.</div>';
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    const task = doc.data();
-                    const isDone = task.completedBy && task.completedBy.includes(currentUser.uid);
-                    const dueDateInfo = formatDueDate(task.dueDate);
-                    const isCreator = task.creatorId === currentUser.uid;
-
-                    let completedAvatarsHTML = '';
-                    if(task.completedBy && task.completedBy.length > 0) {
-                        completedAvatarsHTML = task.completedBy.map(userId => {
-                            const user = membersCache[userId];
-                            return user ? `<img src="${user.photoURL}" title="${user.name}" alt="${user.name}">` : '';
-                        }).join('');
-                    }
-
-                    const detailsHTML = `
-                        <div class="task-details">
-                            ${task.description ? `<p class="task-description">${task.description.replace(/\n/g, '<br>')}</p>` : ''}
-                            <div class="completion-info">
-                                <strong>${task.completedBy?.length || 0} dari ${classMemberCount} selesai</strong>
-                                <div class="completed-avatars">${completedAvatarsHTML}</div>
-                            </div>
-                            <div class="task-footer">
-                                <span class="task-creator">Dibuat oleh ${task.creatorName || 'N/A'}</span>
-                                ${isCreator ? `<button class="delete-task-btn" data-task-id="${doc.id}"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg> Hapus</button>` : ''}
-                            </div>
-                        </div>`;
-                    
-                    const li = document.createElement('li');
-                    li.className = `task-item ${isDone ? 'done' : ''}`;
-                    li.id = `task-${doc.id}`;
-                    li.innerHTML = `
-                        <div class="task-header">
-                            <div class="task-title-wrapper">
-                                <div class="task-checkbox" data-task-id="${doc.id}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>
-                                </div>
-                                <h4>${task.title}</h4>
-                            </div>
-                            <div class="task-meta">
-                                <span class="due-date ${dueDateInfo.className}">${dueDateInfo.text}</span>
-                                <svg class="task-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                            </div>
-                        </div>
-                        ${detailsHTML}
-                    `;
-                    list.appendChild(li);
-                });
-            });
-        }
-        
-        async function handleToggleTask(taskId) {
-            if (!taskId || !currentUser) return;
-            const taskRef = doc(db, 'classes', classId, 'tasks', taskId);
-            const taskItem = document.getElementById(`task-${taskId}`);
-            const isDone = taskItem.classList.contains('done');
-
-            try {
-                if (isDone) {
-                    await updateDoc(taskRef, { completedBy: arrayRemove(currentUser.uid) });
-                } else {
-                    await updateDoc(taskRef, { completedBy: arrayUnion(currentUser.uid) });
-                }
-            } catch (error) {
-                console.error("Error updating task status:", error);
-                alert("Gagal memperbarui status tugas.");
-            }
-        }
-        
-        async function handleAddTask(e) {
-            e.preventDefault();
-            const title = document.getElementById('task-title').value;
-            const dueDateStr = document.getElementById('task-due-date').value;
-            const description = document.getElementById('task-description').value;
-
-            if (!title || !dueDateStr) return;
-            
-            const dueDate = new Date(dueDateStr);
-            const confirmBtn = document.getElementById('confirm-add-task-btn');
-            confirmBtn.disabled = true;
-
-            try {
-                await addDoc(collection(db, 'classes', classId, 'tasks'), {
-                    title: title,
-                    description: description,
-                    dueDate: Timestamp.fromDate(dueDate),
-                    createdAt: serverTimestamp(),
-                    creatorId: currentUser.uid,
-                    creatorName: currentUser.displayName,
-                    completedBy: []
-                });
-                document.getElementById('add-task-form').reset();
-                document.getElementById('add-task-modal').style.display = 'none';
-            } catch (error) {
-                console.error("Error adding task:", error);
-                alert("Gagal menambahkan tugas.");
-            } finally {
-                confirmBtn.disabled = false;
-            }
-        }
-
-        async function handleDeleteTask(taskId) {
-            if (!taskId) return;
-            if (confirm("Apakah Anda yakin ingin menghapus tugas ini untuk semua anggota kelas?")) {
-                try {
-                    await deleteDoc(doc(db, 'classes', classId, 'tasks', taskId));
-                } catch (error) {
-                    console.error("Error deleting task: ", error);
-                    alert("Gagal menghapus tugas.");
-                }
-            }
-        }
-
-        function listenForSharedNotes() {
-            const q = query(collection(db, 'classes', classId, 'sharedNotes'), orderBy('sharedAt', 'desc'));
-            notesUnsubscribe = onSnapshot(q, (snapshot) => {
-                const list = document.getElementById('shared-notes-list');
-                if(!list) return;
-                list.innerHTML = '';
-                 if (snapshot.empty) {
-                    list.innerHTML = '<div class="empty-state" style="padding: 1rem 0;">Belum ada catatan bersama.</div>';
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    const note = doc.data();
-                    const li = document.createElement('li');
-                    li.className = 'note-card';
-                    
-                    li.dataset.title = note.title;
-                    li.dataset.body = note.body;
-                    li.dataset.author = note.sharedBy;
-                    if (note.sharedAt) {
-                        li.dataset.date = note.sharedAt.toDate().toLocaleDateString('id-ID', {
-                            day: 'numeric', month: 'long', year: 'numeric'
-                        });
-                    }
-
-                    li.innerHTML = `
-                        <h4>${note.title}</h4>
-                        <p>${note.body.substring(0, 100)}${note.body.length > 100 ? '...' : ''}</p>
-                        <small>Oleh ${note.sharedBy}</small>
-                    `;
-                    list.appendChild(li);
-                });
-            });
-        }
-        
-        function showReadNoteModal(title, body, author, date) {
-            document.getElementById('read-note-title').textContent = title;
-            document.getElementById('read-note-meta').innerHTML = `Dibagikan oleh <strong>${author}</strong> pada ${date}`;
-            document.getElementById('read-note-body').innerHTML = `<p>${body.replace(/\n/g, '<br>')}</p>`;
-            document.getElementById('read-note-modal').style.display = 'flex';
-        }
-
-        function handleUrlFragment() {
-            const hash = window.location.hash;
-            if (hash && hash.startsWith('#task-')) {
-                setTimeout(() => {
-                    const targetTaskId = hash.substring(1);
-                    const targetTaskElement = document.getElementById(targetTaskId);
-                    if (targetTaskElement) {
-                        const classBody = document.querySelector('.class-body');
-                        
-                        const taskCard = targetTaskElement.closest('.content-card');
-                        if (taskCard) {
-                             classBody.scrollTo({
-                                top: taskCard.offsetTop - 20,
-                                behavior: 'smooth'
-                            });
-                        }
-
-                        targetTaskElement.classList.add('expanded');
-                        targetTaskElement.style.transition = 'background-color 0.5s ease-in-out';
-                        targetTaskElement.style.backgroundColor = 'var(--primary-light)';
-                        setTimeout(() => {
-                            targetTaskElement.style.backgroundColor = '';
-                        }, 2500);
-                    }
-                }, 700);
-            }
-        }
-
-    </script>
+    // Global actions
+    document.querySelector('.logout')?.addEventListener('click', (e)=>{ e.preventDefault(); signOut(auth); });
+  </script>
 </body>
 </html>
 
