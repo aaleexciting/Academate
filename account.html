@@ -74,7 +74,7 @@
     }
 
     /* Buttons */
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
     .btn:hover{border-color:#d8d8e0}
     .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
     .btn-danger{background:#fff;color:var(--danger);border:1px solid #ffd2d2}
@@ -86,24 +86,35 @@
     .grid{display:grid;grid-template-columns:1fr;gap:18px}
     @media (min-width:1100px){.grid{grid-template-columns:1.2fr .8fr}}
     .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
-    .card-head{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--border)}
+    .card-head{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--border); flex-wrap: wrap; gap: 8px;}
     .card-head h2{margin:0;font-size:18px}
     .card-body{padding:16px}
     .card-foot{padding:12px 16px;border-top:1px solid var(--border);background:#fafafe;display:flex;justify-content:flex-end;gap:10px}
 
-    .form-row{display:grid;grid-template-columns:180px 1fr;gap:12px;align-items:center;margin-bottom:12px}
-    .form-row label{font-weight:600;color:var(--muted)}
-    .form-row input, .form-row select{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);outline:none;max-width:420px}
+    .form-row{margin-bottom:16px}
+    .form-row label{font-weight:600;color:var(--text); display: block; margin-bottom: 6px;}
+    .form-row input, .form-row select{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);outline:none; width: 100%; font-family: inherit; font-size: 14px;}
     .help{color:var(--muted);font-size:12px;margin-top:6px}
     .avatar{display:flex;align-items:center;gap:12px}
-    .avatar img{width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--border)}
+    .avatar img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--border)}
 
     .list{display:grid;gap:12px}
-    .class-item{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff}
-    .class-main{display:flex;align-items:center;gap:12px}
-    .class-icon{width:44px;height:44px;border-radius:10px;background:#F3F2FF;color:var(--primary);display:grid;place-items:center}
+    .class-item{border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff}
+    .class-main{display:flex;align-items:center;gap:12px; margin-bottom: 12px;}
+    .class-icon{width:44px;height:44px;border-radius:10px;background:#F3F2FF;color:var(--primary);display:grid;place-items:center; flex-shrink: 0;}
+    .btn-full{width: 100%;}
 
     .danger-zone{border:1px dashed #ffd2d2;background:#fff6f6}
+
+    @media (min-width: 768px) {
+        .form-row{display:grid;grid-template-columns:180px 1fr;gap:12px;align-items:center;margin-bottom:12px}
+        .form-row label { margin-bottom: 0; color: var(--muted); }
+        .form-row input, .form-row select { width: auto; max-width: 420px; }
+        .avatar img{width:72px;height:72px;}
+        .class-item { display: flex; align-items: center; justify-content: space-between; }
+        .class-main { margin-bottom: 0; }
+        .btn-full { width: auto; }
+    }
 
     /* Mobile nav */
     .mobile-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;height:70px;padding:0 10px;z-index:1000}
@@ -111,6 +122,12 @@
     .mobile-nav a i{font-size:20px}
     .mobile-nav a.active{color:var(--primary)}
     @media (min-width:901px){.mobile-nav{display:none}}
+    
+    @media (max-width: 420px) {
+      .app { padding: 12px; }
+      .main-content { padding: 12px; }
+      .card-body { padding: 12px; }
+    }
 
     .toast{position:fixed;right:18px;bottom:90px;background:#111827;color:#fff;padding:12px 14px;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,.25);display:none;z-index:1100}
   </style>
@@ -150,7 +167,7 @@
           <div class="header-main">
             <div>
               <h1>Akun</h1>
-              <p>Kelola profil & keanggotaan kelas Anda — konsisten dengan Dasbor, Kelas, Tugas & Catatan.</p>
+              <p>Kelola profil & keanggotaan kelas Anda.</p>
             </div>
             <a href="#" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
           </div>
@@ -207,7 +224,7 @@
     <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
     <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
     <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
-    <a class="active" href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+    <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
   <!-- Simple confirm dialog -->
@@ -291,7 +308,7 @@
               <div class="help">${escapeHTML(c.dosen||'-')} • ${escapeHTML(c.hari||'-')} ${escapeHTML(c.waktu||'')}</div>
             </div>
           </div>
-          <button class="btn" data-leave="${c.id}"><i class="ri-logout-box-r-line"></i>Tinggalkan</button>
+          <button class="btn btn-full" data-leave="${c.id}"><i class="ri-logout-box-r-line"></i>Tinggalkan</button>
         `;
         el.querySelector('[data-leave]').addEventListener('click',()=> confirmDialog({
           title:'Tinggalkan Kelas', text:`Anda akan keluar dari ${escapeHTML(c.namaMataKuliah||'kelas ini')}. Lanjutkan?`,
@@ -369,3 +386,4 @@
   </script>
 </body>
 </html>
+
