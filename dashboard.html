@@ -144,10 +144,19 @@
     }
     .class-card-lg .arrow-btn:hover { transform: scale(1.1); }
 
-    /* Profile card */
-    .profile-card{text-align:center}
-    .profile-img{width:72px; height:72px; border-radius:50%; object-fit:cover; border:4px solid var(--surface); box-shadow:var(--shadow); margin-bottom:8px}
-    .profile-logout-btn{margin-top:12px; border:1px solid var(--border); background:var(--surface); color:var(--muted); padding:8px 12px; border-radius:10px; font-weight:600; cursor:pointer; width:100%}
+    /* REVAMPED Profile card */
+    .profile-card{ padding: 0; overflow: hidden; position: relative; }
+    .profile-banner{ height: 80px; background-size: cover; background-position: center; }
+    .profile-content{ padding: 12px; text-align: center; margin-top: -40px; }
+    .profile-img{ width:72px; height:72px; border-radius:50%; object-fit:cover; border:4px solid var(--surface); box-shadow:var(--shadow); margin-bottom:8px }
+    .profile-logout-btn{ margin-top:12px; border:1px solid var(--border); background:var(--surface); color:var(--muted); padding:8px 12px; border-radius:10px; font-weight:600; cursor:pointer; width:100% }
+    .edit-profile-btn {
+        position: absolute; top: 8px; right: 8px; z-index: 2;
+        width: 32px; height: 32px; border-radius: 50%;
+        background: rgba(255,255,255,0.8); backdrop-filter: blur(4px);
+        display: grid; place-items: center; color: var(--text);
+        text-decoration: none; border: 1px solid var(--border);
+    }
 
     /* Calendar */
     .calendar-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
@@ -211,7 +220,7 @@
         .main-column { order: 1; }
         #tasks-wrapper { order: 2; }
         #calendar-wrapper { order: 3; }
-        #profile-card { order: 4; }
+        #profile-card-wrapper { order: 4; }
     }
     
     @media (max-width: 420px) {
@@ -359,6 +368,11 @@
     let currentCalendarDate = new Date();
     let classScheduleDays = [];
     let countdownInterval = null;
+    const BANNERS = {
+      'banner1': 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max',
+      'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max',
+      'banner3': 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max'
+    };
 
     onAuthStateChanged(auth, user => { if (user) initialize(user); else window.location.replace('auth.html'); });
     
@@ -371,7 +385,7 @@
       renderSkeleton();
       try{
         const { userData, classesData, allTasks } = await fetchAll(user);
-        const incompleteTasks = allTasks.filter(task => !task.completedBy?.includes(user.uid));
+        const incompleteTasks = allTasks.filter(task => !(task.completedBy?.includes(user.uid)));
         classScheduleDays = [...new Set(classesData.map(c => c.hari))];
         renderDashboard(user, userData, classesData, incompleteTasks);
         attachEventListeners();
@@ -383,20 +397,28 @@
 
     async function fetchAll(user){
       const userDocRef = doc(db, 'users', user.uid);
-      await setDoc(userDocRef, { name:user.displayName, email:user.email, photoURL:user.photoURL }, { merge:true });
       const userDocSnap = await getDoc(userDocRef);
-      const userData = userDocSnap.data();
+      if (!userDocSnap.exists()) {
+        await setDoc(userDocRef, { name:user.displayName, email:user.email, photoURL:user.photoURL }, { merge:true });
+      }
+      const userData = userDocSnap.data() || { name: user.displayName, email: user.email, photoURL: user.photoURL };
       const joinedClassesIds = userData.joinedClasses || [];
       if(joinedClassesIds.length === 0) return { userData, classesData:[], allTasks:[] };
+      
       const classPromises = joinedClassesIds.map(id => getDoc(doc(db,'classes',id)));
-      const taskPromises  = joinedClassesIds.map(id => getDocs(query(collection(db,'classes',id,'tasks'), where('dueDate','>=', Timestamp.now()))));
-      const [classSnapshots, taskSnapshotsByClass] = await Promise.all([Promise.all(classPromises), Promise.all(taskPromises)]);
+      const [classSnapshots] = await Promise.all([Promise.all(classPromises)]);
+      
       const classesData = classSnapshots.map(s=>({id:s.id, ...s.data()})).filter(c=>c.namaMataKuliah);
+      
+      const taskPromises  = joinedClassesIds.map(id => getDocs(query(collection(db,'classes',id,'tasks'))));
+      const [taskSnapshotsByClass] = await Promise.all([Promise.all(taskPromises)]);
+      
       const allTasks = [];
       taskSnapshotsByClass.forEach((snap, idx)=>{
         const classInfo = classesData[idx]; if(!classInfo) return;
         snap.forEach(docu=> allTasks.push({ id:docu.id, classId:classInfo.id, ...docu.data(), className:classInfo.namaMataKuliah || 'Unknown' }));
       });
+
       return { userData, classesData, allTasks };
     }
 
@@ -404,7 +426,6 @@
       const main = document.getElementById('main-content');
       main.innerHTML = `
         <header class="header">
-          <!-- Mobile Top Bar -->
           <div class="header-top">
             <div class="header-brand">Academate</div>
             <div class="header-actions">
@@ -412,8 +433,6 @@
               <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
             </div>
           </div>
-          
-          <!-- Main Header Content (Greeting for mobile, Greeting + Toolbar for desktop) -->
           <div class="header-main">
             <div>
               <h1>${getGreeting(user.displayName)}</h1>
@@ -423,8 +442,6 @@
               <img id="header-avatar-img" class="header-avatar" alt="Foto profil">
             </a>
           </div>
-
-          <!-- Desktop Toolbar -->
           <div class="header-toolbar">
             <div class="search-bar">
                 <i class="ri-search-line"></i>
@@ -440,7 +457,7 @@
             <section id="other-upcoming-classes-section"></section>
           </div>
           <div class="side-column">
-            <div class="dashboard-card profile-card" id="profile-card"></div>
+            <section id="profile-card-wrapper"></section>
             <section id="calendar-wrapper">
                 <div class="dashboard-card">
                     <div class="calendar-header">
@@ -461,7 +478,7 @@
       const avatarUrl = user.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${(user.displayName||'A').charAt(0)}`;
       document.getElementById('header-avatar-img').src = avatarUrl;
       
-      renderProfile(user);
+      renderProfile(user, userData);
       renderCalendar(currentCalendarDate, classScheduleDays);
 
       if(classesData.length){
@@ -472,14 +489,22 @@
       }else{ renderEmptyStates(); }
     }
 
-    function renderProfile(user){
+    function renderProfile(user, userData){
+      const container = document.getElementById('profile-card-wrapper');
       const avatar = user.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${(user.displayName||'A').charAt(0)}`;
-      document.getElementById('profile-card').innerHTML = `
-        <img class="profile-img" src="${avatar}" alt="Foto profil">
-        <h3 style="margin:0 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.displayName || 'Pengguna'}</h3>
-        <p style="color:var(--muted);margin:0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.email || ''}</p>
-        <button id="logout-button-mobile" class="profile-logout-btn">Keluar</button>
-        `;
+      const bannerUrl = BANNERS[userData.bannerId] || BANNERS['banner1'];
+      container.innerHTML = `
+        <div class="dashboard-card profile-card">
+            <a href="account.html" class="edit-profile-btn" title="Edit Profil"><i class="ri-pencil-line"></i></a>
+            <div class="profile-banner" style="background-image: linear-gradient(to top, rgba(0,0,0,0.25), transparent), url(${bannerUrl})"></div>
+            <div class="profile-content">
+                <img class="profile-img" src="${avatar}" alt="Foto profil">
+                <h3 style="margin:0 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.displayName || 'Pengguna'}</h3>
+                <p style="color:var(--muted);margin:0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${userData.university || 'Universitas belum diatur'}</p>
+                <button id="logout-button-mobile" class="profile-logout-btn">Keluar</button>
+            </div>
+        </div>
+      `;
     }
 
     async function renderClassCarousel(classes){
@@ -504,17 +529,13 @@
           'linear-gradient(135deg, #e6fcf5, #e3f2fd)', 'linear-gradient(135deg, #fffbe6, #f0f9ff)',
           'linear-gradient(135deg, #ffeef2, #eef2ff)'
       ];
-      const icons = [
-          'ri-code-s-slash-line', 'ri-artboard-2-line', 'ri-compass-3-line',
-          'ri-bar-chart-horizontal-line', 'ri-camera-lens-line', 'ri-book-3-line'
-      ];
 
       classes.forEach((c,i)=>{
         const memberAvatars = (c.members || []).slice(0,3).map(id => memberData[id] ? `<img src="${memberData[id].photoURL}" alt="member">` : '').join('');
         const card = document.createElement('a');
         card.href = `class_page.html?id=${c.id}`; card.className = 'class-card-lg';
         card.innerHTML = `
-          <div class="card-thumb" style="background: ${gradients[i % gradients.length]}"> <i class="${icons[i % icons.length]}"></i> </div>
+          <div class="card-thumb" style="background: ${gradients[i % gradients.length]}"> ${c.classIcon || '📚'} </div>
           <h3 style="margin:0 0 4px;">${c.namaMataKuliah||''}</h3>
           <p class="muted">${c.dosen || ''}</p>
           <div class="card-meta">
@@ -548,6 +569,7 @@
       if(!upcoming.length){
         mainSection.innerHTML = `<div class="dashboard-card" style="text-align:center; color:var(--muted)">Tidak ada kelas yang akan datang.</div>`; otherSection.innerHTML=''; return;
       }
+      
       const { classData: nextClass, classTime } = upcoming[0];
       mainSection.innerHTML = `
         <div class="section-header"><h2 class="section-title" style="margin-bottom: 0;">Kelas Berikutnya</h2></div>
@@ -558,12 +580,16 @@
         </div>`;
       if(countdownInterval) clearInterval(countdownInterval);
       countdownInterval = setInterval(()=>updateCountdown(classTime),1000); updateCountdown(classTime);
-      const others = upcoming.slice(1);
-      otherSection.innerHTML = others.length ? `<div style="display:flex;flex-direction:column;gap:14px">${others.map(({classData, classTime})=>`
-        <div class="dashboard-card" style="display:flex; align-items:center; gap:12px">
-          <div style="width:58px; text-align:center; flex-shrink:0;"><div class="calendar-day-name">${classTime.toLocaleDateString('id-ID',{weekday:'short'})}</div><div style="font-weight:700; color:var(--primary); font-size:18px">${classTime.getDate()}</div></div>
-          <div style="flex-grow:1; min-width:0;"><div style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${classData.namaMataKuliah||''}</div><div style="color:var(--muted)">${classData.waktu||''} • Ruang ${classData.ruang||''}</div></div>
-        </div>`).join('')}</div>` : '';
+      
+      const others = upcoming.slice(1, 3);
+      otherSection.innerHTML = others.length ? `<h2 class="section-title" style="font-size: 15px; margin-bottom: 4px;">Selanjutnya</h2><div style="display:flex;flex-direction:column;gap:14px">${others.map(({classData, classTime})=>`
+        <a href="class_page.html?id=${classData.id}" style="text-decoration: none;">
+          <div class="dashboard-card" style="display:flex; align-items:center; gap:12px">
+            <div style="width:58px; text-align:center; flex-shrink:0;"><div class="calendar-day-name">${classTime.toLocaleDateString('id-ID',{weekday:'short'})}</div><div style="font-weight:700; color:var(--primary); font-size:18px">${classTime.getDate()}</div></div>
+            <div style="flex-grow:1; min-width:0;"><div style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${classData.namaMataKuliah||''}</div><div style="color:var(--muted)">${classData.waktu||''} • Ruang ${classData.ruang||''}</div></div>
+            <i class="ri-arrow-right-s-line" style="color:var(--muted); font-size: 20px;"></i>
+          </div>
+        </a>`).join('')}</div>` : '';
     }
 
     function renderUpcomingDeadlines(tasks){
@@ -589,16 +615,32 @@
       document.getElementById('next-month-btn')?.addEventListener('click',()=>{ currentCalendarDate.setMonth(currentCalendarDate.getMonth()+1); renderCalendar(currentCalendarDate, classScheduleDays); });
     }
 
-    function findUpcomingClasses(classes, count=3){
-      const dayMap={ 'Minggu':0,'Senin':1,'Selasa':2,'Rabu':3,'Kamis':4,'Jumat':5,'Sabtu':6 };
-      const now = new Date(); const upcoming=[];
-      for(let i=0;i<7;i++){
-        const checkDay=(now.getDay()+i)%7;
-        const dayName=Object.keys(dayMap).find(k=>dayMap[k]===checkDay);
-        const todays = classes.filter(c=>c.hari===dayName).sort((a,b)=>a.waktu.localeCompare(b.waktu));
-        for(const cls of todays){ const [h,m]=String(cls.waktu||'00:00').split(':').map(Number); const t=new Date(); t.setDate(now.getDate()+i); t.setHours(h||0,m||0,0,0); if(t>now) upcoming.push({classData:cls, classTime:t}); }
+    function findUpcomingClasses(classes, count = 3){
+      const dayMap = { 'Minggu': 0, 'Senin': 1, 'Selasa': 2, 'Rabu': 3, 'Kamis': 4, 'Jumat': 5, 'Sabtu': 6 };
+      const now = new Date();
+      const upcoming = [];
+
+      for (let i = 0; i < 8; i++) {
+          const checkDate = new Date(now);
+          checkDate.setDate(now.getDate() + i);
+          const checkDayOfWeek = checkDate.getDay();
+          const dayName = Object.keys(dayMap).find(k => dayMap[k] === checkDayOfWeek);
+
+          const classesOnThisDay = classes
+              .filter(c => c.hari === dayName)
+              .sort((a, b) => (a.waktu || '00:00').localeCompare(b.waktu || '00:00'));
+
+          for (const cls of classesOnThisDay) {
+              const [h, m] = String(cls.waktu || '00:00').split(':').map(Number);
+              const classTime = new Date(checkDate);
+              classTime.setHours(h || 0, m || 0, 0, 0);
+
+              if (classTime > now) {
+                  upcoming.push({ classData: cls, classTime: classTime });
+              }
+          }
       }
-      return upcoming.sort((a,b)=>a.classTime-b.classTime).slice(0,count);
+      return upcoming.sort((a, b) => a.classTime - b.classTime).slice(0, count);
     }
 
     function updateCountdown(target){ const el=document.getElementById('countdown-display'); if(!el) return; const now=new Date(); const diff=target-now; if(diff<=0){ el.textContent='Sedang berlangsung'; if(countdownInterval) clearInterval(countdownInterval); return; } const d=Math.floor(diff/(1000*60*60*24)); const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60)); const m=Math.floor((diff%(1000*60*60))/(1000*60)); const s=Math.floor((diff%(1000*60))/1000); if(d>0) el.textContent=`Mulai dalam ${d} hari`; else if(h>0) el.textContent=`Mulai dalam ${h}j ${m}m`; else el.textContent=`Mulai dalam ${m}m ${s}d`; }

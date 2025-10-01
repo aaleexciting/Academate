@@ -108,13 +108,13 @@
 
     .x-body{padding:14px 14px 10px}
     .x-title{display:flex;gap:10px;align-items:flex-start}
-    .x-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;color:#fff;flex-shrink:0}
-    .x-icon[data-c="#10B981"]{background:linear-gradient(135deg,#34D399,#10B981)}
-    .x-icon[data-c="#F59E0B"]{background:linear-gradient(135deg,#FBBF24,#F59E0B)}
-    .x-icon[data-c="#EF4444"]{background:linear-gradient(135deg,#F87171,#EF4444)}
-    .x-icon[data-c="#3B82F6"]{background:linear-gradient(135deg,#60A5FA,#3B82F6)}
-    .x-icon[data-c="#8B5CF6"]{background:linear-gradient(135deg,#A78BFA,#8B5CF6)}
-    .x-icon[data-c="#EC4899"]{background:linear-gradient(135deg,#F472B6,#EC4899)}
+    .x-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;color:var(--text);flex-shrink:0}
+    .x-icon[data-c="#8B5CF6"]{background:linear-gradient(135deg,#A78BFA22,#8B5CF633)}
+    .x-icon[data-c="#10B981"]{background:linear-gradient(135deg,#34D39922,#10B98133)}
+    .x-icon[data-c="#F59E0B"]{background:linear-gradient(135deg,#FBBF2422,#F59E0B33)}
+    .x-icon[data-c="#EF4444"]{background:linear-gradient(135deg,#F8717122,#EF444433)}
+    .x-icon[data-c="#3B82F6"]{background:linear-gradient(135deg,#60A5FA22,#3B82F633)}
+    .x-icon[data-c="#EC4899"]{background:linear-gradient(135deg,#F472B622,#EC489933)}
 
     .x-body h3{margin:0;font-size:16px}
     .x-sub{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -138,19 +138,71 @@
     .sk{position:relative;overflow:hidden;background:#F2F3F7;border-radius:10px}
     .sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:shimmer 1.2s infinite}
     @keyframes shimmer{100%{transform:translateX(100%)}}
+    
+    /* MODALS (NEWLY ADDED & FIXED) */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 31, 36, 0.6);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 100;
+      display: none; /* Changed to none */
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fade-in 0.2s ease;
+    }
+    .overlay.show { display: flex; } /* New class to show */
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      width: min(95vw, 560px);
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modal-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .modal h2 { margin: 0 0 16px; }
+    @keyframes modal-pop {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
 
-    /* Modals */
-    .modal-overlay{ position:fixed; inset:0; background: rgba(17, 24, 39, .55); backdrop-filter: blur(4px); display:none; align-items:center; justify-content:center; z-index:1000 }
-    .modal{ background:#fff; width:90%; max-width:560px; border-radius:16px; padding:20px; box-shadow:var(--shadow) }
-    .modal h2{ margin:0 0 4px; font-size:18px }
-    .modal .sub{ color:var(--muted); margin-bottom:14px; font-size:13px }
-    .modal-form{ display:grid; grid-template-columns:1fr 1fr; gap:12px }
-    .form-group{ display:flex; flex-direction:column }
-    .form-group label{ font-weight:600; font-size:13px; margin-bottom:6px }
-    .form-group input, .form-group select{ padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--surface); outline:none }
-    .form-group input:focus, .form-group select:focus{ border-color:var(--primary) }
-    .full{ grid-column:1 / -1 }
-    .modal-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:10px; grid-column:1 / -1 }
+    .m-form { display: flex; flex-direction: column; gap: 14px; }
+    .m-form label { font-weight: 600; font-size: 14px; color: var(--text); }
+    .m-form input, .m-form textarea, .m-form select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font: inherit;
+      background: var(--bg);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .m-form input:focus, .m-form textarea:focus, .m-form select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px #6f6cff3b;
+    }
+    
+    .m-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+    .m-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .m-btn.primary { background: var(--primary); color: #fff; }
+    .m-btn.primary:hover { background: var(--primary-2); }
+    .m-btn.ghost { border-color: var(--border); background: transparent; color: var(--muted); }
+    .m-btn.ghost:hover { background: var(--bg); color: var(--text); }
   </style>
 </head>
 <body>
@@ -187,8 +239,8 @@
           </div>
           <div class="header-main">
             <div>
-              <h1>Kelas</h1>
-              <p>Semua kelas Anda—rapi, informatif, dan bisa di-pin.</p>
+              <h1>Kelas Anda</h1>
+              <p>Kelola, akses, dan organisir semua mata kuliah Anda di satu tempat.</p>
             </div>
             <a href="account.html" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
           </div>
@@ -206,7 +258,6 @@
             <div class="class-toolbar">
               <button class="btn btn-secondary" id="join-class-btn"><i class="ri-user-shared-line"></i><span>Gabung Kelas</span></button>
               <button class="btn btn-primary" id="create-class-btn"><i class="ri-add-line"></i><span>Buat Kelas</span></button>
-              <button class="btn" id="sort-pin-btn"><i class="ri-pushpin-2-line"></i><span>Tampilkan Pin Dulu</span></button>
             </div>
           </section>
 
@@ -229,58 +280,69 @@
   </nav>
 
   <!-- Modals: Create / Join / Share -->
-  <div class="modal-overlay" id="create-class-modal">
+  <div class="overlay" id="create-class-modal">
     <div class="modal">
       <h2>Buat Kelas Baru</h2>
-      <p class="sub">Isi detail di bawah ini untuk membuat kelas baru.</p>
-      <form id="create-class-form" class="modal-form">
-        <div class="form-group full"><label for="namaMataKuliah">Nama Mata Kuliah</label><input type="text" id="namaMataKuliah" required></div>
-        <div class="form-group full"><label for="dosen">Dosen</label><input type="text" id="dosen" required></div>
-        <div class="form-group"><label for="sks">SKS</label><input type="number" id="sks" required min="1" max="6"></div>
-        <div class="form-group"><label for="ruang">Ruang</label><input type="text" id="ruang" required></div>
-        <div class="form-group"><label for="hari">Hari</label>
-          <select id="hari" required>
-            <option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option>
-          </select>
+      <form id="create-class-form" class="m-form">
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <input type="text" id="class-icon" style="font-size: 24px; text-align: center; width: 60px; padding: 10px 0;" maxlength="2" placeholder="📚">
+            <input type="text" id="namaMataKuliah" placeholder="Nama Mata Kuliah" required style="flex: 1;">
         </div>
-        <div class="form-group"><label for="waktu">Waktu Mulai</label><input type="time" id="waktu" required></div>
-        <div class="form-group"><label for="waktuSelesai">Waktu Selesai</label><input type="time" id="waktuSelesai" required></div>
-        <div class="modal-actions"><button type="button" class="btn" id="cancel-create-btn">Batal</button><button type="submit" class="btn btn-primary" id="confirm-create-btn">Buat Kelas</button></div>
+        <input type="text" id="dosen" placeholder="Nama Dosen" required>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+            <input type="text" id="ruang" placeholder="Ruang Kelas">
+            <input type="number" id="sks" placeholder="SKS" min="1" max="6" required>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+            <select id="hari" required>
+                <option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option>
+            </select>
+            <input type="time" id="waktu" required>
+            <input type="time" id="waktuSelesai" required>
+        </div>
+        <div class="m-foot">
+            <button type="button" class="m-btn ghost" data-close-modal>Batal</button>
+            <button type="submit" class="m-btn primary" id="confirm-create-btn">Buat Kelas</button>
+        </div>
       </form>
     </div>
   </div>
 
-  <div class="modal-overlay" id="join-class-modal">
-    <div class="modal">
+  <div class="overlay" id="join-class-modal">
+    <div class="modal" style="max-width:420px">
       <h2>Gabung dengan Kelas</h2>
-      <p class="sub">Masukkan kode kelas untuk bergabung.</p>
-      <div class="modal-form">
-        <div class="form-group full"><label for="class-code-input">Kode Kelas</label><input type="text" id="class-code-input" placeholder="ABCD-1234"></div>
-        <div class="modal-actions"><button type="button" class="btn" id="cancel-join-btn">Batal</button><button type="button" class="btn btn-primary" id="join-by-code-btn">Gabung</button></div>
-      </div>
+      <p style="margin:-8px 0 16px; color:var(--muted)">Masukkan kode kelas untuk bergabung.</p>
+      <form id="join-class-form" class="m-form">
+        <input type="text" id="class-code-input" placeholder="ABCD-1234" style="text-align:center; font-size: 1.1rem; letter-spacing: 2px;">
+        <div class="m-foot">
+          <button type="button" class="m-btn ghost" data-close-modal>Batal</button>
+          <button type="submit" class="m-btn primary" id="join-by-code-btn">Gabung</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <div class="modal-overlay" id="share-class-modal">
-    <div class="modal" style="max-width:460px">
-      <h2>Bagikan Kelas</h2>
-      <p class="sub">Bagikan kode atau link undangan.</p>
-      <div class="card" style="padding:10px">
-        <div style="font-weight:600;margin-bottom:6px">Kode Kelas</div>
-        <div style="display:flex;gap:8px;align-items:center;border:1px solid var(--border);border-radius:12px;padding:8px 10px">
-          <span id="share-class-code" style="flex:1"></span>
-          <button id="copy-code-btn" class="btn btn-secondary" type="button">Salin</button>
+  <div class="overlay" id="share-class-modal">
+      <div class="modal" style="max-width:460px">
+        <h2>Bagikan Kelas</h2>
+        <p style="margin:-8px 0 16px; color:var(--muted)">Bagikan kode atau link untuk mengundang teman.</p>
+        
+        <div style="font-weight:600; font-size: 13px;">Kode Kelas</div>
+        <div style="display:flex; gap:8px; align-items:center; border:1px solid var(--border); border-radius:12px; padding:8px 10px; background: var(--bg);">
+          <span id="share-class-code" style="flex:1; font-weight: 700; letter-spacing: 2px; font-size: 1.2rem;"></span>
+          <button id="copy-code-btn" class="btn btn-secondary" type="button"><i class="ri-file-copy-line"></i>Salin</button>
+        </div>
+        
+        <div style="font-weight:600; font-size: 13px; margin-top: 12px;">Link Undangan</div>
+        <div style="display:flex; gap:8px; align-items:center; border:1px solid var(--border); border-radius:12px; padding:0 10px; background: var(--bg);">
+            <input id="share-class-link" type="text" readonly style="flex:1; border:none; outline:none; background:transparent; font-size: 14px; color: var(--muted); padding: 10px 0;">
+            <button id="copy-link-btn" class="btn btn-secondary" type="button"><i class="ri-links-line"></i>Salin</button>
+        </div>
+
+        <div class="m-foot">
+            <button type="button" class="m-btn primary" data-close-modal>Tutup</button>
         </div>
       </div>
-      <div class="card" style="padding:10px;margin-top:10px">
-        <div style="font-weight:600;margin-bottom:6px">Link Undangan</div>
-        <div style="display:flex;gap:8px;align-items:center;border:1px solid var(--border);border-radius:12px;padding:8px 10px">
-          <input id="share-class-link" type="text" readonly style="flex:1;border:none;outline:none;background:transparent">
-          <button id="copy-link-btn" class="btn btn-secondary" type="button">Salin</button>
-        </div>
-      </div>
-      <button class="btn" id="close-share-modal-btn" style="width:100%;margin-top:10px">Tutup</button>
-    </div>
   </div>
 
   <!-- Firebase + App Logic (fully wired) -->
@@ -355,17 +417,16 @@
     }
 
     async function fetchTaskStats(classId){
-      // Expected schema: collection('tasks') where task.classId == classId
-      // A task is considered completed if task.status === 'done' OR current user id in task.completedBy[]
+      // A task is completed if current user id is in task.completedBy[]
       try{
-        const qy = query(collection(db,'tasks'), where('classId','==', classId));
+        const qy = query(collection(db, 'classes', classId, 'tasks'));
         const snap = await getDocs(qy);
-        const tasks = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+        const tasks = snap.docs.map(d=>d.data());
         const total = tasks.length;
-        const completed = tasks.filter(t => t.status === 'done' || (Array.isArray(t.completedBy) && t.completedBy.includes(currentUser.uid))).length;
+        const completed = tasks.filter(t => (Array.isArray(t.completedBy) && t.completedBy.includes(currentUser.uid))).length;
         const pct = total ? Math.round((completed/total)*100) : 0;
         return { tasksTotal: total, tasksCompleted: completed, progress: pct };
-      }catch(err){ console.warn('fetchTaskStats failed', err); return { tasksTotal: 0, tasksCompleted: 0, progress: 0 }; }
+      }catch(err){ console.warn('fetchTaskStats failed for', classId, err); return { tasksTotal: 0, tasksCompleted: 0, progress: 0 }; }
     }
 
     function pinKey(id){ return `academate:pin:${id}` }
@@ -407,19 +468,19 @@
 
       card.innerHTML = `
         <div class="x-cover" style="background:linear-gradient(135deg, ${color}, ${shade(color)})">
-          <button class="pin-right" title="Pin"><i class="ri-pushpin-2${pin?'-fill':'-line'}"></i></button>
+          <button class="pin-right" title="Sematkan Kelas"><i class="ri-pushpin-2${pin?'-fill':'-line'}"></i></button>
           <div class="badge"><i class="ri-map-pin-2-line"></i><span>Ruang ${escapeHTML(data.ruang||'-')}</span></div>
         </div>
         <div class="x-body">
           <div class="x-title">
-            <div class="x-icon" data-c="${color}"><i class="ri-book-2-line"></i></div>
+            <div class="x-icon" data-c="${color}">${data.classIcon || '📚'}</div>
             <div style="flex:1">
               <h3>${escapeHTML(data.namaMataKuliah||'Tanpa Nama')}</h3>
               <p class="x-sub">${escapeHTML(data.dosen||'-')} • ${escapeHTML(data.hari||'-')}</p>
             </div>
           </div>
           <div class="x-meta">
-            <div class="x-progress">
+            <div class="x-progress" title="${tasksCompleted} dari ${tasksTotal} tugas selesai">
               <div class="meter" aria-label="Progress kelas" role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100"><span style="width:${progress}%"></span></div>
             </div>
             <div class="x-stats">
@@ -436,75 +497,64 @@
           </div>
         </div>`;
 
-      // load member avatars from users collection (real data)
       const peopleEl = card.querySelector('.x-people');
-      const memberDocs = await Promise.all(members.map(uid => getDoc(doc(db,'users',uid)).catch(()=>null)));
-      const imgs = memberDocs.map((s,i)=>{
-        let src,label;
-        if(s && s.exists()){
-          const d = s.data();
-          const name = (d.name || d.displayName || 'User').toString();
-          label = name;
-          if(d.photoURL){ src = d.photoURL; }
-          else { src = placeholderFromName(name); }
-        } else {
-          label = `User ${i+1}`; src = placeholderFromName(String(members[i]||'U')); }
-        return `<img src="${src}" alt="${escapeHTML(label)}" title="${escapeHTML(label)}">`;
-      }).join('');
-      peopleEl.innerHTML = imgs;
+      if (members.length > 0) {
+        const memberDocs = await Promise.all(members.map(uid => getDoc(doc(db,'users',uid)).catch(()=>null)));
+        const imgs = memberDocs.map((s,i)=>{
+          let src,label;
+          if(s && s.exists()){
+            const d = s.data();
+            const name = (d.name || d.displayName || 'User').toString();
+            label = name;
+            src = d.photoURL || placeholderFromName(name);
+          } else {
+            label = `User ${i+1}`; src = placeholderFromName(String(members[i]||'U')); 
+          }
+          return `<img src="${src}" alt="${escapeHTML(label)}" title="${escapeHTML(label)}">`;
+        }).join('');
+        peopleEl.innerHTML = imgs;
+      }
 
-      // interactions
       const pinBtn = card.querySelector('.pin-right');
       const shareBtn = card.querySelector('.share');
-
-      pinBtn.addEventListener('click', ()=>{ const now = !(localStorage.getItem(pinKey(id))==='1'); localStorage.setItem(pinKey(id), now?'1':'0'); pinBtn.innerHTML = `<i class="ri-pushpin-2${now?'-fill':'-line'}"></i>`; reloadSort();});
+      pinBtn.addEventListener('click', ()=>{ const now = !(localStorage.getItem(pinKey(id))==='1'); localStorage.setItem(pinKey(id), now?'1':'0'); renderClasses(Array.from(grid.children).map(el => JSON.parse(el.dataset.classdata))); });
       shareBtn.addEventListener('click', ()=> showShareModal(id, data.classCode));
-
+      card.dataset.classdata = JSON.stringify(data);
       return card;
     }
 
-    function reloadSort(){
-      // resort cards in DOM by pin status then by title text
-      const cards = [...grid.children].map(el=>({ el, title: (el.querySelector('h3')?.textContent||'') }));
-      cards.sort((A,B)=>{
-        const aid = new URLSearchParams(A.el.querySelector('a.btn.btn-primary').href.split('?')[1]).get('id');
-        const bid = new URLSearchParams(B.el.querySelector('a.btn.btn-primary').href.split('?')[1]).get('id');
-        const ap = localStorage.getItem(pinKey(aid))==='1';
-        const bp = localStorage.getItem(pinKey(bid))==='1';
-        if(ap!==bp) return ap?-1:1; return A.title.localeCompare(B.title);
-      });
-      grid.innerHTML=''; cards.forEach(c=>grid.appendChild(c.el));
-    }
-
     function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
-
-    function shade(hex){
-      try{ const x=parseInt(hex.slice(1),16); const r=(x>>16)&255, g=(x>>8)&255, b=x&255; const k=.65; return `#${toHex(r*k)}${toHex(g*k)}${toHex(b*k)}` } catch{ return '#5555aa' }
+    function shade(hex, percent = -0.3) {
+      if (!hex) return '#5555aa';
+      let f=parseInt(hex.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+      return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
     }
-    function toHex(n){ return Math.round(n).toString(16).padStart(2,'0') }
     function escapeHTML(s){ return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
     function initialsOf(name){ return (name||'U').split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase() }
     function placeholderFromName(name){ return `https://placehold.co/64x64/E5E7EB/6B7280?text=${encodeURIComponent(initialsOf(name))}` }
-
-    function toggleModal(id, show){ const el = document.getElementById(id); if(!el) return; el.style.display = show ? 'flex' : 'none'; }
-
+    
     function attachEvents(){
       document.getElementById('logout-button-desktop')?.addEventListener('click', ()=> signOut(auth));
-      document.getElementById('create-class-btn').addEventListener('click', ()=> toggleModal('create-class-modal', true));
-      document.getElementById('join-class-btn').addEventListener('click', ()=> toggleModal('join-class-modal', true));
-      document.getElementById('cancel-create-btn').addEventListener('click', ()=> toggleModal('create-class-modal', false));
-      document.getElementById('cancel-join-btn').addEventListener('click', ()=> toggleModal('join-class-modal', false));
-      document.getElementById('close-share-modal-btn').addEventListener('click', ()=> toggleModal('share-class-modal', false));
+      document.getElementById('create-class-btn').addEventListener('click', () => document.getElementById('create-class-modal').classList.add('show'));
+      document.getElementById('join-class-btn').addEventListener('click', () => document.getElementById('join-class-modal').classList.add('show'));
       document.getElementById('create-class-form').addEventListener('submit', handleCreateClass);
-      document.getElementById('join-by-code-btn').addEventListener('click', handleJoinByCode);
-      document.getElementById('sort-pin-btn').addEventListener('click', reloadSort);
-      document.querySelectorAll('.modal-overlay').forEach(ov=> ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.style.display='none'; }));
+      document.getElementById('join-class-form').addEventListener('submit', handleJoinByCode);
+      document.getElementById('copy-code-btn').addEventListener('click', (e)=> copyToClipboard(document.getElementById('share-class-code').textContent, e.target));
+      document.getElementById('copy-link-btn').addEventListener('click', (e)=> copyToClipboard(document.getElementById('share-class-link').value, e.target));
+
+      document.body.addEventListener('click', (e) => {
+          const closeModalButton = e.target.closest('[data-close-modal]');
+          const overlay = e.target.closest('.overlay');
+          if (closeModalButton || (overlay && e.target === overlay)) {
+              (closeModalButton || e.target).closest('.overlay').classList.remove('show');
+          }
+      });
     }
 
     async function handleCreateClass(e){
       e.preventDefault();
       const confirmBtn = document.getElementById('confirm-create-btn');
-      confirmBtn.disabled = true; confirmBtn.textContent = 'Membuat...';
+      confirmBtn.disabled = true; confirmBtn.innerHTML = 'Membuat...';
       try{
         const namaMK = document.getElementById('namaMataKuliah').value;
         const initials = namaMK.replace(/[^a-zA-Z0-9 ]/g, "").split(' ').map(w=>w[0]).join('').toUpperCase().substring(0,4);
@@ -512,6 +562,7 @@
         const classCode = `${initials}-${randomCode}`;
         const newClassData = {
           namaMataKuliah: namaMK,
+          classIcon: document.getElementById('class-icon').value || '📚',
           dosen: document.getElementById('dosen').value,
           sks: Number(document.getElementById('sks').value),
           ruang: document.getElementById('ruang').value,
@@ -525,12 +576,13 @@
         };
         const newDoc = await addDoc(collection(db,'classes'), newClassData);
         await setDoc(doc(db,'users', currentUser.uid), { joinedClasses: arrayUnion(newDoc.id) }, { merge: true });
-        e.target.reset(); toggleModal('create-class-modal', false); await loadClasses();
+        e.target.reset(); document.getElementById('create-class-modal').classList.remove('show'); await loadClasses();
       }catch(err){ console.error(err); alert('Gagal membuat kelas.'); }
-      finally{ confirmBtn.disabled = false; confirmBtn.textContent = 'Buat Kelas'; }
+      finally{ confirmBtn.disabled = false; confirmBtn.innerHTML = 'Buat Kelas'; }
     }
 
-    async function handleJoinByCode(){
+    async function handleJoinByCode(e){
+      e.preventDefault();
       const codeInput = document.getElementById('class-code-input');
       const joinBtn = document.getElementById('join-by-code-btn');
       const code = codeInput.value.trim().toUpperCase();
@@ -544,7 +596,7 @@
         if (joinedClassIds.includes(classId)){ alert('Anda sudah bergabung.'); return; }
         await setDoc(doc(db,'users', currentUser.uid), { joinedClasses: arrayUnion(classId) }, { merge: true });
         await updateDoc(doc(db,'classes', classId), { members: arrayUnion(currentUser.uid) });
-        toggleModal('join-class-modal', false); codeInput.value=''; await loadClasses();
+        document.getElementById('join-class-modal').classList.remove('show'); codeInput.value=''; await loadClasses();
       }catch(err){ console.error(err); alert('Gagal bergabung ke kelas.'); }
       finally{ joinBtn.disabled = false; joinBtn.textContent = 'Gabung'; }
     }
@@ -552,20 +604,27 @@
     function showShareModal(classId, classCode){
       document.getElementById('share-class-code').textContent = classCode || 'N/A';
       const link = `${window.location.origin}${window.location.pathname}?join_code=${classCode}`;
-      document.getElementById('share-class-link').value = link;
-      toggleModal('share-class-modal', true);
+      const linkInput = document.getElementById('share-class-link');
+      if (linkInput) {
+          linkInput.value = link;
+      }
+      document.getElementById('share-class-modal').classList.add('show');
     }
-
-    document.getElementById('copy-code-btn').addEventListener('click', (e)=> copyToClipboard(document.getElementById('share-class-code').textContent, e.target));
-    document.getElementById('copy-link-btn').addEventListener('click', (e)=> copyToClipboard(document.getElementById('share-class-link').value, e.target));
-
-    function copyToClipboard(text, btn){ navigator.clipboard.writeText(text).then(()=>{ const o=btn.textContent; btn.textContent='Disalin!'; setTimeout(()=> btn.textContent=o, 1400); }); }
+    
+    function copyToClipboard(text, btn){
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(()=>{ 
+        const originalIcon = btn.innerHTML;
+        btn.innerHTML='<i class="ri-check-line"></i>Disalin!'; 
+        setTimeout(()=> btn.innerHTML=originalIcon, 1500);
+      }); 
+    }
 
     function handleUrlParams(){
       const params = new URLSearchParams(window.location.search);
       const joinCode = params.get('join_code');
       if (joinCode){
-        toggleModal('join-class-modal', true);
+        document.getElementById('join-class-modal').classList.add('show');
         document.getElementById('class-code-input').value = joinCode;
         window.history.replaceState({}, document.title, window.location.pathname);
       }
@@ -573,3 +632,4 @@
   </script>
 </body>
 </html>
+

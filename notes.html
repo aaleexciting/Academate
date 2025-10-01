@@ -21,7 +21,7 @@
     html,body{height:100%}
     *{box-sizing:border-box}
     body{margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px;padding-bottom:80px}
-    a{color:inherit}
+    a{color:inherit; text-decoration: none;}
 
     /* App Shell */
     .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
@@ -62,9 +62,43 @@
     .header-main p{color:var(--muted);margin:4px 0 0;font-size:14px}
     .header-avatar-link{text-decoration:none}
     .header-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0}
-    .header-toolbar{display:none}
+    
+    /* Toolbar & Filters */
+    .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .search-bar{position:relative; flex-grow: 1;}
+    .search-bar input{width:100%; padding:12px 16px 12px 44px;border-radius:12px;border:1px solid var(--border);background:var(--surface);outline:none;transition:.2s}
+    .search-bar input:focus{border-color:var(--primary);background:var(--surface)}
+    .search-bar i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted)}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
+    .btn:hover{border-color:#d8d8e0}
+    .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
+    
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px;
+      background: var(--bg);
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+    .filter-group { display: flex; align-items: center; gap: 8px; }
+    .filter-group label { font-size: 13px; font-weight: 500; color: var(--muted); }
+    .filter-group select {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .filter-group select:focus { outline-color: var(--primary); }
+    .tabs{display:flex;border:1px solid var(--border);border-radius:10px;background:var(--surface);padding:4px}
+    .tab-btn{padding:6px 12px;border:none;background:none;border-radius:8px;font-weight:600;color:var(--muted);cursor:pointer}
+    .tab-btn.active{background:#F3F2FF;color:var(--primary)}
 
-    /* Desktop toolbar */
+
+    /* Desktop header overrides */
     @media (min-width:901px){
       .main-content{max-width:min(var(--content-max),calc(100vw - var(--sidebar-w) - 120px));margin:0 auto}
       .header{display:flex;justify-content:space-between;align-items:center}
@@ -72,11 +106,6 @@
       .header-main{display:block}
       .header-main h1{font-size:26px}
       .header-main p{font-size:15px;margin-top:6px}
-      .header-toolbar{display:flex;align-items:center;gap:12px}
-      .search-bar{position:relative}
-      .search-bar input{width:320px;padding:12px 16px 12px 44px;border-radius:12px;border:1px solid var(--border);background:var(--bg);outline:none;transition:.2s}
-      .search-bar input:focus{border-color:var(--primary);background:var(--surface)}
-      .search-bar i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted)}
     }
 
     /* Mobile nav */
@@ -86,94 +115,163 @@
     .mobile-nav a.active{color:var(--primary)}
     @media (min-width:901px){.mobile-nav{display:none}}
 
-    /* Page layout */
-    .page{display:grid;grid-template-columns:380px minmax(0,1fr);gap:18px}
-    @media (max-width:900px){
-      .page{grid-template-columns:1fr}
-      .sticky{position:sticky;top:10px;z-index:2}
+    /* === NOTES PAGE REDESIGN === */
+    .page-layout { display: none; } /* Hide layout until ready */
+    .page-layout.ready { display: block; }
+    
+    .notes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--gap);
+        margin-top: 24px;
     }
 
-    .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+    .note-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        cursor: pointer;
+        transition: transform .2s, box-shadow .2s;
+        display: flex;
+        flex-direction: column;
+    }
+    .note-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+    }
+    .note-card-body { padding: 16px; flex-grow: 1; display: flex; flex-direction: column; }
+    .note-card h3 { margin: 0 0 8px; font-size: 16px; }
+    .note-card .excerpt {
+        font-size: 14px;
+        color: var(--muted);
+        flex-grow: 1;
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .note-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 12px;
+        font-size: 12px;
+        color: var(--muted);
+    }
+    .tag-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #F3F2FF;
+        border: 1px solid #E7E6FF;
+        border-radius: 999px;
+        padding: 4px 8px;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--primary);
+    }
+    .tag-pill .dot { width: 8px; height: 8px; border-radius: 50%; }
 
-    /* List Panel */
-    .list-top{display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid var(--border)}
-    .list-top h2{margin:0;font-size:18px}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
-    .btn:hover{border-color:#d8d8e0}
-    .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
-    .btn-secondary{background:#F3F2FF;color:var(--primary);border-color:#E7E6FF}
+    /* Shared Note Card styling */
+    .note-card.shared { background-color: #FDFDFD; }
+    .shared-author-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        font-size: 12px;
+        font-weight: 500;
+        border-bottom: 1px solid var(--border);
+    }
+    .shared-author-header img {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .shared-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .shared-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 14px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
 
-    .list-controls{padding:12px;border-bottom:1px solid var(--border)}
-    .search{position:relative}
-    .search input{width:100%;padding:10px 12px 10px 40px;border-radius:12px;border:1px solid var(--border);background:var(--bg);outline:none}
-    .search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
-    .tabs{display:flex;gap:6px;margin-top:10px;background:#F2F3FF;border:1px solid #E7E6FF;border-radius:12px;padding:4px}
-    .tab{flex:1;padding:8px 10px;background:transparent;border:none;border-radius:10px;font-weight:600;color:var(--muted);cursor:pointer}
-    .tab.active{background:#fff;color:var(--primary);box-shadow:0 2px 10px rgba(111,108,255,.15)}
 
-    .tag-strip{display:flex;gap:8px;overflow:auto;padding:10px 2px 2px}
-    .tag-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:#fff;border-radius:999px;padding:6px 10px;font-size:12px;color:var(--muted);white-space:nowrap;cursor:pointer}
-    .tag-chip.active{background:#F3F2FF;color:var(--primary);border-color:#E7E6FF}
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .loader { border:4px solid #f3f3f3; border-top:4px solid var(--primary); border-radius:50%; width:40px; height:40px; animation: spin 1s linear infinite; margin: 60px auto; }
+    @keyframes spin{ to{ transform: rotate(360deg) } }
 
-    .list{max-height:calc(100dvh - 330px);overflow:auto}
-    .item{padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer}
-    .item h4{margin:0 0 6px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .item .excerpt{color:var(--muted);font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    .item .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px;color:var(--muted);font-size:12px;gap:10px;flex-wrap:wrap}
-    .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:11px}
-    .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-    .item.active{background:#F3F2FF}
-
-    /* Editor/Reader Panel */
-    .editor{display:none;flex-direction:column;height:calc(100dvh - 230px)}
-    .editor-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border)}
-    .toolbar-left{display:flex;gap:8px;align-items:center}
-    .toolbar-right{display:flex;gap:8px;align-items:center}
-    .icon-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:18px}
+    /* === EDITOR / READER OVERLAY === */
+    .overlay-container {
+        position: fixed;
+        inset: 0;
+        background: rgba(247, 247, 250, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 2000;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .3s, visibility .3s;
+    }
+    .overlay-container.show { opacity: 1; visibility: visible; }
+    
+    .overlay-content { width: 100%; max-width: 900px; margin: 0 auto; padding: 24px; flex-grow: 1; display: flex; flex-direction: column; }
+    .overlay-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-shrink: 0; }
+    .overlay-actions { display: flex; gap: 8px; align-items: center; }
+    .icon-btn{width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:20px;transition:.2s;flex-shrink:0}
     .icon-btn:hover{color:var(--primary);border-color:#d8d8e0}
-
-    .titlewrap{padding:10px 14px;border-bottom:1px solid var(--border)}
-    #note-title{width:100%;border:none;outline:none;font-size:22px;font-weight:700;background:transparent}
-    .meta{padding:0 14px 8px;color:var(--muted);font-size:12px}
-
-    .tag-editor{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
-    .tag-editor .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:12px}
+    
+    /* Editor Specific */
+    #note-title-input {
+        flex-grow: 1;
+        border: none;
+        outline: none;
+        font-size: 28px;
+        font-weight: 700;
+        background: transparent;
+        padding: 8px 0;
+    }
+    .editor-meta-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 12px; color: var(--muted); padding-bottom: 12px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .tag-editor{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .tag-editor .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:12px; background: #fff;}
     .tag-editor .chip button{border:none;background:transparent;cursor:pointer;color:var(--muted)}
     .tag-selector{position:relative}
-    .tag-selector button{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:#fff;cursor:pointer;font-weight:600}
-    .tag-dropdown{position:absolute;top:110%;left:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);min-width:220px;display:none;z-index:10}
-    .tag-dropdown .opt{display:flex;align-items:center;gap:8px;padding:8px 10px;cursor:pointer}
+    .tag-selector .icon-btn{background: transparent; border: 1px dashed var(--border);}
+    .tag-dropdown{position:absolute;top:110%;left:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);min-width:220px;display:none;z-index:10; padding: 4px;}
+    .tag-dropdown .opt{display:flex;align-items:center;gap:8px;padding:8px 10px;cursor:pointer; border-radius: 8px;}
     .tag-dropdown .opt:hover{background:#F7F7FA}
+    #quill-editor-container { flex-grow: 1; position: relative; margin: 0 -24px; }
+    .ql-toolbar.ql-snow{border:none !important; border-bottom:1px solid var(--border) !important; padding:12px 24px !important; position: sticky; top:0; background: rgba(247, 247, 250, 0.8); backdrop-filter: blur(4px); z-index: 5;}
+    .ql-container.ql-snow{border:none !important;}
+    .ql-editor{font-size:16px;line-height:1.8;padding:24px; background: transparent !important;}
+    
+    /* Reader Specific */
+    #reader-title { font-size: 28px; font-weight: 700; margin: 0; }
+    .reader-meta { font-size: 13px; color: var(--muted); margin-top: 8px; display: flex; gap: 12px; align-items: center; }
+    #reader-body { flex-grow: 1; overflow-y: auto; line-height: 1.9; font-size: 17px; padding-top: 24px; }
 
-    #ql-wrap{flex:1;overflow:auto}
-    .ql-toolbar.ql-snow{border:none;border-bottom:1px solid var(--border);padding:10px 14px}
-    .ql-container.ql-snow{border:none}
-    .ql-editor{font-size:16px;line-height:1.8;padding:18px 24px;max-width:900px;margin:0 auto}
+    /* Focus Mode */
+    body.focus-mode .sidebar, body.focus-mode .header, body.focus-mode .mobile-nav, body.focus-mode .main > .main-content > *:not(.overlay-container) { display: none !important; }
+    body.focus-mode .app, body.focus-mode .main, body.focus-mode .main-content { padding: 0; }
 
-    .word{border-top:1px solid var(--border);padding:8px 14px;color:var(--muted);font-size:12px;text-align:right}
-
-    .reader{display:none;flex-direction:column;height:calc(100dvh - 230px)}
-    .reader-head{padding:24px 28px;border-bottom:1px solid var(--border);background:var(--surface)}
-    .reader-head h2{margin:0 0 6px;font-size:26px}
-    .reader-meta{display:flex;gap:12px;color:var(--muted);font-size:13px;flex-wrap:wrap}
-    .reader-tags{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-    .reader-body{flex:1;overflow:auto;padding:24px 28px}
-    .reader-body article{max-width:900px;margin:0 auto;font-size:17px;line-height:1.9}
-
-    .placeholder{display:grid;place-items:center;padding:80px 20px;color:var(--muted)}
-
-    /* Read Comfort toggles */
-    .serif .ql-editor{font-family:Georgia, "Times New Roman", serif}
-    .wide .ql-editor, .wide .reader-body article{max-width:1200px}
-    .focus .sidebar, .focus .mobile-nav, .focus .list{display:none}
-    .focus .page{grid-template-columns:1fr}
-
-    /* Mobile extras */
-    @media (max-width:900px){
-      .fab{position:fixed;right:18px;bottom:90px;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--primary);color:#fff;border:none;box-shadow:0 10px 24px rgba(111,108,255,.35);z-index:1001}
-      .editor{height:calc(100dvh - 180px)}
-      .reader{height:calc(100dvh - 180px)}
-    }
+    /* Share Modal */
+    .modal-overlay { position:fixed; inset:0; background:rgba(17,24,39,.55); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); align-items:center; justify-content:center; z-index:2100; display: none; }
+    .modal-overlay.show { display: flex; }
+    .modal { background:#fff; padding:20px; border-radius:16px; width:90%; max-width:420px; box-shadow:var(--shadow); }
+    
   </style>
 </head>
 <body>
@@ -200,98 +298,42 @@
     <!-- Main -->
     <main class="main">
       <div class="main-content">
-        <header class="header">
-          <div class="header-top">
-            <div class="header-brand">Academate</div>
-            <div class="header-actions">
-              <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
-              <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
-            </div>
-          </div>
-          <div class="header-main">
-            <div>
-              <h1>Catatan</h1>
-              <p>Lebih terorganisir: tag per mata kuliah, filter cepat, dan pengalaman mobile yang mantap.</p>
-            </div>
-            <a href="account.html" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
-          </div>
-          <div class="header-toolbar">
-            <div class="search-bar">
-              <i class="ri-search-line"></i>
-              <input id="global-search" type="text" placeholder="Cari judul/konten catatan...">
-            </div>
-            <button class="icon-btn" id="new-note-btn" title="Catatan Baru"><i class="ri-add-line"></i></button>
-          </div>
-        </header>
-
-        <div class="page">
-          <!-- List panel -->
-          <section class="panel sticky">
-            <div class="list-top">
-              <h2>Daftar Catatan</h2>
-              <button class="btn btn-primary" id="new-note-btn-2"><i class="ri-add-line"></i><span>Baru</span></button>
-            </div>
-            <div class="list-controls">
-              <div class="search"><i class="ri-search-line"></i><input id="search-input" placeholder="Cari catatan..."></div>
-              <div class="tabs">
-                <button class="tab active" data-tab="personal">Catatan Saya</button>
-                <button class="tab" data-tab="shared">Catatan Kelas</button>
-              </div>
-              <div id="tag-strip" class="tag-strip" aria-label="Filter berdasarkan mata kuliah"></div>
-            </div>
-            <div id="notes-list" class="list" aria-live="polite"></div>
-          </section>
-
-          <!-- Editor/Reader panel -->
-          <section class="panel">
-            <div id="placeholder" class="placeholder"><div>
-              <i class="ri-quill-pen-line" style="font-size:68px"></i>
-              <h3>Pilih catatan untuk dibaca atau buat yang baru</h3>
-            </div></div>
-
-            <!-- Editor -->
-            <div id="editor" class="editor">
-              <div class="editor-toolbar">
-                <div class="toolbar-left">
-                  <button id="toggle-serif" class="icon-btn" title="Mode Serif"><i class="ri-font-size-2"></i></button>
-                  <button id="toggle-wide" class="icon-btn" title="Lebar Konten Lebih Besar"><i class="ri-page-separator"></i></button>
-                  <button id="toggle-focus" class="icon-btn" title="Fokus (sembunyikan daftar)"><i class="ri-focus-2-line"></i></button>
+        <div class="page-layout">
+            <header class="header">
+              <div class="header-main">
+                <div>
+                  <h1>Pusat Catatan</h1>
+                  <p>Tulis, organisir, dan berkolaborasi dalam semua catatan Anda.</p>
                 </div>
-                <div class="toolbar-right">
-                  <div class="tag-selector">
-                    <button id="add-tag-btn" type="button"><i class="ri-price-tag-3-line"></i> Tag Kelas</button>
-                    <div id="tag-dropdown" class="tag-dropdown"></div>
-                  </div>
-                  <button id="share-btn" class="btn"><i class="ri-share-forward-line"></i><span>Bagikan</span></button>
-                  <button id="delete-btn" class="btn" style="color:#EF4444;border-color:#F5C2C2"><i class="ri-delete-bin-6-line"></i><span>Hapus</span></button>
-                  <button id="save-btn" class="btn btn-primary"><i class="ri-save-3-line"></i><span>Simpan</span></button>
+                <a href="account.html" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
+              </div>
+            </header>
+
+            <div class="toolbar">
+              <div class="search-bar">
+                <i class="ri-search-line"></i>
+                <input id="search-input" type="text" placeholder="Cari di semua catatan...">
+              </div>
+              <button class="btn btn-primary" id="new-note-btn"><i class="ri-add-line"></i><span>Catatan Baru</span></button>
+            </div>
+            
+            <div class="filter-bar">
+                <div class="filter-group tabs">
+                    <button class="tab-btn active" data-filter="all">Semua</button>
+                    <button class="tab-btn" data-filter="personal">Pribadi</button>
+                    <button class="tab-btn" data-filter="shared">Dibagikan</button>
                 </div>
-              </div>
-              <div class="titlewrap"><input id="note-title" placeholder="Judul Catatan..."></div>
-              <div class="meta"><span id="note-meta">Catatan baru</span></div>
-              <div class="tag-editor">
-                <div id="tag-chips"></div>
-              </div>
-              <div id="ql-wrap"><div id="quill"></div></div>
-              <div class="word"><span id="word-count">0 kata</span></div>
+                <div class="filter-group">
+                    <label for="class-filter">Mata Kuliah:</label>
+                    <select id="class-filter">
+                        <option value="all">Semua</option>
+                    </select>
+                </div>
             </div>
 
-            <!-- Reader (read-only) -->
-            <div id="reader" class="reader">
-              <div class="reader-head">
-                <h2 id="reader-title">—</h2>
-                <div class="reader-meta">
-                  <span id="reader-author"></span>
-                  <span id="reader-class"></span>
-                  <span id="reader-date"></span>
-                </div>
-                <div id="reader-tags" class="reader-tags"></div>
-              </div>
-              <div class="reader-body">
-                <article id="reader-article"></article>
-              </div>
+            <div id="notes-grid" class="notes-grid" aria-live="polite">
+                <div class="loader"></div>
             </div>
-          </section>
         </div>
       </div>
     </main>
@@ -306,12 +348,58 @@
     <a class="active" href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
+  <!-- Editor Overlay -->
+  <div id="editor-overlay" class="overlay-container">
+    <div class="overlay-content">
+        <div class="overlay-header">
+            <button id="back-to-list-btn" class="icon-btn" title="Kembali ke Daftar"><i class="ri-arrow-left-line"></i></button>
+            <input id="note-title-input" placeholder="Judul Catatan...">
+            <div class="overlay-actions">
+                <button id="toggle-focus-btn" class="icon-btn" title="Mode Fokus"><i class="ri-fullscreen-line"></i></button>
+                <button id="share-btn" class="icon-btn" title="Bagikan"><i class="ri-share-forward-line"></i></button>
+                <button id="delete-btn" class="icon-btn" title="Hapus"><i class="ri-delete-bin-line"></i></button>
+            </div>
+        </div>
+        <div class="editor-meta-bar">
+            <div class="tag-editor">
+                <div id="tag-chips"></div>
+                <div class="tag-selector">
+                    <button id="add-tag-btn" type="button" class="icon-btn" title="Tambah Tag Kelas"><i class="ri-add-line"></i></button>
+                    <div id="tag-dropdown" class="tag-dropdown"></div>
+                </div>
+            </div>
+            <span id="word-count">0 kata</span>
+        </div>
+        <div id="quill-editor-container">
+            <div id="quill-editor"></div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Reader Overlay for Shared Notes -->
+  <div id="reader-overlay" class="overlay-container">
+    <div class="overlay-content">
+        <div class="overlay-header">
+            <button id="reader-back-btn" class="icon-btn" title="Kembali ke Daftar"><i class="ri-arrow-left-line"></i></button>
+            <div style="flex-grow:1;">
+                <h2 id="reader-title"></h2>
+                <div class="reader-meta">
+                    <span id="reader-author"></span>
+                    <span id="reader-date"></span>
+                </div>
+            </div>
+        </div>
+        <div id="reader-body"></div>
+    </div>
+  </div>
+
+
   <!-- Share Modal -->
-  <div class="modal-overlay" id="share-modal" style="display:none;position:fixed;inset:0;background:rgba(17,24,39,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);align-items:center;justify-content:center;z-index:1000">
-    <div class="modal" style="background:#fff;padding:20px;border-radius:16px;width:90%;max-width:420px;box-shadow:var(--shadow)">
+  <div class="modal-overlay" id="share-modal">
+    <div class="modal">
       <h3 style="margin:0 0 8px">Bagikan ke Kelas</h3>
       <p style="color:var(--muted);margin:0 0 12px">Pilih kelas tujuan:</p>
-      <select id="share-class" style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface)"></select>
+      <select id="share-class" style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg)"></select>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
         <button id="share-cancel" class="btn">Batal</button>
         <button id="share-confirm" class="btn btn-primary">Bagikan</button>
@@ -319,255 +407,450 @@
     </div>
   </div>
 
-  <button class="fab" id="fab" title="Catatan Baru" style="display:none"><i class="ri-add-line"></i></button>
-
   <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD7F650" };
 
     const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
 
-    // State
-    let currentUser=null; let activeTab='personal'; let currentNoteId=null; let currentType='personal';
-    let personalUnsub=null; let sharedUnsubs=[]; let quill; let classesCache={}; let allPersonal=[], allShared=[];
-    let activeTagFilters=new Set(); // classIds selected
+    let currentUser = null, currentNoteId = null, notesUnsubscriber = null, quill, classesCache = {}, allNotes = [];
+    let saveTimer = null, isSaving = false, currentNoteTags = [];
+    let currentFilters = { type: 'all', class: 'all' };
 
-    const notesList=document.getElementById('notes-list');
-    const searchInput=document.getElementById('search-input');
-    const placeholder=document.getElementById('placeholder');
-    const editor=document.getElementById('editor');
-    const reader=document.getElementById('reader');
-    const noteTitle=document.getElementById('note-title');
-    const noteMeta=document.getElementById('note-meta');
-    const wordCount=document.getElementById('word-count');
-    const tagChips=document.getElementById('tag-chips');
-    const tagDropdown=document.getElementById('tag-dropdown');
-    const tagStrip=document.getElementById('tag-strip');
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => document.querySelectorAll(selector);
 
-    // Auth
-    onAuthStateChanged(auth, async (user)=>{
-      if(!user){ window.location.replace('auth.html'); return; }
-      currentUser=user; hydrateAvatar(); initQuill();
-      await loadClasses(); listenPersonal(); listenShared();
-      attachEvents(); renderTagFilters(); renderList();
-      if(window.matchMedia('(max-width:900px)').matches){ document.getElementById('fab').style.display='grid'; }
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { window.location.replace('auth.html'); return; }
+      currentUser = user;
+      hydrateAvatar();
+      initQuill();
+      await loadClasses();
+      attachEventListeners();
+      listenToAllNotes();
+      handleUrlParams();
+      $('.page-layout').classList.add('ready');
     });
-
-    function hydrateAvatar(){
-      const avatar=document.getElementById('header-avatar-img');
-      const name=localStorage.getItem('userDisplayName')||(currentUser?.displayName??'A');
-      const photo=localStorage.getItem('userPhotoURL')||currentUser?.photoURL;
-      if(avatar) avatar.src=photo||`https://placehold.co/80x80/E5E7EB/6B7280?text=${(name||'A').charAt(0)}`;
+    
+    function hydrateAvatar() {
+        const avatar = $('#header-avatar-img');
+        if (!avatar) return;
+        const name = localStorage.getItem('userDisplayName') || (currentUser?.displayName ?? 'A');
+        const photo = localStorage.getItem('userPhotoURL') || currentUser?.photoURL;
+        avatar.src = photo || `https://placehold.co/80x80/E5E7EB/6B7280?text=${(name || 'A').charAt(0)}`;
     }
 
-    function initQuill(){
-      quill=new Quill('#quill',{ theme:'snow', placeholder:'Tulis catatanmu di sini...', modules:{ toolbar:[[{header:[1,2,3,false]}],["bold","italic","underline"],[{list:'ordered'},{list:'bullet'}],["link"],['clean']] } });
-      quill.on('text-change',()=>{ updateWord(); scheduleAutosave(); });
-    }
-
-    async function loadClasses(){
-      const u=await getDoc(doc(db,'users',currentUser.uid));
-      const joined=(u.exists()? (u.data().joinedClasses||[]):[]);
-      if(!joined.length) return;
-      const snaps=await Promise.all(joined.map(id=>getDoc(doc(db,'classes',id))));
-      snaps.forEach(s=>{ if(s.exists()) classesCache[s.id]=s.data(); });
-      // fill share select
-      const sel=document.getElementById('share-class'); sel.innerHTML='';
-      Object.entries(classesCache).forEach(([id,c])=> sel.insertAdjacentHTML('beforeend',`<option value="${id}">${escapeHTML(c.namaMataKuliah||'Kelas')}</option>`));
-      // build tag dropdown options
-      rebuildTagDropdown();
-    }
-
-    function rebuildTagDropdown(){
-      tagDropdown.innerHTML='';
-      Object.entries(classesCache).forEach(([id,c])=>{
-        const opt=document.createElement('div'); opt.className='opt';
-        opt.innerHTML=`<span class="dot" style="background:${colorFor(id)}"></span><span>${escapeHTML(c.namaMataKuliah||'Kelas')}</span>`;
-        opt.addEventListener('click',()=> addTagToCurrent(id));
-        tagDropdown.appendChild(opt);
-      });
-    }
-
-    function listenPersonal(){
-      const qy=query(collection(db,'users',currentUser.uid,'notes'), orderBy('updatedAt','desc'));
-      personalUnsub=onSnapshot(qy,(snap)=>{
-        allPersonal=snap.docs.map(d=>({id:d.id,tags:[],...d.data()}));
-        // backfill if tags missing
-        allPersonal.forEach(n=>{ if(!Array.isArray(n.tags)) n.tags=[]; });
-        renderList(); if(currentType==='personal'&&currentNoteId){ highlightActive(); updateTagEditor(); }
-      });
-    }
-
-    async function listenShared(){
-      sharedUnsubs.forEach(u=>u()); sharedUnsubs=[]; allShared=[];
-      const u=await getDoc(doc(db,'users',currentUser.uid));
-      const joined=u.exists()? (u.data().joinedClasses||[]):[];
-      const promises=joined.map(cid=> new Promise(resolve=>{
-        const qy=query(collection(db,'classes',cid,'sharedNotes'), orderBy('sharedAt','desc'));
-        const unsub=onSnapshot(qy,(snap)=>{
-          allShared=allShared.filter(n=>n.classId!==cid).concat(snap.docs.map(d=>({id:d.id,classId:cid,...d.data()})));
-          allShared.sort((a,b)=> (b.sharedAt?.toMillis?.()||0)-(a.sharedAt?.toMillis?.()||0));
-          if(activeTab==='shared') renderList(); resolve();
+    function initQuill() {
+        quill = new Quill('#quill-editor', {
+            theme: 'snow',
+            placeholder: 'Mulai tulis sesuatu yang luar biasa...',
+            modules: { toolbar: [[{ header: [1, 2, 3, false] }], ["bold", "italic", "underline"], [{ list: 'ordered' }, { list: 'bullet' }], ["link"], ['clean']] }
         });
-        sharedUnsubs.push(unsub);
-      }));
-      await Promise.all(promises);
+        quill.on('text-change', () => {
+            updateWordCount();
+            scheduleAutoSave();
+        });
     }
-
-    function renderTagFilters(){
-      tagStrip.innerHTML='';
-      Object.entries(classesCache).forEach(([id,c])=>{
-        const chip=document.createElement('button'); chip.type='button'; chip.className='tag-chip'; chip.dataset.id=id;
-        chip.innerHTML=`<span class="dot" style="background:${colorFor(id)}"></span>${escapeHTML(c.namaMataKuliah||'Kelas')}`;
-        chip.addEventListener('click',()=>{ if(activeTagFilters.has(id)) activeTagFilters.delete(id); else activeTagFilters.add(id); chip.classList.toggle('active'); renderList(); });
-        tagStrip.appendChild(chip);
-      });
-    }
-
-    function renderList(){
-      const source= activeTab==='personal'? allPersonal: allShared;
-      const q=(searchInput.value||'').toLowerCase();
-      let filtered=source.filter(n=> (n.title||'').toLowerCase().includes(q) || (n.plainText||n.body||'').toLowerCase().includes(q));
-      if(activeTagFilters.size){
-        if(activeTab==='personal') filtered=filtered.filter(n=> (n.tags||[]).some(t=> activeTagFilters.has(t)));
-        else filtered=filtered.filter(n=> activeTagFilters.has(n.classId));
-      }
-      notesList.innerHTML = filtered.length? '' : `<div style="padding:16px;color:var(--muted);text-align:center">Tidak ada catatan.</div>`;
-      filtered.forEach(n=>{
-        const el=document.createElement('div'); el.className='item'; el.dataset.id=n.id; el.dataset.type=activeTab;
-        const pills = (activeTab==='personal' ? (n.tags||[]) : [n.classId]).filter(Boolean).map(cid=>{
-          const name=(classesCache[cid]?.namaMataKuliah)||'Kelas';
-          return `<span class="pill"><span class="dot" style="background:${colorFor(cid)}"></span>${escapeHTML(name)}</span>`;
-        }).join('');
-        if(activeTab==='personal'){
-          el.innerHTML=`<h4>${escapeHTML(n.title||'Tanpa Judul')}</h4>
-            <div class="excerpt">${escapeHTML((n.plainText||'').slice(0,140))}</div>
-            <div class="meta"><span>${formatDate(n.updatedAt)}</span><span style="display:flex;gap:6px;flex-wrap:wrap">${pills}</span></div>`;
-        } else {
-          el.innerHTML=`<h4>${escapeHTML(n.title||'Tanpa Judul')}</h4>
-            <div class="excerpt">${escapeHTML((n.body||'').slice(0,140))}</div>
-            <div class="meta"><span>${formatDate(n.sharedAt)}</span><span style="display:flex;gap:6px;flex-wrap:wrap">${pills}</span></div>`;
+    
+    async function loadClasses(){
+        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+        const classIds = userDoc.exists() ? (userDoc.data().joinedClasses || []) : [];
+        if (!classIds.length) return;
+        const snaps = await Promise.all(classIds.map(id => getDoc(doc(db, 'classes', id))));
+        snaps.forEach(s => { if(s.exists()) classesCache[s.id] = s.data(); });
+        rebuildTagDropdown();
+        
+        const classFilter = $('#class-filter');
+        classFilter.innerHTML = '<option value="all">Semua Mata Kuliah</option>';
+        Object.entries(classesCache).forEach(([id, c]) => {
+            classFilter.innerHTML += `<option value="${id}">${escapeHTML(c.namaMataKuliah || 'Kelas')}</option>`;
+        });
+        
+        const shareSelect = $('#share-class');
+        if (shareSelect) {
+            shareSelect.innerHTML = Object.entries(classesCache).map(([id, c]) => `<option value="${id}">${escapeHTML(c.namaMataKuliah || 'Kelas')}</option>`).join('');
         }
-        el.addEventListener('click',()=> openNote(n.id, activeTab, n.classId));
-        notesList.appendChild(el);
-      });
-      highlightActive();
     }
 
-    async function openNote(id, type, classId){
-      currentNoteId=id; currentType=type;
-      placeholder.style.display='none';
-      if(type==='personal'){
-        reader.style.display='none'; editor.style.display='flex';
-        const note=allPersonal.find(n=>n.id===id); if(!note) return;
-        noteTitle.value=note.title||''; noteMeta.textContent=`Terakhir diperbarui: ${formatDateTime(note.updatedAt)}`;
-        try{ quill.setContents(JSON.parse(note.contentDelta||'[]')); }catch{ quill.setText(note.plainText||''); }
-        updateWord(); updateTagEditor(note.tags||[]);
-      } else {
-        editor.style.display='none'; reader.style.display='flex';
-        const ref=doc(db,'classes',classId,'sharedNotes',id); const snap=await getDoc(ref); if(!snap.exists()) return;
-        const d=snap.data(); const c=classesCache[classId]||{};
-        document.getElementById('reader-title').textContent = d.title||'Tanpa Judul';
-        document.getElementById('reader-author').textContent = `Oleh ${d.sharedBy||'—'}`;
-        document.getElementById('reader-class').textContent = c.namaMataKuliah||'';
-        document.getElementById('reader-date').textContent = formatDate(d.sharedAt);
-        document.getElementById('reader-article').innerText = (d.body||'');
-        // tags for shared: just the class
-        const rtags=document.getElementById('reader-tags'); rtags.innerHTML = `<span class="pill"><span class="dot" style="background:${colorFor(classId)}"></span>${escapeHTML(c.namaMataKuliah||'Kelas')}</span>`;
-      }
-      highlightActive();
-      if(window.matchMedia('(max-width:900px)').matches){ window.scrollTo({ top:0, behavior:'smooth' }); }
+    function listenToAllNotes() {
+        if (notesUnsubscriber) notesUnsubscriber();
+        let personalNotes = [];
+        let sharedNotes = [];
+        const classIds = Object.keys(classesCache);
+        
+        const personalQuery = query(collection(db, 'users', currentUser.uid, 'notes'), orderBy('updatedAt', 'desc'));
+        const personalUnsub = onSnapshot(personalQuery, (snapshot) => {
+            personalNotes = snapshot.docs.map(d => ({ id: d.id, type: 'personal', ...d.data() }));
+            updateAndRenderNotes(personalNotes, sharedNotes);
+        });
+
+        const sharedUnsubs = classIds.map(classId => {
+            const sharedQuery = query(collection(db, 'classes', classId, 'sharedNotes'), orderBy('sharedAt', 'desc'));
+            return onSnapshot(sharedQuery, (snapshot) => {
+                const notesForClass = snapshot.docs.map(d => ({ id: d.id, classId, type: 'shared', ...d.data() }));
+                sharedNotes = sharedNotes.filter(n => n.classId !== classId).concat(notesForClass);
+                updateAndRenderNotes(personalNotes, sharedNotes);
+            });
+        });
+        
+        notesUnsubscriber = () => [personalUnsub, ...sharedUnsubs].forEach(unsub => unsub());
     }
 
-    function highlightActive(){
-      [...notesList.children].forEach(n=> n.classList.toggle('active', n.dataset.id===currentNoteId && n.dataset.type===currentType));
+    function updateAndRenderNotes(personal, shared) {
+        const externalSharedNotes = shared.filter(note => note.originalOwnerId !== currentUser.uid);
+        allNotes = [...personal, ...externalSharedNotes];
+        allNotes.sort((a,b) => (b.updatedAt?.toMillis() || b.sharedAt?.toMillis() || 0) - (a.updatedAt?.toMillis() || a.sharedAt?.toMillis() || 0));
+        renderNotesGrid();
     }
 
-    // Save / Autosave + Tags persistence
-    let saveTimer=null; let saving=false; let pendingTags=[];
-    function scheduleAutosave(){ if(currentType!=='personal') return; if(saveTimer) clearTimeout(saveTimer); saveTimer=setTimeout(()=>saveNote('auto'), 800); }
+    function renderNotesGrid() {
+        const grid = $('#notes-grid');
+        const searchQuery = ($('#search-input').value || '').toLowerCase();
+        
+        let filteredNotes = allNotes.filter(note => 
+            (note.title || '').toLowerCase().includes(searchQuery) || 
+            (note.plainText || note.body || '').toLowerCase().includes(searchQuery)
+        );
 
-    async function saveNote(mode='manual'){
-      if(currentType!=='personal') return; if(saving) return; saving=true;
-      const title=noteTitle.value.trim()||'Tanpa Judul';
-      const payload={ title, contentDelta: JSON.stringify(quill.getContents()), plainText: quill.getText(), updatedAt: serverTimestamp(), tags: pendingTags.slice() };
-      try{
-        if(!currentNoteId){ payload.createdAt=serverTimestamp(); const ref=await addDoc(collection(db,'users',currentUser.uid,'notes'), payload); currentNoteId=ref.id; }
-        else { await updateDoc(doc(db,'users',currentUser.uid,'notes',currentNoteId), payload); }
-        noteMeta.textContent = (mode==='auto')? 'Perubahan disimpan otomatis' : `Tersimpan ${new Date().toLocaleTimeString('id-ID')}`;
-        // refresh list state
-      }catch(e){ console.error(e); alert('Gagal menyimpan catatan'); }
-      finally{ saving=false; }
+        if (currentFilters.type !== 'all') {
+            filteredNotes = filteredNotes.filter(note => note.type === currentFilters.type);
+        }
+        
+        if (currentFilters.class !== 'all') {
+            filteredNotes = filteredNotes.filter(note => {
+                if (note.type === 'personal') return (note.tags || []).includes(currentFilters.class);
+                if (note.type === 'shared') return note.classId === currentFilters.class;
+                return false;
+            });
+        }
+
+        if (filteredNotes.length === 0) {
+            grid.innerHTML = `<div class="empty-state"><h3>Tidak Ada Catatan</h3><p>Coba sesuaikan filter atau buat catatan baru.</p></div>`;
+            return;
+        }
+
+        grid.innerHTML = '';
+        filteredNotes.forEach(note => {
+            const card = document.createElement('div');
+            card.className = `note-card ${note.type}`;
+            card.dataset.noteId = note.id;
+            card.dataset.type = note.type;
+            if (note.type === 'shared') card.dataset.classId = note.classId;
+
+            if (note.type === 'shared') {
+                card.innerHTML += `
+                    <div class="shared-author-header">
+                        <img src="${note.sharedByPhotoURL || 'https://placehold.co/48x48/E5E7EB/6B7280?text=A'}" alt="${escapeHTML(note.sharedBy)}">
+                        <span>Dibagikan oleh <strong>${escapeHTML(note.sharedBy)}</strong></span>
+                    </div>`;
+            }
+
+            const cardBody = document.createElement('div');
+            cardBody.className = 'note-card-body';
+
+            const tagId = note.type === 'personal' ? (note.tags && note.tags.length > 0 ? note.tags[0] : null) : note.classId;
+            const tagInfo = tagId ? classesCache[tagId] : null;
+            
+            const sharedToIndicator = (note.type === 'personal' && note.sharedTo && note.sharedTo.length > 0)
+                ? `<div class="shared-indicator" title="Dibagikan ke kelas">
+                     ${note.sharedTo.map(id => `<span class="shared-pill">${classesCache[id]?.classIcon || '✔️'}</span>`).join('')}
+                   </div>`
+                : '';
+
+            cardBody.innerHTML = `
+                <h3>${escapeHTML(note.title || 'Tanpa Judul')}</h3>
+                <p class="excerpt">${escapeHTML((note.plainText || note.body || '').substring(0, 150))}</p>
+                <div class="note-card-footer">
+                    <span>${formatDate(note.updatedAt || note.sharedAt)}</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      ${sharedToIndicator}
+                      ${tagInfo ? `<div class="tag-pill"><span class="dot" style="background:${colorFor(tagId)}"></span>${escapeHTML(tagInfo.namaMataKuliah)}</div>` : ''}
+                    </div>
+                </div>
+            `;
+            card.appendChild(cardBody);
+            card.addEventListener('click', () => {
+                if (note.type === 'personal') openEditor(note.id);
+                else openReader(note.id, note.classId);
+            });
+            grid.appendChild(card);
+        });
     }
 
-    function updateTagEditor(tags){
-      pendingTags = Array.isArray(tags)? [...new Set(tags)]: (pendingTags||[]);
-      tagChips.innerHTML='';
-      pendingTags.forEach(cid=>{
-        const name=(classesCache[cid]?.namaMataKuliah)||'Kelas';
-        const chip=document.createElement('span'); chip.className='chip';
-        chip.innerHTML = `<span class="dot" style="background:${colorFor(cid)}"></span>${escapeHTML(name)} <button title="Hapus">✕</button>`;
-        chip.querySelector('button').addEventListener('click',()=>{ pendingTags = pendingTags.filter(x=>x!==cid); updateTagEditor(pendingTags); scheduleAutosave(); });
-        tagChips.appendChild(chip);
-      });
+    function openEditor(noteId) {
+        currentNoteId = noteId;
+        const overlay = $('#editor-overlay');
+        
+        if (noteId === 'new') {
+            $('#note-title-input').value = '';
+            quill.setContents([]);
+            currentNoteTags = [];
+        } else {
+            const note = allNotes.find(n => n.id === noteId && n.type === 'personal');
+            if (!note) return;
+            $('#note-title-input').value = note.title || '';
+            try { quill.setContents(JSON.parse(note.contentDelta || '[]')); } catch { quill.setText(note.plainText || ''); }
+            currentNoteTags = note.tags || [];
+        }
+
+        updateWordCount();
+        updateTagEditor();
+        overlay.classList.add('show');
     }
 
-    function addTagToCurrent(cid){ if(!pendingTags.includes(cid)){ pendingTags.push(cid); updateTagEditor(pendingTags); scheduleAutosave(); } tagDropdown.style.display='none'; }
-
-    // Delete & Share
-    async function deleteNote(){ if(!currentNoteId||currentType!=='personal') return; if(!confirm('Hapus catatan ini?')) return; await deleteDoc(doc(db,'users',currentUser.uid,'notes',currentNoteId)); currentNoteId=null; editor.style.display='none'; placeholder.style.display='grid'; }
-
-    function openShareModal(){ if(currentType!=='personal'){ alert('Catatan bersama hanya bisa dibaca.'); return; } if(!currentNoteId){ alert('Simpan catatan terlebih dulu.'); return; } document.getElementById('share-modal').style.display='flex'; }
-    function closeShare(){ document.getElementById('share-modal').style.display='none'; }
-    async function confirmShare(){ const cid=(document.getElementById('share-class').value)||''; if(!cid) return; const note=allPersonal.find(n=>n.id===currentNoteId) || { title: noteTitle.value, plainText: quill.getText() } ; try{
-      await addDoc(collection(db,'classes',cid,'sharedNotes'), { originalNoteId: currentNoteId, originalOwnerId: currentUser.uid, title: note.title||'Tanpa Judul', body: note.plainText||quill.getText()||'', sharedBy: currentUser.displayName||'Anonim', sharedByPhotoURL: currentUser.photoURL||null, sharedAt: serverTimestamp() });
-      await updateDoc(doc(db,'users',currentUser.uid,'notes',currentNoteId), { sharedTo: arrayUnion(cid) });
-      // ensure tag added to note when shared
-      if(!pendingTags.includes(cid)){ pendingTags.push(cid); await updateDoc(doc(db,'users',currentUser.uid,'notes',currentNoteId), { tags: pendingTags }); updateTagEditor(pendingTags); }
-      closeShare();
-    }catch(e){ console.error(e); alert('Gagal membagikan catatan'); } }
-
-    // UI helpers & events
-    function attachEvents(){
-      document.getElementById('logout-button-desktop')?.addEventListener('click',()=>signOut(auth));
-      document.getElementById('new-note-btn').addEventListener('click',newNote);
-      document.getElementById('new-note-btn-2').addEventListener('click',newNote);
-      document.getElementById('fab').addEventListener('click',newNote);
-      document.querySelectorAll('.tab').forEach(b=> b.addEventListener('click',(e)=>{ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); e.currentTarget.classList.add('active'); activeTab=e.currentTarget.dataset.tab; renderList(); placeholder.style.display = (activeTab==='personal'&& !currentNoteId)?'grid':'none'; if(activeTab==='shared'){ editor.style.display='none'; reader.style.display = currentNoteId? 'flex':'none'; }
-      }));
-      searchInput.addEventListener('input',renderList);
-      document.getElementById('global-search')?.addEventListener('input',()=>{ searchInput.value=document.getElementById('global-search').value; renderList(); });
-      document.getElementById('save-btn').addEventListener('click',()=>saveNote('manual'));
-      document.getElementById('delete-btn').addEventListener('click',deleteNote);
-      document.getElementById('share-btn').addEventListener('click',openShareModal);
-      document.getElementById('share-cancel').addEventListener('click',closeShare);
-      document.getElementById('share-confirm').addEventListener('click',confirmShare);
-
-      document.getElementById('toggle-serif').addEventListener('click',()=> document.body.classList.toggle('serif'));
-      document.getElementById('toggle-wide').addEventListener('click',()=> document.body.classList.toggle('wide'));
-      document.getElementById('toggle-focus').addEventListener('click',()=> document.body.classList.toggle('focus'));
-
-      const selBtn=document.getElementById('add-tag-btn');
-      selBtn.addEventListener('click',()=>{ tagDropdown.style.display = tagDropdown.style.display==='block' ? 'none' : 'block'; });
-      document.addEventListener('click',(e)=>{ if(!e.target.closest('.tag-selector')) tagDropdown.style.display='none'; });
+    async function openReader(noteId, classId) {
+        const overlay = $('#reader-overlay');
+        try {
+            const noteSnap = await getDoc(doc(db, 'classes', classId, 'sharedNotes', noteId));
+            if (!noteSnap.exists()) {
+                alert('Catatan yang dibagikan tidak ditemukan.');
+                return;
+            }
+            const note = noteSnap.data();
+            $('#reader-title').textContent = escapeHTML(note.title);
+            $('#reader-author').textContent = `Oleh ${escapeHTML(note.sharedBy)}`;
+            $('#reader-date').textContent = formatDate(note.sharedAt);
+            $('#reader-body').innerHTML = escapeHTML(note.body).replace(/\n/g, '<br>');
+            overlay.classList.add('show');
+        } catch (err) {
+            console.error("Error fetching shared note:", err);
+            alert("Gagal membuka catatan.");
+        }
     }
 
-    function newNote(){ currentNoteId=null; currentType='personal'; placeholder.style.display='none'; reader.style.display='none'; editor.style.display='flex'; noteTitle.value=''; quill.setContents([]); noteMeta.textContent='Catatan baru'; updateWord(); pendingTags=[]; updateTagEditor(pendingTags); if(window.matchMedia('(max-width:900px)').matches){ window.scrollTo({ top:0, behavior:'smooth' }); } }
-
-    function updateWord(){ const text=quill.getText().trim(); const n=text? text.split(/\s+/).length:0; wordCount.textContent=`${n} kata`; }
-
-    function colorFor(id){ // deterministic color per class id
-      const colors=['#8B5CF6','#10B981','#F59E0B','#EF4444','#3B82F6','#EC4899','#06B6D4','#84CC16'];
-      let h=0; for(let i=0;i<id.length;i++) h=(h*31 + id.charCodeAt(i))>>>0; return colors[h%colors.length];
+    function closeEditor() {
+        scheduleAutoSave(true); // Force save on close
+        $('#editor-overlay').classList.remove('show');
+        document.body.classList.remove('focus-mode');
+        currentNoteId = null;
+    }
+    
+    function closeReader() {
+        $('#reader-overlay').classList.remove('show');
     }
 
+    function scheduleAutoSave(force = false) {
+        if (saveTimer) clearTimeout(saveTimer);
+        const saveAction = async () => {
+            if (isSaving || !currentNoteId) return;
+            isSaving = true;
+
+            const title = $('#note-title-input').value.trim() || 'Tanpa Judul';
+            const payload = {
+                title,
+                contentDelta: JSON.stringify(quill.getContents()),
+                plainText: quill.getText(),
+                updatedAt: serverTimestamp(),
+                tags: currentNoteTags
+            };
+
+            try {
+                if (currentNoteId === 'new') {
+                    payload.createdAt = serverTimestamp();
+                    const ref = await addDoc(collection(db, 'users', currentUser.uid, 'notes'), payload);
+                    currentNoteId = ref.id;
+                } else {
+                    await updateDoc(doc(db, 'users', currentUser.uid, 'notes', currentNoteId), payload);
+                }
+            } catch (e) { console.error("Autosave failed:", e); } 
+            finally { isSaving = false; }
+        };
+
+        if (force) {
+            saveAction();
+        } else {
+            saveTimer = setTimeout(saveAction, 1500);
+        }
+    }
+    
+    function updateWordCount() {
+        const text = quill.getText().trim();
+        const count = text ? text.split(/\s+/).length : 0;
+        $('#word-count').textContent = `${count} kata`;
+    }
+
+    function updateTagEditor() {
+        const container = $('#tag-chips');
+        container.innerHTML = '';
+        currentNoteTags.forEach(tagId => {
+            const classInfo = classesCache[tagId];
+            if (!classInfo) return;
+            const chip = document.createElement('div');
+            chip.className = 'chip';
+            chip.innerHTML = `
+                <span class="dot" style="background:${colorFor(tagId)}"></span>
+                ${escapeHTML(classInfo.namaMataKuliah)}
+                <button data-tag-id="${tagId}">&times;</button>
+            `;
+            chip.querySelector('button').addEventListener('click', () => removeTag(tagId));
+            container.appendChild(chip);
+        });
+    }
+
+    function removeTag(tagId) {
+        currentNoteTags = currentNoteTags.filter(id => id !== tagId);
+        updateTagEditor();
+        scheduleAutoSave();
+    }
+    
+    function addTag(tagId) {
+        if (!currentNoteTags.includes(tagId)) {
+            currentNoteTags.push(tagId);
+            updateTagEditor();
+            scheduleAutoSave();
+        }
+        $('#tag-dropdown').style.display = 'none';
+    }
+
+    function rebuildTagDropdown() {
+        const dropdown = $('#tag-dropdown');
+        dropdown.innerHTML = '';
+        Object.entries(classesCache).forEach(([id, c]) => {
+            const opt = document.createElement('div');
+            opt.className = 'opt';
+            opt.innerHTML = `<span class="dot" style="background:${colorFor(id)}"></span><span>${escapeHTML(c.namaMataKuliah)}</span>`;
+            opt.addEventListener('click', () => addTag(id));
+            dropdown.appendChild(opt);
+        });
+    }
+    
+    async function deleteCurrentNote() {
+        if (!currentNoteId || currentNoteId === 'new') {
+            closeEditor();
+            return;
+        }
+        if (confirm('Anda yakin ingin menghapus catatan ini?')) {
+            try {
+                await deleteDoc(doc(db, 'users', currentUser.uid, 'notes', currentNoteId));
+                closeEditor();
+            } catch (err) {
+                console.error("Gagal menghapus catatan:", err);
+                alert('Gagal menghapus catatan.');
+            }
+        }
+    }
+
+    async function shareCurrentNote() {
+        if (!currentNoteId || currentNoteId === 'new') {
+            alert('Harap simpan catatan terlebih dahulu sebelum membagikan.');
+            return;
+        }
+        $('#share-modal').classList.add('show');
+    }
+    
+    async function confirmShare() {
+        const classId = $('#share-class').value;
+        if (!classId) return;
+        
+        await scheduleAutoSave(true);
+        
+        const noteRef = doc(db, 'users', currentUser.uid, 'notes', currentNoteId);
+        const noteSnap = await getDoc(noteRef);
+        if (!noteSnap.exists()) {
+            alert('Catatan tidak ditemukan.'); return;
+        }
+        const noteData = noteSnap.data();
+
+        try {
+            await addDoc(collection(db, 'classes', classId, 'sharedNotes'), {
+                originalNoteId: currentNoteId,
+                originalOwnerId: currentUser.uid,
+                title: noteData.title,
+                body: noteData.plainText,
+                sharedBy: currentUser.displayName,
+                sharedByPhotoURL: currentUser.photoURL,
+                sharedAt: serverTimestamp()
+            });
+            
+            await updateDoc(noteRef, { 
+                sharedTo: arrayUnion(classId),
+                tags: arrayUnion(classId)
+            });
+
+            currentNoteTags = [...new Set([...(currentNoteTags || []), classId])];
+            updateTagEditor();
+
+            $('#share-modal').classList.remove('show');
+            alert('Catatan berhasil dibagikan!');
+        } catch(e) {
+            console.error(e);
+            alert('Gagal membagikan catatan.');
+        }
+    }
+
+    function handleUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const noteId = params.get('note_id');
+        const classId = params.get('class_id');
+        if (noteId && classId) {
+            openReader(noteId, classId);
+            window.history.replaceState({}, document.title, window.location.pathname); 
+        }
+    }
+
+    function attachEventListeners() {
+        $('#logout-button-desktop')?.addEventListener('click', () => signOut(auth));
+        $('#new-note-btn').addEventListener('click', () => openEditor('new'));
+        $('#search-input').addEventListener('input', renderNotesGrid);
+        
+        // Filters
+        $('.tabs').addEventListener('click', (e) => {
+            if (e.target.matches('.tab-btn')) {
+                $('.tabs .active').classList.remove('active');
+                e.target.classList.add('active');
+                currentFilters.type = e.target.dataset.filter;
+                renderNotesGrid();
+            }
+        });
+        $('#class-filter').addEventListener('change', (e) => {
+            currentFilters.class = e.target.value;
+            renderNotesGrid();
+        });
+
+        // Editor controls
+        $('#back-to-list-btn').addEventListener('click', closeEditor);
+        $('#reader-back-btn').addEventListener('click', closeReader);
+        $('#delete-btn').addEventListener('click', deleteCurrentNote);
+        $('#share-btn').addEventListener('click', shareCurrentNote);
+
+        $('#toggle-focus-btn').addEventListener('click', () => {
+            document.body.classList.toggle('focus-mode');
+            $('#toggle-focus-btn i').classList.toggle('ri-fullscreen-line');
+            $('#toggle-focus-btn i').classList.toggle('ri-fullscreen-exit-line');
+            quill.focus();
+        });
+
+        $('#add-tag-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dropdown = $('#tag-dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+        document.body.addEventListener('click', (e) => {
+            if (!e.target.closest('.tag-selector')) {
+                $('#tag-dropdown').style.display = 'none';
+            }
+        });
+        
+        // Share modal
+        $('#share-confirm').addEventListener('click', confirmShare);
+        $('#share-cancel').addEventListener('click', () => $('#share-modal').classList.remove('show'));
+    }
+
+    // --- Helpers ---
     function escapeHTML(s){ return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
-    function formatDate(ts){ try{ return ts?.toDate?.().toLocaleDateString('id-ID') || new Date(ts).toLocaleDateString('id-ID'); }catch{ return '—' } }
-    function formatDateTime(ts){ try{ return ts?.toDate?.().toLocaleString('id-ID') || new Date(ts).toLocaleString('id-ID'); }catch{ return '—' } }
+    function formatDate(ts){ try{ return ts?.toDate?.().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) || ''; }catch{ return '' } }
+    function colorFor(id) {
+        const colors=['#8B5CF6','#10B981','#F59E0B','#EF4444','#3B82F6','#EC4899','#06B6D4','#84CC16'];
+        let hash = 0;
+        for (let i = 0; i < id.length; i++) { hash = (hash * 31 + id.charCodeAt(i)) >>> 0; }
+        return colors[hash % colors.length];
+    }
+
   </script>
 </body>
 </html>
+
