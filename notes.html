@@ -419,6 +419,7 @@
 
     let currentUser = null, currentNoteId = null, notesUnsubscriber = null, quill, classesCache = {}, allNotes = [];
     let saveTimer = null, isSaving = false, currentNoteTags = [];
+    let shareTargetClassId = null; // New variable to hold share target
     let currentFilters = { type: 'all', class: 'all' };
 
     const $ = (selector) => document.querySelector(selector);
@@ -589,6 +590,10 @@
             $('#note-title-input').value = '';
             quill.setContents([]);
             currentNoteTags = [];
+            // If creating a note to be shared, automatically add the tag
+            if (shareTargetClassId && classesCache[shareTargetClassId]) {
+                 currentNoteTags.push(shareTargetClassId);
+            }
         } else {
             const note = allNotes.find(n => n.id === noteId && n.type === 'personal');
             if (!note) return;
@@ -627,6 +632,7 @@
         $('#editor-overlay').classList.remove('show');
         document.body.classList.remove('focus-mode');
         currentNoteId = null;
+        shareTargetClassId = null; // Reset share target on close
     }
     
     function closeReader() {
@@ -653,6 +659,11 @@
                     payload.createdAt = serverTimestamp();
                     const ref = await addDoc(collection(db, 'users', currentUser.uid, 'notes'), payload);
                     currentNoteId = ref.id;
+                    // If this was meant to be shared, share it now
+                    if (shareTargetClassId) {
+                        await shareNoteToClass(ref.id, shareTargetClassId);
+                        shareTargetClassId = null; // Clear after sharing
+                    }
                 } else {
                     await updateDoc(doc(db, 'users', currentUser.uid, 'notes', currentNoteId), payload);
                 }
@@ -734,7 +745,32 @@
         }
     }
 
-    async function shareCurrentNote() {
+    async function shareNoteToClass(noteId, classId) {
+        const noteRef = doc(db, 'users', currentUser.uid, 'notes', noteId);
+        const noteSnap = await getDoc(noteRef);
+        if (!noteSnap.exists()) {
+            console.error('Note to be shared does not exist.');
+            return;
+        }
+        const noteData = noteSnap.data();
+
+        try {
+            await addDoc(collection(db, 'classes', classId, 'sharedNotes'), {
+                originalNoteId: noteId,
+                originalOwnerId: currentUser.uid,
+                title: noteData.title,
+                body: noteData.plainText,
+                sharedBy: currentUser.displayName,
+                sharedByPhotoURL: currentUser.photoURL,
+                sharedAt: serverTimestamp()
+            });
+            await updateDoc(noteRef, { sharedTo: arrayUnion(classId) });
+        } catch(e) {
+            console.error("Failed to auto-share note:", e);
+        }
+    }
+    
+    async function handleShareModal() {
         if (!currentNoteId || currentNoteId === 'new') {
             alert('Harap simpan catatan terlebih dahulu sebelum membagikan.');
             return;
@@ -746,49 +782,37 @@
         const classId = $('#share-class').value;
         if (!classId) return;
         
-        await scheduleAutoSave(true);
+        await scheduleAutoSave(true); // Ensure latest version is saved
+        await shareNoteToClass(currentNoteId, classId);
         
-        const noteRef = doc(db, 'users', currentUser.uid, 'notes', currentNoteId);
-        const noteSnap = await getDoc(noteRef);
-        if (!noteSnap.exists()) {
-            alert('Catatan tidak ditemukan.'); return;
-        }
-        const noteData = noteSnap.data();
-
-        try {
-            await addDoc(collection(db, 'classes', classId, 'sharedNotes'), {
-                originalNoteId: currentNoteId,
-                originalOwnerId: currentUser.uid,
-                title: noteData.title,
-                body: noteData.plainText,
-                sharedBy: currentUser.displayName,
-                sharedByPhotoURL: currentUser.photoURL,
-                sharedAt: serverTimestamp()
-            });
-            
-            await updateDoc(noteRef, { 
-                sharedTo: arrayUnion(classId),
-                tags: arrayUnion(classId)
-            });
-
-            currentNoteTags = [...new Set([...(currentNoteTags || []), classId])];
+        // Also update tags locally to reflect the share
+        if (!currentNoteTags.includes(classId)) {
+            currentNoteTags.push(classId);
             updateTagEditor();
-
-            $('#share-modal').classList.remove('show');
-            alert('Catatan berhasil dibagikan!');
-        } catch(e) {
-            console.error(e);
-            alert('Gagal membagikan catatan.');
         }
+
+        $('#share-modal').classList.remove('show');
+        alert('Catatan berhasil dibagikan!');
     }
 
     function handleUrlParams() {
         const params = new URLSearchParams(window.location.search);
         const noteId = params.get('note_id');
         const classId = params.get('class_id');
+        const shareToClassId = params.get('share_to');
+
         if (noteId && classId) {
+            // Open a shared note for reading
             openReader(noteId, classId);
-            window.history.replaceState({}, document.title, window.location.pathname); 
+        } else if (shareToClassId) {
+            // Open editor to create a new note and share it
+            shareTargetClassId = shareToClassId;
+            openEditor('new');
+        }
+        
+        // Clean the URL after processing params
+        if (noteId || shareToClassId) {
+           window.history.replaceState({}, document.title, window.location.pathname); 
         }
     }
 
@@ -815,7 +839,7 @@
         $('#back-to-list-btn').addEventListener('click', closeEditor);
         $('#reader-back-btn').addEventListener('click', closeReader);
         $('#delete-btn').addEventListener('click', deleteCurrentNote);
-        $('#share-btn').addEventListener('click', shareCurrentNote);
+        $('#share-btn').addEventListener('click', handleShareModal);
 
         $('#toggle-focus-btn').addEventListener('click', () => {
             document.body.classList.toggle('focus-mode');
@@ -853,4 +877,3 @@
   </script>
 </body>
 </html>
-
