@@ -138,6 +138,7 @@
     .sk{position:relative;overflow:hidden;background:#F2F3F7;border-radius:10px}
     .sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:shimmer 1.2s infinite}
     @keyframes shimmer{100%{transform:translateX(100%)}}
+    .skeleton-wrapper.hidden { display: none; }
     
     /* MODALS (NEWLY ADDED & FIXED) */
     .overlay {
@@ -203,6 +204,74 @@
     .m-btn.primary:hover { background: var(--primary-2); }
     .m-btn.ghost { border-color: var(--border); background: transparent; color: var(--muted); }
     .m-btn.ghost:hover { background: var(--bg); color: var(--text); }
+
+    /* ===== MOBILE RESPONSIVENESS FIXES ===== */
+    @media (max-width: 900px) {
+      /* Fix: Allow page to scroll naturally on mobile */
+      html, body {
+        height: auto;
+      }
+      /* Fix: Add padding to prevent content from being hidden by the fixed mobile nav */
+      body {
+        padding-bottom: 100px;
+      }
+      #page-content.hidden { display: none; }
+    }
+    
+    @media (min-width: 901px) {
+        .skeleton-wrapper {
+            display: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+      /* Adjust main layout padding for smaller screens */
+      .app, .main-content {
+        padding: 12px;
+      }
+      .header-main h1 {
+        font-size: 20px;
+      }
+      .header-main p {
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .class-toolbar {
+        flex-direction: column;
+        align-items: stretch; /* Make buttons take full width */
+      }
+      .class-toolbar .btn {
+        justify-content: center; /* Center button content */
+      }
+
+      /* Fix: Force a single-column layout for class cards */
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      /* Fix: Make card content responsive */
+      .x-body {
+        padding: 12px;
+      }
+      .x-meta {
+        display: flex; /* Change from grid to flex for better wrapping */
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .x-stats {
+        justify-content: flex-start;
+      }
+      .x-foot {
+        padding: 8px 12px;
+      }
+
+      /* Fix: Make modal forms responsive */
+      #create-class-modal .m-form > div[style*="grid"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -229,42 +298,78 @@
     <!-- Main -->
     <main class="main">
       <div class="main-content">
-        <header class="header">
-          <div class="header-top">
-            <div class="header-brand">Academate</div>
-            <div class="header-actions">
-              <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
-              <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+          
+        <!-- Skeleton Loader (Mobile Only) -->
+        <div class="skeleton-wrapper">
+            <header class="header">
+                <div class="header-top">
+                    <div class="header-brand">Academate</div>
+                    <div class="header-actions">
+                        <div class="icon-btn sk" style="width:38px;height:38px; border-radius:50%;"></div>
+                        <div class="icon-btn sk" style="width:38px;height:38px; border-radius:50%;"></div>
+                    </div>
+                </div>
+                <div class="header-main">
+                    <div>
+                        <div class="sk" style="height:22px; width:150px; border-radius:8px;"></div>
+                        <div class="sk" style="height:14px; width:250px; margin-top: 8px; border-radius:6px;"></div>
+                    </div>
+                    <div class="sk header-avatar" style="width:42px;height:42px;"></div>
+                </div>
+            </header>
+            <div class="page-grid">
+                <section class="card">
+                    <div class="class-toolbar">
+                        <div class="btn sk" style="flex:1; height:42px;"></div>
+                        <div class="btn sk" style="flex:1; height:42px;"></div>
+                    </div>
+                </section>
+                <section class="card">
+                    <h2 class="section-title">Daftar Kelas</h2>
+                    <div class="grid" id="skeleton-grid"></div>
+                </section>
             </div>
-          </div>
-          <div class="header-main">
-            <div>
-              <h1>Kelas Anda</h1>
-              <p>Kelola, akses, dan organisir semua mata kuliah Anda di satu tempat.</p>
-            </div>
-            <a href="account.html" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
-          </div>
-          <div class="header-toolbar">
-            <div class="search-bar">
-              <i class="ri-search-line"></i>
-              <input id="global-search" type="text" placeholder="Cari kelas, dosen, ruang...">
-            </div>
-            <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
-          </div>
-        </header>
+        </div>
+        
+        <!-- Actual Content (Initially hidden on mobile) -->
+        <div id="actual-content" style="display: none;">
+            <header class="header">
+              <div class="header-top">
+                <div class="header-brand">Academate</div>
+                <div class="header-actions">
+                  <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
+                  <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+                </div>
+              </div>
+              <div class="header-main">
+                <div>
+                  <h1>Kelas Anda</h1>
+                  <p>Kelola, akses, dan organisir semua mata kuliah Anda di satu tempat.</p>
+                </div>
+                <a href="account.html" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
+              </div>
+              <div class="header-toolbar">
+                <div class="search-bar">
+                  <i class="ri-search-line"></i>
+                  <input id="global-search" type="text" placeholder="Cari kelas, dosen, ruang...">
+                </div>
+                <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+              </div>
+            </header>
 
-        <div class="page-grid" id="page-content">
-          <section class="card">
-            <div class="class-toolbar">
-              <button class="btn btn-secondary" id="join-class-btn"><i class="ri-user-shared-line"></i><span>Gabung Kelas</span></button>
-              <button class="btn btn-primary" id="create-class-btn"><i class="ri-add-line"></i><span>Buat Kelas</span></button>
-            </div>
-          </section>
+            <div class="page-grid" id="page-content">
+              <section class="card">
+                <div class="class-toolbar">
+                  <button class="btn btn-secondary" id="join-class-btn"><i class="ri-user-shared-line"></i><span>Gabung Kelas</span></button>
+                  <button class="btn btn-primary" id="create-class-btn"><i class="ri-add-line"></i><span>Buat Kelas</span></button>
+                </div>
+              </section>
 
-          <section class="card" aria-live="polite">
-            <h2 class="section-title">Daftar Kelas</h2>
-            <div id="class-grid" class="grid"></div>
-          </section>
+              <section class="card" aria-live="polite">
+                <h2 class="section-title">Daftar Kelas</h2>
+                <div id="class-grid" class="grid"></div>
+              </section>
+            </div>
         </div>
       </div>
     </main>
@@ -357,28 +462,38 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const grid = document.getElementById('class-grid');
     let currentUser = null; let joinedClassIds = [];
     const palette = ['#8B5CF6','#10B981','#F59E0B','#EF4444','#3B82F6','#EC4899'];
 
+    // Initial setup on DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.innerWidth > 900) {
+            document.querySelector('.skeleton-wrapper').style.display = 'none';
+            document.getElementById('actual-content').style.display = 'block';
+            paintCardSkeletons(6);
+        } else {
+            paintCardSkeletons(3, document.getElementById('skeleton-grid'));
+        }
+    });
+    
     onAuthStateChanged(auth, async (user)=>{
       if(!user){ window.location.replace('auth.html'); return; }
       currentUser = user;
-      hydrateAvatar();
-      paintSkeletons(6);
       await loadClasses();
       attachEvents();
       handleUrlParams();
     });
-
-    function hydrateAvatar(){
-      const avatar = document.getElementById('header-avatar-img');
-      const name = localStorage.getItem('userDisplayName') || (currentUser?.displayName ?? 'A');
-      const photo = localStorage.getItem('userPhotoURL') || currentUser?.photoURL;
-      if (avatar) avatar.src = photo || `https://placehold.co/80x80/E5E7EB/6B7280?text=${(name||'A').charAt(0)}`;
+    
+    function showContent() {
+        const skeleton = document.querySelector('.skeleton-wrapper');
+        const content = document.getElementById('actual-content');
+        if (skeleton) skeleton.style.display = 'none';
+        if (content) content.style.display = 'block';
     }
 
-    function paintSkeletons(n){
+    function paintCardSkeletons(n, container){
+      const grid = container || document.getElementById('class-grid');
+      if (!grid) return;
       grid.innerHTML = '';
       for(let i=0;i<n;i++){
         const sk = document.createElement('div');
@@ -403,21 +518,40 @@
       try{
         const userDoc = await getDoc(doc(db,'users', currentUser.uid));
         joinedClassIds = userDoc.exists() ? (userDoc.data().joinedClasses || []) : [];
-        if(!joinedClassIds.length){ grid.innerHTML = `<div class='card' style='text-align:center;border:2px dashed var(--border)'><h3 style='margin:0 0 6px'>Anda Belum Memiliki Kelas</h3><p style='color:var(--muted);margin:0'>Buat atau gabung dengan kelas untuk mulai belajar.</p></div>`; return; }
+        
+        hydrateAvatar();
 
-        // fetch class docs
+        if(!joinedClassIds.length){ 
+          const grid = document.getElementById('class-grid');
+          if (grid) grid.innerHTML = `<div class='card' style='text-align:center;border:2px dashed var(--border); padding: 24px;'><h3 style='margin:0 0 6px'>Anda Belum Memiliki Kelas</h3><p style='color:var(--muted);margin:0'>Buat atau gabung dengan kelas untuk mulai belajar.</p></div>`;
+          showContent();
+          return; 
+        }
+
         const snaps = await Promise.all(joinedClassIds.map(id => getDoc(doc(db,'classes',id))));
         let classes = snaps.filter(s=>s.exists()).map(s=>({ id:s.id, ...s.data() }));
 
-        // enrich with task stats (real data)
         classes = await Promise.all(classes.map(async c => ({ ...c, ...await fetchTaskStats(c.id) })));
-
+        
         renderClasses(classes);
-      }catch(e){ console.error(e); grid.innerHTML = `<div class='card' style='text-align:center'><h3>Gagal Memuat Kelas</h3><p style='color:var(--muted)'>Silakan coba lagi.</p></div>`; }
+        showContent();
+
+      }catch(e){ 
+        console.error(e); 
+        const grid = document.getElementById('class-grid');
+        if (grid) grid.innerHTML = `<div class='card' style='text-align:center'><h3>Gagal Memuat Kelas</h3><p style='color:var(--muted)'>Silakan coba lagi.</p></div>`; 
+        showContent();
+      }
+    }
+    
+    function hydrateAvatar(){
+      const avatar = document.getElementById('header-avatar-img');
+      const name = localStorage.getItem('userDisplayName') || (currentUser?.displayName ?? 'A');
+      const photo = localStorage.getItem('userPhotoURL') || currentUser?.photoURL;
+      if (avatar) avatar.src = photo || `https://placehold.co/80x80/E5E7EB/6B7280?text=${(name||'A').charAt(0)}`;
     }
 
     async function fetchTaskStats(classId){
-      // A task is completed if current user id is in task.completedBy[]
       try{
         const qy = query(collection(db, 'classes', classId, 'tasks'));
         const snap = await getDocs(qy);
@@ -432,7 +566,6 @@
     function pinKey(id){ return `academate:pin:${id}` }
 
     function renderClasses(list){
-      // sort: pinned first, then by name
       list.sort((a,b)=>{
         const ap = localStorage.getItem(pinKey(a.id))==='1';
         const bp = localStorage.getItem(pinKey(b.id))==='1';
@@ -440,10 +573,10 @@
         return (a.namaMataKuliah||'').localeCompare(b.namaMataKuliah||'');
       });
 
+      const grid = document.getElementById('class-grid');
       grid.innerHTML = '';
       list.forEach((c, i)=> buildCard(c, palette[i%palette.length]).then(card=> grid.appendChild(card)));
 
-      // wire global search
       document.getElementById('global-search')?.addEventListener('input', (e)=>{
         const q = e.target.value.toLowerCase();
         [...grid.children].forEach(el=>{
@@ -517,7 +650,7 @@
 
       const pinBtn = card.querySelector('.pin-right');
       const shareBtn = card.querySelector('.share');
-      pinBtn.addEventListener('click', ()=>{ const now = !(localStorage.getItem(pinKey(id))==='1'); localStorage.setItem(pinKey(id), now?'1':'0'); renderClasses(Array.from(grid.children).map(el => JSON.parse(el.dataset.classdata))); });
+      pinBtn.addEventListener('click', ()=>{ const now = !(localStorage.getItem(pinKey(id))==='1'); localStorage.setItem(pinKey(id), now?'1':'0'); renderClasses(Array.from(document.getElementById('class-grid').children).map(el => JSON.parse(el.dataset.classdata))); });
       shareBtn.addEventListener('click', ()=> showShareModal(id, data.classCode));
       card.dataset.classdata = JSON.stringify(data);
       return card;
@@ -535,20 +668,20 @@
     
     function attachEvents(){
       document.getElementById('logout-button-desktop')?.addEventListener('click', ()=> signOut(auth));
-      document.getElementById('create-class-btn').addEventListener('click', () => document.getElementById('create-class-modal').classList.add('show'));
-      document.getElementById('join-class-btn').addEventListener('click', () => document.getElementById('join-class-modal').classList.add('show'));
+      document.body.addEventListener('click', (e) => {
+        if(e.target.closest('#create-class-btn')) document.getElementById('create-class-modal').classList.add('show');
+        if(e.target.closest('#join-class-btn')) document.getElementById('join-class-modal').classList.add('show');
+        
+        const closeModalButton = e.target.closest('[data-close-modal]');
+        const overlay = e.target.closest('.overlay');
+        if (closeModalButton || (overlay && e.target === overlay)) {
+            (closeModalButton || e.target).closest('.overlay').classList.remove('show');
+        }
+      });
       document.getElementById('create-class-form').addEventListener('submit', handleCreateClass);
       document.getElementById('join-class-form').addEventListener('submit', handleJoinByCode);
       document.getElementById('copy-code-btn').addEventListener('click', (e)=> copyToClipboard(document.getElementById('share-class-code').textContent, e.target));
       document.getElementById('copy-link-btn').addEventListener('click', (e)=> copyToClipboard(document.getElementById('share-class-link').value, e.target));
-
-      document.body.addEventListener('click', (e) => {
-          const closeModalButton = e.target.closest('[data-close-modal]');
-          const overlay = e.target.closest('.overlay');
-          if (closeModalButton || (overlay && e.target === overlay)) {
-              (closeModalButton || e.target).closest('.overlay').classList.remove('show');
-          }
-      });
     }
 
     async function handleCreateClass(e){
