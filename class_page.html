@@ -17,7 +17,8 @@
       --primary:#6F6CFF; --primary-2:#8B7CFF; --border:#ECECF1;
       --shadow:0 6px 24px rgba(30,31,36,.07);
       --radius:18px; --sidebar-w:280px; --gap:18px; --content-max:1320px;
-      --bubble:#F6F6FF; --bubble-me:#6F6CFF; --bubble-me-text:#fff;
+      --bubble:#F3F2FF; /* Soft lavender, from dashboard hover */
+      --bubble-me-text:#fff;
       --ok:#10B981; --warn:#F59E0B; --danger:#EF4444;
     }
     html,body{height:100%}
@@ -119,9 +120,23 @@
     .m{display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:end; margin:8px 0}
     .m.me{grid-template-columns:1fr auto}
     .m.me .ava{order:2}
-    .m.me .bubble{order:1; justify-self:end; background:var(--bubble-me); color:var(--bubble-me-text)}
+    .m.me .bubble{
+        order:1;
+        justify-self:end;
+        background: linear-gradient(135deg, var(--primary-2), var(--primary));
+        color:var(--bubble-me-text);
+        border: none;
+    }
     .ava{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.05); cursor: pointer;}
-    .bubble{max-width:min(640px, 85%); background:var(--bubble); border:1px solid var(--border); padding:10px 12px; border-radius:14px; box-shadow:0 1px 3px rgba(0,0,0,.04); line-height:1.55}
+    .bubble{
+        max-width:min(640px, 85%);
+        background:var(--bubble);
+        border:none; padding:10px 12px;
+        border-radius:14px;
+        box-shadow:0 1px 3px rgba(0,0,0,.04);
+        line-height:1.55;
+        justify-self: start; /* This is the fix! */
+    }
     .meta{display:flex; align-items:center; gap:8px; font-size:11px; color:var(--muted); margin-top:6px}
     .m.me .meta { color: rgba(255, 255, 255, 0.75); }
     .sender{font-weight:600; font-size:12px}
@@ -475,7 +490,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot, Timestamp, arrayUnion, arrayRemove, limit, startAfter, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, Timestamp, arrayUnion, arrayRemove, limit, startAfter, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
     const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD7F650" };
@@ -489,25 +504,29 @@
     let discussionUnsub = null, tasksUnsub = null, notesUnsub = null;
     const VISIBLE_AVATARS = 5; 
     let listenersAttached = false;
-    const BANNERS = { 'banner1': 'https://unsera.ac.id/wp-content/uploads/2024/02/WhatsApp-Image-2024-02-28-at-3.02.13-PM.jpeg', 'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max', 'banner3': 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max' };
+    const BANNERS = { 'banner1': 'https://res.cloudinary.com/ddrtdofqo/image/upload/WhatsApp-Image-2024-02-28-at-3.02.13-PM_zmmjvb.jpg', 'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib-rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max', 'banner3': 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib-rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max' };
+
+    // --- Robust variables for Lazy Loading ---
+    let firstMessageDoc = null; 
+    let latestMessageDoc = null; 
+    const renderedMessageIds = new Set(); 
+    let isLoadingMessages = false;
+    let allMessagesLoaded = false;
+    const MESSAGES_PER_PAGE = 25;
 
     const $ = (id)=>document.getElementById(id);
     
-    // --- Skeleton and Content Visibility ---
     function showContent() {
         const skeleton = $('skeleton-loader');
         if (skeleton) skeleton.style.display = 'none';
-        // The content divs are populated before this is called, making them visible.
     }
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) { cleanup(); window.location.replace('auth.html'); return; }
       currentUser = user;
-
       const params = new URLSearchParams(location.search); 
       classId = params.get('id');
       if (!classId) { renderEmpty('ID Kelas tidak ditemukan.'); return; }
-      
       await loadClass();
       if (!listenersAttached) {
           attachEventListeners();
@@ -527,17 +546,14 @@
 
         await cacheMembers(data.members || []);
 
-        // Populate content before showing
         populateHeader(data);
         populateContentShell();
         renderClassMembers();
-        
         cleanup(); 
-        listenDiscussions();
+        await initialMessagesLoad();
         listenTasks();
         listenNotes();
-
-        showContent(); // Transition from skeleton to real content
+        showContent();
       }catch(e){ 
         console.error("Gagal memuat kelas:", e); 
         renderEmpty('Gagal memuat halaman kelas.'); 
@@ -575,18 +591,12 @@
           <div class="card-body">
             <div class="card-head">
               <h3 class="card-title">Diskusi Kelas</h3>
-              <div style="display:flex; gap:8px; align-items:center">
-                <span id="presence" class="header-sub">— online</span>
-                <button class="btn" id="jump-latest"><i class="ri-arrow-down-line"></i> Terbaru</button>
-              </div>
+              <button class="btn" id="jump-latest"><i class="ri-arrow-down-line"></i> Terbaru</button>
             </div>
             <div class="chat-wrapper">
               <div id="discussion-feed" class="feed" aria-label="Utas diskusi">
-                <div style="padding: 8px 12px;">
-                  <div class="skeleton" style="height: 52px; width: 70%; border-radius: 14px; margin-bottom: 12px;"></div>
-                  <div class="skeleton" style="height: 60px; width: 80%; border-radius: 14px; margin-left: auto; margin-bottom: 12px;"></div>
-                  <div class="skeleton" style="height: 40px; width: 50%; border-radius: 14px;"></div>
-                </div>
+                 <div id="message-loader-sentinel" style="height: 1px;"></div>
+                 <div id="feed-spinner" class="loader" style="display: none;"></div>
               </div>
               <div class="composer">
                 <div class="tools"><button class="i-btn" id="attach-btn" title="Lampirkan"><i class="ri-attachment-line"></i></button><input id="file-input" type="file" accept="image/*" hidden></div>
@@ -603,8 +613,6 @@
               <div class="card-head"><h3 class="card-title">Tugas</h3></div>
               <ul id="task-list" class="tasks" aria-label="Daftar tugas">
                 <div class="skeleton" style="height: 45px; width: 100%; border-radius: 8px; margin-bottom: 8px;"></div>
-                <div class="skeleton" style="height: 45px; width: 100%; border-radius: 8px; margin-bottom: 8px;"></div>
-                <div class="skeleton" style="height: 45px; width: 100%; border-radius: 8px;"></div>
               </ul>
               <button id="add-task-btn" class="btn primary full"><i class="ri-add-line"></i> Tambah Tugas Baru</button>
             </div>
@@ -613,7 +621,6 @@
             <div class="card-body" style="min-height:0">
               <div class="card-head"><h3 class="card-title">Catatan Bersama</h3><a id="add-note-btn" class="btn primary"><i class="ri-add-line"></i> Tambah</a></div>
               <ul id="shared-notes-list" class="notes" aria-label="Catatan bersama">
-                 <div class="skeleton" style="height: 80px; width: 100%; border-radius: 12px; margin-bottom: 10px;"></div>
                  <div class="skeleton" style="height: 80px; width: 100%; border-radius: 12px;"></div>
               </ul>
             </div>
@@ -669,35 +676,114 @@
       ul.appendChild(li);
     }
     
-    function renderMsg(m){
-      const isMe = m.senderId === currentUser?.uid;
-      const wrap = el('div',{class:'m'+(isMe?' me':'')});
-      const ava = el('img',{class:'ava',src: m.senderPhotoURL || 'https://placehold.co/80x80', alt: m.senderName || 'avatar', 'data-user-id': m.senderId});
-      const bubble = el('div',{class:'bubble'});
-      const sender = el('div',{class:'sender'}, m.senderName || 'Anonymous');
-      const msgContent = m.text ? m.text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : (m.image ? `<img class="msg-img" src="${m.image}" alt="lampiran">` : '');
-      const msg = el('div',{}, msgContent);
-      const time = m.createdAt?.toDate?.() || new Date();
-      const meta = el('div',{class:'meta'}, time.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}));
-      bubble.append(sender,msg,meta);
-      if (isMe){ wrap.append(bubble, ava); } else { wrap.append(ava, bubble); }
-      return wrap;
+    function createMsgElement(data) {
+        const isMe = data.senderId === currentUser?.uid;
+        const wrap = el('div', { class: 'm' + (isMe ? ' me' : '') });
+        const ava = el('img', { class: 'ava', src: data.senderPhotoURL || 'https://placehold.co/80x80', alt: data.senderName || 'avatar', 'data-user-id': data.senderId });
+        const bubble = el('div', { class: 'bubble' });
+        const sender = el('div', { class: 'sender' }, data.senderName || 'Anonymous');
+        const msgContent = data.text ? data.text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : (data.image ? `<img class="msg-img" src="${data.image}" alt="lampiran">` : '');
+        const msg = el('div', {}, msgContent);
+        const time = data.createdAt?.toDate?.() || new Date();
+        const meta = el('div', { class: 'meta' }, time.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }));
+        bubble.append(sender, msg, meta);
+        if (isMe) { wrap.append(bubble, ava); } else { wrap.append(ava, bubble); }
+        return wrap;
+    }
+
+    function renderMessagesBatch(docs, prepend) {
+        const feed = $('discussion-feed');
+        if (!feed || docs.length === 0) return;
+        
+        const fragment = document.createDocumentFragment();
+        docs.forEach(doc => {
+            if (renderedMessageIds.has(doc.id)) return;
+            fragment.appendChild(createMsgElement(doc.data()));
+            renderedMessageIds.add(doc.id);
+        });
+
+        if (prepend) {
+            const oldScrollHeight = feed.scrollHeight;
+            feed.insertBefore(fragment, feed.children[2]);
+            requestAnimationFrame(() => { feed.scrollTop = feed.scrollHeight - oldScrollHeight; });
+        } else {
+            const shouldScroll = feed.scrollHeight - feed.clientHeight <= feed.scrollTop + 50;
+            feed.appendChild(fragment);
+            if (shouldScroll) {
+                requestAnimationFrame(() => feed.scrollTop = feed.scrollHeight);
+            }
+        }
+    }
+
+    async function initialMessagesLoad() {
+        renderedMessageIds.clear();
+        const discussionsRef = collection(db, 'classes', classId, 'discussions');
+        const q = query(discussionsRef, orderBy('createdAt', 'desc'), limit(MESSAGES_PER_PAGE));
+        const snap = await getDocs(q);
+
+        if (!snap.empty) {
+            const docs = snap.docs.reverse(); // ASC order for initial render
+            renderMessagesBatch(docs, false);
+            firstMessageDoc = snap.docs[snap.docs.length - 1]; // Oldest is last in DESC query
+            latestMessageDoc = snap.docs[0]; // Newest is first in DESC query
+        }
+        if (snap.docs.length < MESSAGES_PER_PAGE) {
+            allMessagesLoaded = true;
+            if ($('message-loader-sentinel')) $('message-loader-sentinel').style.display = 'none';
+        }
+        requestAnimationFrame(() => { if ($('discussion-feed')) $('discussion-feed').scrollTop = $('discussion-feed').scrollHeight; });
+        listenForNewMessages();
     }
     
-    function listenDiscussions(){
-      const qRef = query(collection(db,'classes',classId,'discussions'), orderBy('createdAt','desc'), limit(30));
-      discussionUnsub = onSnapshot(qRef, (snap)=>{
-        const feed = $('discussion-feed'); if (!feed) return;
-        feed.innerHTML = ''; let lastDay = '';
-        const docs = snap.docs.slice().reverse();
-        docs.forEach(d => {
-          const m = d.data(); const created = m.createdAt?.toDate?.() || new Date();
-          const dayKey = created.toDateString();
-          if (dayKey !== lastDay){ feed.appendChild(el('div',{class:'day-divider'}, created.toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'}))); lastDay = dayKey; }
-          feed.appendChild(renderMsg(m));
+    async function loadPaginatedMessages() {
+        if (isLoadingMessages || allMessagesLoaded) return;
+        isLoadingMessages = true;
+        if ($('feed-spinner')) $('feed-spinner').style.display = 'block';
+
+        const discussionsRef = collection(db, 'classes', classId, 'discussions');
+        const q = query(discussionsRef, orderBy('createdAt', 'desc'), startAfter(firstMessageDoc), limit(MESSAGES_PER_PAGE));
+
+        try {
+            const snap = await getDocs(q);
+            if (snap.empty) {
+                allMessagesLoaded = true;
+                if ($('message-loader-sentinel')) $('message-loader-sentinel').style.display = 'none';
+                return;
+            }
+            const docs = snap.docs.reverse(); // ASC order for prepending
+            renderMessagesBatch(docs, true);
+            firstMessageDoc = snap.docs[snap.docs.length - 1]; // New oldest doc
+        } catch(e) {
+            console.error("Error fetching older messages:", e);
+        } finally {
+            isLoadingMessages = false;
+            if ($('feed-spinner')) $('feed-spinner').style.display = 'none';
+        }
+    }
+
+    function listenForNewMessages() {
+        if (discussionUnsub) discussionUnsub();
+        const discussionsRef = collection(db, 'classes', classId, 'discussions');
+        let q;
+        if (latestMessageDoc) {
+            q = query(discussionsRef, orderBy('createdAt', 'asc'), startAfter(latestMessageDoc));
+        } else {
+            // If chat is empty, listen for the very first message
+            q = query(discussionsRef, orderBy('createdAt', 'asc'));
+        }
+
+        discussionUnsub = onSnapshot(q, (snap) => {
+            const newDocs = [];
+            snap.docChanges().forEach(change => {
+                if (change.type === "added") {
+                    newDocs.push(change.doc);
+                    latestMessageDoc = change.doc; 
+                }
+            });
+            if (newDocs.length > 0) {
+                renderMessagesBatch(newDocs, false);
+            }
         });
-        requestAnimationFrame(()=> feed.scrollTop = feed.scrollHeight);
-      });
     }
 
     function listenTasks(){
@@ -772,6 +858,15 @@
         fixVH(); updatePlaceholder();
         const addNoteBtn = $('add-note-btn');
         if (addNoteBtn) addNoteBtn.href = `notes.html?share_to=${classId}`;
+
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                loadPaginatedMessages();
+            }
+        }, { threshold: 0.1 });
+
+        const sentinel = $('message-loader-sentinel');
+        if (sentinel) observer.observe(sentinel);
     }
     
     function handleTaskListClick(e) {
@@ -867,7 +962,6 @@
         $('profile-modal').classList.add('show');
     }
 
-    // --- Helper Functions ---
     function cleanup(){ if(discussionUnsub) discussionUnsub(); if(tasksUnsub) tasksUnsub(); if(notesUnsub) notesUnsub(); }
     function updatePlaceholder() { const input = $('discussion-input'); if (!input) return; if (window.innerWidth <= 600) input.placeholder = "Ketik pesan…"; else input.placeholder = "Ketik pesan…"; }
     function fixVH(){ document.documentElement.style.setProperty('--vh', window.innerHeight + 'px'); }
