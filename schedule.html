@@ -15,112 +15,40 @@
     /* === Global Styles (from other pages) === */
     :root{
       --bg:#F7F7FA;--surface:#fff;--text:#1E1F24;--muted:#6C6F7F;--primary:#6F6CFF;--primary-2:#8B7CFF;--border:#ECECF1;--shadow:0 6px 24px rgba(30,31,36,.07);--radius:18px;--sidebar-w:280px;--content-max:1320px;--gap:18px;
-      --danger:#EF4444;
-      --hour-height: 60px; /* Specific to schedule */
+      --danger:#EF4444; --hour-height: 60px;
     }
     html,body{height:100%}
     *{box-sizing:border-box}
-    body{margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px;padding-bottom:80px}
+    body{margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px;}
     a{color:inherit; text-decoration: none;}
 
-    /* === App Shell (from other pages) === */
-    .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
-    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-    .main-content{padding:var(--gap);width:100%; height: 100%; display: flex; flex-direction: column;}
-
-    /* Buttons */
+    /* === App Shell & Common Components (from other pages) === */
+    .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;height:100dvh; display:grid; grid-template-rows:1fr;}
+    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden; height:100%; display: flex; flex-direction: column;}
+    .main-content{padding:var(--gap);width:100%; flex-grow: 1; display: flex; flex-direction: column;}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
     .btn:hover{border-color:#d8d8e0}
     .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
-    .btn-primary:hover{filter:brightness(.98)}
     .icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:20px;transition:.2s;flex-shrink:0}
-    .icon-btn:hover{color:var(--primary);border-color:#d8d8e0}
-
-    /* Header */
-    .header{margin-top:var(--gap);margin-bottom:24px}
-    .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-    .header-brand{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
-    .header-actions{display:flex;gap:8px}
-    .header-actions .icon-btn{width:38px;height:38px;font-size:18px}
+    .header{padding-bottom:12px; flex-shrink: 0;}
     .header-main{display:flex;justify-content:space-between;align-items:center;gap:16px}
-    .header-main h1{font-size:22px;margin:0}
-    .header-main p{color:var(--muted);margin:4px 0 0;font-size:14px}
-    .header-avatar-link{text-decoration:none}
+    .header-main h1{font-size:22px;margin:0} .header-main p{color:var(--muted);margin:4px 0 0;font-size:14px}
     .header-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0}
-    .header-toolbar{display:none}
-
-    /* Mobile nav */
+    
     .mobile-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;height:70px;padding:0 10px;z-index:1000}
     .mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);text-decoration:none;font-size:10px;font-weight:500;padding:8px;border-radius:8px}
-    .mobile-nav a i{font-size:20px}
-    .mobile-nav a.active{color:var(--primary)}
-
-    /* Responsive layout */
+    .mobile-nav a i{font-size:20px} .mobile-nav a.active{color:var(--primary)}
     .sidebar{display:none}
     
-    /* === NEW MOBILE SCROLLING IMPLEMENTATION (Corrected) === */
-    @media (max-width: 900px) {
-      body { overflow-y: auto; }
-      .app { height: auto; padding-bottom: 80px; }
-      .main { height: auto; }
-      .main-content { height: auto; }
-      .calendar-wrapper { height: auto; min-height: 70vh; }
+    .loader{ border:4px solid #f3f3f3; border-top:4px solid var(--primary); border-radius:50%; width:40px; height:40px; animation: spin 1s linear infinite; margin: 60px auto; }
+    @keyframes spin{ to{ transform: rotate(360deg) } }
+    .empty{ text-align:center; padding:60px; border:2px dashed var(--border); border-radius:14px; background:var(--surface); color:var(--muted) }
 
-      .calendar-header, .calendar-body {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
-      }
-      .calendar-header::-webkit-scrollbar, .calendar-body::-webkit-scrollbar {
-        display: none; /* Hide scrollbar for Chrome, Safari and Opera */
-      }
-      
-      /* Make header scrollable and override desktop grid */
-      .calendar-header {
-         display: block;
-         overflow-x: auto;
-         white-space: nowrap;
-         padding: 8px 0;
-         position: relative;
-      }
-      /* This wrapper is for scroll syncing */
-      .header-scroll-wrapper {
-        display: flex;
-        padding-left: 60px; /* Align with sticky time column */
-      }
-      .calendar-header .day-name {
-        flex: 0 0 110px; /* Give days a fixed width so they don't squish */
-      }
-       .calendar-header > div:first-child {
-         display: none; /* Hide desktop spacer on mobile */
-       }
-
-      .calendar-body {
-        overflow-x: auto;
-      }
-      .time-column {
-        position: sticky;
-        left: 0;
-        z-index: 2;
-        background-color: var(--surface); /* To prevent content from showing through */
-      }
-      .grid-container {
-        /* Make the grid wide enough for 7 days without squishing */
-        width: 175%; 
-        min-width: 800px;
-      }
-       .day-name.today::after {
-        bottom: -9px;
-      }
-    }
-
-
-    /* Desktop */
+    /* ===== DESKTOP STYLES ===== */
     @media (min-width:901px){
       body{padding-bottom:0}
-      .mobile-nav{display:none}
-      .app{display:grid;grid-template-columns:var(--sidebar-w) minmax(0,1fr);gap:24px; height: 100vh;}
-      .main { height: 100%; }
-
+      .mobile-nav, .mobile-schedule-header {display:none}
+      .app{grid-template-columns:var(--sidebar-w) 1fr;gap:24px;}
       .sidebar{display:flex;flex-direction:column;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
       .brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:22px;margin-bottom:18px}
       .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#8B7CFF,#6AC9FF)}
@@ -133,81 +61,83 @@
       .sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
       .sidebar-logout-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--muted);font-weight:600;cursor:pointer;transition:.2s}
       .sidebar-logout-btn:hover{background:#fde2e2;border-color:#f7b2b2;color:#c82424}
-      .sidebar-links{text-align:center;margin-top:16px;display:flex;justify-content:center;gap:16px}
-      .sidebar-links a{font-size:12px;color:var(--muted);text-decoration:none}
-      .sidebar-links a:hover{text-decoration:underline}
-      .copyright{font-size:11px;color:#C0C3D2;text-align:center;margin-top:12px}
-
       .main-content{max-width:min(var(--content-max),calc(100vw - var(--sidebar-w) - 120px));margin:0 auto}
-
-      .header{display:flex;justify-content:space-between;align-items:center; margin-top: 0; margin-bottom: 18px;}
-      .header-top,.header-avatar-link,.header-actions{display:none}
-      .header-main{display:block}
-      .header-main h1{font-size:26px}
-      .header-main p{font-size:15px;margin-top:6px}
-      .header-toolbar{display:flex;align-items:center;gap:12px}
+      .header-main h1{font-size:26px} .header-main p{font-size:15px;margin-top:6px}
+      
+      /* Desktop Calendar Grid */
+      .desktop-calendar { display: flex; flex-direction: column; flex-grow: 1; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+      .desktop-calendar-header { display: grid; grid-template-columns: 60px repeat(7, 1fr); text-align: center; font-weight: 600; color: var(--muted); padding: 12px 0; border-bottom: 1px solid var(--border); background: var(--bg); }
+      .day-name.today { color: var(--primary); font-weight: 700; position: relative; }
+      .day-name.today::after { content: ''; position: absolute; bottom: -13px; left: 50%; transform: translateX(-50%); width: 24px; height: 3px; background: var(--primary); border-radius: 3px; }
+      .desktop-calendar-body { flex-grow: 1; overflow-y: auto; position: relative; display: flex; }
+      .time-column { flex-shrink: 0; width: 60px; }
+      .time-label { height: var(--hour-height); text-align: right; padding-right: 12px; font-size: 12px; color: var(--muted); position: relative; }
+      .time-label span { position: relative; top: -0.7em; }
+      .grid-container { flex-grow: 1; display: grid; grid-template-columns: repeat(7, 1fr); position: relative; }
+      .day-column { border-left: 1px solid var(--border); position: relative; background-image: linear-gradient(to bottom, var(--border) 1px, transparent 1px); background-size: 100% var(--hour-height); padding-top: 40px; /* Space for tasks */ }
+      .day-column:first-child { border-left: none; }
+      .all-day-task-area { position: absolute; top: 0; left: 0; right: 0; padding: 4px; }
+      .all-day-task { background: #F3F2FF; border-left: 3px solid var(--primary); border-radius: 6px; padding: 4px 8px; font-size: 12px; font-weight: 500; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+      .class-block { position: absolute; left: 6px; right: 6px; border-radius: 10px; padding: 8px 10px; overflow: hidden; transition: all 0.2s ease; cursor: pointer; border-left: 4px solid; }
+      .class-block:hover { transform: translateY(-2px); box-shadow: var(--shadow); z-index: 5; }
+      .class-block h3 { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin:0 0 4px; }
+      .class-block p { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin:0; }
+      .current-time-indicator { position: absolute; left: 0; right: 0; height: 2px; background-color: var(--danger); z-index: 10; display: none; pointer-events: none; transition: left .2s, width .2s; }
+      .current-time-indicator::before { content: ''; position: absolute; left: -5px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background-color: var(--danger); }
     }
-
-    /* === Schedule Page Components === */
-    .calendar-wrapper { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 16px;}
-    .calendar-header { display: grid; grid-template-columns: 60px repeat(7, 1fr); text-align: center; font-weight: 600; color: var(--muted); padding: 12px 0; border-bottom: 1px solid var(--border); background: var(--bg); }
-    .day-name.today { color: var(--primary); font-weight: 700; position: relative; }
-    .day-name.today::after { content: ''; position: absolute; bottom: -13px; left: 50%; transform: translateX(-50%); width: 24px; height: 3px; background: var(--primary); border-radius: 3px; }
-
-    .calendar-body { flex-grow: 1; overflow: auto; position: relative; display: flex; }
-    .calendar-body { scrollbar-width: thin; scrollbar-color: var(--primary-2) transparent; }
-    .calendar-body::-webkit-scrollbar { width: 6px; }
-    .calendar-body::-webkit-scrollbar-track { background: transparent; }
-    .calendar-body::-webkit-scrollbar-thumb { background-color: var(--primary-2); border-radius: 20px; }
-
-    .time-column { flex-shrink: 0; width: 60px; }
-    .time-label { height: var(--hour-height); text-align: right; padding-right: 12px; font-size: 12px; color: var(--muted); position: relative; }
-    .time-label span { position: relative; top: -0.7em; }
-
-    .grid-container { flex-grow: 1; display: grid; grid-template-columns: repeat(7, 1fr); position: relative; }
-    .day-column { border-left: 1px solid var(--border); position: relative; background-image: linear-gradient(to bottom, var(--border) 1px, transparent 1px); background-size: 100% var(--hour-height); }
-    .day-column:first-child { border-left: none; }
-
-    .class-block {
-        position: absolute;
-        left: 6px;
-        right: 6px;
-        border-radius: 10px;
-        padding: 8px 10px;
-        overflow: hidden;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        border-left: 4px solid;
-    }
-    .class-block:hover { transform: translateY(-2px); box-shadow: var(--shadow); z-index: 5; }
-    .class-block h3 { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin:0 0 4px; }
-    .class-block p { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin:0; }
-
-    .current-time-indicator {
-        position: absolute;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background-color: var(--danger);
-        z-index: 10;
-        display: none;
-        pointer-events: none;
-        transition: left .2s, width .2s;
-    }
-    .current-time-indicator::before {
-        content: '';
-        position: absolute;
-        left: -5px;
-        top: -4px;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: var(--danger);
-    }
-    .loader{ border:4px solid #f3f3f3; border-top:4px solid var(--primary); border-radius:50%; width:40px; height:40px; animation: spin 1s linear infinite; margin: 60px auto; }
-    @keyframes spin{ to{ transform: rotate(360deg) } }
-    .empty{ text-align:center; padding:60px; border:2px dashed var(--border); border-radius:14px; background:var(--surface); color:var(--muted) }
     
+    /* ===== MOBILE STYLES ===== */
+    @media (max-width: 900px) {
+      body { padding-bottom: 80px; overflow-y: auto; height: auto; }
+      .app { height: auto; }
+      .main { height: auto; }
+      .desktop-calendar { display: none; } /* Hide desktop grid */
+
+      .mobile-schedule-header { padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+      .month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+      .month-nav h2 { font-size: 18px; margin: 0; }
+      .date-scroller { overflow-x: auto; padding-bottom: 8px; -ms-overflow-style: none; scrollbar-width: none; }
+      .date-scroller::-webkit-scrollbar { display: none; }
+      .date-puck-container { display: flex; gap: 10px; }
+      .date-puck { flex: 0 0 48px; text-align: center; padding: 8px 0; border-radius: 12px; cursor: pointer; border: 2px solid transparent; }
+      .date-puck:hover { background: var(--bg); }
+      .date-puck .day { font-size: 12px; font-weight: 500; color: var(--muted); }
+      .date-puck .date { font-size: 16px; font-weight: 700; }
+      .date-puck.today { border-color: var(--primary-2); }
+      .date-puck.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
+      .date-puck.selected .day { color: rgba(255,255,255,0.8); }
+
+      .mobile-agenda-view { flex-grow: 1; overflow-y: auto; padding-top: var(--gap); }
+      .agenda-section-title { font-size: 14px; font-weight: 600; color: var(--muted); margin: 0 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+      .agenda-tasks { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+      .agenda-task-item { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 12px; }
+      .agenda-task-item .icon { font-size: 18px; color: var(--primary); }
+      .agenda-task-item p { margin: 0; font-weight: 500; }
+      .agenda-timeline { position: relative; padding-left: 30px; }
+      .timeline-line { position: absolute; left: 5px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+      .timeline-event { position: relative; margin-bottom: 16px; }
+      .timeline-time { position: absolute; left: -35px; top: -2px; font-size: 12px; color: var(--muted); font-weight: 500; }
+      .timeline-class-block { border-radius: 12px; padding: 12px; border-left: 4px solid; cursor: pointer; }
+      .timeline-class-block h3 { margin: 0 0 4px; font-size: 15px; font-weight: 600; }
+      .timeline-class-block p { margin: 0; font-size: 13px; }
+      .mobile-current-time { position: absolute; left: -10px; right: 0; height: 2px; background: var(--danger); z-index: 2; display: none; }
+      .mobile-current-time::before { content: ''; position: absolute; left: -5px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background-color: var(--danger); }
+    }
+
+    /* Quick Look Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(30,31,36,0.5); backdrop-filter: blur(4px); z-index: 1100; display: none; align-items: center; justify-content: center; animation: fade-in 0.2s; }
+    .modal-overlay.show { display: flex; }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    .modal-content { background: var(--surface); border-radius: var(--radius); width: min(90vw, 420px); box-shadow: var(--shadow); animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    @keyframes pop-in { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    .modal-header { display: flex; gap: 12px; align-items: center; padding: 16px; border-bottom: 1px solid var(--border); }
+    .modal-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 24px; flex-shrink: 0; }
+    .modal-title { font-size: 18px; font-weight: 600; margin: 0; }
+    .modal-subtitle { font-size: 14px; color: var(--muted); margin: 4px 0 0; }
+    .modal-body { padding: 16px; }
+    .modal-detail-item { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .modal-detail-item i { color: var(--muted); font-size: 20px; width: 24px; text-align: center; }
+    .modal-footer { padding: 12px 16px; background: var(--bg); border-top: 1px solid var(--border); display: flex; gap: 12px; justify-content: flex-end; }
   </style>
 </head>
 <body>
@@ -224,37 +154,23 @@
         <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
       </nav>
       <div class="spacer"></div>
-      <div class="sidebar-footer">
-        <button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
-        <div class="sidebar-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a></div>
-        <p class="copyright">&copy; 2025 Academate</p>
-      </div>
+      <div class="sidebar-footer"><button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button></div>
     </aside>
 
     <!-- Main -->
     <main class="main">
       <div class="main-content">
         <header class="header">
-          <div class="header-top">
-            <div class="header-brand">Academate</div>
-            <div class="header-actions">
-              <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
-              <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
-            </div>
-          </div>
           <div class="header-main">
             <div>
               <h1>Jadwal Mingguan</h1>
-              <p>Semua jadwal kelas Anda dalam satu tampilan mingguan yang rapi.</p>
+              <p>Semua jadwal kelas dan tugas Anda dalam satu tampilan.</p>
             </div>
-            <a href="account.html" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
-          </div>
-          <div class="header-toolbar">
-            <!-- Toolbar content can go here if needed -->
+            <a href="account.html"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
           </div>
         </header>
 
-        <div id="calendar-container" class="calendar-wrapper" aria-live="polite">
+        <div id="calendar-container" aria-live="polite" style="flex-grow: 1; display: flex; flex-direction: column;">
           <div class="loader" role="status" aria-label="Memuat jadwal..."></div>
         </div>
       </div>
@@ -270,13 +186,20 @@
     <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
+  <!-- Quick Look Modal -->
+  <div class="modal-overlay" id="quick-look-modal">
+    <div class="modal-content" id="quick-look-modal-content">
+      <!-- Content injected by JS -->
+    </div>
+  </div>
+
   <!-- Firebase + Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, doc, getDoc, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD7F650" };
+    const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50" };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -284,6 +207,13 @@
 
     let timeIndicatorInterval = null;
     let currentUser = null;
+    let selectedDate = new Date();
+    let allData = { classes: [], tasks: [] };
+    const classColors = [
+        { bg: '#F3F2FF', border: '#8B5CF6' }, { bg: '#ECFDF5', border: '#10B981' },
+        { bg: '#FFFBEB', border: '#F59E0B' }, { bg: '#FEF2F2', border: '#EF4444' },
+        { bg: '#EFF6FF', border: '#3B82F6' }, { bg: '#FDF2F8', border: '#EC4899' }
+    ];
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -293,7 +223,8 @@
       }
       currentUser = user;
       hydrateAvatar();
-      loadScheduleData(user);
+      await loadScheduleData(user);
+      render();
     });
 
     document.getElementById('logout-button-desktop')?.addEventListener('click', () => signOut(auth));
@@ -306,47 +237,47 @@
     }
 
     async function loadScheduleData(user) {
-      const calendarContainer = document.getElementById('calendar-container');
-      try {
         const userDocRef = doc(db, 'users', user.uid);
         const userDocSnap = await getDoc(userDocRef);
         const joinedClassesIds = userDocSnap.exists() ? userDocSnap.data().joinedClasses || [] : [];
         
         if (joinedClassesIds.length === 0) {
-          renderEmptyCalendar();
+          allData = { classes: [], tasks: [] };
           return;
         }
         
         const classPromises = joinedClassesIds.map(id => getDoc(doc(db, 'classes', id)));
         const classSnapshots = await Promise.all(classPromises);
-        const classesData = classSnapshots
-          .map(snap => ({ id: snap.id, ...snap.data() }))
-          .filter(c => c.namaMataKuliah);
-        
-        renderCalendar(classesData);
-      } catch (error) {
-        console.error("Error loading schedule data:", error);
-        calendarContainer.innerHTML = '<div class="empty">Gagal memuat jadwal. Silakan coba lagi.</div>';
-      }
+        allData.classes = classSnapshots.map(snap => ({ id: snap.id, ...snap.data() })).filter(c => c.namaMataKuliah);
+
+        const taskPromises = joinedClassesIds.map(id => getDocs(query(collection(db, 'classes', id, 'tasks'))));
+        const taskSnapshots = await Promise.all(taskPromises);
+        allData.tasks = [];
+        taskSnapshots.forEach(snap => {
+            snap.forEach(d => allData.tasks.push({ id: d.id, ...d.data() }));
+        });
     }
 
-    function renderCalendar(classes) {
-      const calendarContainer = document.getElementById('calendar-container');
-      calendarContainer.innerHTML = ''; 
+    function render() {
+        const container = document.getElementById('calendar-container');
+        if (allData.classes.length === 0 && allData.tasks.length === 0) {
+            container.innerHTML = `<div class="empty"><h3>Jadwal Anda kosong</h3><p>Bergabunglah dengan kelas untuk melihat jadwal.</p></div>`;
+            return;
+        }
 
-      const classColors = [
-          { bg: '#F3F2FF', border: '#8B5CF6' }, { bg: '#ECFDF5', border: '#10B981' },
-          { bg: '#FFFBEB', border: '#F59E0B' }, { bg: '#FEF2F2', border: '#EF4444' },
-          { bg: '#EFF6FF', border: '#3B82F6' }, { bg: '#FDF2F8', border: '#EC4899' }
-      ];
+        if (window.innerWidth <= 900) {
+            renderMobileAgenda(container);
+        } else {
+            renderDesktopCalendar(container);
+        }
+    }
 
-      const header = document.createElement('div');
-      header.className = 'calendar-header';
-      header.innerHTML = `<div></div>`; // Spacer for desktop time column
-      
-      const body = document.createElement('div');
-      body.className = 'calendar-body';
-      
+    function renderDesktopCalendar(container) {
+      container.innerHTML = `<div class="desktop-calendar"><div class="desktop-calendar-header"></div><div class="desktop-calendar-body"></div></div>`;
+      const header = container.querySelector('.desktop-calendar-header');
+      const body = container.querySelector('.desktop-calendar-body');
+
+      header.innerHTML = `<div></div>`; 
       const timeColumn = document.createElement('div');
       timeColumn.className = 'time-column';
       for (let hour = 7; hour <= 20; hour++) {
@@ -355,64 +286,59 @@
 
       const gridContainer = document.createElement('div');
       gridContainer.className = 'grid-container';
-
+      
       const days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
       const dayFullNames = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-      const todayIndex = (new Date().getDay() + 6) % 7; // Monday is 0
+      const todayIndex = (new Date().getDay() + 6) % 7;
 
-      const dayElements = [];
       days.forEach((dayName, index) => {
         const dayHeader = document.createElement('div');
         dayHeader.className = `day-name ${index === todayIndex ? 'today' : ''}`;
         dayHeader.textContent = dayName;
-        dayElements.push(dayHeader);
+        header.appendChild(dayHeader);
 
         const dayColumn = document.createElement('div');
         dayColumn.className = 'day-column';
-        dayColumn.dataset.day = dayFullNames[index];
+        dayColumn.dataset.dayIndex = index;
         gridContainer.appendChild(dayColumn);
+        
+        // Render All-day tasks
+        const dayDate = new Date();
+        dayDate.setDate(dayDate.getDate() - todayIndex + index);
+        const tasksForDay = allData.tasks.filter(t => isSameDay(safeGetDate(t.dueDate), dayDate));
+        if(tasksForDay.length > 0) {
+            const taskArea = document.createElement('div');
+            taskArea.className = 'all-day-task-area';
+            tasksForDay.slice(0, 2).forEach(task => {
+                const taskEl = document.createElement('div');
+                taskEl.className = 'all-day-task';
+                taskEl.textContent = task.title;
+                taskEl.onclick = () => showQuickLookModal({task});
+                taskArea.appendChild(taskEl);
+            });
+            dayColumn.appendChild(taskArea);
+        }
       });
       
-      // Conditionally wrap header elements for mobile scrolling
-      if (window.innerWidth <= 900) {
-        const headerScrollWrapper = document.createElement('div');
-        headerScrollWrapper.className = 'header-scroll-wrapper';
-        dayElements.forEach(el => headerScrollWrapper.appendChild(el));
-        header.appendChild(headerScrollWrapper);
-         // Sync scrolling between header and body
-        body.addEventListener('scroll', () => {
-            header.scrollLeft = body.scrollLeft;
-        });
-      } else {
-        dayElements.forEach(el => header.appendChild(el));
-      }
-
-
       body.append(timeColumn, gridContainer);
-      calendarContainer.append(header, body);
-      
-      classes.forEach((c, index) => {
-        const dayCol = gridContainer.querySelector(`[data-day="${c.hari}"]`);
+
+      allData.classes.forEach((c, index) => {
+        const dayIndex = dayFullNames.indexOf(c.hari);
+        const dayCol = gridContainer.querySelector(`[data-day-index="${dayIndex}"]`);
         if (!dayCol || !c.waktu) return;
 
         const [startHour, startMinute] = c.waktu.split(':').map(Number);
-        let durationMinutes = (c.sks || 2) * 50; // Default duration based on SKS
-
+        let durationMinutes = (c.sks || 2) * 50;
         if (c.waktuSelesai) {
           const [endHour, endMinute] = c.waktuSelesai.split(':').map(Number);
           durationMinutes = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
         }
         
-        if (durationMinutes <= 0) return;
-
         const startOffsetMinutes = (startHour - 7) * 60 + startMinute;
-        const hourHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hour-height'));
+        const top = (startOffsetMinutes / 60) * 60; // 60 is hourHeight
+        const height = (durationMinutes / 60) * 60;
         
-        const top = (startOffsetMinutes / 60) * hourHeight;
-        const height = (durationMinutes / 60) * hourHeight;
-        
-        const classBlock = document.createElement('a');
-        classBlock.href = `class_page.html?id=${c.id}`;
+        const classBlock = document.createElement('div');
         classBlock.className = 'class-block';
         classBlock.style.top = `${top}px`;
         classBlock.style.height = `${height}px`;
@@ -420,88 +346,205 @@
         const color = classColors[index % classColors.length];
         classBlock.style.backgroundColor = color.bg;
         classBlock.style.borderColor = color.border;
+        classBlock.onclick = () => showQuickLookModal({classData: c});
         
-        const timeText = c.waktuSelesai ? `${c.waktu} - ${c.waktuSelesai}` : c.waktu;
-        classBlock.innerHTML = `
-            <h3>${escapeHTML(c.namaMataKuliah)}</h3>
-            <p style="color: ${color.border}; font-weight: 500;">${timeText}</p>
-            <p style="color: var(--muted);">Ruang ${escapeHTML(c.ruang)}</p>
-        `;
+        classBlock.innerHTML = `<h3>${escapeHTML(c.namaMataKuliah)}</h3><p style="color: ${color.border};">${c.waktu} - ${c.waktuSelesai || ''}</p><p>${escapeHTML(c.ruang)}</p>`;
         dayCol.appendChild(classBlock);
       });
-      
-      // Auto-scroll to today's column on mobile
-      if (window.innerWidth <= 900) {
-        const todayColumn = gridContainer.querySelectorAll('.day-column')[todayIndex];
-        if (todayColumn) {
-          // Center today's column if possible
-          const scrollPos = todayColumn.offsetLeft - (body.clientWidth / 2) + (todayColumn.clientWidth / 2);
-          body.scrollLeft = scrollPos;
-        }
-      }
-
-      setupCurrentTimeIndicator();
-      window.addEventListener('resize', setupCurrentTimeIndicator);
+      setupCurrentTimeIndicator(gridContainer, 'desktop');
     }
 
-    function setupCurrentTimeIndicator() {
+    function renderMobileAgenda(container) {
+        container.innerHTML = `<div class="mobile-schedule-header"></div><div class="mobile-agenda-view"></div>`;
+        const header = container.querySelector('.mobile-schedule-header');
+        const agendaView = container.querySelector('.mobile-agenda-view');
+
+        // Header: Month Nav + Date Scroller
+        header.innerHTML = `<div class="month-nav">
+            <button class="icon-btn" id="prev-month-btn"><i class="ri-arrow-left-s-line"></i></button>
+            <h2>${selectedDate.toLocaleString('id-ID', { month: 'long', year: 'numeric' })}</h2>
+            <button class="icon-btn" id="next-month-btn"><i class="ri-arrow-right-s-line"></i></button>
+        </div><div class="date-scroller"><div class="date-puck-container"></div></div>`;
+
+        const dateContainer = header.querySelector('.date-puck-container');
+        const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+        const daysInMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0).getDate();
+        
+        for (let i = 1; i <= daysInMonth; i++) {
+            const date = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth(), i);
+            const puck = document.createElement('div');
+            puck.className = 'date-puck';
+            if (isSameDay(date, new Date())) puck.classList.add('today');
+            if (isSameDay(date, selectedDate)) puck.classList.add('selected');
+            puck.innerHTML = `<div class="day">${date.toLocaleString('id-ID', { weekday: 'short' })}</div><div class="date">${i}</div>`;
+            puck.onclick = () => {
+                selectedDate = date;
+                render();
+            };
+            dateContainer.appendChild(puck);
+        }
+
+        const tasksForDay = allData.tasks.filter(t => isSameDay(safeGetDate(t.dueDate), selectedDate));
+        const dayFullNames = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+        const dayOfWeek = selectedDate.toLocaleString('id-ID', { weekday: 'long' });
+        const classesForDay = allData.classes.filter(c => c.hari === dayOfWeek).sort((a,b) => (a.waktu || '00:00').localeCompare(b.waktu || '00:00'));
+
+        let agendaHTML = '';
+        if (tasksForDay.length > 0) {
+            agendaHTML += `<h3 class="agenda-section-title">Tugas Tenggat Hari Ini</h3><div class="agenda-tasks">
+                ${tasksForDay.map(t => `<div class="agenda-task-item"><i class="ri-checkbox-circle-line icon"></i><p>${escapeHTML(t.title)}</p></div>`).join('')}
+            </div>`;
+        }
+        
+        if (classesForDay.length > 0) {
+            agendaHTML += `<h3 class="agenda-section-title">Jadwal Kelas</h3><div class="agenda-timeline" style="height: ${14 * 60}px;"> <!-- 14 hours * 60px/hour -->
+                <div class="timeline-line"></div>`;
+
+            classesForDay.forEach((c, i) => {
+                const color = classColors[i % classColors.length];
+                const [startHour, startMinute] = c.waktu.split(':').map(Number);
+                let durationMinutes = (c.sks || 2) * 50;
+                if (c.waktuSelesai) {
+                    const [endHour, endMinute] = c.waktuSelesai.split(':').map(Number);
+                    durationMinutes = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+                }
+                const startOffsetMinutes = (startHour - 7) * 60 + startMinute;
+                const top = (startOffsetMinutes / 60) * 60;
+                const height = (durationMinutes / 60) * 60;
+
+                agendaHTML += `<div class="timeline-event" style="position: absolute; top: ${top}px; left: 30px; right: 0; height: ${height}px;">
+                    <div class="timeline-time">${c.waktu}</div>
+                    <div class="timeline-class-block" style="background:${color.bg}; border-color:${color.border}; height: 100%;" onclick="showQuickLookModal({classData: document.getElementById('calendar-container')._classData[${allData.classes.indexOf(c)}]})">
+                        <h3>${escapeHTML(c.namaMataKuliah)}</h3>
+                        <p>${escapeHTML(c.dosen)} • Ruang ${escapeHTML(c.ruang)}</p>
+                    </div>
+                </div>`;
+            });
+
+            agendaHTML += `<div class="mobile-current-time"></div></div>`;
+        }
+        
+        if (agendaHTML === '') {
+            agendaHTML = `<div class="empty" style="padding: 30px 0;"><h3>Tidak ada jadwal</h3><p>Nikmati hari luangmu!</p></div>`;
+        }
+
+        agendaView.innerHTML = agendaHTML;
+        // Store class data on a non-HTML element to pass to onclick
+        container._classData = allData.classes;
+        window.showQuickLookModal = showQuickLookModal; // Make it globally accessible for inline onclick
+
+        // Attach month nav listeners
+        document.getElementById('prev-month-btn').onclick = () => { selectedDate.setMonth(selectedDate.getMonth() - 1); render(); };
+        document.getElementById('next-month-btn').onclick = () => { selectedDate.setMonth(selectedDate.getMonth() + 1); render(); };
+        
+        // Scroll selected date into view
+        const selectedPuck = dateContainer.querySelector('.selected');
+        if (selectedPuck) {
+            const scroller = dateContainer.parentElement;
+            const scrollPos = selectedPuck.offsetLeft - (scroller.clientWidth / 2) + (selectedPuck.clientWidth / 2);
+            scroller.scrollLeft = scrollPos;
+        }
+
+        setupCurrentTimeIndicator(agendaView, 'mobile');
+    }
+
+    function setupCurrentTimeIndicator(container, mode) {
       if (timeIndicatorInterval) clearInterval(timeIndicatorInterval);
-
-      const gridContainer = document.querySelector('.calendar-body .grid-container');
-      if (!gridContainer) return;
-
-      let indicator = document.querySelector('.current-time-indicator');
-      if (!indicator) {
-        indicator = document.createElement('div');
-        indicator.className = 'current-time-indicator';
-        gridContainer.appendChild(indicator);
-      }
       
       const updatePosition = () => {
         const now = new Date();
-        const todayDayIndex = (now.getDay() + 6) % 7;
-        const dayColumns = gridContainer.querySelectorAll('.day-column');
-        
-        if (todayDayIndex >= dayColumns.length) {
-          indicator.style.display = 'none';
-          return;
+        if (mode === 'desktop') {
+            const indicator = container.querySelector('.current-time-indicator');
+            if (!indicator) return;
+            const todayDayIndex = (now.getDay() + 6) % 7;
+            const dayColumns = container.querySelectorAll('.day-column');
+            if (todayDayIndex >= dayColumns.length || !isSameDay(now, new Date())) { indicator.style.display = 'none'; return; }
+            const currentMinutes = (now.getHours() - 7) * 60 + now.getMinutes();
+            if (currentMinutes < 0 || currentMinutes > 14 * 60) { indicator.style.display = 'none'; return; }
+            indicator.style.display = 'block';
+            indicator.style.top = `${(currentMinutes / 60) * 60}px`; // 60 is hourHeight
+            indicator.style.left = `${dayColumns[todayDayIndex].offsetLeft}px`;
+            indicator.style.width = `${dayColumns[todayDayIndex].offsetWidth}px`;
+        } else { // Mobile
+            const indicator = container.querySelector('.mobile-current-time');
+            if (!indicator || !isSameDay(now, selectedDate)) { if(indicator) indicator.style.display = 'none'; return; }
+            const currentMinutes = (now.getHours() - 7) * 60 + now.getMinutes();
+             if (currentMinutes < 0 || currentMinutes > 14 * 60) { if(indicator) indicator.style.display = 'none'; return; }
+            
+            indicator.style.display = 'block';
+            indicator.style.top = `${(currentMinutes / 60) * 60}px`;
         }
-
-        const currentMinutes = (now.getHours() - 7) * 60 + now.getMinutes();
-        if (currentMinutes < 0 || currentMinutes > 14 * 60) {
-             indicator.style.display = 'none';
-             return;
-        }
-
-        const hourHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hour-height'));
-        indicator.style.display = 'block';
-        indicator.style.top = `${(currentMinutes / 60) * hourHeight}px`;
-        indicator.style.left = `${dayColumns[todayDayIndex].offsetLeft}px`;
-        indicator.style.width = `${dayColumns[todayDayIndex].offsetWidth}px`;
       };
-      
       updatePosition();
-      const initialTop = parseFloat(indicator.style.top);
-      if (!isNaN(initialTop) && document.querySelector('.calendar-body').scrollTop === 0) {
-        const calendarBody = document.querySelector('.calendar-body');
-        const viewportHeight = calendarBody.clientHeight;
-        calendarBody.scrollTop = initialTop - (viewportHeight / 3);
-      }
-
       timeIndicatorInterval = setInterval(updatePosition, 60000);
     }
+
+    function showQuickLookModal(data) {
+        const modal = document.getElementById('quick-look-modal');
+        const content = document.getElementById('quick-look-modal-content');
+        
+        let html = '';
+        if (data.classData) {
+            const c = data.classData;
+            html = `<div class="modal-header">
+                        <div class="modal-icon" style="background:${classColors[0].bg}">${c.classIcon || '📚'}</div>
+                        <div><h3 class="modal-title">${escapeHTML(c.namaMataKuliah)}</h3><p class="modal-subtitle">${escapeHTML(c.dosen)}</p></div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-detail-item"><i class="ri-time-line"></i><span>${c.hari}, ${c.waktu} - ${c.waktuSelesai || ''}</span></div>
+                        <div class="modal-detail-item"><i class="ri-map-pin-line"></i><span>Ruang ${escapeHTML(c.ruang)}</span></div>
+                        <div class="modal-detail-item"><i class="ri-book-3-line"></i><span>${c.sks} SKS</span></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" id="modal-close-btn">Tutup</button>
+                        <a href="class_page.html?id=${c.id}" class="btn btn-primary">Buka Kelas</a>
+                    </div>`;
+        } else if (data.task) {
+            const t = data.task;
+            html = `<div class="modal-header">
+                        <div class="modal-icon" style="background:#F3F2FF"><i class="ri-task-line"></i></div>
+                        <div><h3 class="modal-title">${escapeHTML(t.title)}</h3><p class="modal-subtitle">Tenggat: ${safeGetDate(t.dueDate)?.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long'}) || 'Tidak ada tenggat'}</p></div>
+                    </div>
+                    <div class="modal-body">
+                        <p>${escapeHTML(t.description || 'Tidak ada deskripsi.')}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" id="modal-close-btn">Tutup</button>
+                        <a href="class_page.html?id=${t.classId}#task-${t.id}" class="btn btn-primary">Lihat Tugas</a>
+                    </div>`;
+        }
+        
+        content.innerHTML = html;
+        modal.classList.add('show');
+        
+        document.getElementById('modal-close-btn').onclick = () => modal.classList.remove('show');
+        modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('show'); };
+    }
     
-    function renderEmptyCalendar() {
-      document.getElementById('calendar-container').innerHTML = `<div class="empty">
-        <h3 style="margin: 0 0 8px;">Jadwal Anda masih kosong</h3>
-        <p style="margin:0;">Bergabunglah dengan sebuah kelas untuk melihat jadwal Anda di sini.</p>
-      </div>`;
+    // --- Helper Functions ---
+    function safeGetDate(ts) {
+        if (!ts) return null;
+        if (typeof ts.toDate === 'function') {
+            return ts.toDate(); // Firestore Timestamp
+        }
+        if (ts instanceof Date) {
+            return ts; // Javascript Date
+        }
+        return null; // Invalid date type
     }
 
-    function escapeHTML(s) {
-      return (s || '').replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+    function isSameDay(d1, d2) {
+        if (!d1 || !d2) return false;
+        return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
     }
+    function escapeHTML(s) { return (s || '').replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])); }
+
+    window.addEventListener('resize', render);
   </script>
 </body>
 </html>
+
+
+
+
 
