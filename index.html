@@ -1,227 +1,327 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk - Academate</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary-color: #7C3AED;
-            --primary-hover: #6D28D9;
-            --text-dark: #1F2937;
-            --text-muted: #4B5563;
-            --bg-body: #F8F7FA;
-            --card-bg: #FFFFFF;
-            --input-bg: #F9FAFB;
-            --border-color: #E5E7EB;
-            --error-color: #EF4444;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Academate — Study made soft & simple</title>
+<meta name="description" content="Academate — your soft, minimal, fun student hub. Classes, tasks, schedule, and notes in one place." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+<style>
+  :root{
+    /* match dashboard theme */
+    --bg: #F7F7FA;
+    --surface: #FFFFFF;
+    --text: #1E1F24;
+    --muted: #6C6F7F;
+    --primary: #6F6CFF;
+    --primary-2: #8B7CFF;
+    --border: #ECECF1;
+    --shadow: 0 10px 30px rgba(30,31,36,.08);
+    --radius: 18px;
+    --max: 1200px;
+  }
+  *,*:before,*:after{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:"Poppins", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg); color: var(--text); overflow-x:hidden;
+  }
+  a{color:inherit}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  /* Top progress */
+  .scroll-progress{position:fixed; left:0; top:0; height:4px; width:0%; background:linear-gradient(90deg,var(--primary),var(--primary-2)); z-index:9999; box-shadow:0 2px 6px rgba(111,108,255,.4)}
 
-        html, body {
-            height: 100%;
-        }
+  /* App Shell */
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 20px}
+  .nav{position:sticky; top:0; z-index:50; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom:1px solid var(--border);
+       background: color-mix(in oklab, white 70%, transparent);}
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; height:68px}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:700; font-size:20px}
+  .logo{width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,#8B7CFF,#6AC9FF)}
+  .nav a.cta{padding:10px 14px; border-radius:12px; text-decoration:none; font-weight:600; border:1px solid var(--border);
+             background:var(--surface); color:var(--text); box-shadow:0 4px 12px rgba(0,0,0,.04)}
+  .nav a.cta-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; border:none}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-dark);
-            display: grid;
-            place-items: center;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            padding: 1.5rem;
-        }
-        
-        .auth-card {
-            width: 100%;
-            max-width: 380px;
-            background-color: var(--card-bg);
-            padding: 3rem 2.5rem;
-            border-radius: 1.5rem;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
-            text-align: center;
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+  /* Hero */
+  .hero{position:relative; padding:64px 0 40px}
+  .hero-grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:36px; align-items:center}
+  .eyebrow{display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); background:#FAFAFE; padding:6px 10px; border-radius:999px; border:1px solid var(--border)}
+  .hero h1{font-size:clamp(28px, 5vw, 48px); line-height:1.08; margin:14px 0 10px}
+  .hero p{color:var(--muted); font-size:clamp(14px, 1.6vw, 16px); margin:0 0 16px}
+  .hero-cta{display:flex; gap:10px; flex-wrap:wrap}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:14px; border:1px solid var(--border); background:var(--surface); text-decoration:none; font-weight:600}
+  .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; border:none}
+  .subtle{font-size:12px; color:var(--muted)}
 
-        .logo {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 1.5rem;
-        }
-        
-        .card-title {
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
-        }
-        
-        .card-subtitle {
-            color: var(--text-muted);
-            margin-bottom: 2.5rem;
-            line-height: 1.5;
-        }
+  /* Device mock */
+  .phone{aspect-ratio:9/19; background:linear-gradient(180deg,#fff,#f5f6fa); border-radius:32px; border:1px solid var(--border);
+         box-shadow:var(--shadow); position:relative; overflow:hidden}
+  .notch{position:absolute; top:10px; left:50%; transform:translateX(-50%); width:120px; height:18px; border-radius:30px; background:#e9eaf2}
+  .screen{position:absolute; inset:16px; border-radius:20px; background:#fff; overflow:auto}
+  .chip{display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:#fff; box-shadow:0 6px 16px rgba(30,31,36,.06)}
+  .chips{display:flex; gap:10px; flex-wrap:wrap}
 
-        .google-signin-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 0.85rem 1rem;
-            border-radius: 0.75rem;
-            background-color: var(--primary-color);
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.2), 0 2px 4px -2px rgba(124, 58, 237, 0.1);
-        }
-        
-        .google-signin-btn:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.2), 0 4px 6px -4px rgba(124, 58, 237, 0.1);
-        }
-        
-        .google-signin-btn svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 0.75rem;
-            background-color: #fff;
-            border-radius: 50%;
-            padding: 2px;
-        }
-        
-        .error-message {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: var(--error-color);
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            margin-top: 1.5rem;
-            display: none; /* Hidden by default */
-        }
-        
-    </style>
+  .screen-hero{padding:16px}
+  .screen-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
+  .badge{font-size:11px; padding:6px 10px; border-radius:999px; background:#F3F2FF; color:var(--primary); font-weight:700}
+  .card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:12px; box-shadow:0 4px 12px rgba(0,0,0,.04)}
+  .list{display:flex; flex-direction:column; gap:10px}
+  .li{display:flex; gap:10px; align-items:center}
+  .li .icon{width:38px; height:38px; display:grid; place-items:center; border-radius:12px; background:#F3F2FF; color:var(--primary)}
+  .li .meta{font-size:12px; color:var(--muted)}
+  .progress{height:10px; background:#F0F1F6; border-radius:999px; overflow:hidden}
+  .progress > i{display:block; height:100%; width:42%; background:linear-gradient(90deg,var(--primary),var(--primary-2))}
+
+  /* Scrollytelling */
+  .pin-wrap{position:relative}
+  .pin{position:sticky; top:88px}
+  .steps{display:flex; flex-direction:column; gap:40px}
+  .step{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; box-shadow:var(--shadow); opacity:.6; transform:translateY(8px) scale(.98); transition:transform .5s cubic-bezier(.2,.8,.2,1), opacity .5s}
+  .step.active{opacity:1; transform:translateY(0) scale(1)}
+  .step h3{margin:0 0 6px; font-size:18px}
+  .step p{margin:0; color:var(--muted)}
+  .pin-visual{aspect-ratio:16/11; background:linear-gradient(135deg, #f5f0ff, #e6f6ff); border-radius:16px; border:1px solid var(--border);
+              display:grid; place-items:center; overflow:hidden}
+  .pin-visual-inner{display:grid; gap:12px; padding:16px; width:min(560px, 88%)}
+  .kv{display:flex; align-items:center; gap:10px}
+  .kv .k{width:40px; height:40px; border-radius:12px; display:grid; place-items:center; font-size:20px; background:#fff; border:1px solid var(--border)}
+  .kv .v{flex:1; height:14px; border-radius:999px; background:#fff; border:1px solid var(--border)}
+
+  /* Metrics strip */
+  .strip{display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-top:18px}
+  .stat{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,.03)}
+  .stat b{font-size:20px}
+  .stat span{display:block; color:var(--muted); font-size:12px}
+
+  /* CTA section */
+  .cta{padding:72px 0}
+  .cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; border-radius:20px; padding:28px; display:grid; gap:16px; align-items:center}
+  .cta-box h2{margin:0; font-size:clamp(22px, 3.5vw, 32px)}
+  .cta-actions{display:flex; gap:10px; flex-wrap:wrap}
+  .cta .btn{background:#fff; border:none}
+  .cta .btn.secondary{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.4); color:#fff}
+
+  footer{padding:20px 0 60px; color:var(--muted)}
+  .footer-row{display:flex; justify-content:space-between; align-items:center; gap:10px}
+
+  /* Responsive */
+  @media (max-width: 980px){
+    .hero-grid{grid-template-columns: 1fr;}
+    .pin{position:relative; top:0}
+    .pin-grid{grid-template-columns:1fr}
+  }
+</style>
 </head>
 <body>
+<div class="scroll-progress" id="scroll-progress"></div>
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand"><div class="logo" aria-hidden="true"></div>Academate</div>
+    <nav style="display:flex; gap:8px">
+      <a class="cta" href="#features">Features</a>
+      <a class="cta" href="#how">How it works</a>
+      <a class="cta cta-primary" href="#get">Get started</a>
+    </nav>
+  </div>
+</header>
 
-    <div class="auth-card">
-        <a href="index.html" class="logo">Academate</a>
-        
-        <h1 class="card-title">Satu Langkah Lagi</h1>
-        <p class="card-subtitle">Masuk atau daftar dengan akun Google Anda untuk memulai.</p>
-        
-        <button class="google-signin-btn" id="google-signin-btn">
-            <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.22,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C43.021,36.258,44,30.638,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path></svg>
-            <span>Lanjutkan dengan Google</span>
-        </button>
+<main>
+  <!-- HERO -->
+  <section class="hero wrap" aria-label="intro">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow"><i class="ri-sparkling-2-fill"></i> Soft, minimal, fun</span>
+        <h1>Study made softer.<br>All your <span style="background:linear-gradient(135deg,var(--primary),var(--primary-2)); -webkit-background-clip:text; background-clip:text; color:transparent">classes & tasks</span> in one calm space.</h1>
+        <p>Academate is a delightful student hub: classes with emoji identity, tasks with friendly deadlines, a clean calendar, and notes that stay out of your way.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#get"><i class="ri-rocket-2-fill"></i>Start free</a>
+          <a class="btn" href="#how"><i class="ri-play-circle-line"></i>See how it works</a>
+        </div>
+        <p class="subtle">No clutter. No noise. Just progress.</p>
+        <div class="chips" style="margin-top:10px">
+          <div class="chip"><i class="ri-book-open-line"></i> Emoji-first classes</div>
+          <div class="chip"><i class="ri-task-line"></i> Friendly deadlines</div>
+          <div class="chip"><i class="ri-calendar-2-line"></i> Minimal calendar</div>
+        </div>
+      </div>
+      <div class="phone" aria-hidden="true">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="screen-hero">
+            <div class="screen-header">
+              <span class="badge">Progress</span>
+              <span class="subtle">Today</span>
+            </div>
+            <div class="card" style="margin-bottom:12px">
+              <div class="progress"><i style="width:64%"></i></div>
+            </div>
+            <div class="list">
+              <div class="li"><div class="icon">📐</div><div>
+                <div style="font-weight:600; font-size:14px">Linear Algebra</div>
+                <div class="meta">Room 203 • 09:40</div></div></div>
+              <div class="li"><div class="icon">🧪</div><div>
+                <div style="font-weight:600; font-size:14px">Chemistry Lab</div>
+                <div class="meta">Submit worksheet • due today</div></div></div>
+              <div class="li"><div class="icon">💻</div><div>
+                <div style="font-weight:600; font-size:14px">Web Dev</div>
+                <div class="meta">Prototype review • Fri</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <div id="error-message" class="error-message"></div>
+  <!-- SCROLLYTELLING BLOCK -->
+  <section id="features" class="wrap" style="padding:30px 0 16px"><h2 style="font-size:22px; margin:0 0 12px">Built for calm productivity</h2><p class="subtle" style="margin:0 0 14px">Scroll to explore.</p></section>
+  <section class="wrap pin-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; align-items:start; padding:0 0 60px">
+    <div class="pin-wrap">
+      <div class="pin">
+        <div class="pin-visual">
+          <div class="pin-visual-inner" id="pin-visual">
+            <!-- dynamic tiles to reflect step -->
+            <div class="kv"><div class="k">📚</div><div class="v"></div></div>
+            <div class="kv"><div class="k">🧩</div><div class="v"></div></div>
+            <div class="kv"><div class="k">⏱️</div><div class="v"></div></div>
+            <div class="kv"><div class="k">🗒️</div><div class="v"></div></div>
+          </div>
+        </div>
+        <div class="strip">
+          <div class="stat"><b id="metric-a">64%</b><span>weekly completion</span></div>
+          <div class="stat"><b id="metric-b">12</b><span>active classes</span></div>
+          <div class="stat"><b id="metric-c">3</b><span>today’s tasks</span></div>
+        </div>
+      </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, getAdditionalUserInfo } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    <div class="steps" id="steps">
+      <article class="step" data-visual="classes">
+        <h3>Emoji-first classes</h3>
+        <p>Goodbye generic icons. Every class can have a playful emoji identity with a soft background shape. Easy to scan, easy to love.</p>
+      </article>
+      <article class="step" data-visual="deadlines">
+        <h3>Deadlines that feel friendly</h3>
+        <p>Warnings that never shout. Clear badges like <em>today</em>, <em>tomorrow</em>, or <em>3 days left</em> keep stress low while staying precise.</p>
+      </article>
+      <article class="step" data-visual="calendar">
+        <h3>Tiny, powerful calendar</h3>
+        <p>A compact monthly view with subtle dots for class days—clean, minimal, and always there when you need it.</p>
+      </article>
+      <article class="step" data-visual="notes">
+        <h3>Notes that don’t get in the way</h3>
+        <p>Write. Close. Done. Your notes stay light and searchable across classes—no heavy toolbars or visual noise.</p>
+      </article>
+    </div>
+  </section>
 
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
-            authDomain: "acadmte.firebaseapp.com",
-            projectId: "acadmte",
-            storageBucket: "acadmte.appspot.com",
-            messagingSenderId: "547286858993",
-            appId: "1:547286858993:web:b83de49e7eb1cc35a67d50",
-            measurementId: "G-ZEFYD7F650"
-        };
+  <!-- HOW IT WORKS -->
+  <section id="how" class="wrap" style="padding:14px 0 60px">
+    <div class="card" style="padding:18px 18px 6px">
+      <h2 style="margin:0 0 10px; font-size:22px">How it works</h2>
+      <div class="list">
+        <div class="li">
+          <div class="icon"><i class="ri-login-circle-line"></i></div>
+          <div><div style="font-weight:600">Sign in & join classes</div><div class="meta">Bring your current schedule in seconds and pick an emoji badge for each class.</div></div>
+        </div>
+        <div class="li">
+          <div class="icon"><i class="ri-task-line"></i></div>
+          <div><div style="font-weight:600">Add tasks once</div><div class="meta">They show up everywhere—dashboard, calendar, and friendly deadline list.</div></div>
+        </div>
+        <div class="li">
+          <div class="icon"><i class="ri-progress-3-line"></i></div>
+          <div><div style="font-weight:600">Watch progress grow</div><div class="meta">A calm progress bar at the top summarizes what you’ve accomplished.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+  <!-- CTA -->
+  <section id="get" class="cta">
+    <div class="wrap">
+      <div class="cta-box">
+        <h2>Ready to make school feel lighter?</h2>
+        <p style="margin:0; opacity:.95">Start with the minimal dashboard, add classes, and see your day simplify.</p>
+        <div class="cta-actions">
+          <a class="btn" href="#"><i class="ri-apple-fill"></i> Download (soon)</a>
+          <a class="btn" href="#"><i class="ri-google-fill"></i> Sign in with Google</a>
+          <a class="btn secondary" href="#features"><i class="ri-arrow-right-line"></i> Explore features</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
 
-        // --- Auth State Observer ---
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                window.location.replace('dashboard.html');
-            }
-        });
+<footer>
+  <div class="wrap footer-row">
+    <span>&copy; 2025 Academate</span>
+    <span class="subtle">Terms • Privacy</span>
+  </div>
+</footer>
 
-        // --- DOM Elements ---
-        const googleSignInBtn = document.getElementById('google-signin-btn');
-        const errorMessageDiv = document.getElementById('error-message');
+<script>
+  // Top scroll progress
+  const bar = document.getElementById('scroll-progress');
+  const onScroll = () => {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    bar.style.width = scrolled + '%';
+  };
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-        // --- Utility Functions ---
-        function showErrorMessage(message) {
-            errorMessageDiv.textContent = message;
-            errorMessageDiv.style.display = 'block';
-        }
-        
-        function getFriendlyErrorMessage(errorCode) {
-            switch (errorCode) {
-                case 'auth/popup-closed-by-user': return 'Proses masuk dengan Google dibatalkan.';
-                case 'auth/cancelled-popup-request': return 'Beberapa permintaan masuk dibuka. Harap selesaikan satu per satu.';
-                default: return 'Gagal masuk dengan Google. Silakan coba lagi.';
-            }
-        }
+  // Scrollytelling steps activation + visual sync
+  const steps = Array.from(document.querySelectorAll('.step'));
+  const visual = document.getElementById('pin-visual');
+  const metrics = {
+    classes: { a:'72%', b:'8', c:'2' },
+    deadlines: { a:'64%', b:'8', c:'3' },
+    calendar: { a:'68%', b:'8', c:'2' },
+    notes: { a:'75%', b:'8', c:'1' }
+  };
 
-        // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => {
-            googleSignInBtn.addEventListener('click', async () => {
-                const provider = new GoogleAuthProvider();
-                errorMessageDiv.style.display = 'none'; // Clear previous errors
-                googleSignInBtn.disabled = true;
+  const setTiles = (key) => {
+    // Update emoji tiles & progress in the pinned visual
+    const map = {
+      classes:['📚','🧩','🎨','🧠'],
+      deadlines:['⏱️','📌','✅','📬'],
+      calendar:['📅','🔔','🗓️','📍'],
+      notes:['🗒️','🔎','✨','📁']
+    }[key] || ['📚','🧩','⏱️','🗒️'];
 
-                try {
-                    const result = await signInWithPopup(auth, provider);
-                    const user = result.user;
-                    
-                    // Check if the user document already exists. If not, create it.
-                    const userDocRef = doc(db, "users", user.uid);
-                    const userDoc = await getDoc(userDocRef);
+    const rows = visual.querySelectorAll('.kv .k');
+    rows.forEach((el, i) => el.textContent = map[i] || '📚');
 
-                    if (!userDoc.exists()) {
-                        await setDoc(userDocRef, {
-                            name: user.displayName,
-                            email: user.email,
-                            photoURL: user.photoURL,
-                            createdAt: new Date(),
-                            provider: 'google'
-                        });
-                    }
-                    // Redirect is handled by onAuthStateChanged observer
-                } catch (error) {
-                    console.error("Google Sign-In Error:", error);
-                    showErrorMessage(getFriendlyErrorMessage(error.code));
-                } finally {
-                    googleSignInBtn.disabled = false;
-                }
-            });
-        });
-    </script>
+    const m = metrics[key] || metrics.deadlines;
+    document.getElementById('metric-a').textContent = m.a;
+    document.getElementById('metric-b').textContent = m.b;
+    document.getElementById('metric-c').textContent = m.c;
+  };
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        steps.forEach(s=>s.classList.remove('active'));
+        entry.target.classList.add('active');
+        setTiles(entry.target.dataset.visual);
+      }
+    })
+  }, { threshold:.6 });
+  steps.forEach(s=>io.observe(s));
+
+  // Subtle pin visual parallax on scroll
+  let latest = 0; let ticking = false;
+  function parallax(){
+    const pin = document.querySelector('.pin-visual');
+    if(!pin) return;
+    const rect = pin.getBoundingClientRect();
+    const amt = Math.min(12, Math.max(-12, (window.innerHeight/2 - rect.top) * 0.04));
+    pin.style.transform = `translateY(${amt}px)`;
+  }
+  window.addEventListener('scroll', ()=>{ latest = window.scrollY; if(!ticking){ window.requestAnimationFrame(()=>{ parallax(); ticking=false; }); ticking=true; }} , {passive:true});
+  parallax();
+</script>
 </body>
 </html>
-
