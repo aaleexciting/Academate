@@ -25,7 +25,7 @@
 
     /* App Shell */
     .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
-    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);}
     .main-content{padding:var(--gap);width:100%}
 
     /* Sidebar */
@@ -51,7 +51,7 @@
       .copyright{font-size:11px;color:#C0C3D2;text-align:center;margin-top:12px}
     }
 
-    /* Header */
+    /* === HEADER (CONSISTENT) === */
     .header{margin-top:var(--gap);margin-bottom:24px}
     .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
     .header-brand{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
@@ -62,16 +62,15 @@
     .header-main p{color:var(--muted);margin:4px 0 0;font-size:14px}
     .header-avatar-link{text-decoration:none}
     .header-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0}
+    .header-toolbar{display:none} /* Hidden on mobile */
+    .icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:20px;transition:.2s;flex-shrink:0}
+    .icon-btn:hover{color:var(--primary);border-color:#d8d8e0}
     
     /* Toolbar & Filters */
-    .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-    .search-bar{position:relative; flex-grow: 1;}
-    .search-bar input{width:100%; padding:12px 16px 12px 44px;border-radius:12px;border:1px solid var(--border);background:var(--surface);outline:none;transition:.2s}
-    .search-bar input:focus{border-color:var(--primary);background:var(--surface)}
-    .search-bar i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted)}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
     .btn:hover{border-color:#d8d8e0}
     .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
+    .btn-primary:hover{filter:brightness(.98)}
     
     .filter-bar {
       display: flex;
@@ -80,7 +79,6 @@
       padding: 10px;
       background: var(--bg);
       border-radius: 12px;
-      margin-top: 16px;
     }
     .filter-group { display: flex; align-items: center; gap: 8px; }
     .filter-group label { font-size: 13px; font-weight: 500; color: var(--muted); }
@@ -97,8 +95,13 @@
     .tab-btn{padding:6px 12px;border:none;background:none;border-radius:8px;font-weight:600;color:var(--muted);cursor:pointer}
     .tab-btn.active{background:#F3F2FF;color:var(--primary)}
 
+    /* === SKELETON LOADER === */
+    .sk{position:relative;overflow:hidden;background:#F2F3F7;border-radius:10px}
+    .sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:shimmer 1.2s infinite}
+    @keyframes shimmer{100%{transform:translateX(100%)}}
+    .skeleton-wrapper.hidden { display: none; }
 
-    /* Desktop header overrides */
+    /* === DESKTOP HEADER OVERRIDES (CONSISTENT) === */
     @media (min-width:901px){
       .main-content{max-width:min(var(--content-max),calc(100vw - var(--sidebar-w) - 120px));margin:0 auto}
       .header{display:flex;justify-content:space-between;align-items:center}
@@ -106,6 +109,11 @@
       .header-main{display:block}
       .header-main h1{font-size:26px}
       .header-main p{font-size:15px;margin-top:6px}
+      .header-toolbar{display:flex;align-items:center;gap:12px}
+      .search-bar{position:relative}
+      .search-bar input{width:320px;padding:12px 16px 12px 44px;border-radius:12px;border:1px solid var(--border);background:var(--bg);outline:none;transition:.2s}
+      .search-bar input:focus{border-color:var(--primary);background:var(--surface)}
+      .search-bar i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted)}
     }
 
     /* Mobile nav */
@@ -116,14 +124,40 @@
     @media (min-width:901px){.mobile-nav{display:none}}
 
     /* === NOTES PAGE REDESIGN === */
-    .page-layout { display: none; } /* Hide layout until ready */
-    .page-layout.ready { display: block; }
-    
     .notes-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: var(--gap);
         margin-top: 24px;
+    }
+
+    /* === "Add New" Card Style === */
+    .add-note-card {
+        border: 2px dashed var(--border);
+        background-color: var(--bg);
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: var(--muted);
+        cursor: pointer;
+        transition: background-color .2s, border-color .2s, color .2s;
+        min-height: 220px; /* Ensure consistent height */
+    }
+    .add-note-card:hover {
+        background-color: #F3F2FF;
+        border-color: var(--primary-2);
+        color: var(--primary);
+    }
+    .add-note-card i {
+        font-size: 36px;
+        margin-bottom: 12px;
+    }
+    .add-note-card span {
+        font-weight: 600;
+        font-size: 16px;
     }
 
     .note-card {
@@ -140,7 +174,15 @@
         box-shadow: var(--shadow);
     }
     .note-card-body { padding: 16px; flex-grow: 1; display: flex; flex-direction: column; }
-    .note-card h3 { margin: 0 0 8px; font-size: 16px; }
+    .note-card h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
     .note-card .excerpt {
         font-size: 14px;
         color: var(--muted);
@@ -153,11 +195,14 @@
     }
     .note-card-footer {
         display: flex;
-        justify-content: space-between;
         align-items: center;
         margin-top: 12px;
         font-size: 12px;
         color: var(--muted);
+        gap: 8px;
+    }
+    .note-card-footer > div {
+        margin-left: auto;
     }
     .tag-pill {
         display: inline-flex;
@@ -170,10 +215,14 @@
         font-size: 11px;
         font-weight: 500;
         color: var(--primary);
+        max-width: 220px;
     }
-    .tag-pill .dot { width: 8px; height: 8px; border-radius: 50%; }
-
-    /* Shared Note Card styling */
+    .tag-pill .dot { flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; }
+    .tag-pill .tag-pill-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
     .note-card.shared { background-color: #FDFDFD; }
     .shared-author-header {
         display: flex;
@@ -206,11 +255,7 @@
       place-items: center;
       box-shadow: 0 1px 2px rgba(0,0,0,.04);
     }
-
-
     .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
-    .loader { border:4px solid #f3f3f3; border-top:4px solid var(--primary); border-radius:50%; width:40px; height:40px; animation: spin 1s linear infinite; margin: 60px auto; }
-    @keyframes spin{ to{ transform: rotate(360deg) } }
 
     /* === EDITOR / READER OVERLAY === */
     .overlay-container {
@@ -227,14 +272,9 @@
         transition: opacity .3s, visibility .3s;
     }
     .overlay-container.show { opacity: 1; visibility: visible; }
-    
     .overlay-content { width: 100%; max-width: 900px; margin: 0 auto; padding: 24px; flex-grow: 1; display: flex; flex-direction: column; }
     .overlay-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-shrink: 0; }
     .overlay-actions { display: flex; gap: 8px; align-items: center; }
-    .icon-btn{width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:20px;transition:.2s;flex-shrink:0}
-    .icon-btn:hover{color:var(--primary);border-color:#d8d8e0}
-    
-    /* Editor Specific */
     #note-title-input {
         flex-grow: 1;
         border: none;
@@ -257,21 +297,80 @@
     .ql-toolbar.ql-snow{border:none !important; border-bottom:1px solid var(--border) !important; padding:12px 24px !important; position: sticky; top:0; background: rgba(247, 247, 250, 0.8); backdrop-filter: blur(4px); z-index: 5;}
     .ql-container.ql-snow{border:none !important;}
     .ql-editor{font-size:16px;line-height:1.8;padding:24px; background: transparent !important;}
-    
-    /* Reader Specific */
     #reader-title { font-size: 28px; font-weight: 700; margin: 0; }
     .reader-meta { font-size: 13px; color: var(--muted); margin-top: 8px; display: flex; gap: 12px; align-items: center; }
     #reader-body { flex-grow: 1; overflow-y: auto; line-height: 1.9; font-size: 17px; padding-top: 24px; }
-
-    /* Focus Mode */
     body.focus-mode .sidebar, body.focus-mode .header, body.focus-mode .mobile-nav, body.focus-mode .main > .main-content > *:not(.overlay-container) { display: none !important; }
     body.focus-mode .app, body.focus-mode .main, body.focus-mode .main-content { padding: 0; }
-
-    /* Share Modal */
     .modal-overlay { position:fixed; inset:0; background:rgba(17,24,39,.55); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); align-items:center; justify-content:center; z-index:2100; display: none; }
     .modal-overlay.show { display: flex; }
     .modal { background:#fff; padding:20px; border-radius:16px; width:90%; max-width:420px; box-shadow:var(--shadow); }
     
+    /* === MOBILE RESPONSIVENESS FIXES === */
+    @media (max-width: 900px) {
+      html, body {
+        height: auto;
+      }
+    }
+    @media (max-width: 520px) {
+      .app, .main-content { padding: 12px; }
+      .header-main h1 { font-size: 20px; }
+      .header-main p { font-size: 13px; line-height: 1.4; }
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 12px;
+        background: var(--surface);
+      }
+      .filter-group.tabs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        width: 100%;
+        border: none;
+        background: var(--bg);
+      }
+      .filter-group:not(.tabs) {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: stretch;
+      }
+      .filter-group select { width: 100%; background: var(--bg); }
+      .notes-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+      .note-card-footer { flex-wrap: wrap; gap: 8px; }
+      .tag-pill { max-width: 150px; }
+      .overlay-content { padding: 12px; padding-bottom: 80px; }
+      .overlay-header { gap: 12px; align-items: center; }
+      #note-title-input { font-size: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .overlay-actions {
+        position: fixed; bottom: 0; left: 0; right: 0; width: 100%;
+        padding: 12px; background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        border-top: 1px solid var(--border); justify-content: flex-end; z-index: 2001; gap: 12px;
+      }
+      #toggle-focus-btn { display: none; }
+      .editor-meta-bar { flex-wrap: wrap; }
+      .tag-editor .chip { max-width: 150px; }
+      .tag-editor .chip .chip-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      #quill-editor-container { margin: 0 -12px; }
+      .ql-toolbar.ql-snow { padding: 8px !important; display: flex; flex-wrap: wrap; justify-content: center; }
+      .ql-toolbar.ql-snow .ql-formats { margin-right: 5px !important; margin-bottom: 5px; }
+
+      .add-note-card {
+        min-height: 150px;
+      }
+      .add-note-card i {
+        font-size: 32px;
+      }
+      .add-note-card span {
+        font-size: 15px;
+      }
+    }
+    @media (max-width: 375px) {
+      .app, .main-content { padding: 8px; }
+      .note-card-body { padding: 12px; }
+    }
   </style>
 </head>
 <body>
@@ -298,8 +397,40 @@
     <!-- Main -->
     <main class="main">
       <div class="main-content">
-        <div class="page-layout">
+
+        <!-- Skeleton Loader -->
+        <div class="skeleton-wrapper">
             <header class="header">
+                <div class="header-top">
+                    <div class="header-brand">Academate</div>
+                    <div class="header-actions">
+                        <div class="icon-btn sk" style="width:38px;height:38px; border-radius:50%;"></div>
+                        <div class="icon-btn sk" style="width:38px;height:38px; border-radius:50%;"></div>
+                    </div>
+                </div>
+                <div class="header-main">
+                    <div>
+                        <div class="sk" style="height:22px; width:150px; border-radius:8px;"></div>
+                        <div class="sk" style="height:14px; width:250px; margin-top: 8px; border-radius:6px;"></div>
+                    </div>
+                </div>
+            </header>
+            <div class="filter-bar sk" style="height: 60px; padding: 0;"></div>
+            <div id="skeleton-notes-grid" class="notes-grid">
+                <!-- Skeletons will be painted here by JS -->
+            </div>
+        </div>
+
+        <!-- Actual Content -->
+        <div id="actual-content" style="display: none;">
+            <header class="header">
+              <div class="header-top">
+                <div class="header-brand">Academate</div>
+                <div class="header-actions">
+                  <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
+                  <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+                </div>
+              </div>
               <div class="header-main">
                 <div>
                   <h1>Pusat Catatan</h1>
@@ -307,15 +438,14 @@
                 </div>
                 <a href="account.html" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
               </div>
-            </header>
-
-            <div class="toolbar">
-              <div class="search-bar">
-                <i class="ri-search-line"></i>
-                <input id="search-input" type="text" placeholder="Cari di semua catatan...">
+              <div class="header-toolbar">
+                <div class="search-bar">
+                  <i class="ri-search-line"></i>
+                  <input id="search-input" type="text" placeholder="Cari di semua catatan...">
+                </div>
+                <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
               </div>
-              <button class="btn btn-primary" id="new-note-btn"><i class="ri-add-line"></i><span>Catatan Baru</span></button>
-            </div>
+            </header>
             
             <div class="filter-bar">
                 <div class="filter-group tabs">
@@ -332,7 +462,7 @@
             </div>
 
             <div id="notes-grid" class="notes-grid" aria-live="polite">
-                <div class="loader"></div>
+                <!-- Notes will be loaded here -->
             </div>
         </div>
       </div>
@@ -421,9 +551,14 @@
     let saveTimer = null, isSaving = false, currentNoteTags = [];
     let shareTargetClassId = null; // New variable to hold share target
     let currentFilters = { type: 'all', class: 'all' };
+    let isFirstLoad = true;
 
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => document.querySelectorAll(selector);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        paintNoteSkeletons(window.innerWidth > 900 ? 7 : 4);
+    });
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) { window.location.replace('auth.html'); return; }
@@ -434,8 +569,41 @@
       attachEventListeners();
       listenToAllNotes();
       handleUrlParams();
-      $('.page-layout').classList.add('ready');
     });
+
+    function showContent() {
+        const skeleton = $('.skeleton-wrapper');
+        const content = $('#actual-content');
+        if (skeleton) skeleton.style.display = 'none';
+        if (content) content.style.display = 'block';
+    }
+
+    function paintNoteSkeletons(n) {
+        const grid = $('#skeleton-notes-grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        // Add a skeleton for the "Add New" card
+        const addCard = document.createElement('div');
+        addCard.className = 'add-note-card sk';
+        grid.appendChild(addCard);
+
+        for (let i = 0; i < n - 1; i++) { // n-1 because add card is one
+            const card = document.createElement('div');
+            card.className = 'note-card'; // Use existing class for dimensions
+            card.innerHTML = `
+                <div class="note-card-body">
+                    <div class="sk" style="height: 20px; width: 80%; margin-bottom: 12px; border-radius: 6px;"></div>
+                    <div class="sk" style="height: 14px; width: 100%; margin-bottom: 6px; border-radius: 6px;"></div>
+                    <div class="sk" style="height: 14px; width: 100%; margin-bottom: 6px; border-radius: 6px;"></div>
+                    <div class="sk" style="height: 14px; width: 60%; border-radius: 6px;"></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+                        <div class="sk" style="height: 12px; width: 70px; border-radius: 4px;"></div>
+                        <div class="sk" style="height: 24px; width: 100px; border-radius: 999px;"></div>
+                    </div>
+                </div>`;
+            grid.appendChild(card);
+        }
+    }
     
     function hydrateAvatar() {
         const avatar = $('#header-avatar-img');
@@ -487,6 +655,9 @@
         const personalUnsub = onSnapshot(personalQuery, (snapshot) => {
             personalNotes = snapshot.docs.map(d => ({ id: d.id, type: 'personal', ...d.data() }));
             updateAndRenderNotes(personalNotes, sharedNotes);
+        }, (error) => {
+            console.error("Error fetching personal notes:", error);
+            if(isFirstLoad) showContent(); // Show content even if there's an error
         });
 
         const sharedUnsubs = classIds.map(classId => {
@@ -495,6 +666,9 @@
                 const notesForClass = snapshot.docs.map(d => ({ id: d.id, classId, type: 'shared', ...d.data() }));
                 sharedNotes = sharedNotes.filter(n => n.classId !== classId).concat(notesForClass);
                 updateAndRenderNotes(personalNotes, sharedNotes);
+            }, (error) => {
+                console.error(`Error fetching shared notes for class ${classId}:`, error);
+                if(isFirstLoad) showContent(); // Show content even if there's an error
             });
         });
         
@@ -506,10 +680,25 @@
         allNotes = [...personal, ...externalSharedNotes];
         allNotes.sort((a,b) => (b.updatedAt?.toMillis() || b.sharedAt?.toMillis() || 0) - (a.updatedAt?.toMillis() || a.sharedAt?.toMillis() || 0));
         renderNotesGrid();
+        
+        if (isFirstLoad) {
+            showContent();
+            isFirstLoad = false;
+        }
     }
 
     function renderNotesGrid() {
         const grid = $('#notes-grid');
+        grid.innerHTML = ''; // Clear the grid first
+
+        // Create and prepend the "Add New" card
+        const addCard = document.createElement('div');
+        addCard.className = 'add-note-card';
+        addCard.title = 'Buat Catatan Baru';
+        addCard.innerHTML = `<i class="ri-add-line"></i><span>Buat Catatan Baru</span>`;
+        addCard.addEventListener('click', () => openEditor('new'));
+        grid.appendChild(addCard);
+
         const searchQuery = ($('#search-input').value || '').toLowerCase();
         
         let filteredNotes = allNotes.filter(note => 
@@ -529,12 +718,11 @@
             });
         }
 
-        if (filteredNotes.length === 0) {
-            grid.innerHTML = `<div class="empty-state"><h3>Tidak Ada Catatan</h3><p>Coba sesuaikan filter atau buat catatan baru.</p></div>`;
+        if (allNotes.length === 0) {
+            // No need for a separate empty state message, the "Add New" card serves as a prompt
             return;
         }
 
-        grid.innerHTML = '';
         filteredNotes.forEach(note => {
             const card = document.createElement('div');
             card.className = `note-card ${note.type}`;
@@ -569,7 +757,7 @@
                     <span>${formatDate(note.updatedAt || note.sharedAt)}</span>
                     <div style="display: flex; align-items: center; gap: 8px;">
                       ${sharedToIndicator}
-                      ${tagInfo ? `<div class="tag-pill"><span class="dot" style="background:${colorFor(tagId)}"></span>${escapeHTML(tagInfo.namaMataKuliah)}</div>` : ''}
+                      ${tagInfo ? `<div class="tag-pill"><span class="dot" style="background:${colorFor(tagId)}"></span><span class="tag-pill-name">${escapeHTML(tagInfo.namaMataKuliah)}</span></div>` : ''}
                     </div>
                 </div>
             `;
@@ -694,7 +882,7 @@
             chip.className = 'chip';
             chip.innerHTML = `
                 <span class="dot" style="background:${colorFor(tagId)}"></span>
-                ${escapeHTML(classInfo.namaMataKuliah)}
+                <span class="chip-text">${escapeHTML(classInfo.namaMataKuliah)}</span>
                 <button data-tag-id="${tagId}">&times;</button>
             `;
             chip.querySelector('button').addEventListener('click', () => removeTag(tagId));
@@ -818,8 +1006,6 @@
 
     function attachEventListeners() {
         $('#logout-button-desktop')?.addEventListener('click', () => signOut(auth));
-        $('#new-note-btn').addEventListener('click', () => openEditor('new'));
-        $('#search-input').addEventListener('input', renderNotesGrid);
         
         // Filters
         $('.tabs').addEventListener('click', (e) => {
@@ -834,6 +1020,7 @@
             currentFilters.class = e.target.value;
             renderNotesGrid();
         });
+        $('#search-input').addEventListener('input', renderNotesGrid);
 
         // Editor controls
         $('#back-to-list-btn').addEventListener('click', closeEditor);
@@ -877,3 +1064,4 @@
   </script>
 </body>
 </html>
+

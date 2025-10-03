@@ -23,7 +23,7 @@
 
     /* App Shell */
     .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
-    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);}
     .main-content{padding:var(--gap);width:100%}
 
     /* Sidebar (desktop) */
@@ -145,6 +145,16 @@
     .banner-option.selected {
       border-color: var(--primary);
     }
+
+    /* === SCROLLING & SKELETON FIXES === */
+    @media (max-width: 900px) {
+      html, body {
+        height: auto;
+      }
+    }
+    .sk{position:relative;overflow:hidden;background:#F2F3F7;border-radius:10px}
+    .sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:shimmer 1.2s infinite}
+    @keyframes shimmer{100%{transform:translateX(100%)}}
   </style>
 </head>
 <body>
@@ -171,74 +181,102 @@
     <!-- Main -->
     <main class="main">
       <div class="main-content">
-        <header class="header">
-          <div class="header-top">
-            <div class="header-brand">Academate</div>
-            <div class="header-actions">
-              <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
-              <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
-            </div>
-          </div>
-          <div class="header-main">
-            <div>
-              <h1>Akun</h1>
-              <p>Kelola profil & keanggotaan kelas Anda.</p>
-            </div>
-            <a href="#" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
-          </div>
-          <div class="header-toolbar"></div>
-        </header>
-
-        <div class="grid">
-          <!-- Profile card -->
-          <section class="card">
-            <div class="card-head"><h2>Profil</h2><button id="save-profile" class="btn btn-primary"><i class="ri-save-3-line"></i>Simpan</button></div>
-            <div class="card-body">
-              <div class="form-row">
-                <label>Foto Profil</label>
-                <div class="avatar"><img id="avatar" alt="avatar"></div>
+        
+        <!-- Skeleton Loader -->
+        <div id="skeleton-wrapper">
+          <header class="header">
+              <div class="header-top">
+                  <div class="header-brand">Academate</div>
+                  <div class="header-actions">
+                      <div class="icon-btn sk" style="width:38px;height:38px; border-radius:10px;"></div>
+                      <div class="icon-btn sk" style="width:38px;height:38px; border-radius:10px;"></div>
+                  </div>
               </div>
-              <div class="form-row"><label for="display-name">Nama Tampilan</label><input id="display-name" placeholder="Nama Anda"></div>
-              <div class="form-row"><label>Email</label><input id="email" disabled></div>
-              <div class="form-row"><label for="university">Universitas</label><input id="university" placeholder="Nama Universitas"></div>
-              <div class="form-row"><label for="major">Jurusan/Major</label><input id="major" placeholder="Contoh: Informatika"></div>
-              <div class="form-row"><label for="semester">Semester</label>
-                <input type="number" id="semester" placeholder="e.g., 5" min="1">
+              <div class="header-main">
+                  <div>
+                      <div class="sk" style="height:22px; width:100px; border-radius:8px;"></div>
+                      <div class="sk" style="height:14px; width:220px; margin-top: 8px; border-radius:6px;"></div>
+                  </div>
               </div>
+          </header>
+          <div class="grid">
+            <div class="card sk" style="height: 500px;"></div>
+            <div class="card sk" style="height: 300px;"></div>
+          </div>
+          <div class="card sk" style="height: 100px; margin-top: 18px;"></div>
+        </div>
 
-              <!-- NEW FIELDS -->
-              <div class="form-row"><label for="instagram">Instagram</label><input id="instagram" placeholder="https://instagram.com/username"></div>
-              <div class="form-row"><label for="spotify">Spotify</label><input id="spotify" placeholder="https://open.spotify.com/user/..."></div>
+        <!-- Actual Content -->
+        <div id="actual-content" style="display: none;">
+          <header class="header">
+            <div class="header-top">
+              <div class="header-brand">Academate</div>
+              <div class="header-actions">
+                <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
+                <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+              </div>
+            </div>
+            <div class="header-main">
+              <div>
+                <h1>Akun</h1>
+                <p>Kelola profil & keanggotaan kelas Anda.</p>
+              </div>
+              <a href="#" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
+            </div>
+            <div class="header-toolbar"></div>
+          </header>
 
-              <div class="form-row" style="align-items: flex-start; margin-top: 16px;">
-                <label>Banner Profil</label>
-                <div id="banner-selector" style="display: flex; gap: 10px; flex-wrap: wrap; max-width: 420px;">
-                  <!-- Banners will be generated by JS here -->
+          <div class="grid">
+            <!-- Profile card -->
+            <section class="card">
+              <div class="card-head"><h2>Profil</h2><button id="save-profile" class="btn btn-primary"><i class="ri-save-3-line"></i>Simpan</button></div>
+              <div class="card-body">
+                <div class="form-row">
+                  <label>Foto Profil</label>
+                  <div class="avatar"><img id="avatar" alt="avatar"></div>
                 </div>
-              </div>
-              <!-- END OF NEW FIELDS -->
-            </div>
-            <div class="card-foot"><span id="save-state" class="help" style="margin-right:auto"></span><button id="signout" class="btn"><i class="ri-logout-box-r-line"></i>Keluar</button></div>
-          </section>
+                <div class="form-row"><label for="display-name">Nama Tampilan</label><input id="display-name" placeholder="Nama Anda"></div>
+                <div class="form-row"><label>Email</label><input id="email" disabled></div>
+                <div class="form-row"><label for="university">Universitas</label><input id="university" placeholder="Nama Universitas"></div>
+                <div class="form-row"><label for="major">Jurusan/Major</label><input id="major" placeholder="Contoh: Informatika"></div>
+                <div class="form-row"><label for="semester">Semester</label>
+                  <input type="number" id="semester" placeholder="e.g., 5" min="1">
+                </div>
 
-          <!-- Classes membership -->
-          <section class="card">
-            <div class="card-head"><h2>Keanggotaan Kelas</h2>
-              <div style="display:flex;gap:8px"><button id="refresh-classes" class="btn"><i class="ri-refresh-line"></i>Muat Ulang</button></div>
-            </div>
-            <div class="card-body">
-              <div id="classes-list" class="list" aria-live="polite"></div>
+                <!-- NEW FIELDS -->
+                <div class="form-row"><label for="instagram">Instagram</label><input id="instagram" placeholder="https://instagram.com/username"></div>
+                <div class="form-row"><label for="spotify">Spotify</label><input id="spotify" placeholder="https://open.spotify.com/user/..."></div>
+
+                <div class="form-row" style="align-items: flex-start; margin-top: 16px;">
+                  <label>Banner Profil</label>
+                  <div id="banner-selector" style="display: flex; gap: 10px; flex-wrap: wrap; max-width: 420px;">
+                    <!-- Banners will be generated by JS here -->
+                  </div>
+                </div>
+                <!-- END OF NEW FIELDS -->
+              </div>
+              <div class="card-foot"><span id="save-state" class="help" style="margin-right:auto"></span><button id="signout" class="btn"><i class="ri-logout-box-r-line"></i>Keluar</button></div>
+            </section>
+
+            <!-- Classes membership -->
+            <section class="card">
+              <div class="card-head"><h2>Keanggotaan Kelas</h2>
+                <div style="display:flex;gap:8px"><button id="refresh-classes" class="btn"><i class="ri-refresh-line"></i>Muat Ulang</button></div>
+              </div>
+              <div class="card-body">
+                <div id="classes-list" class="list" aria-live="polite"></div>
+              </div>
+            </section>
+          </div>
+
+          <section class="card danger-zone" style="margin-top:18px">
+            <div class="card-head"><h2>Zona Berbahaya</h2></div>
+            <div class="card-body" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+              <div><b>Hapus Akun</b><div class="help">Tindakan ini permanen dan tidak dapat dibatalkan.</div></div>
+              <button id="delete-account" class="btn btn-danger"><i class="ri-delete-bin-6-line"></i>Hapus Akun</button>
             </div>
           </section>
         </div>
-
-        <section class="card danger-zone" style="margin-top:18px">
-          <div class="card-head"><h2>Zona Berbahaya</h2></div>
-          <div class="card-body" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-            <div><b>Hapus Akun</b><div class="help">Tindakan ini permanen dan tidak dapat dibatalkan.</div></div>
-            <button id="delete-account" class="btn btn-danger"><i class="ri-delete-bin-6-line"></i>Hapus Akun</button>
-          </div>
-        </section>
       </div>
     </main>
   </div>
@@ -277,6 +315,7 @@
     const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
 
     let currentUser=null; let userData={}; let classes=[]; let classMap={};
+    let isFirstLoad = true;
 
     const BANNERS = {
       'banner1': 'https://res.cloudinary.com/ddrtdofqo/image/upload/WhatsApp-Image-2024-02-28-at-3.02.13-PM_zmmjvb.jpg',
@@ -300,8 +339,22 @@
 
     onAuthStateChanged(auth, async (user)=>{
       if(!user){ window.location.replace('auth.html'); return; }
-      currentUser=user; hydrateAvatar(); await hydrateUser(); await hydrateClasses(); renderClasses(); attachEvents();
+      currentUser=user; 
+      await hydrateUser(); 
+      await hydrateClasses(); 
+      renderClasses(); 
+      attachEvents();
+      if(isFirstLoad) {
+        showContent();
+        isFirstLoad = false;
+      }
     });
+
+    function showContent() {
+      document.getElementById('skeleton-wrapper').style.display = 'none';
+      document.getElementById('actual-content').style.display = 'block';
+      hydrateAvatar();
+    }
 
     function hydrateAvatar(){
       const name=localStorage.getItem('userDisplayName') || (currentUser?.displayName ?? 'A');
@@ -443,4 +496,3 @@
   </script>
 </body>
 </html>
-
