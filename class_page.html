@@ -931,12 +931,23 @@
     async function handleKickMember(e) {
         const kickButton = e.target.closest('[data-kick-uid]');
         if (kickButton) {
-            const userIdToKick = kickButton.dataset.kickUid; const memberName = membersCache[userIdToKick]?.name || 'anggota ini';
+            const userIdToKick = kickButton.dataset.kickUid;
+            const memberName = membersCache[userIdToKick]?.name || 'anggota ini';
+            
             if (await showConfirm(`Anda yakin ingin mengeluarkan ${memberName} dari kelas?`)) {
                 try {
-                    const batch = writeBatch(db); batch.update(doc(db, 'classes', classId), { members: arrayRemove(userIdToKick) }); batch.update(doc(db, 'users', userIdToKick), { joinedClasses: arrayRemove(classId) });
-                    await batch.commit(); delete membersCache[userIdToKick]; renderClassMembers();
-                } catch (err) { console.error("Gagal mengeluarkan anggota:", err); alert("Gagal mengeluarkan anggota."); }
+                    // CORRECTED: Only perform the action the admin is authorized to do.
+                    const classRef = doc(db, 'classes', classId);
+                    await updateDoc(classRef, { members: arrayRemove(userIdToKick) });
+                    
+                    // The rest of your UI logic is correct.
+                    delete membersCache[userIdToKick];
+                    renderClassMembers();
+                    // showToast(`${memberName} has been removed.`); // Optional: add a success toast
+                } catch (err) {
+                    console.error("Gagal mengeluarkan anggota:", err);
+                    alert("Gagal mengeluarkan anggota.");
+                }
             }
         }
     }
@@ -972,4 +983,3 @@
   </script>
 </body>
 </html>
-
