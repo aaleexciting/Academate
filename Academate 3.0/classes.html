@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kelas — Academate</title>
+
+  <!-- Fonts & Icons (same as dashboard) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+
+  <style>
+    :root{
+      --bg:#F7F7FA;--surface:#fff;--text:#1E1F24;--muted:#6C6F7F;--primary:#6F6CFF;--primary-2:#8B7CFF;--border:#ECECF1;--shadow:0 6px 24px rgba(30,31,36,.07);--radius:18px;--sidebar-w:280px;--content-max:1320px;--gap:18px;
+      --success:#10B981;--warn:#F59E0B;--danger:#EF4444;--info:#3B82F6;
+    }
+    html,body{height:100%}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px;padding-bottom:80px}
+    a{color:inherit}
+
+    /* App Shell */
+    .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
+    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .main-content{padding:var(--gap);width:100%}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
+    .btn:hover{border-color:#d8d8e0}
+    .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
+    .btn-primary:hover{filter:brightness(.98)}
+    .btn-secondary{background:#F3F2FF;color:var(--primary);border-color:#E7E6FF}
+    .icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:20px;transition:.2s;flex-shrink:0}
+    .icon-btn:hover{color:var(--primary);border-color:#d8d8e0}
+
+    /* Header */
+    .header{margin-top:var(--gap);margin-bottom:24px}
+    .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .header-brand{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+    .header-actions{display:flex;gap:8px}
+    .header-actions .icon-btn{width:38px;height:38px;font-size:18px}
+    .header-main{display:flex;justify-content:space-between;align-items:center;gap:16px}
+    .header-main h1{font-size:22px;margin:0}
+    .header-main p{color:var(--muted);margin:4px 0 0;font-size:14px}
+    .header-avatar-link{text-decoration:none}
+    .header-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0}
+    .header-toolbar{display:none}
+
+    /* Mobile nav */
+    .mobile-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;height:70px;padding:0 10px;z-index:1000}
+    .mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);text-decoration:none;font-size:10px;font-weight:500;padding:8px;border-radius:8px}
+    .mobile-nav a i{font-size:20px}
+    .mobile-nav a.active{color:var(--primary)}
+
+    /* Responsive layout */
+    .sidebar{display:none}
+    .page-grid{display:flex;flex-direction:column;gap:var(--gap)}
+
+    /* Desktop */
+    @media (min-width:901px){
+      body{padding-bottom:0}
+      .mobile-nav{display:none}
+      .app{display:grid;grid-template-columns:var(--sidebar-w) minmax(0,1fr);gap:24px}
+
+      .sidebar{display:flex;flex-direction:column;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+      .brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:22px;margin-bottom:18px}
+      .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#8B7CFF,#6AC9FF)}
+      .nav{display:flex;flex-direction:column;gap:8px;overflow:auto;padding-right:2px}
+      .nav a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:var(--muted);text-decoration:none;font-weight:500;transition:.2s}
+      .nav a i{font-size:20px}
+      .nav a:hover{background:#F3F2FF;color:var(--primary)}
+      .nav a.active{background:var(--primary);color:#fff;box-shadow:0 8px 20px rgba(111,108,255,.3)}
+      .spacer{flex:1}
+      .sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
+      .sidebar-logout-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--muted);font-weight:600;cursor:pointer;transition:.2s}
+      .sidebar-logout-btn:hover{background:#fde2e2;border-color:#f7b2b2;color:#c82424}
+      .sidebar-links{text-align:center;margin-top:16px;display:flex;justify-content:center;gap:16px}
+      .sidebar-links a{font-size:12px;color:var(--muted);text-decoration:none}
+      .sidebar-links a:hover{text-decoration:underline}
+      .copyright{font-size:11px;color:#C0C3D2;text-align:center;margin-top:12px}
+
+      .main-content{max-width:min(var(--content-max),calc(100vw - var(--sidebar-w) - 120px));margin:0 auto}
+
+      .header{display:flex;justify-content:space-between;align-items:center}
+      .header-top,.header-avatar-link,.header-actions{display:none}
+      .header-main{display:block}
+      .header-main h1{font-size:26px}
+      .header-main p{font-size:15px;margin-top:6px}
+      .header-toolbar{display:flex;align-items:center;gap:12px}
+      .search-bar{position:relative}
+      .search-bar input{width:320px;padding:12px 16px 12px 44px;border-radius:12px;border:1px solid var(--border);background:var(--bg);outline:none;transition:.2s}
+      .search-bar input:focus{border-color:var(--primary);background:var(--surface)}
+      .search-bar i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted)}
+    }
+
+    /* === Modern Class Card System (functional) === */
+    .class-toolbar{display:flex;gap:10px;flex-wrap:wrap}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:var(--gap)}
+
+    .x-card{position:relative;border:1px solid var(--border);border-radius:16px;background:var(--surface);overflow:hidden;transition:transform .18s ease, box-shadow .18s ease}
+    .x-card:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(0,0,0,.07)}
+
+    .x-cover{height:90px;background:linear-gradient(135deg,var(--primary),var(--primary-2));position:relative}
+    .x-cover .badge{position:absolute;bottom:10px;left:12px;background:rgba(255,255,255,.9);padding:6px 10px;border-radius:999px;border:1px solid var(--border);font-size:12px;font-weight:600;display:inline-flex;gap:6px;align-items:center}
+    .x-cover .pin-right{position:absolute;top:10px;right:10px;width:36px;height:36px;display:grid;place-items:center;border-radius:12px;background:rgba(255,255,255,.9);border:1px solid var(--border);cursor:pointer}
+
+    .x-body{padding:14px 14px 10px}
+    .x-title{display:flex;gap:10px;align-items:flex-start}
+    .x-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;color:var(--text);flex-shrink:0}
+    .x-icon[data-c="#8B5CF6"]{background:linear-gradient(135deg,#A78BFA22,#8B5CF633)}
+    .x-icon[data-c="#10B981"]{background:linear-gradient(135deg,#34D39922,#10B98133)}
+    .x-icon[data-c="#F59E0B"]{background:linear-gradient(135deg,#FBBF2422,#F59E0B33)}
+    .x-icon[data-c="#EF4444"]{background:linear-gradient(135deg,#F8717122,#EF444433)}
+    .x-icon[data-c="#3B82F6"]{background:linear-gradient(135deg,#60A5FA22,#3B82F633)}
+    .x-icon[data-c="#EC4899"]{background:linear-gradient(135deg,#F472B622,#EC489933)}
+
+    .x-body h3{margin:0;font-size:16px}
+    .x-sub{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+    .x-meta{display:grid;grid-template-columns:1fr auto;align-items:center;margin-top:10px;gap:10px}
+    .x-progress{display:flex;align-items:center;gap:10px}
+    .meter{height:8px;border-radius:999px;background:#F1F2F6;overflow:hidden;flex:1}
+    .meter > span{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-2));width:0}
+    .x-stats{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:12px;color:var(--muted)}
+
+    .x-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);background:var(--bg);padding:10px 12px}
+    .x-people{display:flex}
+    .x-people img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin-left:-8px}
+    .x-people img:first-child{margin-left:0}
+    .x-actions{display:flex;gap:8px}
+    .btn-icon{background:var(--surface);border:1px solid var(--border);width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--muted);cursor:pointer}
+    .btn-icon:hover{color:var(--primary);border-color:#d8d8e0}
+
+    /* Skeletons */
+    .sk{position:relative;overflow:hidden;background:#F2F3F7;border-radius:10px}
+    .sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:shimmer 1.2s infinite}
+    @keyframes shimmer{100%{transform:translateX(100%)}}
+    .skeleton-wrapper.hidden { display: none; }
+    
+    /* MODALS (NEWLY ADDED & FIXED) */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 31, 36, 0.6);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 100;
+      display: none; /* Changed to none */
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fade-in 0.2s ease;
+    }
+    .overlay.show { display: flex; } /* New class to show */
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      width: min(95vw, 560px);
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modal-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .modal h2 { margin: 0 0 16px; }
+    @keyframes modal-pop {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .m-form { display: flex; flex-direction: column; gap: 14px; }
+    .m-form label { font-weight: 600; font-size: 14px; color: var(--text); }
+    .m-form input, .m-form textarea, .m-form select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font: inherit;
+      background: var(--bg);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .m-form input:focus, .m-form textarea:focus, .m-form select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px #6f6cff3b;
+    }
+    
+    .m-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+    .m-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .m-btn.primary { background: var(--primary); color: #fff; }
+    .m-btn.primary:hover { background: var(--primary-2); }
+    .m-btn.ghost { border-color: var(--border); background: transparent; color: var(--muted); }
+    .m-btn.ghost:hover { background: var(--bg); color: var(--text); }
+
+    /* ===== MOBILE RESPONSIVENESS FIXES ===== */
+    @media (max-width: 900px) {
+      /* Fix: Allow page to scroll naturally on mobile */
+      html, body {
+        height: auto;
+      }
+      /* Fix: Add padding to prevent content from being hidden by the fixed mobile nav */
+      body {
+        padding-bottom: 100px;
+      }
+      #page-content.hidden { display: none; }
+    }
+    
+    @media (min-width: 901px) {
+        .skeleton-wrapper {
+            display: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+      /* Adjust main layout padding for smaller screens */
+      .app, .main-content {
+        padding: 12px;
+      }
+      .header-main h1 {
+        font-size: 20px;
+      }
+      .header-main p {
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .class-toolbar {
+        flex-direction: column;
+        align-items: stretch; /* Make buttons take full width */
+      }
+      .class-toolbar .btn {
+        justify-content: center; /* Center button content */
+      }
+
+      /* Fix: Force a single-column layout for class cards */
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      /* Fix: Make card content responsive */
+      .x-body {
+        padding: 12px;
+      }
+      .x-meta {
+        display: flex; /* Change from grid to flex for better wrapping */
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .x-stats {
+        justify-content: flex-start;
+      }
+      .x-foot {
+        padding: 8px 12px;
+      }
+
+      /* Fix: Make modal forms responsive */
+      #create-class-modal .m-form > div[style*="grid"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Navigasi utama">
+      <div class="brand"><div class="logo" aria-hidden="true"></div>Academate</div>
+      <nav class="nav">
+        <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+        <a class="active" href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+        <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+        <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+        <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+      </nav>
+      <div class="spacer"></div>
+      <div class="sidebar-footer">
+        <button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
+        <div class="sidebar-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a></div>
+        <p class="copyright">&copy; 2025 Academate</p>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="main-content">
+          
+        <!-- Skeleton Loader (Mobile Only) -->
+        <div class="skeleton-wrapper">
+            <header class="header">
+                <div class="header-top">
+                    <div class="header-brand">Academate</div>
+                    <div class="header-actions">
+                        <div class="icon-btn sk" style="width:38px;height:38px; border-radius:50%;"></div>
+                        <div class="icon-btn sk" style="width:38px;height:38px; border-radius:50%;"></div>
+                    </div>
+                </div>
+                <div class="header-main">
+                    <div>
+                        <div class="sk" style="height:22px; width:150px; border-radius:8px;"></div>
+                        <div class="sk" style="height:14px; width:250px; margin-top: 8px; border-radius:6px;"></div>
+                    </div>
+                    <div class="sk header-avatar" style="width:42px;height:42px;"></div>
+                </div>
+            </header>
+            <div class="page-grid">
+                <section class="card">
+                    <div class="class-toolbar">
+                        <div class="btn sk" style="flex:1; height:42px;"></div>
+                        <div class="btn sk" style="flex:1; height:42px;"></div>
+                    </div>
+                </section>
+                <section class="card">
+                    <h2 class="section-title">Daftar Kelas</h2>
+                    <div class="grid" id="skeleton-grid"></div>
+                </section>
+            </div>
+        </div>
+        
+        <!-- Actual Content (Initially hidden on mobile) -->
+        <div id="actual-content" style="display: none;">
+            <header class="header">
+              <div class="header-top">
+                <div class="header-brand">Academate</div>
+                <div class="header-actions">
+                  <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
+                  <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+                </div>
+              </div>
+              <div class="header-main">
+                <div>
+                  <h1>Kelas Anda</h1>
+                  <p>Kelola, akses, dan organisir semua mata kuliah Anda di satu tempat.</p>
+                </div>
+                <a href="account.html" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
+              </div>
+              <div class="header-toolbar">
+                <div class="search-bar">
+                  <i class="ri-search-line"></i>
+                  <input id="global-search" type="text" placeholder="Cari kelas, dosen, ruang...">
+                </div>
+                <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+              </div>
+            </header>
+
+            <div class="page-grid" id="page-content">
+              <section class="card">
+                <div class="class-toolbar">
+                  <button class="btn btn-secondary" id="join-class-btn"><i class="ri-user-shared-line"></i><span>Gabung Kelas</span></button>
+                  <button class="btn btn-primary" id="create-class-btn"><i class="ri-add-line"></i><span>Buat Kelas</span></button>
+                </div>
+              </section>
+
+              <section class="card" aria-live="polite">
+                <h2 class="section-title">Daftar Kelas</h2>
+                <div id="class-grid" class="grid"></div>
+              </section>
+            </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav">
+    <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+    <a class="active" href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+    <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+    <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+    <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+  </nav>
+
+  <!-- Modals: Create / Join / Share -->
+  <div class="overlay" id="create-class-modal">
+    <div class="modal">
+      <h2>Buat Kelas Baru</h2>
+      <form id="create-class-form" class="m-form">
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <input type="text" id="class-icon" style="font-size: 24px; text-align: center; width: 60px; padding: 10px 0;" maxlength="2" placeholder="📚">
+            <input type="text" id="namaMataKuliah" placeholder="Nama Mata Kuliah" required style="flex: 1;">
+        </div>
+        <input type="text" id="dosen" placeholder="Nama Dosen" required>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+            <input type="text" id="ruang" placeholder="Ruang Kelas">
+            <input type="number" id="sks" placeholder="SKS" min="1" max="6" required>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+            <select id="hari" required>
+                <option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option>
+            </select>
+            <input type="time" id="waktu" required>
+            <input type="time" id="waktuSelesai" required>
+        </div>
+        <div class="m-foot">
+            <button type="button" class="m-btn ghost" data-close-modal>Batal</button>
+            <button type="submit" class="m-btn primary" id="confirm-create-btn">Buat Kelas</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="overlay" id="join-class-modal">
+    <div class="modal" style="max-width:420px">
+      <h2>Gabung dengan Kelas</h2>
+      <p style="margin:-8px 0 16px; color:var(--muted)">Masukkan kode kelas untuk bergabung.</p>
+      <form id="join-class-form" class="m-form">
+        <input type="text" id="class-code-input" placeholder="ABCD-1234" style="text-align:center; font-size: 1.1rem; letter-spacing: 2px;">
+        <div class="m-foot">
+          <button type="button" class="m-btn ghost" data-close-modal>Batal</button>
+          <button type="submit" class="m-btn primary" id="join-by-code-btn">Gabung</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="overlay" id="share-class-modal">
+      <div class="modal" style="max-width:460px">
+        <h2>Bagikan Kelas</h2>
+        <p style="margin:-8px 0 16px; color:var(--muted)">Bagikan kode atau link untuk mengundang teman.</p>
+        
+        <div style="font-weight:600; font-size: 13px;">Kode Kelas</div>
+        <div style="display:flex; gap:8px; align-items:center; border:1px solid var(--border); border-radius:12px; padding:8px 10px; background: var(--bg);">
+          <span id="share-class-code" style="flex:1; font-weight: 700; letter-spacing: 2px; font-size: 1.2rem;"></span>
+          <button id="copy-code-btn" class="btn btn-secondary" type="button"><i class="ri-file-copy-line"></i>Salin</button>
+        </div>
+        
+        <div style="font-weight:600; font-size: 13px; margin-top: 12px;">Link Undangan</div>
+        <div style="display:flex; gap:8px; align-items:center; border:1px solid var(--border); border-radius:12px; padding:0 10px; background: var(--bg);">
+            <input id="share-class-link" type="text" readonly style="flex:1; border:none; outline:none; background:transparent; font-size: 14px; color: var(--muted); padding: 10px 0;">
+            <button id="copy-link-btn" class="btn btn-secondary" type="button"><i class="ri-links-line"></i>Salin</button>
+        </div>
+
+        <div class="m-foot">
+            <button type="button" class="m-btn primary" data-close-modal>Tutup</button>
+        </div>
+      </div>
+  </div>
+
+  <!-- Firebase + App Logic (fully wired) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, arrayUnion, serverTimestamp, query, where, getDocs, limit, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD7F650" };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null; let joinedClassIds = [];
+    const palette = ['#8B5CF6','#10B981','#F59E0B','#EF4444','#3B82F6','#EC4899'];
+
+    // Initial setup on DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.innerWidth > 900) {
+            document.querySelector('.skeleton-wrapper').style.display = 'none';
+            document.getElementById('actual-content').style.display = 'block';
+            paintCardSkeletons(6);
+        } else {
+            paintCardSkeletons(3, document.getElementById('skeleton-grid'));
+        }
+    });
+    
+    onAuthStateChanged(auth, async (user)=>{
+      if(!user){ window.location.replace('auth.html'); return; }
+      currentUser = user;
+      await loadClasses();
+      attachEvents();
+      handleUrlParams();
+    });
+    
+    function showContent() {
+        const skeleton = document.querySelector('.skeleton-wrapper');
+        const content = document.getElementById('actual-content');
+        if (skeleton) skeleton.style.display = 'none';
+        if (content) content.style.display = 'block';
+    }
+
+    function paintCardSkeletons(n, container){
+      const grid = container || document.getElementById('class-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      for(let i=0;i<n;i++){
+        const sk = document.createElement('div');
+        sk.className='x-card';
+        sk.innerHTML = `<div class='x-cover sk' style='height:90px'></div>
+          <div class='x-body'>
+            <div class='x-title'><div class='x-icon sk' style='width:42px;height:42px'></div><div style='flex:1'>
+              <div class='sk' style='height:16px;border-radius:6px'></div>
+              <div class='sk' style='height:12px;width:70%;margin-top:8px;border-radius:6px'></div>
+            </div></div>
+            <div class='x-meta' style='margin-top:12px'>
+              <div class='x-progress'><div class='meter'><span style='width:40%'></span></div></div>
+              <div class='x-stats'><div class='sk' style='height:22px;width:80px;border-radius:999px'></div></div>
+            </div>
+          </div>
+          <div class='x-foot'><div class='x-people'></div><div class='x-actions'><div class='btn-icon sk'></div><div class='btn-icon sk'></div></div></div>`;
+        grid.appendChild(sk);
+      }
+    }
+
+    async function loadClasses(){
+      try{
+        const userDoc = await getDoc(doc(db,'users', currentUser.uid));
+        joinedClassIds = userDoc.exists() ? (userDoc.data().joinedClasses || []) : [];
+        
+        hydrateAvatar();
+
+        if(!joinedClassIds.length){ 
+          const grid = document.getElementById('class-grid');
+          if (grid) grid.innerHTML = `<div class='card' style='text-align:center;border:2px dashed var(--border); padding: 24px;'><h3 style='margin:0 0 6px'>Anda Belum Memiliki Kelas</h3><p style='color:var(--muted);margin:0'>Buat atau gabung dengan kelas untuk mulai belajar.</p></div>`;
+          showContent();
+          return; 
+        }
+
+        const snaps = await Promise.all(joinedClassIds.map(id => getDoc(doc(db,'classes',id))));
+        let classes = snaps.filter(s=>s.exists()).map(s=>({ id:s.id, ...s.data() }));
+
+        classes = await Promise.all(classes.map(async c => ({ ...c, ...await fetchTaskStats(c.id) })));
+        
+        renderClasses(classes);
+        showContent();
+
+      }catch(e){ 
+        console.error(e); 
+        const grid = document.getElementById('class-grid');
+        if (grid) grid.innerHTML = `<div class='card' style='text-align:center'><h3>Gagal Memuat Kelas</h3><p style='color:var(--muted)'>Silakan coba lagi.</p></div>`; 
+        showContent();
+      }
+    }
+    
+    function hydrateAvatar(){
+      const avatar = document.getElementById('header-avatar-img');
+      const name = localStorage.getItem('userDisplayName') || (currentUser?.displayName ?? 'A');
+      const photo = localStorage.getItem('userPhotoURL') || currentUser?.photoURL;
+      if (avatar) avatar.src = photo || `https://placehold.co/80x80/E5E7EB/6B7280?text=${(name||'A').charAt(0)}`;
+    }
+
+    async function fetchTaskStats(classId){
+      try{
+        const qy = query(collection(db, 'classes', classId, 'tasks'));
+        const snap = await getDocs(qy);
+        const tasks = snap.docs.map(d=>d.data());
+        const total = tasks.length;
+        const completed = tasks.filter(t => (Array.isArray(t.completedBy) && t.completedBy.includes(currentUser.uid))).length;
+        const pct = total ? Math.round((completed/total)*100) : 0;
+        return { tasksTotal: total, tasksCompleted: completed, progress: pct };
+      }catch(err){ console.warn('fetchTaskStats failed for', classId, err); return { tasksTotal: 0, tasksCompleted: 0, progress: 0 }; }
+    }
+
+    function pinKey(id){ return `academate:pin:${id}` }
+
+    function renderClasses(list){
+      list.sort((a,b)=>{
+        const ap = localStorage.getItem(pinKey(a.id))==='1';
+        const bp = localStorage.getItem(pinKey(b.id))==='1';
+        if(ap!==bp) return ap?-1:1;
+        return (a.namaMataKuliah||'').localeCompare(b.namaMataKuliah||'');
+      });
+
+      const grid = document.getElementById('class-grid');
+      grid.innerHTML = '';
+      list.forEach((c, i)=> buildCard(c, palette[i%palette.length]).then(card=> grid.appendChild(card)));
+
+      document.getElementById('global-search')?.addEventListener('input', (e)=>{
+        const q = e.target.value.toLowerCase();
+        [...grid.children].forEach(el=>{
+          const hay = (el.getAttribute('data-search')||'').toLowerCase();
+          el.style.display = hay.includes(q) ? '' : 'none';
+        });
+      });
+    }
+
+    async function buildCard(data, color){
+      const id = data.id;
+      const pin = localStorage.getItem(pinKey(id))==='1';
+      const progress = clamp(typeof data.progress==='number'?data.progress:0, 0, 100);
+      const tasksTotal = data.tasksTotal ?? 0;
+      const tasksCompleted = data.tasksCompleted ?? 0;
+      const upcoming = (data.upcoming ?? `${data.hari||'-'} ${data.waktu||''}`);
+      const members = (data.members||[]).slice(0,4);
+
+      const card = document.createElement('div');
+      card.className='x-card';
+      card.setAttribute('data-search', `${data.namaMataKuliah||''} ${data.dosen||''} ${data.ruang||''} ${data.hari||''}`);
+
+      card.innerHTML = `
+        <div class="x-cover" style="background:linear-gradient(135deg, ${color}, ${shade(color)})">
+          <button class="pin-right" title="Sematkan Kelas"><i class="ri-pushpin-2${pin?'-fill':'-line'}"></i></button>
+          <div class="badge"><i class="ri-map-pin-2-line"></i><span>Ruang ${escapeHTML(data.ruang||'-')}</span></div>
+        </div>
+        <div class="x-body">
+          <div class="x-title">
+            <div class="x-icon" data-c="${color}">${data.classIcon || '📚'}</div>
+            <div style="flex:1">
+              <h3>${escapeHTML(data.namaMataKuliah||'Tanpa Nama')}</h3>
+              <p class="x-sub">${escapeHTML(data.dosen||'-')} • ${escapeHTML(data.hari||'-')}</p>
+            </div>
+          </div>
+          <div class="x-meta">
+            <div class="x-progress" title="${tasksCompleted} dari ${tasksTotal} tugas selesai">
+              <div class="meter" aria-label="Progress kelas" role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100"><span style="width:${progress}%"></span></div>
+            </div>
+            <div class="x-stats">
+              <span class="chip" title="Tugas aktif"><i class="ri-task-line"></i>${tasksCompleted}/${tasksTotal} selesai</span>
+              <span class="chip" title="Pertemuan berikutnya"><i class="ri-time-line"></i>${escapeHTML(upcoming)}</span>
+            </div>
+          </div>
+        </div>
+        <div class="x-foot">
+          <div class="x-people"></div>
+          <div class="x-actions">
+            <button class="btn-icon share" title="Bagikan"><i class="ri-share-forward-line"></i></button>
+            <a class="btn btn-primary" style="padding:8px 12px" href="class_page.html?id=${id}">Buka</a>
+          </div>
+        </div>`;
+
+      const peopleEl = card.querySelector('.x-people');
+      if (members.length > 0) {
+        const memberDocs = await Promise.all(members.map(uid => getDoc(doc(db,'users',uid)).catch(()=>null)));
+        const imgs = memberDocs.map((s,i)=>{
+          let src,label;
+          if(s && s.exists()){
+            const d = s.data();
+            const name = (d.name || d.displayName || 'User').toString();
+            label = name;
+            src = d.photoURL || placeholderFromName(name);
+          } else {
+            label = `User ${i+1}`; src = placeholderFromName(String(members[i]||'U')); 
+          }
+          return `<img src="${src}" alt="${escapeHTML(label)}" title="${escapeHTML(label)}">`;
+        }).join('');
+        peopleEl.innerHTML = imgs;
+      }
+
+      const pinBtn = card.querySelector('.pin-right');
+      const shareBtn = card.querySelector('.share');
+      pinBtn.addEventListener('click', ()=>{ const now = !(localStorage.getItem(pinKey(id))==='1'); localStorage.setItem(pinKey(id), now?'1':'0'); renderClasses(Array.from(document.getElementById('class-grid').children).map(el => JSON.parse(el.dataset.classdata))); });
+      shareBtn.addEventListener('click', ()=> showShareModal(id, data.classCode));
+      card.dataset.classdata = JSON.stringify(data);
+      return card;
+    }
+
+    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+    function shade(hex, percent = -0.3) {
+      if (!hex) return '#5555aa';
+      let f=parseInt(hex.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+      return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
+    }
+    function escapeHTML(s){ return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
+    function initialsOf(name){ return (name||'U').split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase() }
+    function placeholderFromName(name){ return `https://placehold.co/64x64/E5E7EB/6B7280?text=${encodeURIComponent(initialsOf(name))}` }
+    
+    function attachEvents(){
+      document.getElementById('logout-button-desktop')?.addEventListener('click', ()=> signOut(auth));
+      document.body.addEventListener('click', (e) => {
+        if(e.target.closest('#create-class-btn')) document.getElementById('create-class-modal').classList.add('show');
+        if(e.target.closest('#join-class-btn')) document.getElementById('join-class-modal').classList.add('show');
+        
+        const closeModalButton = e.target.closest('[data-close-modal]');
+        const overlay = e.target.closest('.overlay');
+        if (closeModalButton || (overlay && e.target === overlay)) {
+            (closeModalButton || e.target).closest('.overlay').classList.remove('show');
+        }
+      });
+      document.getElementById('create-class-form').addEventListener('submit', handleCreateClass);
+      document.getElementById('join-class-form').addEventListener('submit', handleJoinByCode);
+      document.getElementById('copy-code-btn').addEventListener('click', (e)=> copyToClipboard(document.getElementById('share-class-code').textContent, e.target));
+      document.getElementById('copy-link-btn').addEventListener('click', (e)=> copyToClipboard(document.getElementById('share-class-link').value, e.target));
+    }
+
+    async function handleCreateClass(e){
+      e.preventDefault();
+      const confirmBtn = document.getElementById('confirm-create-btn');
+      confirmBtn.disabled = true; confirmBtn.innerHTML = 'Membuat...';
+      try{
+        const namaMK = document.getElementById('namaMataKuliah').value;
+        const initials = namaMK.replace(/[^a-zA-Z0-9 ]/g, "").split(' ').map(w=>w[0]).join('').toUpperCase().substring(0,4);
+        const randomCode = Math.floor(1000 + Math.random()*9000);
+        const classCode = `${initials}-${randomCode}`;
+        const newClassData = {
+          namaMataKuliah: namaMK,
+          classIcon: document.getElementById('class-icon').value || '📚',
+          dosen: document.getElementById('dosen').value,
+          sks: Number(document.getElementById('sks').value),
+          ruang: document.getElementById('ruang').value,
+          hari: document.getElementById('hari').value,
+          waktu: document.getElementById('waktu').value,
+          waktuSelesai: document.getElementById('waktuSelesai').value,
+          classCode,
+          creatorId: currentUser.uid,
+          createdAt: serverTimestamp(),
+          members: [currentUser.uid]
+        };
+        const newDoc = await addDoc(collection(db,'classes'), newClassData);
+        await setDoc(doc(db,'users', currentUser.uid), { joinedClasses: arrayUnion(newDoc.id) }, { merge: true });
+        e.target.reset(); document.getElementById('create-class-modal').classList.remove('show'); await loadClasses();
+      }catch(err){ console.error(err); alert('Gagal membuat kelas.'); }
+      finally{ confirmBtn.disabled = false; confirmBtn.innerHTML = 'Buat Kelas'; }
+    }
+
+    async function handleJoinByCode(e){
+      e.preventDefault();
+      const codeInput = document.getElementById('class-code-input');
+      const joinBtn = document.getElementById('join-by-code-btn');
+      const code = codeInput.value.trim().toUpperCase();
+      if(!code){ return alert('Silakan masukkan kode kelas.'); }
+      joinBtn.disabled = true; joinBtn.textContent = 'Mencari...';
+      try{
+        const qy = query(collection(db,'classes'), where('classCode','==', code), limit(1));
+        const snap = await getDocs(qy);
+        if (snap.empty){ alert('Kelas tidak ditemukan.'); return; }
+        const classId = snap.docs[0].id;
+        if (joinedClassIds.includes(classId)){ alert('Anda sudah bergabung.'); return; }
+        await setDoc(doc(db,'users', currentUser.uid), { joinedClasses: arrayUnion(classId) }, { merge: true });
+        await updateDoc(doc(db,'classes', classId), { members: arrayUnion(currentUser.uid) });
+        document.getElementById('join-class-modal').classList.remove('show'); codeInput.value=''; await loadClasses();
+      }catch(err){ console.error(err); alert('Gagal bergabung ke kelas.'); }
+      finally{ joinBtn.disabled = false; joinBtn.textContent = 'Gabung'; }
+    }
+
+    function showShareModal(classId, classCode){
+      document.getElementById('share-class-code').textContent = classCode || 'N/A';
+      const link = `${window.location.origin}${window.location.pathname}?join_code=${classCode}`;
+      const linkInput = document.getElementById('share-class-link');
+      if (linkInput) {
+          linkInput.value = link;
+      }
+      document.getElementById('share-class-modal').classList.add('show');
+    }
+    
+    function copyToClipboard(text, btn){
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(()=>{ 
+        const originalIcon = btn.innerHTML;
+        btn.innerHTML='<i class="ri-check-line"></i>Disalin!'; 
+        setTimeout(()=> btn.innerHTML=originalIcon, 1500);
+      }); 
+    }
+
+    function handleUrlParams(){
+      const params = new URLSearchParams(window.location.search);
+      const joinCode = params.get('join_code');
+      if (joinCode){
+        document.getElementById('join-class-modal').classList.add('show');
+        document.getElementById('class-code-input').value = joinCode;
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+  </script>
+</body>
+</html>
+

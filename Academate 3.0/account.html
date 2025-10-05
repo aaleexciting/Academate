@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Akun — Academate</title>
+
+  <!-- Fonts & Icons (match other pages) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+
+  <style>
+    :root{
+      --bg:#F7F7FA;--surface:#fff;--text:#1E1F24;--muted:#6C6F7F;--primary:#6F6CFF;--primary-2:#8B7CFF;--border:#ECECF1;--shadow:0 6px 24px rgba(30,31,36,.07);--radius:18px;--sidebar-w:280px;--content-max:1320px;--gap:18px;
+      --success:#10B981;--warn:#F59E0B;--danger:#EF4444;--info:#3B82F6;
+    }
+    html,body{height:100%}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px;padding-bottom:80px}
+    a{color:inherit}
+
+    /* App Shell */
+    .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
+    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);}
+    .main-content{padding:var(--gap);width:100%}
+
+    /* Sidebar (desktop) */
+    .sidebar{display:none}
+    @media (min-width:901px){
+      body{padding-bottom:0}
+      .app{display:grid;grid-template-columns:var(--sidebar-w) minmax(0,1fr);gap:24px}
+      .sidebar{display:flex;flex-direction:column;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+      .brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:22px;margin-bottom:18px}
+      .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#8B7CFF,#6AC9FF)}
+      .nav{display:flex;flex-direction:column;gap:8px;overflow:auto;padding-right:2px}
+      .nav a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:var(--muted);text-decoration:none;font-weight:500;transition:.2s}
+      .nav a i{font-size:20px}
+      .nav a:hover{background:#F3F2FF;color:var(--primary)}
+      .nav a.active{background:var(--primary);color:#fff;box-shadow:0 8px 20px rgba(111,108,255,.3)}
+      .spacer{flex:1}
+      .sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
+      .sidebar-logout-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--muted);font-weight:600;cursor:pointer;transition:.2s}
+      .sidebar-logout-btn:hover{background:#fde2e2;border-color:#f7b2b2;color:#c82424}
+      .sidebar-links{text-align:center;margin-top:16px;display:flex;justify-content:center;gap:16px}
+      .sidebar-links a{font-size:12px;color:var(--muted);text-decoration:none}
+      .sidebar-links a:hover{text-decoration:underline}
+      .copyright{font-size:11px;color:#C0C3D2;text-align:center;margin-top:12px}
+    }
+
+    /* Header */
+    .header{margin-top:var(--gap);margin-bottom:24px}
+    .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .header-brand{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+    .header-actions{display:flex;gap:8px}
+    .header-actions .icon-btn{width:38px;height:38px;font-size:18px}
+    .header-main{display:flex;justify-content:space-between;align-items:center;gap:16px}
+    .header-main h1{font-size:22px;margin:0}
+    .header-main p{color:var(--muted);margin:4px 0 0;font-size:14px}
+    .header-avatar-link{text-decoration:none}
+    .header-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0}
+    .header-toolbar{display:none}
+
+    /* Desktop toolbar */
+    @media (min-width:901px){
+      .main-content{max-width:min(var(--content-max),calc(100vw - var(--sidebar-w) - 120px));margin:0 auto}
+      .header{display:flex;justify-content:space-between;align-items:center}
+      .header-top,.header-avatar-link,.header-actions{display:none}
+      .header-main{display:block}
+      .header-main h1{font-size:26px}
+      .header-main p{font-size:15px;margin-top:6px}
+      .header-toolbar{display:flex;align-items:center;gap:12px}
+    }
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
+    .btn:hover{border-color:#d8d8e0}
+    .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
+    .btn-danger{background:#fff;color:var(--danger);border:1px solid #ffd2d2}
+    .btn-danger:hover{background:#ffe7e7}
+    .icon-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:18px}
+    .icon-btn:hover{color:var(--primary);border-color:#d8d8e0}
+
+    /* Cards & forms */
+    .grid{display:grid;grid-template-columns:1fr;gap:18px}
+    @media (min-width:1100px){.grid{grid-template-columns:1.2fr .8fr}}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+    .card-head{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--border); flex-wrap: wrap; gap: 8px;}
+    .card-head h2{margin:0;font-size:18px}
+    .card-body{padding:16px}
+    .card-foot{padding:12px 16px;border-top:1px solid var(--border);background:#fafafe;display:flex;justify-content:flex-end;gap:10px}
+
+    .form-row{margin-bottom:16px}
+    .form-row label{font-weight:600;color:var(--text); display: block; margin-bottom: 6px;}
+    .form-row input, .form-row select{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);outline:none; width: 100%; font-family: inherit; font-size: 14px;}
+    .help{color:var(--muted);font-size:12px;margin-top:6px}
+    .avatar{display:flex;align-items:center;gap:12px}
+    .avatar img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--border)}
+
+    .list{display:grid;gap:12px}
+    .class-item{border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff}
+    .class-main{display:flex;align-items:center;gap:12px; margin-bottom: 12px;}
+    .class-icon{width:44px;height:44px;border-radius:10px;background:#F3F2FF;color:var(--text);font-size: 22px; display:grid;place-items:center; flex-shrink: 0;}
+    .btn-full{width: 100%;}
+
+    .danger-zone{border:1px dashed #ffd2d2;background:#fff6f6}
+
+    @media (min-width: 768px) {
+        .form-row{display:grid;grid-template-columns:180px 1fr;gap:12px;align-items:center;margin-bottom:12px}
+        .form-row label { margin-bottom: 0; color: var(--muted); }
+        .form-row input, .form-row select { width: auto; max-width: 420px; }
+        .avatar img{width:72px;height:72px;}
+        .class-item { display: flex; align-items: center; justify-content: space-between; }
+        .class-main { margin-bottom: 0; }
+        .btn-full { width: auto; }
+    }
+
+    /* Mobile nav */
+    .mobile-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;height:70px;padding:0 10px;z-index:1000}
+    .mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);text-decoration:none;font-size:10px;font-weight:500;padding:8px;border-radius:8px}
+    .mobile-nav a i{font-size:20px}
+    .mobile-nav a.active{color:var(--primary)}
+    @media (min-width:901px){.mobile-nav{display:none}}
+    
+    @media (max-width: 420px) {
+      .app { padding: 12px; }
+      .main-content { padding: 12px; }
+      .card-body { padding: 12px; }
+    }
+
+    .toast{position:fixed;right:18px;bottom:90px;background:#111827;color:#fff;padding:12px 14px;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,.25);display:none;z-index:1100}
+
+    /* Banner Selector Styles */
+    .banner-option {
+      width: 120px;
+      height: 60px;
+      border-radius: 8px;
+      border: 3px solid transparent;
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .banner-option.selected {
+      border-color: var(--primary);
+    }
+
+    /* === SCROLLING & SKELETON FIXES === */
+    @media (max-width: 900px) {
+      html, body {
+        height: auto;
+      }
+    }
+    .sk{position:relative;overflow:hidden;background:#F2F3F7;border-radius:10px}
+    .sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:shimmer 1.2s infinite}
+    @keyframes shimmer{100%{transform:translateX(100%)}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Navigasi utama">
+      <div class="brand"><div class="logo" aria-hidden="true"></div>Academate</div>
+      <nav class="nav">
+        <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+        <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+        <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+        <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+        <a class="active" href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+      </nav>
+      <div class="spacer"></div>
+      <div class="sidebar-footer">
+        <button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
+        <div class="sidebar-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a></div>
+        <p class="copyright">&copy; 2025 Academate</p>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="main-content">
+        
+        <!-- Skeleton Loader -->
+        <div id="skeleton-wrapper">
+          <header class="header">
+              <div class="header-top">
+                  <div class="header-brand">Academate</div>
+                  <div class="header-actions">
+                      <div class="icon-btn sk" style="width:38px;height:38px; border-radius:10px;"></div>
+                      <div class="icon-btn sk" style="width:38px;height:38px; border-radius:10px;"></div>
+                  </div>
+              </div>
+              <div class="header-main">
+                  <div>
+                      <div class="sk" style="height:22px; width:100px; border-radius:8px;"></div>
+                      <div class="sk" style="height:14px; width:220px; margin-top: 8px; border-radius:6px;"></div>
+                  </div>
+              </div>
+          </header>
+          <div class="grid">
+            <div class="card sk" style="height: 500px;"></div>
+            <div class="card sk" style="height: 300px;"></div>
+          </div>
+          <div class="card sk" style="height: 100px; margin-top: 18px;"></div>
+        </div>
+
+        <!-- Actual Content -->
+        <div id="actual-content" style="display: none;">
+          <header class="header">
+            <div class="header-top">
+              <div class="header-brand">Academate</div>
+              <div class="header-actions">
+                <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
+                <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+              </div>
+            </div>
+            <div class="header-main">
+              <div>
+                <h1>Akun</h1>
+                <p>Kelola profil & keanggotaan kelas Anda.</p>
+              </div>
+              <a href="#" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
+            </div>
+            <div class="header-toolbar"></div>
+          </header>
+
+          <div class="grid">
+            <!-- Profile card -->
+            <section class="card">
+              <div class="card-head"><h2>Profil</h2><button id="save-profile" class="btn btn-primary"><i class="ri-save-3-line"></i>Simpan</button></div>
+              <div class="card-body">
+                <div class="form-row">
+                  <label>Foto Profil</label>
+                  <div class="avatar"><img id="avatar" alt="avatar"></div>
+                </div>
+                <div class="form-row"><label for="display-name">Nama Tampilan</label><input id="display-name" placeholder="Nama Anda"></div>
+                <div class="form-row"><label>Email</label><input id="email" disabled></div>
+                <div class="form-row"><label for="university">Universitas</label><input id="university" placeholder="Nama Universitas"></div>
+                <div class="form-row"><label for="major">Jurusan/Major</label><input id="major" placeholder="Contoh: Informatika"></div>
+                <div class="form-row"><label for="semester">Semester</label>
+                  <input type="number" id="semester" placeholder="e.g., 5" min="1">
+                </div>
+
+                <!-- NEW FIELDS -->
+                <div class="form-row"><label for="instagram">Instagram</label><input id="instagram" placeholder="https://instagram.com/username"></div>
+                <div class="form-row"><label for="spotify">Spotify</label><input id="spotify" placeholder="https://open.spotify.com/user/..."></div>
+
+                <div class="form-row" style="align-items: flex-start; margin-top: 16px;">
+                  <label>Banner Profil</label>
+                  <div id="banner-selector" style="display: flex; gap: 10px; flex-wrap: wrap; max-width: 420px;">
+                    <!-- Banners will be generated by JS here -->
+                  </div>
+                </div>
+                <!-- END OF NEW FIELDS -->
+              </div>
+              <div class="card-foot"><span id="save-state" class="help" style="margin-right:auto"></span><button id="signout" class="btn"><i class="ri-logout-box-r-line"></i>Keluar</button></div>
+            </section>
+
+            <!-- Classes membership -->
+            <section class="card">
+              <div class="card-head"><h2>Keanggotaan Kelas</h2>
+                <div style="display:flex;gap:8px"><button id="refresh-classes" class="btn"><i class="ri-refresh-line"></i>Muat Ulang</button></div>
+              </div>
+              <div class="card-body">
+                <div id="classes-list" class="list" aria-live="polite"></div>
+              </div>
+            </section>
+          </div>
+
+          <section class="card danger-zone" style="margin-top:18px">
+            <div class="card-head"><h2>Zona Berbahaya</h2></div>
+            <div class="card-body" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+              <div><b>Hapus Akun</b><div class="help">Tindakan ini permanen dan tidak dapat dibatalkan.</div></div>
+              <button id="delete-account" class="btn btn-danger"><i class="ri-delete-bin-6-line"></i>Hapus Akun</button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav">
+    <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+    <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+    <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+    <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+    <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+  </nav>
+
+  <!-- Simple confirm dialog -->
+  <div id="confirm-overlay" style="display:none;position:fixed;inset:0;background:rgba(17,24,39,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center">
+    <div style="background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 14px;max-width:420px;width:90%">
+      <h3 id="confirm-title" style="margin:0 0 6px;font-size:18px">Konfirmasi</h3>
+      <p id="confirm-text" style="margin:0 0 12px;color:var(--muted)">Yakin?</p>
+      <div style="display:flex;justify-content:flex-end;gap:8px">
+        <button id="confirm-cancel" class="btn">Batal</button>
+        <button id="confirm-ok" class="btn btn-danger">Lanjut</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Tersimpan</div>
+
+  <!-- Firebase + Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut, updateProfile, GoogleAuthProvider, reauthenticateWithPopup, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, arrayRemove, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD7F650" };
+
+    const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
+
+    let currentUser=null; let userData={}; let classes=[]; let classMap={};
+    let isFirstLoad = true;
+
+    const BANNERS = {
+      'banner1': 'https://res.cloudinary.com/ddrtdofqo/image/upload/WhatsApp-Image-2024-02-28-at-3.02.13-PM_zmmjvb.jpg',
+      'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max',
+      'banner3': 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max'
+    };
+
+    const avatar=document.getElementById('avatar');
+    const headerAvatar=document.getElementById('header-avatar-img');
+    const displayNameEl=document.getElementById('display-name');
+    const emailEl=document.getElementById('email');
+    const universityEl=document.getElementById('university');
+    const majorEl=document.getElementById('major');
+    const semesterEl=document.getElementById('semester');
+    const instagramEl = document.getElementById('instagram');
+    const spotifyEl = document.getElementById('spotify');
+    const bannerSelector = document.getElementById('banner-selector');
+    const saveBtn=document.getElementById('save-profile');
+    const saveState=document.getElementById('save-state');
+    const classesList=document.getElementById('classes-list');
+
+    onAuthStateChanged(auth, async (user)=>{
+      if(!user){ window.location.replace('auth.html'); return; }
+      currentUser=user; 
+      await hydrateUser(); 
+      await hydrateClasses(); 
+      renderClasses(); 
+      attachEvents();
+      if(isFirstLoad) {
+        showContent();
+        isFirstLoad = false;
+      }
+    });
+
+    function showContent() {
+      document.getElementById('skeleton-wrapper').style.display = 'none';
+      document.getElementById('actual-content').style.display = 'block';
+      hydrateAvatar();
+    }
+
+    function hydrateAvatar(){
+      const name=localStorage.getItem('userDisplayName') || (currentUser?.displayName ?? 'A');
+      const photo=localStorage.getItem('userPhotoURL') || currentUser?.photoURL;
+      const ph=`https://placehold.co/120x120/E5E7EB/6B7280?text=${(name||'A').charAt(0)}`;
+      if(headerAvatar) headerAvatar.src = photo || ph;
+      if(avatar) avatar.src = photo || ph;
+    }
+
+    async function hydrateUser(){
+      const snap=await getDoc(doc(db,'users', currentUser.uid));
+      userData = snap.exists()? snap.data():{};
+      displayNameEl.value = userData.name || currentUser.displayName || '';
+      emailEl.value = currentUser.email || '';
+      universityEl.value = userData.university || '';
+      majorEl.value = userData.major || '';
+      semesterEl.value = userData.semester || '';
+      instagramEl.value = userData.instagramUrl || '';
+      spotifyEl.value = userData.spotifyUrl || '';
+      renderBannerOptions(userData.bannerId || 'banner1');
+    }
+
+    function renderBannerOptions(selectedId) {
+        bannerSelector.innerHTML = '';
+        for (const [id, url] of Object.entries(BANNERS)) {
+            const bannerDiv = document.createElement('div');
+            bannerDiv.className = `banner-option ${id === selectedId ? 'selected' : ''}`;
+            bannerDiv.style.backgroundImage = `url(${url})`;
+            bannerDiv.dataset.bannerId = id;
+            bannerSelector.appendChild(bannerDiv);
+        }
+    }
+
+    async function hydrateClasses(){
+      const snap=await getDoc(doc(db,'users', currentUser.uid));
+      const ids = snap.exists()? (snap.data().joinedClasses || []) : [];
+      const docs = await Promise.all(ids.map(id=> getDoc(doc(db,'classes',id))));
+      classes = docs.filter(s=>s.exists()).map(s=>({ id:s.id, ...s.data() }));
+      classMap = Object.fromEntries(classes.map(c=>[c.id,c]));
+    }
+
+    function renderClasses(){
+      classesList.innerHTML = '';
+      if(!classes.length){ classesList.innerHTML = '<div style="padding:12px;color:var(--muted)">Belum bergabung kelas.</div>'; return; }
+      classes.forEach(c=>{
+        const el=document.createElement('div'); el.className='class-item';
+        el.innerHTML = `
+          <div class="class-main">
+            <div class="class-icon">${c.classIcon || '📚'}</div>
+            <div>
+              <div style="font-weight:700">${escapeHTML(c.namaMataKuliah||'Kelas')}</div>
+              <div class="help">${escapeHTML(c.dosen||'-')} • ${escapeHTML(c.hari||'-')} ${escapeHTML(c.waktu||'')}</div>
+            </div>
+          </div>
+          <button class="btn btn-full" data-leave="${c.id}"><i class="ri-logout-box-r-line"></i>Tinggalkan</button>
+        `;
+        el.querySelector('[data-leave]').addEventListener('click',()=> confirmDialog({
+          title:'Tinggalkan Kelas', text:`Anda akan keluar dari ${escapeHTML(c.namaMataKuliah||'kelas ini')}. Lanjutkan?`,
+          onOk:()=> leaveClass(c.id)
+        }));
+        classesList.appendChild(el);
+      });
+    }
+
+    async function saveProfile(){
+      saveBtn.disabled=true; saveState.textContent='Menyimpan...';
+      const selectedBanner = bannerSelector.querySelector('.selected');
+      const payload={
+        name: (displayNameEl.value||'').trim(),
+        university: (universityEl.value||'').trim(),
+        major: (majorEl.value||'').trim(),
+        semester: semesterEl.value||'',
+        instagramUrl: (instagramEl.value||'').trim(),
+        spotifyUrl: (spotifyEl.value||'').trim(),
+        bannerId: selectedBanner ? selectedBanner.dataset.bannerId : 'banner1'
+      };
+      try{
+        await updateDoc(doc(db,'users', currentUser.uid), payload);
+        if(payload.name && payload.name !== currentUser.displayName){ await updateProfile(currentUser, { displayName: payload.name }); localStorage.setItem('userDisplayName', payload.name); }
+        showToast('Profil tersimpan'); saveState.textContent='Tersimpan';
+        setTimeout(()=> saveState.textContent='', 2000);
+      }catch(e){ console.error(e); alert('Gagal menyimpan profil.'); }
+      finally{ saveBtn.disabled=false; }
+    }
+
+    async function leaveClass(classId){
+      try{
+        // remove from user's joinedClasses
+        const uref = doc(db,'users', currentUser.uid);
+        await updateDoc(uref, { joinedClasses: arrayRemove(classId) });
+        // Optional: also remove user from class.members if it exists
+        try{ await updateDoc(doc(db,'classes', classId), { members: arrayRemove(currentUser.uid) }); }catch{}
+        classes = classes.filter(c=>c.id!==classId); renderClasses(); showToast('Berhasil keluar dari kelas');
+      }catch(e){ console.error(e); alert('Gagal meninggalkan kelas.'); }
+    }
+
+    function attachEvents(){
+      document.getElementById('logout-button-desktop')?.addEventListener('click',()=> signOut(auth));
+      document.getElementById('signout').addEventListener('click',()=> signOut(auth));
+      document.getElementById('refresh-classes').addEventListener('click', async()=>{ await hydrateClasses(); renderClasses(); });
+      saveBtn.addEventListener('click', saveProfile);
+      document.getElementById('delete-account').addEventListener('click',()=> confirmDialog({title:'Hapus Akun', text:'Ini akan menghapus akun Anda secara permanen. Lanjutkan?', danger:true, onOk: deleteAccount }));
+      bannerSelector.addEventListener('click', (e) => {
+        if (e.target.classList.contains('banner-option')) {
+            bannerSelector.querySelector('.selected')?.classList.remove('selected');
+            e.target.classList.add('selected');
+        }
+      });
+    }
+
+    async function deleteAccount(){
+      try{
+        const provider=new GoogleAuthProvider();
+        await reauthenticateWithPopup(currentUser, provider);
+        // NOTE: Firestore cleanup of user doc should be done in backend; we only remove auth user here for safety.
+        await deleteUser(currentUser);
+        alert('Akun dihapus.');
+        window.location.replace('index.html');
+      }catch(e){
+        if(e.code==='auth/requires-recent-login') alert('Sesi berakhir. Login ulang untuk menghapus.');
+        else if(e.code==='auth/popup-closed-by-user') alert('Dibatalkan.');
+        else alert('Gagal menghapus akun.');
+      }
+    }
+
+    function confirmDialog({title='Konfirmasi', text='Yakin?', danger=false, onOk}){
+      const ov=document.getElementById('confirm-overlay'); ov.style.display='flex';
+      document.getElementById('confirm-title').textContent=title;
+      document.getElementById('confirm-text').textContent=text;
+      const ok=document.getElementById('confirm-ok'); ok.classList.toggle('btn-danger', !!danger);
+      const close=()=> ov.style.display='none';
+      document.getElementById('confirm-cancel').onclick = close;
+      ok.onclick = ()=>{ close(); onOk&&onOk(); };
+    }
+
+    function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=> t.style.display='none', 1600); }
+
+    function escapeHTML(s){ return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
+  </script>
+</body>
+</html>

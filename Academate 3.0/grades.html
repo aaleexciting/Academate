@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analisis Nilai — Academate</title>
+
+  <!-- Fonts & Icons (Consistent with suite) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+
+  <!-- Charts & Stats -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root{
+      --bg:#F7F7FA;--surface:#fff;--text:#1E1F24;--muted:#6C6F7F;--primary:#6F6CFF;--primary-2:#8B7CFF;--border:#ECECF1;--shadow:0 6px 24px rgba(30,31,36,.07);--radius:18px;--sidebar-w:280px;--content-max:1320px;--gap:18px;
+      --success:#10B981;--warn:#F59E0B;--danger:#EF4444;--info:#3B82F6;
+    }
+    html,body{height:100%}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px;padding-bottom:80px}
+    a{color:inherit; text-decoration:none}
+
+    /* === App Shell (parity) === */
+    .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
+    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .main-content{padding:var(--gap);width:100%}
+    .sidebar{display:none}
+
+    @media (min-width:901px){
+      body{padding-bottom:0}
+      .app{display:grid;grid-template-columns:var(--sidebar-w) minmax(0,1fr);gap:24px}
+      .sidebar{display:flex;flex-direction:column;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+      .brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:22px;margin-bottom:18px}
+      .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#8B7CFF,#6AC9FF)}
+      .nav{display:flex;flex-direction:column;gap:8px}
+      .nav a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:var(--muted);text-decoration:none;font-weight:500;transition:.2s}
+      .nav a i{font-size:20px}
+      .nav a:hover{background:#F3F2FF;color:var(--primary)}
+      .nav a.active{background:var(--primary);color:#fff;box-shadow:0 8px 20px rgba(111,108,255,.3)}
+      .spacer{flex:1}
+      .sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
+      .sidebar-logout-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--muted);font-weight:600;cursor:pointer;transition:.2s}
+      .sidebar-logout-btn:hover{background:#fde2e2;border-color:#f7b2b2;color:#c82424}
+
+      .main-content{max-width:min(var(--content-max),calc(100vw - var(--sidebar-w) - 120px));margin:0 auto}
+      .header{display:flex;justify-content:space-between;align-items:center}
+      .header-main h1{font-size:26px}
+    }
+
+    /* Header */
+    .header{margin-top:var(--gap);margin-bottom:24px}
+    .header-main h1{font-size:22px;margin:0}
+    .header-main p{color:var(--muted);margin:4px 0 0;font-size:14px}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
+    .btn:hover{border-color:#d8d8e0}
+    .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
+    .btn-danger{background:#fff;color:var(--danger);border-color:#ffd2d2}
+
+    /* Cards */
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+    .card-head{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--border);gap:8px;flex-wrap:wrap}
+    .card-head h2{margin:0;font-size:18px}
+    .card-body{padding:16px}
+
+    /* Layouts */
+    .page-grid{display:grid;gap:var(--gap)}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--gap)}
+    .charts-grid{display:grid;grid-template-columns:1fr;gap:var(--gap)}
+    @media (min-width:1100px){.charts-grid{grid-template-columns:1.4fr 1fr}}
+
+    /* Stats */
+    .stat-card{padding:18px;border:1px solid var(--border);border-radius:14px;background:#fff}
+    .stat-top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+    .stat-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px}
+    .ipk{background:#F3F2FF;color:var(--primary)}
+    .sks{background:#ECFDF5;color:var(--success)}
+    .mk{background:#FFFBEB;color:var(--warn)}
+    .trend{background:#E0F2FE;color:#0EA5E9}
+    .stat-label{font-size:13px;color:var(--muted)}
+    .stat-value{font-size:28px;font-weight:700}
+
+    /* Tables */
+    .table-container{max-height:520px;overflow:auto}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px 16px;border-bottom:1px solid var(--border);text-align:left}
+    thead{position:sticky;top:0;background:#fff}
+    th{font-size:13px;color:var(--muted);font-weight:600}
+    tr:hover{background:#F8F8FE}
+
+    /* Importer */
+    .importer{padding:40px 20px;border:2px dashed var(--border);border-radius:16px;text-align:center}
+    .importer i{font-size:48px;color:var(--primary)}
+    textarea{width:100%;max-width:720px;min-height:220px;border:1px solid var(--border);border-radius:12px;padding:12px;font-family:ui-monospace, "SF Mono", Menlo, monospace}
+
+    /* Pills & filters */
+    .filters{display:flex;gap:10px;flex-wrap:wrap}
+    .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:12px;color:var(--muted)}
+    .chip i{font-size:14px}
+    .search{position:relative}
+    .search input{padding:10px 12px 10px 40px;border-radius:12px;border:1px solid var(--border);background:#F2F3FF}
+    .search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+
+    /* Mobile nav */
+    .mobile-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;height:70px;padding:0 10px;z-index:1000}
+    .mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:10px;font-weight:500;padding:8px;border-radius:8px}
+    .mobile-nav a i{font-size:20px}
+    .mobile-nav a.active{color:var(--primary)}
+    @media (min-width:901px){.mobile-nav{display:none}}
+
+    .toast{position:fixed;right:18px;bottom:90px;background:#111827;color:#fff;padding:12px 14px;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,.25);display:none;z-index:1100}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Navigasi utama">
+      <div class="brand"><div class="logo" aria-hidden="true"></div>Academate</div>
+      <nav class="nav">
+        <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+        <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+        <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+        <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+        <a href="grades.html" class="active"><i class="ri-line-chart-line"></i><span>Analisis Nilai</span></a>
+        <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+      </nav>
+      <div class="spacer"></div>
+      <div class="sidebar-footer">
+        <button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div id="main-content" class="main-content">
+        <div class="loader" style="border:4px solid #f3f3f3;border-top:4px solid var(--primary);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:60px auto"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav">
+    <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+    <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+    <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+    <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+    <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+    <a href="grades.html" class="active"><i class="ri-line-chart-line"></i><span>Analisis</span></a>
+  </nav>
+
+  <div id="toast" class="toast">Tersimpan</div>
+
+  <!-- Firebase + Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50" };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let currentUser = null;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { window.location.replace('auth.html'); return; }
+      currentUser = user;
+      loadPageContent();
+      document.getElementById('logout-button-desktop')?.addEventListener('click', () => signOut(auth));
+    });
+
+    async function loadPageContent(){
+      const root = document.getElementById('main-content');
+      try{
+        const snap = await getDoc(doc(db,'users', currentUser.uid));
+        const data = snap.exists()? snap.data():{};
+        const transcript = data.transcript || null;
+        if(!transcript){ renderImporterView(); return; }
+        const analysis = analyzeTranscript(transcript);
+        renderAnalysisView(analysis, transcript, data);
+      }catch(e){ console.error(e); root.innerHTML = `<p style="color:#EF4444">Gagal memuat data.</p>`; }
+    }
+
+    /* ================= Importer ================= */
+    function renderImporterView(){
+      const root = document.getElementById('main-content');
+      root.innerHTML = `
+        <header class="header"><div class="header-main"><div><h1>Analisis Nilai</h1><p>Impor transkrip nilai Anda untuk mulai menganalisis performa.</p></div></div></header>
+        <section class="card"><div class="card-body importer">
+          <i class="ri-upload-cloud-2-line"></i>
+          <h3>Impor Transkrip Nilai</h3>
+          <p>Salin seluruh tabel/teks transkrip dari portal akademik Anda lalu tempelkan di bawah. Kami akan mendeteksi mata kuliah, SKS, nilai, dan semester.</p>
+          <textarea id="transcript-paste" placeholder="Tempelkan teks transkrip di sini..."></textarea>
+          <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <button id="parse-btn" class="btn btn-primary"><i class="ri-sparkling-2-line"></i> Proses & Simpan</button>
+            <button id="example-btn" class="btn"><i class="ri-lightbulb-line"></i> Lihat Contoh Format</button>
+          </div>
+        </div></section>`;
+      document.getElementById('parse-btn').addEventListener('click', handleImport);
+      document.getElementById('example-btn').addEventListener('click', showExample);
+    }
+
+    function showExample(){
+      const area = document.getElementById('transcript-paste');
+      area.value = `Semester 1 - Tahun Akademik 2023/2024 GANJIL\n1 Kalkulus I A 4.00 3 12.00\n2 Pengantar Pemrograman B+ 3.50 3 10.50\n3 Bahasa Indonesia A 4.00 2 8.00\nSemester 2 - Tahun Akademik 2023/2024 GENAP\n1 Struktur Data A- 3.70 3 11.10\n2 Basis Data B 3.00 3 9.00`;
+      area.scrollIntoView({behavior:'smooth'});
+    }
+
+    async function handleImport(){
+      const btn = document.getElementById('parse-btn');
+      const text = document.getElementById('transcript-paste').value.trim();
+      if(!text){ alert('Kotak teks tidak boleh kosong.'); return; }
+      btn.disabled=true; btn.innerHTML='<i class="ri-loader-4-line"></i> Memproses...';
+      const parsed = parseTranscriptFromText(text);
+      if(!parsed?.length){ alert('Format tidak dikenali. Cek contoh format.'); btn.disabled=false; btn.innerHTML='<i class="ri-sparkling-2-line"></i> Proses & Simpan'; return; }
+      try{
+        await updateDoc(doc(db,'users', currentUser.uid), { transcript: parsed, transcriptLastUpdated: serverTimestamp() });
+        showToast('Transkrip disimpan');
+        loadPageContent();
+      }catch(e){ console.error(e); alert('Gagal menyimpan.'); btn.disabled=false; btn.innerHTML='<i class="ri-sparkling-2-line"></i> Proses & Simpan'; }
+    }
+
+    /* Robust-ish parser for common text exports */
+    function parseTranscriptFromText(text){
+      const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+      const out=[]; let currentSemester=null; let currentYear=null; let termLabel='';
+      const semRe = /Semester\s+(\d+)\s*-\s*Tahun\s+Akademik\s+(\d{4}\/\d{4})\s+(GANJIL|GENAP)/i;
+      // Example line: 1 Kalkulus I A 4.00 3 12.00
+      const rowRe = /^(\d+)\s+(.+?)\s+([A-D][+\-]?)\s+([0-4](?:\.\d{1,2})?)\s+(\d{1,2})\s+([0-9]+(?:\.[0-9]{1,2})?)$/;
+      for(const line of lines){
+        const sm = line.match(semRe);
+        if(sm){ currentSemester=Number(sm[1]); currentYear=`${sm[2]} ${sm[3].toUpperCase()}`; termLabel = `Sm. ${currentSemester} (${currentYear})`; continue; }
+        const rm = line.match(rowRe);
+        if(rm){ out.push({ no:Number(rm[1]), name:rm[2], grade:rm[3].toUpperCase(), points:Number(rm[4]), credits:Number(rm[5]), totalPoints:Number(rm[6]), semester: currentSemester ?? 0, academicYear: currentYear ?? 'Unknown', termLabel }); }
+      }
+      return out;
+    }
+
+    /* ================= Analysis ================= */
+    function analyzeTranscript(rows){
+      const bySem = new Map(); const gradeDist = {}; let totalPts=0, totalSks=0;
+      for(const r of rows){
+        totalPts += r.totalPoints||0; totalSks += r.credits||0;
+        const key = r.termLabel || `Sm. ${r.semester}`;
+        if(!bySem.has(key)) bySem.set(key, { pts:0, sks:0, rows:[] });
+        bySem.get(key).pts += r.totalPoints||0; bySem.get(key).sks += r.credits||0; bySem.get(key).rows.push(r);
+        const g = r.grade.replace(/[^A-D]/g,''); gradeDist[g] = (gradeDist[g]||0)+1;
+      }
+      const semesterGpa = [...bySem.entries()].map(([label,v])=>({ label, gpa: v.sks? (v.pts/v.sks):0, sks:v.sks })).sort((a,b)=> a.label.localeCompare(b.label, 'id'));
+      const cumulativeGpa = totalSks? (totalPts/totalSks):0;
+      const best = semesterGpa.length? semesterGpa.reduce((p,c)=> c.gpa>p.gpa? c:p, semesterGpa[0]) : null;
+      const worst = semesterGpa.length? semesterGpa.reduce((p,c)=> c.gpa<p.gpa? c:p, semesterGpa[0]) : null;
+      // rolling trend (last 3 terms)
+      const trend3 = semesterGpa.slice(-3).map(x=>x.gpa);
+      const trendDelta = trend3.length>=2? (trend3[trend3.length-1]-trend3[0]) : 0;
+      return { cumulativeGpa, totalSks, courseCount: rows.length, semesterGpa, gradeDist, best, worst, trendDelta };
+    }
+
+    /* ================= Views ================= */
+    function renderAnalysisView(analysis, rows, userData){
+      const root = document.getElementById('main-content');
+      const lastUpdated = userData.transcriptLastUpdated?.toDate?.().toLocaleString('id-ID') || '';
+      root.innerHTML = `
+        <header class="header"><div class="header-main"><div>
+          <h1>Analisis Nilai</h1>
+          <p>Visualisasi IP, distribusi nilai, dan detail transkrip — dengan filter dan insight.</p>
+        </div></div></header>
+
+        <section class="card"><div class="card-body" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <div class="filters">
+            <span class="chip"><i class="ri-graduation-cap-line"></i> IPK: <b>${analysis.cumulativeGpa.toFixed(2)}</b></span>
+            <span class="chip"><i class="ri-book-2-line"></i> SKS: <b>${analysis.totalSks}</b></span>
+            <span class="chip"><i class="ri-list-check-2"></i> MK: <b>${analysis.courseCount}</b></span>
+            ${lastUpdated? `<span class="chip"><i class="ri-time-line"></i> Update: ${lastUpdated}</span>`:''}
+          </div>
+          <div style="display:flex;gap:8px">
+            <button id="btn-export-csv" class="btn"><i class="ri-download-2-line"></i> Ekspor CSV</button>
+            <button id="btn-reimport" class="btn btn-danger"><i class="ri-delete-bin-6-line"></i> Hapus & Impor Ulang</button>
+          </div>
+        </div></section>
+
+        <section class="stats-grid">
+          ${statTile('IPK Kumulatif', analysis.cumulativeGpa.toFixed(2), 'ri-graduation-cap-line','ipk')}
+          ${statTile('Total SKS', analysis.totalSks, 'ri-book-2-line','sks')}
+          ${statTile('Mata Kuliah', rows.length, 'ri-list-check-2','mk')}
+          ${statTile('Tren 3 Term', (analysis.trendDelta>=0?'+':'')+analysis.trendDelta.toFixed(2), 'ri-line-chart-line','trend')}
+        </section>
+
+        <section class="charts-grid">
+          <div class="card"><div class="card-head"><h2>IP per Semester</h2></div><div class="card-body" style="height:320px"><canvas id="gpaTrend"></canvas></div></div>
+          <div class="card"><div class="card-head"><h2>Distribusi Nilai</h2></div><div class="card-body" style="height:320px"><canvas id="gradePie"></canvas></div></div>
+        </section>
+
+        <section class="card">
+          <div class="card-head"><h2>Detail Transkrip</h2>
+            <div class="search"><i class="ri-search-line"></i><input id="q" placeholder="Cari mata kuliah / nilai"/></div>
+          </div>
+          <div class="card-body" style="padding:0"><div class="table-container"><table>
+            <thead><tr><th>Term</th><th>Mata Kuliah</th><th>SKS</th><th>Nilai</th><th>Angka Mutu</th><th>Mutu×SKS</th></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table></div></div>
+        </section>
+      `;
+
+      // Render rows
+      const tbody = document.getElementById('tbody');
+      const sorted = [...rows].sort((a,b)=> (a.termLabel||'').localeCompare(b.termLabel||'') || a.no-b.no);
+      let rowsView = sorted;
+      const renderRows = (arr)=>{
+        tbody.innerHTML='';
+        for(const r of arr){
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${escapeHTML(r.termLabel||'')}</td><td>${escapeHTML(r.name)}</td><td>${r.credits}</td><td>${r.grade}</td><td>${Number(r.points).toFixed(2)}</td><td>${Number(r.totalPoints).toFixed(2)}</td>`;
+          tbody.appendChild(tr);
+        }
+      };
+      renderRows(rowsView);
+
+      // Search filter
+      document.getElementById('q').addEventListener('input', (e)=>{
+        const v = e.target.value.toLowerCase();
+        rowsView = sorted.filter(r=> (r.name||'').toLowerCase().includes(v) || String(r.grade).toLowerCase().includes(v));
+        renderRows(rowsView);
+      });
+
+      // Charts
+      setTimeout(()=>{
+        renderGpaTrend(analysis.semesterGpa);
+        renderGradePie(analysis.gradeDist);
+      }, 50);
+
+      // Export CSV
+      document.getElementById('btn-export-csv').addEventListener('click', ()=> exportCSV(sorted));
+
+      // Reimport
+      document.getElementById('btn-reimport').addEventListener('click', async()=>{
+        if(!confirm('Hapus data transkrip dan impor ulang?')) return;
+        try{ await updateDoc(doc(db,'users', currentUser.uid), { transcript: null }); loadPageContent(); }catch(e){ alert('Gagal menghapus.'); }
+      });
+    }
+
+    function statTile(label, value, icon, kind){
+      return `<div class="stat-card"><div class="stat-top"><div class="stat-icon ${kind}"><i class="${icon}"></i></div><div><div class="stat-label">${label}</div><div class="stat-value">${value}</div></div></div></div>`;
+    }
+
+    /* ================= Charts ================= */
+    function renderGpaTrend(sem){
+      const el = document.getElementById('gpaTrend'); if(!el) return;
+      const labels = sem.map(s=> s.label);
+      const data = sem.map(s=> Number(s.gpa.toFixed? s.gpa.toFixed(2): s.gpa));
+      new Chart(el.getContext('2d'), {
+        type:'line',
+        data:{ labels, datasets:[{ label:'IP', data, borderColor:'#6F6CFF', backgroundColor:'rgba(111,108,255,.12)', borderWidth:3, fill:true, tension:.35, pointRadius:4 }]},
+        options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ y:{ suggestedMin:2.5, max:4.0 } } }
+      });
+    }
+
+    function renderGradePie(dist){
+      const el = document.getElementById('gradePie'); if(!el) return;
+      const labels = Object.keys(dist).sort();
+      const data = labels.map(k=> dist[k]);
+      new Chart(el.getContext('2d'), {
+        type:'doughnut',
+        data:{ labels, datasets:[{ data, backgroundColor:['#6F6CFF','#10B981','#F59E0B','#EF4444','#3B82F6','#EC4899'], borderColor:'#fff', borderWidth:4 }] },
+        options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom' } } }
+      });
+    }
+
+    /* ================= Utils ================= */
+    function exportCSV(rows){
+      const header=['no','name','grade','points','credits','totalPoints','semester','academicYear','termLabel'];
+      const csv=[header.join(',')].concat(rows.map(r=> header.map(h=> JSON.stringify(r[h]??'')).join(','))).join('\n');
+      const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=url; a.download='transkrip.csv'; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
+    }
+
+    function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=> t.style.display='none', 1600); }
+    function escapeHTML(s){ return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
+  </script>
+</body>
+</html>

@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="id" data-app="academate">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Academate • Kelas</title>
+  <!-- Fonts & Icons (same as dashboard master) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+
+  <style>
+    /* ===== THEME — identical to dashboard ===== */
+    :root{
+      --bg:#F7F7FA; --surface:#FFFFFF; --text:#1E1F24; --muted:#6C6F7F;
+      --primary:#6F6CFF; --primary-2:#8B7CFF; --border:#ECECF1;
+      --shadow:0 6px 24px rgba(30,31,36,.07);
+      --radius:18px; --sidebar-w:280px; --gap:18px; --content-max:1320px;
+      --bubble:#F3F2FF; /* Soft lavender, from dashboard hover */
+      --bubble-me-text:#fff;
+      --ok:#10B981; --warn:#F59E0B; --danger:#EF4444;
+    }
+    html,body{height:100%}
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
+      background:var(--bg); color:var(--text); overflow:hidden; font-size:15px;
+    }
+
+    /* App shell */
+    .app{padding:var(--gap); width:100%; max-width:1700px; margin:0 auto; height:100dvh; display:grid; grid-template-rows:1fr}
+    @media (min-width:901px){
+      .app{grid-template-columns:var(--sidebar-w) 1fr; grid-template-rows:1fr; column-gap:24px}
+    }
+
+    /* Sidebar (desktop) */
+    .sidebar{display:none}
+    @media (min-width:901px){
+      .sidebar{display:flex; flex-direction:column; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; height:100%; min-height:0}
+      .brand{display:flex; align-items:center; gap:12px; font-weight:700; font-size:22px; margin-bottom:18px}
+      .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#8B7CFF,#6AC9FF)}
+      .nav{display:flex; flex-direction:column; gap:8px; overflow:auto; padding-right:4px}
+      .nav a{display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; color:var(--muted); text-decoration:none; font-weight:500; transition:.2s}
+      .nav a i{font-size:20px}
+      .nav a:hover{background:#F3F2FF; color:var(--primary)}
+      .nav a.active{background:var(--primary); color:#fff; box-shadow:0 8px 20px rgba(111,108,255,.3)}
+      .spacer{flex:1}
+      .sidebar-footer { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); }
+      .sidebar-logout-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; background: transparent; border: 1px solid var(--border); color: var(--muted); font-weight: 600; cursor: pointer; transition: .2s; }
+      .sidebar-logout-btn:hover { background: #fde2e2; border-color: #f7b2b2; color: #c82424; }
+      .sidebar-links { text-align: center; margin-top: 16px; display: flex; justify-content: center; gap: 16px; }
+      .sidebar-links a { font-size: 12px; color: var(--muted); text-decoration: none; }
+      .sidebar-links a:hover { text-decoration: underline; }
+      .copyright { font-size: 11px; color: #C0C3D2; text-align: center; margin-top: 12px; }
+    }
+
+    /* Main layout: FIXED expanded content (no layout jump) */
+    .main{display:grid; grid-template-rows:auto 1fr; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; height:100%; min-height:0}
+    .header{display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border)}
+    .header-left{display:flex; align-items:center; gap:12px; min-width: 0;}
+    .header-left > div { flex-grow: 1; min-width: 0; }
+    .header-title-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap;}
+    .header-title{margin:0; font-size:20px; display: flex; align-items: center;}
+    .header-icon {
+        width: 44px; height: 44px; border-radius: 12px;
+        background: var(--bubble); display: grid; place-items: center;
+        font-size: 24px; flex-shrink: 0; margin-right: 8px;
+    }
+    .header-sub{margin:4px 0 0; color:var(--muted); font-size:13px; width: 100%;}
+    .header-right{display:flex; align-items:center; gap:10px}
+    .icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:18px;transition:.2s}
+    .icon-btn:hover{color:var(--primary); border-color:#d8d8e0}
+    .avatar{width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--border)}
+
+    /* Member Display in Header */
+    .class-members-display { display: flex; align-items: center; cursor: pointer; }
+    .member-avatar-stack { display: flex; }
+    .member-avatar-stack .avatar-sm { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--surface); margin-left: -10px; object-fit: cover; transition: transform .2s; }
+    .member-avatar-stack .avatar-sm:first-child { margin-left: 0; }
+    .class-members-display:hover .avatar-sm { transform: translateY(-2px); }
+    .more-members { width: 28px; height: 28px; border-radius: 50%; background: var(--bubble); border: 2px solid var(--surface); margin-left: -10px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--primary); }
+    @media (max-width: 900px) {
+        .header-title-wrapper { flex-direction: row; align-items: center; gap: 12px; }
+        .header-sub { width: auto; margin-top: 0; }
+    }
+
+    /* Member List in Modal */
+    .member-popup-list { list-style: none; margin: 0; padding: 0 4px; max-height: 50vh; overflow-y: auto; }
+    .member-popup-item { display: flex; align-items: center; gap: 12px; padding: 10px 8px; border-radius: 8px; cursor: pointer; }
+    .member-popup-item:hover { background-color: var(--bg); }
+    .member-popup-item .avatar { width: 40px; height: 40px; border: none; flex-shrink: 0; }
+    .member-popup-item-info { min-width: 0; }
+    .member-popup-item-info h4 { font-size: 14px; margin: 0 0 2px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .member-popup-item-info p { font-size: 12px; margin: 0; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .member-popup-list { scrollbar-width: thin; scrollbar-color: var(--primary-2) transparent; }
+    .member-popup-list::-webkit-scrollbar { width: 6px; }
+    .member-popup-list::-webkit-scrollbar-track { background: transparent; }
+    .member-popup-list::-webkit-scrollbar-thumb { background-color: var(--primary-2); border-radius: 20px; }
+
+
+    /* CONTENT: fixed grid that fills remaining height */
+    .content{display:grid; grid-template-columns:1fr; gap:18px; padding:18px; height:100%; min-height:0}
+    @media (min-width:1100px){ .content{grid-template-columns:2fr 1fr} }
+
+    .card{background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:0 2px 8px rgba(20,20,30,.03); display:flex; flex-direction:column; min-height:0}
+    .card-body{padding:16px; display:flex; flex-direction:column; min-height:0; flex-grow: 1;}
+    .card-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px}
+    .card-title{font-size:16px; font-weight:600; margin:0}
+    .btn{display:inline-flex; align-items:center; gap:8px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--text); padding:8px 12px; cursor:pointer; font-weight:600; text-decoration:none}
+    .btn.primary{background:#F1EEFF; color:var(--primary); border-color:#E3E0FF}
+    .btn.full{width:100%; justify-content:center}
+
+    /* === GROUP DISCUSSION — revamped alignment & scaling === */
+    .chat-wrapper{display:grid; grid-template-rows:1fr auto; gap:12px; min-height:0; flex:1}
+    .feed{position:relative; overflow:auto; padding:8px 12px 8px 0; min-height:0}
+    .day-divider{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:12px; margin:10px 0}
+    .day-divider::before,.day-divider::after{content:""; height:1px; background:var(--border); flex:1}
+
+    .m{display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:end; margin:8px 0}
+    .m.me{grid-template-columns:1fr auto}
+    .m.me .ava{order:2}
+    .m.me .bubble{
+        order:1;
+        justify-self:end;
+        background: linear-gradient(135deg, var(--primary-2), var(--primary));
+        color:var(--bubble-me-text);
+        border: none;
+    }
+    .ava{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.05); cursor: pointer;}
+    .bubble{
+        max-width:min(640px, 85%);
+        background:var(--bubble);
+        border:none; padding:10px 12px;
+        border-radius:14px;
+        box-shadow:0 1px 3px rgba(0,0,0,.04);
+        line-height:1.55;
+        justify-self: start; /* This is the fix! */
+    }
+    .meta{display:flex; align-items:center; gap:8px; font-size:11px; color:var(--muted); margin-top:6px}
+    .m.me .meta { color: rgba(255, 255, 255, 0.75); }
+    .sender{font-weight:600; font-size:12px}
+    .msg-img{border-radius:12px; border:1px solid var(--border); max-width:260px; width:100%; height:auto}
+
+    /* Composer: sticky, auto-grow textarea, attach & emoji */
+    .composer{display:flex; align-items:flex-end; gap:10px; background:var(--surface); border-top:1px solid var(--border); padding-top:10px}
+    .composer .tools{display:flex; align-items:center; gap:6px}
+    .i-btn{width:44px;height:44px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:18px}
+    .composer textarea{flex:1; resize:none; max-height:34dvh; min-height:44px; padding:12px 14px; border:1px solid var(--border); border-radius:12px; font:inherit; line-height:1.5; overflow:auto;}
+    .composer button{height:44px; padding:12px 14px; border:none; border-radius:12px; background:var(--primary); color:#fff; font-weight:700; cursor:pointer}
+    .typing{font-size:12px; color:var(--muted); margin-top:4px}
+
+    /* Better list sections */
+    .tasks{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; overflow:auto}
+    .task{border-top:1px solid var(--border)}
+    .task:first-child{border-top:0}
+    .task-h{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 0; cursor:pointer}
+    .task-left{display:flex; align-items:center; gap:12px; min-width:0}
+    .checkbox{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);display:grid;place-items:center;flex-shrink:0;background:#fff}
+    .task.done .checkbox{background:var(--primary); border-color:var(--primary)}
+    .checkbox i{font-size:14px; color:#fff; opacity:0; transform:scale(.6); transition:.15s}
+    .task.done .checkbox i{opacity:1; transform:scale(1)}
+    .task-title{font-weight:600; white-space:nowrap; text-overflow:ellipsis; overflow:hidden}
+    .due{font-size:11px; padding:4px 8px; border-radius:99px; flex-shrink:0}
+    .due.normal{background:#F5F6FA; color:var(--muted)}
+    .due.soon{background:#FEF3C7; color:#B45309}
+    .due.urgent,.due.overdue{background:#FEE2E2; color:#B91C1C}
+    .expand i{color:var(--muted)}
+    .task-details{max-height:0; overflow:hidden; transition:max-height .3s ease, padding .3s ease}
+    .task.expanded .task-details{max-height:600px; padding-bottom:12px}
+    .task-desc{margin:0 0 10px 32px; color:#3a3d4a; line-height:1.6; white-space:pre-wrap}
+    .task-foot{display:flex; justify-content:space-between; align-items:center; gap:10px; padding-left:32px}
+    .task-foot .who{font-size:12px; color:var(--muted)}
+    .task-foot .del{border:none; background:transparent; color:var(--muted); cursor:pointer; padding:6px 8px; border-radius:8px}
+    .task-foot .del:hover{background:#FEE2E2; color:#B91C1C}
+    .pp-row{display:flex}
+    .pp-row img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin-left:-8px}
+    .pp-row img:first-child{margin-left:0}
+
+    /* Notes */
+    .notes{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; overflow:auto}
+    .note{border:1px solid var(--border); background:#FAFAFF; border-radius:12px; padding:12px; cursor:pointer; transition:.2s; text-decoration: none; display: block;}
+    .note:hover{background:#F3F2FF; border-color:#DCD9FF}
+    .note h4{margin:0 0 4px; font-size:14px; color: var(--text);}
+    .note p{margin:0; color:#3a3d4a; font-size:13px}
+    .note small{display:block; color:var(--muted); margin-top:8px}
+    
+    /* ===== MODERN SCROLLBAR (REVISED) ===== */
+    .nav, .feed, .member-popup-list {
+      scrollbar-width: thin; scrollbar-color: var(--primary-2) transparent;
+    }
+    .nav::-webkit-scrollbar, .feed::-webkit-scrollbar, .member-popup-list::-webkit-scrollbar { width: 8px; }
+    .nav::-webkit-scrollbar-track, .feed::-webkit-scrollbar-track, .member-popup-list::-webkit-scrollbar-track { background: transparent; }
+    .nav::-webkit-scrollbar-thumb, .feed::-webkit-scrollbar-thumb, .member-popup-list::-webkit-scrollbar-thumb { background-color: var(--primary-2); border-radius: 20px; }
+    .nav::-webkit-scrollbar-thumb:hover, .feed::-webkit-scrollbar-thumb:hover, .member-popup-list::-webkit-scrollbar-thumb:hover { background-color: var(--primary); }
+    .tasks, .notes, .composer textarea { -ms-overflow-style: none; scrollbar-width: none; }
+    .tasks::-webkit-scrollbar, .notes::-webkit-scrollbar, .composer textarea::-webkit-scrollbar { display: none; }
+    body { scrollbar-width: thin; scrollbar-color: var(--primary-2) var(--bg); }
+    body::-webkit-scrollbar { width: 8px; }
+    body::-webkit-scrollbar-track { background: var(--bg); }
+    body::-webkit-scrollbar-thumb { background: var(--primary-2); border-radius: 20px; }
+    body::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+    /* ===== FIX 1: Decouple side panel to fix desktop layout ===== */
+    .side-panel {
+      display: flex; flex-direction: column; gap: var(--gap); min-height: 0;
+    }
+
+    /* Mobile bottom nav */
+    .mnav{position:fixed; left:0; right:0; bottom:0; height:70px; background:rgba(255,255,255,.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; z-index:40}
+    .mnav a{display:flex; flex-direction:column; align-items:center; gap:4px; text-decoration:none; color:var(--muted); font-size:10px; font-weight:500}
+    .mnav a i{font-size:20px}
+    .mnav a.active{color:var(--primary)}
+    @media (min-width:901px){ .mnav{display:none} }
+
+    /* Utilities */
+    .skeleton{background:#f0f1f5; background:linear-gradient(90deg, #f0f1f5 25%, #f7f8fa 37%, #f0f1f5 63%); background-size:400% 100%; animation:shimmer 1.4s ease infinite; border-radius:12px}
+    @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+    .loader{border:4px solid #f3f3f3;border-top:4px solid var(--primary);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:24px auto}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .empty{color:var(--muted); text-align:center; padding:18px}
+
+    /* ===== MOBILE RESPONSIVENESS ===== */
+    @media (max-width: 900px) {
+      html, body { height: auto; }
+      body { overflow: auto; padding-bottom: 100px; }
+      .app { display: block; height: auto; }
+      .main { display: block; height: auto; }
+      .content { display: flex; flex-direction: column; height: auto; gap: var(--gap); }
+      .card-body { flex-grow: 0; }
+      #discussion-card { height: 75dvh; display: flex; flex-direction: column; }
+      #discussion-card .card-body { flex-grow: 1; }
+    }
+    
+    /* ===== ENHANCED MOBILE STYLING (FIXES) - DISCORD STYLE ===== */
+    @media (max-width: 450px) {
+      .content { padding: 12px; gap: 12px; }
+      .card-body { padding: 12px; }
+      .m { gap: 8px; }
+      .ava { width: 32px; height: 32px; }
+      .bubble { padding: 8px 12px; font-size: 14px; }
+      .sender { font-size: 11px; }
+      .composer { gap: 6px; padding-top: 8px; }
+      .i-btn { width: 42px; height: 42px; }
+      .composer textarea { min-height: 42px; font-size: 14px; padding: 10px 12px; }
+      #send-btn { width: 42px; height: 42px; padding: 0; font-size: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+      #send-btn i { font-size: 20px; margin: 0; }
+      #add-note-btn { padding: 6px 10px; font-size: 13px; }
+      .header { padding: 10px 12px; justify-content: space-between; gap: 10px; align-items: center; }
+      .header-left { align-items: center; min-width: 0; }
+      .header-right { display: flex; gap: 8px; flex-shrink: 0; padding: 0; align-items: center; }
+      .header-right #refresh-btn { display: none; }
+      .header-left > div { position: relative; padding-left: 44px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+      .header-icon { position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; font-size: 18px; margin-right: 0; }
+      .class-members-display { display: flex; }
+      .header-sub { display: block; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; padding-left: 0; }
+      .header-title-wrapper { display: block; cursor: pointer; min-width: 0; }
+      .header-title { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; margin: 0; display: block; }
+      .icon-btn { width: 36px !important; height: 36px !important; border-radius: 50% !important; flex-shrink: 0; }
+      .header-left .icon-btn { margin-top: 0; }
+      .header-right .avatar { width: 36px; height: 36px; flex-shrink: 0; }
+    }
+
+    /* ===== MODALS (NEWLY ADDED & FIXED) ===== */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 31, 36, 0.6);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fade-in 0.2s ease;
+    }
+    .overlay.show { display: flex; }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      width: min(95vw, 480px);
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modal-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .modal h2 { margin: 0 0 16px; }
+    @keyframes modal-pop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; } }
+
+    .m-form { display: flex; flex-direction: column; gap: 14px; }
+    .m-form label { font-weight: 600; font-size: 14px; color: var(--text); }
+    .m-form input, .m-form textarea, .m-form select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font: inherit;
+      background: var(--bg);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .m-form input:focus, .m-form textarea:focus, .m-form select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px #6f6cff3b;
+    }
+    
+    .m-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+    .m-btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 10px; border: 1px solid transparent; font-weight: 600; cursor: pointer; transition: .2s; }
+    .m-btn.primary { background: var(--primary); color: #fff; }
+    .m-btn.primary:hover { background: var(--primary-2); }
+    .m-btn.ghost { border-color: var(--border); background: transparent; color: var(--muted); }
+    .m-btn.ghost:hover { background: var(--bg); color: var(--text); }
+
+    /* Profile Modal CSS */
+    .profile-card-banner { height: 120px; background-size: cover; background-position: center; }
+    .profile-card-body { padding: 16px; text-align: center; position: relative; }
+    .profile-card-avatar { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid var(--surface); position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); }
+    .profile-card-info { padding-top: 45px; }
+    .profile-card-info h3 { margin: 0; font-size: 20px; }
+    .profile-card-info p { margin: 4px 0 12px; color: var(--muted); }
+    .profile-card-details { font-size: 13px; text-align: left; padding: 0 8px; }
+    .detail-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .detail-item i { color: var(--muted); }
+    .profile-card-socials { display: flex; justify-content: center; gap: 12px; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; }
+    .social-btn { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--bg); color: var(--text); font-size: 22px; text-decoration: none; }
+    
+    /* Settings Modal Responsiveness */
+    @media (max-width: 520px) {
+        #settings-modal .modal { padding: 20px; }
+        #settings-modal .m-form > div[style*="grid"] { grid-template-columns: 1fr !important; }
+        #settings-modal .m-foot { flex-wrap: wrap; gap: 12px !important; justify-content: center !important; margin-top: 20px; }
+        #settings-modal .m-foot > div { flex-basis: 100%; order: 1; display: flex; gap: 10px; }
+        #settings-modal .m-foot > div .m-btn { flex-grow: 1; justify-content: center; }
+        #settings-modal .m-foot #delete-class-btn { flex-basis: 100%; order: 2; justify-content: center !important; background-color: #fef2f2; }
+    }
+  </style>
+</head>
+<body data-page="classes">
+  <div class="app">
+    <!-- Sidebar (desktop) -->
+    <aside class="sidebar" aria-label="Navigasi utama">
+      <div class="brand"><div class="logo" aria-hidden="true"></div>Academate</div>
+      <nav class="nav">
+        <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+        <a href="classes.html" class="active"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+        <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+        <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+        <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+      </nav>
+      <div class="spacer"></div>
+      <div class="sidebar-footer">
+        <button class="sidebar-logout-btn logout" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
+        <div class="sidebar-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a></div>
+        <p class="copyright">&copy; 2025 Academate</p>
+      </div>
+    </aside>
+
+    <!-- Main (contains skeleton and actual content) -->
+    <section class="main" id="main">
+      <!-- SKELETON LOADER -->
+      <div id="skeleton-loader">
+        <header class="header">
+          <div class="header-left" style="gap: 12px; align-items: center;">
+            <div class="skeleton" style="width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;"></div>
+            <div style="flex: 1; min-width: 0;">
+              <div class="skeleton" style="height: 24px; width: 60%; border-radius: 8px;"></div>
+              <div class="skeleton" style="height: 16px; width: 80%; margin-top: 8px; border-radius: 6px;"></div>
+            </div>
+          </div>
+          <div class="header-right" style="gap: 10px; align-items: center;">
+            <div class="skeleton" style="width: 38px; height: 38px; border-radius: 50%;"></div>
+            <div class="skeleton" style="width: 40px; height: 40px; border-radius: 50%;"></div>
+          </div>
+        </header>
+        <div class="content">
+          <div class="card" id="discussion-card-skeleton">
+            <div class="card-body">
+              <div class="card-head">
+                <div class="skeleton" style="height: 20px; width: 120px; border-radius: 8px;"></div>
+                <div class="skeleton" style="height: 34px; width: 90px; border-radius: 10px;"></div>
+              </div>
+              <div class="chat-wrapper">
+                <div class="feed" style="opacity: 0.5;">
+                  <div class="skeleton" style="width: 60%; height: 40px; border-radius: 12px; margin-bottom: 12px;"></div>
+                  <div class="skeleton" style="width: 75%; height: 50px; border-radius: 12px; margin-left: auto; margin-bottom: 12px;"></div>
+                  <div class="skeleton" style="width: 50%; height: 30px; border-radius: 12px; margin-bottom: 12px;"></div>
+                  <div class="skeleton" style="width: 65%; height: 45px; border-radius: 12px; margin-left: auto;"></div>
+                </div>
+                <div class="composer">
+                  <div class="skeleton" style="width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;"></div>
+                  <div class="skeleton" style="flex: 1; height: 44px; border-radius: 12px;"></div>
+                  <div class="skeleton" style="width: 80px; height: 44px; border-radius: 12px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="side-panel" id="side-panel-skeleton">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-head"><div class="skeleton" style="height: 20px; width: 80px; border-radius: 8px;"></div></div>
+                <div class="skeleton" style="height: 34px; width: 100%; border-radius: 8px; margin-bottom: 8px;"></div>
+                <div class="skeleton" style="height: 34px; width: 100%; border-radius: 8px; margin-bottom: 8px;"></div>
+                <div class="skeleton" style="height: 40px; width: 100%; border-radius: 10px; margin-top: 12px;"></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <div class="card-head">
+                  <div class="skeleton" style="height: 20px; width: 150px; border-radius: 8px;"></div>
+                  <div class="skeleton" style="height: 34px; width: 80px; border-radius: 10px;"></div>
+                </div>
+                <div class="skeleton" style="height: 60px; width: 100%; border-radius: 12px; margin-bottom: 8px;"></div>
+                <div class="skeleton" style="height: 60px; width: 100%; border-radius: 12px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ACTUAL CONTENT (Populated by JS) -->
+      <header class="header" id="header"></header>
+      <div class="content" id="content" role="main" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <nav class="mnav">
+    <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+    <a href="classes.html" class="active"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+    <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+    <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+    <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+  </nav>
+
+  <!-- Modals -->
+  <div class="overlay" id="add-task-modal">
+    <div class="modal">
+      <h2>Tambah Tugas Baru</h2>
+      <form id="add-task-form" class="m-form">
+        <div><label for="task-title-input">Judul Tugas</label><input type="text" id="task-title-input" required /></div>
+        <div><label for="task-due-date-input">Tenggat Waktu</label><input type="date" id="task-due-date-input" required /></div>
+        <div><label for="task-description-input">Deskripsi (Opsional)</label><textarea id="task-description-input" rows="4" placeholder="Detail tugas…"></textarea></div>
+        <div class="m-foot">
+          <button type="button" class="m-btn ghost" data-close-modal>Batal</button>
+          <button type="submit" class="m-btn primary" id="confirm-add-task-btn">Tambah</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="overlay" id="member-list-modal">
+      <div class="modal" style="width:min(95vw, 420px);">
+        <h2>Anggota Kelas</h2>
+        <ul id="member-popup-list" class="member-popup-list"></ul>
+        <div class="m-foot"><button class="m-btn primary" data-close-modal>Tutup</button></div>
+      </div>
+  </div>
+  <div class="overlay" id="settings-modal">
+    <div class="modal" style="width:min(95vw, 520px);">
+      <h2>Pengaturan Kelas</h2>
+      <form id="settings-form" class="m-form">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <input type="text" id="settings-icon" style="font-size: 24px; text-align: center; width: 60px; padding: 10px 0;" maxlength="2">
+          <input type="text" id="settings-name" placeholder="Nama Mata Kuliah" required style="flex: 1;">
+        </div>
+        <input type="text" id="settings-lecturer" placeholder="Dosen" required>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+          <input type="text" id="settings-room" placeholder="Ruang"><input type="number" id="settings-sks" placeholder="SKS" min="1" max="6">
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+          <select id="settings-day"><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option></select>
+          <input type="time" id="settings-start-time"><input type="time" id="settings-end-time">
+        </div>
+        <div class="m-foot" style="justify-content: space-between;">
+            <button type="button" class="m-btn" id="delete-class-btn" style="color:var(--danger); border-color: #ffd2d2;">Hapus Kelas</button>
+            <div><button type="button" class="m-btn ghost" data-close-modal>Batal</button><button type="submit" class="m-btn primary">Simpan Perubahan</button></div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="overlay" id="profile-modal">
+      <div class="modal" id="profile-modal-content" style="padding: 0; width: min(95vw, 400px); overflow: hidden;"></div>
+  </div>
+
+  <!-- ===== PAGE SCRIPT ===== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, Timestamp, arrayUnion, arrayRemove, limit, startAfter, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+    const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD7F650" };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    let currentUser = null, classId = null, membersCache = {}, classCreatorId = null, classMemberCount = 0;
+    let discussionUnsub = null, tasksUnsub = null, notesUnsub = null;
+    const VISIBLE_AVATARS = 5; 
+    let listenersAttached = false;
+    const BANNERS = { 'banner1': 'https://res.cloudinary.com/ddrtdofqo/image/upload/WhatsApp-Image-2024-02-28-at-3.02.13-PM_zmmjvb.jpg', 'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib-rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max', 'banner3': 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib-rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max' };
+
+    // --- Robust variables for Lazy Loading ---
+    let firstMessageDoc = null; 
+    let latestMessageDoc = null; 
+    const renderedMessageIds = new Set(); 
+    let isLoadingMessages = false;
+    let allMessagesLoaded = false;
+    const MESSAGES_PER_PAGE = 25;
+
+    const $ = (id)=>document.getElementById(id);
+    
+    function showContent() {
+        const skeleton = $('skeleton-loader');
+        if (skeleton) skeleton.style.display = 'none';
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { cleanup(); window.location.replace('auth.html'); return; }
+      currentUser = user;
+      const params = new URLSearchParams(location.search); 
+      classId = params.get('id');
+      if (!classId) { renderEmpty('ID Kelas tidak ditemukan.'); return; }
+      await loadClass();
+      if (!listenersAttached) {
+          attachEventListeners();
+          listenersAttached = true;
+      }
+    });
+    
+    async function loadClass(){
+      try{
+        const classSnap = await getDoc(doc(db,'classes',classId));
+        if (!classSnap.exists()){ renderEmpty('Kelas tidak ditemukan.'); return; }
+        
+        const data = classSnap.data();
+        classCreatorId = data.creatorId;
+        const userDoc = await getDoc(doc(db,'users',currentUser.uid));
+        if (!(userDoc.data()?.joinedClasses||[]).includes(classId)){ renderEmpty('Anda tidak memiliki akses ke kelas ini.'); return; }
+
+        await cacheMembers(data.members || []);
+
+        populateHeader(data);
+        populateContentShell();
+        renderClassMembers();
+        cleanup(); 
+        await initialMessagesLoad();
+        listenTasks();
+        listenNotes();
+        showContent();
+      }catch(e){ 
+        console.error("Gagal memuat kelas:", e); 
+        renderEmpty('Gagal memuat halaman kelas.'); 
+      }
+    }
+
+    function populateHeader(data) {
+        $('header').innerHTML = `
+          <div class="header-left">
+            <button class="icon-btn" id="back-btn" title="Kembali" aria-label="Kembali"><i class="ri-arrow-left-line"></i></button>
+            <div>
+              <div class="header-title-wrapper">
+                  <h2 class="header-title" id="class-title"><div class="header-icon">${data.classIcon || '📚'}</div> ${data.namaMataKuliah}</h2>
+                  <div id="class-members-display" class="class-members-display"></div>
+              </div>
+              <p class="header-sub" id="class-sub">${data.dosen} • ${data.hari}, ${data.waktu} - ${data.waktuSelesai || ''}</p>
+            </div>
+          </div>
+          <div class="header-right">
+            <button class="icon-btn" id="settings-btn" title="Pengaturan Kelas" style="display: none;"><i class="ri-settings-3-line"></i></button>
+            <button class="icon-btn" id="refresh-btn" title="Segarkan" aria-label="Segarkan"><i class="ri-refresh-line"></i></button>
+            <a href="account.html" title="Akun Anda">
+              <img id="avatar-top" class="avatar" src="${currentUser.photoURL || 'https://placehold.co/80x80'}" alt="Profile"/>
+            </a>
+          </div>
+        `;
+        if (currentUser.uid === classCreatorId) {
+            $('settings-btn').style.display = 'grid';
+        }
+    }
+    
+    function populateContentShell() {
+        $('content').innerHTML = `
+        <div class="card" id="discussion-card">
+          <div class="card-body">
+            <div class="card-head">
+              <h3 class="card-title">Diskusi Kelas</h3>
+              <button class="btn" id="jump-latest"><i class="ri-arrow-down-line"></i> Terbaru</button>
+            </div>
+            <div class="chat-wrapper">
+              <div id="discussion-feed" class="feed" aria-label="Utas diskusi">
+                 <div id="message-loader-sentinel" style="height: 1px;"></div>
+                 <div id="feed-spinner" class="loader" style="display: none;"></div>
+              </div>
+              <div class="composer">
+                <div class="tools"><button class="i-btn" id="attach-btn" title="Lampirkan"><i class="ri-attachment-line"></i></button><input id="file-input" type="file" accept="image/*" hidden></div>
+                <textarea id="discussion-input" placeholder="Ketik pesan…" rows="1"></textarea>
+                <button id="send-btn" class="btn primary"><i class="ri-send-plane-2-line"></i> Kirim</button>
+              </div>
+            </div>
+            <div id="typing" class="typing" aria-live="polite" hidden>Beberapa orang sedang mengetik…</div>
+          </div>
+        </div>
+        <div class="side-panel">
+          <div class="card">
+            <div class="card-body" style="min-height:0">
+              <div class="card-head"><h3 class="card-title">Tugas</h3></div>
+              <ul id="task-list" class="tasks" aria-label="Daftar tugas">
+                <div class="skeleton" style="height: 45px; width: 100%; border-radius: 8px; margin-bottom: 8px;"></div>
+              </ul>
+              <button id="add-task-btn" class="btn primary full"><i class="ri-add-line"></i> Tambah Tugas Baru</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body" style="min-height:0">
+              <div class="card-head"><h3 class="card-title">Catatan Bersama</h3><a id="add-note-btn" class="btn primary"><i class="ri-add-line"></i> Tambah</a></div>
+              <ul id="shared-notes-list" class="notes" aria-label="Catatan bersama">
+                 <div class="skeleton" style="height: 80px; width: 100%; border-radius: 12px;"></div>
+              </ul>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    async function cacheMembers(ids){
+      classMemberCount = ids.length;
+      const snaps = await Promise.all(ids.map(id => getDoc(doc(db,'users',id))));
+      membersCache = snaps.reduce((m,s)=> (s.exists() && (m[s.id]=s.data()), m), {});
+    }
+
+    function renderClassMembers() {
+        const displayContainer = $('class-members-display');
+        const popupList = $('member-popup-list');
+        if (!displayContainer || !popupList) return;
+        displayContainer.innerHTML = '';
+        popupList.innerHTML = '';
+        const memberIds = Object.keys(membersCache);
+        const members = memberIds.map(id => ({ id, ...membersCache[id] }));
+        const avatarStack = el('div', { class: 'member-avatar-stack' });
+        const visibleMembers = members.slice(0, VISIBLE_AVATARS);
+        visibleMembers.forEach(member => {
+            const avatar = el('img', { class: 'avatar-sm', src: member.photoURL || `https://placehold.co/40x40/E5E7EB/6B7280?text=${(member.name || 'A').charAt(0)}`, alt: member.name || 'Anggota', title: member.name || 'Anggota' });
+            avatarStack.appendChild(avatar);
+        });
+        displayContainer.appendChild(avatarStack);
+        if (members.length > VISIBLE_AVATARS) {
+            const moreCount = members.length - VISIBLE_AVATARS;
+            const moreEl = el('div', { class: 'more-members' }, `+${moreCount}`);
+            displayContainer.appendChild(moreEl);
+        }
+        members.forEach(member => {
+            const isCreator = member.id === classCreatorId;
+            const li = el('li', { class: 'member-popup-item' });
+            li.dataset.userId = member.id;
+            const photo = member.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${(member.name || 'A').charAt(0)}`;
+            li.innerHTML = `<img src="${photo}" alt="${member.name}" class="avatar"><div class="member-popup-item-info"><h4>${member.name || 'Pengguna'} ${isCreator ? '<span style="font-size: 11px; color: var(--primary); background: var(--bubble); padding: 2px 6px; border-radius: 6px;">Admin</span>' : ''}</h4><p>${member.university || 'Universitas belum diatur'}</p></div> ${!isCreator && currentUser.uid === classCreatorId ? '<button class="m-btn ghost" data-kick-uid="' + member.id + '" style="margin-left: auto; padding: 6px 10px;">Keluarkan</button>' : ''}`;
+            popupList.appendChild(li);
+        });
+    }
+
+    function renderTask(id,t,ul){
+      const isDone = t.completedBy?.includes(currentUser.uid);
+      const due = formatDue(t.dueDate);
+      const isClassAdmin = classCreatorId === currentUser.uid;
+      const li = document.createElement('li'); li.className = `task ${isDone?'done':''}`; li.id = `task-${id}`;
+      const avatars = (t.completedBy||[]).map(uid=>{ const u = membersCache[uid]; return u?`<img src="${u.photoURL}" title="${u.displayName || u.name}" alt="${u.displayName || u.name}">`:''; }).join('');
+      const safeTitle = (t.title || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      const safeDesc = (t.description || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      li.innerHTML = `<div class="task-h"><div class="task-left"><div class="checkbox" data-id="${id}"><i class="ri-check-line"></i></div><div class="task-title">${safeTitle}</div></div><div style="display:flex; align-items:center; gap:10px"><span class="due ${due.cls}">${due.text}</span><div class="expand"><i class="ri-arrow-down-s-line"></i></div></div></div><div class="task-details">${t.description ? `<p class="task-desc">${safeDesc.replace(/\n/g,'<br>')}</p>` : ''}<div class="task-foot"><div><div class="who">${(t.completedBy?.length||0)} dari ${classMemberCount} selesai</div><div class="pp-row">${avatars}</div></div> ${isClassAdmin ? `<button class="del" data-id="${id}" aria-label="Hapus tugas"><i class="ri-delete-bin-6-line"></i> Hapus</button>`:''}</div></div>`;
+      ul.appendChild(li);
+    }
+    
+    function createMsgElement(data) {
+        const isMe = data.senderId === currentUser?.uid;
+        const wrap = el('div', { class: 'm' + (isMe ? ' me' : '') });
+        const ava = el('img', { class: 'ava', src: data.senderPhotoURL || 'https://placehold.co/80x80', alt: data.senderName || 'avatar', 'data-user-id': data.senderId });
+        const bubble = el('div', { class: 'bubble' });
+        const sender = el('div', { class: 'sender' }, data.senderName || 'Anonymous');
+        const msgContent = data.text ? data.text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : (data.image ? `<img class="msg-img" src="${data.image}" alt="lampiran">` : '');
+        const msg = el('div', {}, msgContent);
+        const time = data.createdAt?.toDate?.() || new Date();
+        const meta = el('div', { class: 'meta' }, time.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }));
+        bubble.append(sender, msg, meta);
+        if (isMe) { wrap.append(bubble, ava); } else { wrap.append(ava, bubble); }
+        return wrap;
+    }
+
+    function renderMessagesBatch(docs, prepend) {
+        const feed = $('discussion-feed');
+        if (!feed || docs.length === 0) return;
+        
+        const fragment = document.createDocumentFragment();
+        docs.forEach(doc => {
+            if (renderedMessageIds.has(doc.id)) return;
+            fragment.appendChild(createMsgElement(doc.data()));
+            renderedMessageIds.add(doc.id);
+        });
+
+        if (prepend) {
+            const oldScrollHeight = feed.scrollHeight;
+            feed.insertBefore(fragment, feed.children[2]);
+            requestAnimationFrame(() => { feed.scrollTop = feed.scrollHeight - oldScrollHeight; });
+        } else {
+            const shouldScroll = feed.scrollHeight - feed.clientHeight <= feed.scrollTop + 50;
+            feed.appendChild(fragment);
+            if (shouldScroll) {
+                requestAnimationFrame(() => feed.scrollTop = feed.scrollHeight);
+            }
+        }
+    }
+
+    async function initialMessagesLoad() {
+        renderedMessageIds.clear();
+        const discussionsRef = collection(db, 'classes', classId, 'discussions');
+        const q = query(discussionsRef, orderBy('createdAt', 'desc'), limit(MESSAGES_PER_PAGE));
+        const snap = await getDocs(q);
+
+        if (!snap.empty) {
+            const docs = snap.docs.reverse(); // ASC order for initial render
+            renderMessagesBatch(docs, false);
+            firstMessageDoc = snap.docs[snap.docs.length - 1]; // Oldest is last in DESC query
+            latestMessageDoc = snap.docs[0]; // Newest is first in DESC query
+        }
+        if (snap.docs.length < MESSAGES_PER_PAGE) {
+            allMessagesLoaded = true;
+            if ($('message-loader-sentinel')) $('message-loader-sentinel').style.display = 'none';
+        }
+        requestAnimationFrame(() => { if ($('discussion-feed')) $('discussion-feed').scrollTop = $('discussion-feed').scrollHeight; });
+        listenForNewMessages();
+    }
+    
+    async function loadPaginatedMessages() {
+        if (isLoadingMessages || allMessagesLoaded) return;
+        isLoadingMessages = true;
+        if ($('feed-spinner')) $('feed-spinner').style.display = 'block';
+
+        const discussionsRef = collection(db, 'classes', classId, 'discussions');
+        const q = query(discussionsRef, orderBy('createdAt', 'desc'), startAfter(firstMessageDoc), limit(MESSAGES_PER_PAGE));
+
+        try {
+            const snap = await getDocs(q);
+            if (snap.empty) {
+                allMessagesLoaded = true;
+                if ($('message-loader-sentinel')) $('message-loader-sentinel').style.display = 'none';
+                return;
+            }
+            const docs = snap.docs.reverse(); // ASC order for prepending
+            renderMessagesBatch(docs, true);
+            firstMessageDoc = snap.docs[snap.docs.length - 1]; // New oldest doc
+        } catch(e) {
+            console.error("Error fetching older messages:", e);
+        } finally {
+            isLoadingMessages = false;
+            if ($('feed-spinner')) $('feed-spinner').style.display = 'none';
+        }
+    }
+
+    function listenForNewMessages() {
+        if (discussionUnsub) discussionUnsub();
+        const discussionsRef = collection(db, 'classes', classId, 'discussions');
+        let q;
+        if (latestMessageDoc) {
+            q = query(discussionsRef, orderBy('createdAt', 'asc'), startAfter(latestMessageDoc));
+        } else {
+            // If chat is empty, listen for the very first message
+            q = query(discussionsRef, orderBy('createdAt', 'asc'));
+        }
+
+        discussionUnsub = onSnapshot(q, (snap) => {
+            const newDocs = [];
+            snap.docChanges().forEach(change => {
+                if (change.type === "added") {
+                    newDocs.push(change.doc);
+                    latestMessageDoc = change.doc; 
+                }
+            });
+            if (newDocs.length > 0) {
+                renderMessagesBatch(newDocs, false);
+            }
+        });
+    }
+
+    function listenTasks(){
+      const qRef = query(collection(db,'classes',classId,'tasks'), orderBy('dueDate','asc'));
+      tasksUnsub = onSnapshot(qRef,(snap)=>{
+        const ul = $('task-list'); ul.innerHTML='';
+        if (snap.empty){ ul.innerHTML = '<div class="empty">Tidak ada tugas.</div>'; return; }
+        snap.forEach(d=> renderTask(d.id, d.data(), ul));
+      });
+    }
+
+    function listenNotes(){
+        const qRef = query(collection(db,'classes',classId,'sharedNotes'), orderBy('sharedAt','desc'));
+        notesUnsub = onSnapshot(qRef,(snap)=>{
+            const ul = $('shared-notes-list'); ul.innerHTML='';
+            if (snap.empty){ ul.innerHTML = '<div class="empty">Belum ada catatan bersama.</div>'; return; }
+            snap.forEach(d=>{
+                const n = d.data();
+                const a = el('a', { class: 'note', href: `notes.html?note_id=${d.id}&class_id=${classId}` });
+                const safeTitle = (n.title || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                const safeBody = (n.body || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                a.innerHTML = `<h4>${safeTitle}</h4><p>${safeBody.substring(0,120)}${safeBody.length>120?'…':''}</p><small>Oleh ${n.sharedBy}</small>`;
+                ul.appendChild(a);
+            });
+        });
+    }
+
+    function attachEventListeners() {
+        document.querySelectorAll('.logout').forEach(btn => btn.addEventListener('click', () => signOut(auth)));
+        document.body.addEventListener('click', (e) => {
+            const closeModalButton = e.target.closest('[data-close-modal]');
+            const overlay = e.target.closest('.overlay');
+            if (closeModalButton || (overlay && e.target === overlay)) { (closeModalButton || e.target).closest('.overlay').classList.remove('show'); }
+        });
+        
+        $('main').addEventListener('click', (e) => {
+            if(e.target.closest('#add-task-btn')) $('add-task-modal').classList.add('show');
+            if(e.target.closest('#send-btn')) addMessage();
+            if(e.target.closest('#jump-latest')) { const feed = $('discussion-feed'); feed.scrollTo({ top: feed.scrollHeight, behavior: 'smooth' }); }
+            if(e.target.closest('#attach-btn')) $('file-input').click();
+            if(e.target.closest('#back-btn')) history.length > 1 ? history.back() : location.assign('classes.html');
+            if(e.target.closest('#refresh-btn')) location.reload();
+            if(e.target.closest('#class-members-display')) $('member-list-modal').classList.add('show');
+            if(e.target.closest('#settings-btn')) { getDoc(doc(db, 'classes', classId)).then(cs => { if (cs.exists()) openSettingsModal(cs.data()); }); }
+            const userId = e.target.closest('[data-user-id]');
+            if(userId) showProfileModal(userId.dataset.userId);
+            handleTaskListClick(e);
+        });
+        
+        $('add-task-form').addEventListener('submit', addTask);
+        $('main').addEventListener('input', (e) => {
+            if(e.target.id === 'file-input') { if (e.target.files.length > 0) uploadImage(e.target.files[0]); }
+        });
+        $('main').addEventListener('keydown', (e) => {
+            if (e.target.id === 'discussion-input' && e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); addMessage(); }
+        });
+        $('main').addEventListener('input', (e) => {
+            if (e.target.id === 'discussion-input' || e.target.id === 'focus') {
+                const ta = e.target;
+                ta.style.height = 'auto'; 
+                ta.style.height = Math.min(ta.scrollHeight, window.innerHeight*0.34) + 'px';
+            }
+        });
+        $('member-popup-list').addEventListener('click', (e) => {
+            const listItem = e.target.closest('.member-popup-item');
+            if (listItem && listItem.dataset.userId && !e.target.dataset.kickUid) { showProfileModal(listItem.dataset.userId); }
+            handleKickMember(e);
+        });
+        $('settings-form').addEventListener('submit', saveSettings);
+        $('delete-class-btn').addEventListener('click', deleteClass);
+        window.addEventListener('resize', () => { fixVH(); updatePlaceholder(); });
+        fixVH(); updatePlaceholder();
+        const addNoteBtn = $('add-note-btn');
+        if (addNoteBtn) addNoteBtn.href = `notes.html?share_to=${classId}`;
+
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                loadPaginatedMessages();
+            }
+        }, { threshold: 0.1 });
+
+        const sentinel = $('message-loader-sentinel');
+        if (sentinel) observer.observe(sentinel);
+    }
+    
+    function handleTaskListClick(e) {
+        const taskHeader = e.target.closest('.task-h'); const checkbox = e.target.closest('.checkbox'); const deleteBtn = e.target.closest('.del');
+        if (checkbox) { toggleTask(checkbox.dataset.id); return; }
+        if (deleteBtn) { deleteTask(deleteBtn.dataset.id); return; }
+        if (taskHeader) { taskHeader.parentElement.classList.toggle('expanded'); }
+    }
+
+    async function addTask(e){
+      e.preventDefault();
+      const title = $('task-title-input').value.trim(); const dateStr = $('task-due-date-input').value; const desc = $('task-description-input').value.trim();
+      if (!title || !dateStr) return;
+      $('confirm-add-task-btn').disabled = true;
+      try{
+        await addDoc(collection(db,'classes',classId,'tasks'),{ title, description: desc||null, dueDate: Timestamp.fromDate(new Date(dateStr)), createdAt: serverTimestamp(), creatorId: currentUser.uid, creatorName: currentUser.displayName||'—', completedBy: [] });
+        $('add-task-form').reset(); $('add-task-modal').classList.remove('show');
+      }catch(err){ console.error("Gagal menambah tugas:", err); alert('Gagal menambahkan tugas.'); } 
+      finally { $('confirm-add-task-btn').disabled = false; }
+    }
+
+    async function toggleTask(id){
+      const ref = doc(db, 'classes', classId, 'tasks', id);
+      const taskDoc = await getDoc(ref); if (!taskDoc.exists()) return;
+      const isDone = (taskDoc.data().completedBy || []).includes(currentUser.uid);
+      try { await updateDoc(ref, { completedBy: isDone ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid) }); } 
+      catch (e) { console.error("Gagal update tugas:", e); alert('Gagal memperbarui status tugas.'); }
+    }
+
+    async function deleteTask(id){
+      if (await showConfirm('Hapus tugas ini untuk semua anggota kelas? Aksi ini tidak dapat dibatalkan.')) {
+        try{ await deleteDoc(doc(db,'classes',classId,'tasks',id)); }
+        catch(e){ console.error("Gagal hapus tugas:",e); alert('Gagal menghapus tugas.'); }
+      }
+    }
+
+    async function addMessage(imageUrl = null){
+      const ta = $('discussion-input'); if (!ta) return;
+      const text = (ta.value||'').trim();
+      if (!text && !imageUrl) return;
+      ta.disabled = true; $('send-btn').disabled = true;
+      try{
+        await addDoc(collection(db,'classes',classId,'discussions'),{ text: text || null, image: imageUrl || null, senderId: currentUser.uid, senderName: currentUser.displayName || 'Anonymous', senderPhotoURL: currentUser.photoURL || null, createdAt: serverTimestamp() });
+        ta.value=''; ta.dispatchEvent(new Event('input'));
+      }catch(e){ console.error("Gagal kirim pesan:", e); alert('Gagal mengirim pesan.'); }
+      finally{ ta.disabled=false; $('send-btn').disabled=false; ta.focus(); }
+    }
+    
+    async function uploadImage(file) {
+        if (!file.type.startsWith('image/')) { alert('Hanya file gambar yang diizinkan.'); return; }
+        const filePath = `class_attachments/${classId}/${currentUser.uid}_${Date.now()}_${file.name}`;
+        const fileRef = ref(storage, filePath);
+        try { await uploadBytes(fileRef, file); const url = await getDownloadURL(fileRef); await addMessage(url); } 
+        catch (error) { console.error('Gagal mengunggah gambar:', error); alert('Gagal mengunggah gambar.'); }
+    }
+
+    function openSettingsModal(classData) {
+        $('settings-icon').value = classData.classIcon || '📚'; $('settings-name').value = classData.namaMataKuliah || ''; $('settings-lecturer').value = classData.dosen || ''; $('settings-room').value = classData.ruang || ''; $('settings-sks').value = classData.sks || ''; $('settings-day').value = classData.hari || 'Senin'; $('settings-start-time').value = classData.waktu || ''; $('settings-end-time').value = classData.waktuSelesai || '';
+        $('settings-modal').classList.add('show');
+    }
+
+    async function handleKickMember(e) {
+        const kickButton = e.target.closest('[data-kick-uid]');
+        if (kickButton) {
+            const userIdToKick = kickButton.dataset.kickUid;
+            const memberName = membersCache[userIdToKick]?.name || 'anggota ini';
+            
+            if (await showConfirm(`Anda yakin ingin mengeluarkan ${memberName} dari kelas?`)) {
+                try {
+                    // CORRECTED: Only perform the action the admin is authorized to do.
+                    const classRef = doc(db, 'classes', classId);
+                    await updateDoc(classRef, { members: arrayRemove(userIdToKick) });
+                    
+                    // The rest of your UI logic is correct.
+                    delete membersCache[userIdToKick];
+                    renderClassMembers();
+                    // showToast(`${memberName} has been removed.`); // Optional: add a success toast
+                } catch (err) {
+                    console.error("Gagal mengeluarkan anggota:", err);
+                    alert("Gagal mengeluarkan anggota.");
+                }
+            }
+        }
+    }
+
+    async function saveSettings(e) {
+        e.preventDefault();
+        const settings = { classIcon: $('settings-icon').value, namaMataKuliah: $('settings-name').value, dosen: $('settings-lecturer').value, ruang: $('settings-room').value, sks: Number($('settings-sks').value), hari: $('settings-day').value, waktu: $('settings-start-time').value, waktuSelesai: $('settings-end-time').value, };
+        try { await updateDoc(doc(db, 'classes', classId), settings); $('settings-modal').classList.remove('show'); loadClass(); } 
+        catch (err) { console.error("Gagal menyimpan pengaturan:", err); alert("Gagal menyimpan pengaturan."); }
+    }
+
+    async function deleteClass() {
+        if (await showConfirm('PERINGATAN: Anda akan menghapus kelas ini secara permanen untuk semua anggota. Semua data terkait akan hilang. Aksi ini tidak dapat dibatalkan.')) {
+            try { await deleteDoc(doc(db, 'classes', classId)); alert('Kelas telah dihapus.'); window.location.assign('classes.html'); } 
+            catch (err) { console.error("Gagal menghapus kelas:", err); alert("Gagal menghapus kelas."); }
+        }
+    }
+    
+    async function showProfileModal(userId) {
+        const userDoc = await getDoc(doc(db, 'users', userId)); if (!userDoc.exists()) return; const u = userDoc.data();
+        const bannerUrl = BANNERS[u.bannerId] || BANNERS['banner1']; const avatarUrl = u.photoURL || `https://placehold.co/90x90/E5E7EB/6B7280?text=${(u.name || 'A').charAt(0)}`;
+        $('profile-modal-content').innerHTML = `<div class="profile-card-banner" style="background-image: url(${bannerUrl})"></div><div class="profile-card-body"><img src="${avatarUrl}" alt="${u.name}" class="profile-card-avatar"><div class="profile-card-info"><h3>${u.name || 'Pengguna'}</h3><p>${u.major || 'Jurusan belum diatur'} di ${u.university || 'Universitas belum diatur'}</p><div class="profile-card-details"><div class="detail-item"><i class="ri-mail-line"></i><span>${u.email}</span></div><div class="detail-item"><i class="ri-book-open-line"></i><span>${u.semester ? `Semester ${u.semester}` : 'Semester belum diatur'}</span></div></div><div class="profile-card-socials">${u.instagramUrl ? `<a href="${u.instagramUrl}" target="_blank" class="social-btn"><i class="ri-instagram-line"></i></a>` : ''}${u.spotifyUrl ? `<a href="${u.spotifyUrl}" target="_blank" class="social-btn"><i class="ri-spotify-line"></i></a>` : ''}</div></div></div><div class="m-foot" style="background: var(--bg); padding: 12px 16px;"><button class="m-btn primary" data-close-modal>Tutup</button></div>`;
+        $('profile-modal').classList.add('show');
+    }
+
+    function cleanup(){ if(discussionUnsub) discussionUnsub(); if(tasksUnsub) tasksUnsub(); if(notesUnsub) notesUnsub(); }
+    function updatePlaceholder() { const input = $('discussion-input'); if (!input) return; if (window.innerWidth <= 600) input.placeholder = "Ketik pesan…"; else input.placeholder = "Ketik pesan…"; }
+    function fixVH(){ document.documentElement.style.setProperty('--vh', window.innerHeight + 'px'); }
+    function renderEmpty(msg){ showContent(); $('content').innerHTML = `<div class="empty">${msg}</div>`; $('header').innerHTML = ''; }
+    function el(tag, attrs={}, children){ const e = document.createElement(tag); Object.entries(attrs||{}).forEach(([k,v])=> e.setAttribute(k,v)); if (children != null) e.innerHTML = children; return e; }
+    function formatDue(ts){ const now = new Date(); const due = ts?.toDate?.() || new Date(); now.setHours(0,0,0,0); due.setHours(0,0,0,0); const diff = Math.ceil((due-now)/(1000*60*60*24)); if (diff < 0) return {text:'Telah lewat', cls:'overdue'}; if (diff === 0) return {text:'Tenggat hari ini', cls:'urgent'}; if (diff === 1) return {text:'Tenggat besok', cls:'urgent'}; if (diff <= 7) return {text:`Tenggat ${diff} hari`, cls:'soon'}; return {text: due.toLocaleDateString('id-ID',{day:'numeric',month:'short'}), cls:'normal'}; }
+    function showConfirm(message) { return new Promise(resolve => { const cO = el('div', { class: 'overlay show' }); const cM = el('div', { class: 'modal' }); const msg = el('p', {style: "line-height:1.6;"}, message); const foot = el('div', { class: 'm-foot' }); const yes = el('button', { class: 'm-btn primary' }, 'Ya, Lanjutkan'); const no = el('button', { class: 'm-btn ghost' }, 'Batal'); foot.append(no, yes); cM.append(msg, foot); cO.append(cM); document.body.appendChild(cO); const close = (r) => { resolve(r); cO.remove(); }; yes.onclick = () => close(true); no.onclick = () => close(false); }); }
+  </script>
+</body>
+</html>

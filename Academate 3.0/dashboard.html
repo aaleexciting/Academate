@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dasbor — Academate</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+
+  <style>
+    :root{
+      --bg: #F7F7FA;
+      --surface: #FFFFFF;
+      --text: #1E1F24;
+      --muted: #6C6F7F;
+      --primary: #6F6CFF;
+      --primary-2: #8B7CFF;
+      --border: #ECECF1;
+      --shadow: 0 6px 24px rgba(30,31,36,.07);
+      --radius: 18px; 
+      --sidebar-w: 280px;
+      --content-max: 1320px;
+      --gap: 18px;
+    }
+
+    html,body{height:100%}
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
+      background:var(--bg); color:var(--text); overflow-x:hidden; font-size:15px;
+      padding-bottom: 80px;
+    }
+
+    /* App Shell */
+    .app{padding:var(--gap); width:100%; max-width:1700px; margin:0 auto; min-height:100dvh}
+
+    /* Main Content Structure */
+    .main{background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
+    .main-content { padding: var(--gap); width: 100%; }
+    
+    /* Icon Button Style */
+    .icon-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); display: grid; place-items: center; cursor: pointer; color: var(--muted); font-size: 20px; transition: .2s; flex-shrink: 0; }
+    .icon-btn:hover { color: var(--primary); border-color: #d8d8e0; }
+
+    /* Consistent Header Styling */
+    .header{ margin-top: var(--gap); margin-bottom: 24px; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .header-brand{ font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
+    .header-actions { display: flex; gap: 8px; }
+    .header-actions .icon-btn { width: 38px; height: 38px; font-size: 18px; }
+    .header-main { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .header-main h1 { font-size: 22px; margin: 0; }
+    .header-main p { color: var(--muted); margin: 4px 0 0; font-size: 14px; }
+    .header-avatar-link { text-decoration: none; }
+    .header-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); flex-shrink: 0; }
+    .header-toolbar { display: none; }
+    
+    .dashboard-card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:0 2px 8px rgba(20,20,30,.03)}
+    .section-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
+    .section-title{font-size:16px; font-weight:600; margin:0 0 12px;}
+
+    /* Course carousel */
+    .class-carousel-wrapper{position:relative}
+    .class-carousel{display:flex; gap:14px; overflow:auto; scroll-snap-type:x mandatory; padding-bottom:4px}
+    .class-carousel::-webkit-scrollbar{display:none} 
+    .class-card-lg{background:var(--surface); flex:0 0 240px; display:flex; flex-direction:column; gap:6px; padding:16px; border:1px solid var(--border); border-radius:16px; text-decoration:none; color:inherit; scroll-snap-align:start; transition:transform .2s, box-shadow .2s}
+    .class-card-lg:hover{transform:translateY(-2px); box-shadow:var(--shadow)}
+    .member-avatars{display:flex}
+    .member-avatars img{width:28px; height:28px; border-radius:50%; border:2px solid #fff; object-fit:cover; margin-left:-8px}
+    .member-avatars img:first-child{margin-left:0}
+    .carousel-controls { display: none; }
+    .carousel-nav-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 50%; width: 34px; height: 34px; display: grid; place-items: center; cursor: pointer; color: var(--muted); box-shadow: 0 2px 8px rgba(30,31,36,.07); transition: all 0.2s ease-in-out; }
+    .carousel-nav-btn:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(30,31,36,.1); color: var(--primary); }
+    .carousel-nav-btn:active { transform: scale(0.95); }
+    .class-card-lg h3 { font-size: 16px; }
+    .muted { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
+    .class-card-lg .card-thumb { height: 110px; border-radius: 12px; display: grid; place-items: center; font-size: 38px; color: var(--text); opacity: 0.8; margin-bottom: 12px; }
+    .class-card-lg .card-meta { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .class-card-lg .arrow-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; border: none; cursor: pointer; background: #F3F2FF; color: var(--primary); font-size: 18px; transition: transform 0.2s; flex-shrink: 0; }
+    .class-card-lg .arrow-btn:hover { transform: scale(1.1); }
+
+    /* Profile card */
+    .profile-card{ padding: 0; overflow: hidden; position: relative; }
+    .profile-banner{ height: 80px; background-size: cover; background-position: center; }
+    .profile-content{ padding: 12px; text-align: center; margin-top: -40px; }
+    .profile-img{ width:72px; height:72px; border-radius:50%; object-fit:cover; border:4px solid var(--surface); box-shadow:var(--shadow); margin-bottom:8px }
+    .profile-logout-btn{ margin-top:12px; border:1px solid var(--border); background:var(--surface); color:var(--muted); padding:8px 12px; border-radius:10px; font-weight:600; cursor:pointer; width:100% }
+    .edit-profile-btn { position: absolute; top: 8px; right: 8px; z-index: 2; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); display: grid; place-items: center; color: var(--text); text-decoration: none; border: 1px solid var(--border); }
+
+    /* Calendar */
+    .calendar-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
+    .calendar-header button{background:var(--surface); border:1px solid var(--border); border-radius:50%; width:34px; height:34px; display:grid; place-items:center; cursor:pointer; flex-shrink: 0;}
+    #month-year{font-weight:700; white-space: nowrap;}
+    #calendar-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; justify-items:center; width: 100%;}
+    .calendar-day-name{font-size:11px; color:var(--muted); font-weight:600}
+    .calendar-day{aspect-ratio:1/1; width:100%; max-width:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:12px; position:relative}
+    .calendar-day.today{background:var(--primary); color:#fff; font-weight:700}
+    .calendar-day.has-class::after{content:""; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:6px; height:6px; background:var(--primary); border-radius:50%}
+    .calendar-day.today.has-class::after{background:#fff}
+
+    /* Deadlines */
+    #deadline-list{list-style:none; margin:0; padding:0}
+    .deadline-item{display:block; text-decoration:none; color:inherit; border-radius:12px}
+    .deadline-item-content{display:flex; align-items:center; gap:10px; padding:8px 4px}
+    .deadline-icon{width:36px; height:36px; border-radius:10px; background:#F3F2FF; color:var(--primary); display:grid; place-items:center; flex-shrink: 0;}
+    .deadline-details{flex-grow: 1; min-width: 0;}
+    .deadline-details h4{margin:0 0 2px; font-weight:600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+    .deadline-details p{margin:0; color:var(--muted); font-size:12px}
+    .due-date{font-weight:700; font-size:11px; border-radius:999px; padding:5px 8px; flex-shrink: 0; white-space: nowrap;}
+    .due-date.soon{color:#F59E0B; background:#FEF3C7}
+    .due-date.urgent{color:#EF5350; background:#FEE2E2}
+
+    /* Upcoming card */
+    .upcoming-class-card{background:linear-gradient(135deg,var(--primary), var(--primary-2)); color:#fff; border-radius:14px; padding:14px; position:relative; overflow:hidden}
+    .upcoming-header{opacity:.85; font-weight:600; font-size:13px}
+    .upcoming-body h2{margin:6px 0; font-size:20px}
+    .upcoming-footer{display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,.3); margin-top:8px; padding-top:8px}
+
+    /* Mobile Navigation */
+    .mobile-nav{ position:fixed; bottom:0; left:0; right:0; background:rgba(255,255,255,.8); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; height:70px; padding:0 10px; z-index: 1000; }
+    .mobile-nav a{ display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--muted); text-decoration:none; font-size:10px; font-weight:500; padding: 8px; border-radius: 8px; }
+    .mobile-nav a i{font-size:20px}
+    .mobile-nav a.active{color:var(--primary)}
+
+    /* SKELETON LOADER STYLES */
+    .skeleton-wrapper.hidden, #actual-content.hidden { display: none; }
+    .skeleton{background:#f0f1f5; background:linear-gradient(90deg, #f0f1f5 25%, #f7f8fa 37%, #f0f1f5 63%); background-size:400% 100%; animation:shimmer 1.4s ease infinite;}
+    @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+
+    /* --- MOBILE & RESPONSIVE LAYOUT --- */
+    .sidebar { display: none; }
+    .dashboard-grid { display: flex; flex-direction: column; gap: var(--gap); }
+    .main-column, .side-column { display: flex; flex-direction: column; gap: var(--gap); }
+
+    @media (max-width: 900px) {
+      body { height: auto; overflow-y: auto; }
+      .app { height: auto; }
+      .main { display: block; height: auto; }
+      
+      .side-column { display: contents; }
+      .main-column { order: 1; }
+      #tasks-wrapper { order: 2; }
+      #calendar-wrapper { order: 3; }
+      #profile-card-wrapper { order: 4; }
+    }
+    
+    @media (max-width: 420px) {
+      .app { padding: 12px; }
+      .main-content { padding: 12px; }
+      .class-card-lg { flex-basis: 220px; }
+      .upcoming-body h2 { font-size: 18px; }
+      #calendar-grid { gap: 4px; }
+    }
+
+    /* --- DESKTOP STYLES (SCROLL FIX) --- */
+    @media (min-width: 901px) {
+      body { padding-bottom: 0; overflow: auto;} /* Allow body to scroll */
+      .mobile-nav { display: none; }
+      .app { display:grid; grid-template-columns: var(--sidebar-w) 1fr; gap:24px; min-height: 100dvh; height: auto; } /* Allow app to grow */
+      
+      .main { height: auto; } /* Allow main content area to grow */
+
+      .sidebar{ display:flex; flex-direction:column; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; min-height:0; }
+      .brand{ display:flex; align-items:center; gap:12px; font-weight:700; font-size:22px; margin-bottom:18px; }
+      .brand .logo{ width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,#8B7CFF,#6AC9FF); }
+      .nav{ display:flex; flex-direction:column; gap:8px; overflow:auto; padding-right:2px; }
+      .nav a{ display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; color:var(--muted); text-decoration:none; font-weight:500; transition:.2s; }
+      .nav a i{font-size:20px}
+      .nav a:hover{background:#F3F2FF; color:var(--primary)}
+      .nav a.active{background:var(--primary); color:#fff; box-shadow:0 8px 20px rgba(111,108,255,.3)}
+      .spacer{flex:1}
+      .sidebar-footer { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); }
+      .sidebar-logout-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; background: transparent; border: 1px solid var(--border); color: var(--muted); font-weight: 600; cursor: pointer; transition: .2s; }
+      .sidebar-logout-btn:hover { background: #fde2e2; border-color: #f7b2b2; color: #c82424; }
+      .sidebar-links { text-align: center; margin-top: 16px; display: flex; justify-content: center; gap: 16px; }
+      .sidebar-links a { font-size: 12px; color: var(--muted); text-decoration: none; }
+      .sidebar-links a:hover { text-decoration: underline; }
+      .copyright { font-size: 11px; color: #C0C3D2; text-align: center; margin-top: 12px; }
+      
+      .main-content { max-width:var(--content-max); margin: 0 auto; width: 100%;}
+      
+      .header { display: flex; justify-content: space-between; align-items: center; margin-top: var(--gap); }
+      .header-top, .header-avatar-link, .header-actions { display: none; }
+      .header-main { display: block; }
+      .header-main h1 { font-size: 26px; }
+      .header-main p { font-size: 15px; margin-top: 6px; }
+      .header-toolbar { display: flex; align-items: center; gap: 12px; }
+      .search-bar { position: relative; }
+      .search-bar input { width: 280px; padding: 12px 16px 12px 44px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); outline: none; transition: .2s; }
+      .search-bar input:focus { border-color: var(--primary); background: var(--surface); }
+      .search-bar i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+
+      .profile-logout-btn { display: none; }
+      .class-card-lg{flex:0 0 280px;}
+      .class-carousel::-webkit-scrollbar{display: block; height: 8px;}
+      .carousel-controls { display: flex; gap: 8px; }
+      .dashboard-grid{ display: grid; grid-template-columns:minmax(0,1fr) clamp(320px, 24vw, 360px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar (Desktop Only) -->
+    <aside class="sidebar" aria-label="Navigasi utama">
+      <div class="brand"><div class="logo" aria-hidden="true"></div>Academate</div>
+      <nav class="nav">
+        <a href="dashboard.html" class="active"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+        <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+        <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+        <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+        <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+      </nav>
+      <div class="spacer"></div>
+      <div class="sidebar-footer">
+        <button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
+        <div class="sidebar-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a></div>
+        <p class="copyright">&copy; 2025 Academate</p>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main" id="main-container">
+      <!-- JS injects skeleton or content here -->
+    </main>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav">
+    <a href="dashboard.html" class="active"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+    <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+    <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+    <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+    <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+  </nav>
+
+  <!-- Firebase + App Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, query, where, Timestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD-F650" };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentCalendarDate = new Date();
+    let classScheduleDays = [];
+    let countdownInterval = null;
+    const BANNERS = {
+      'banner1': 'https://res.cloudinary.com/ddrtdofqo/image/upload/WhatsApp-Image-2024-02-28-at-3.02.13-PM_zmmjvb.jpg',
+      'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max',
+      'banner3': 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max'
+    };
+    
+    document.addEventListener('DOMContentLoaded', renderSkeleton);
+    onAuthStateChanged(auth, user => { if (user) initialize(user); else window.location.replace('auth.html'); });
+    
+    document.addEventListener('click', (e)=>{
+      const target = e.target.closest('button');
+      if(target && (target.id === 'logout-button-desktop' || target.id === 'logout-button-mobile')){ signOut(auth); }
+    });
+
+    async function initialize(user){
+      try{
+        const { userData, classesData, allTasks } = await fetchAll(user);
+        const incompleteTasks = allTasks.filter(task => !(task.completedBy?.includes(user.uid)));
+        classScheduleDays = [...new Set(classesData.map(c => c.hari))];
+        renderDashboard(user, userData, classesData, incompleteTasks);
+        attachEventListeners();
+        showContent();
+      }catch(err){
+        console.error('Error loading dashboard:', err);
+        document.getElementById('main-container').innerHTML = `<div class="main-content" style="text-align:center;color:var(--muted);padding:24px">Gagal memuat dasbor. <a href="#" onclick="location.reload()">Coba Lagi</a></div>`;
+      }
+    }
+
+    async function fetchAll(user){
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+      if (!userDocSnap.exists()) {
+        await setDoc(userDocRef, { name:user.displayName, email:user.email, photoURL:user.photoURL }, { merge:true });
+      }
+      const userData = userDocSnap.data() || { name: user.displayName, email: user.email, photoURL: user.photoURL };
+      const joinedClassesIds = userData.joinedClasses || [];
+      if(joinedClassesIds.length === 0) return { userData, classesData:[], allTasks:[] };
+      
+      const classPromises = joinedClassesIds.map(id => getDoc(doc(db,'classes',id)));
+      const classSnapshots = await Promise.all(classPromises);
+      
+      const classesData = classSnapshots.filter(s => s.exists()).map(s=>({id:s.id, ...s.data()})).filter(c=>c.namaMataKuliah);
+      
+      const taskPromises  = joinedClassesIds.map(id => getDocs(query(collection(db,'classes',id,'tasks'))));
+      const taskSnapshotsByClass = await Promise.all(taskPromises);
+      
+      const allTasks = [];
+      taskSnapshotsByClass.forEach((snap, idx)=>{
+        const classInfo = classesData.find(c => c.id === joinedClassesIds[idx]);
+        if(!classInfo) return;
+        snap.forEach(docu=> allTasks.push({ id:docu.id, classId:classInfo.id, ...docu.data(), className:classInfo.namaMataKuliah || 'Unknown' }));
+      });
+
+      return { userData, classesData, allTasks };
+    }
+
+    function renderDashboard(user, userData, classesData, tasks){
+      const container = document.getElementById('actual-content');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="main-content">
+            <header class="header" id="dashboard-header">
+              <!-- Header content is populated here -->
+            </header>
+            <div class="dashboard-grid">
+                <div class="main-column">
+                <section id="class-carousel-section"></section>
+                <section id="upcoming-class-section"></section>
+                <section id="other-upcoming-classes-section"></section>
+                </div>
+                <div class="side-column">
+                <section id="profile-card-wrapper"></section>
+                <section id="calendar-wrapper">
+                    <div class="dashboard-card">
+                        <div class="calendar-header">
+                            <button id="prev-month-btn" title="Bulan sebelumnya"><i class="ri-arrow-left-s-line"></i></button>
+                            <h4 id="month-year"></h4>
+                            <button id="next-month-btn" title="Bulan berikutnya"><i class="ri-arrow-right-s-line"></i></button>
+                        </div>
+                        <div id="calendar-grid"></div>
+                    </div>
+                </section>
+                <section id="tasks-wrapper">
+                    <h2 class="section-title">Tugas Mendatang</h2>
+                    <div class="dashboard-card" id="deadline-list-container"><ul id="deadline-list"></ul></div>
+                </section>
+                </div>
+            </div>
+        </div>`;
+      
+      renderHeader(user);
+      renderProfile(user, userData);
+      renderCalendar(currentCalendarDate, classScheduleDays);
+
+      if(classesData.length){
+        renderClassCarousel(classesData.slice(0,8));
+        const upcoming = findUpcomingClasses(classesData, 3);
+        renderUpcomingClasses(upcoming);
+        renderUpcomingDeadlines(tasks);
+      }else{ renderEmptyStates(); }
+    }
+    
+    function renderHeader(user) {
+        const header = document.getElementById('dashboard-header');
+        if (!header) return;
+        header.innerHTML = `
+            <div class="header-top">
+                <div class="header-brand">Academate</div>
+                <div class="header-actions">
+                    <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
+                    <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+                </div>
+            </div>
+            <div class="header-main">
+                <div>
+                    <h1>${getGreeting(user.displayName)}</h1>
+                    <p>Semoga harimu menyenangkan dan produktif.</p>
+                </div>
+                <a href="account.html" class="header-avatar-link">
+                    <img class="header-avatar" src="${user.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${(user.displayName||'A').charAt(0)}`}" alt="Foto profil">
+                </a>
+            </div>
+            <div class="header-toolbar">
+                <div class="search-bar">
+                    <i class="ri-search-line"></i>
+                    <input type="text" placeholder="Cari kelas atau tugas...">
+                </div>
+                <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+            </div>`;
+    }
+
+    function renderProfile(user, userData){
+      const container = document.getElementById('profile-card-wrapper');
+      if (!container) return;
+      const avatar = user.photoURL || `https://placehold.co/80x80/E5E7EB/6B7280?text=${(user.displayName||'A').charAt(0)}`;
+      const bannerUrl = BANNERS[userData.bannerId] || BANNERS['banner1'];
+      container.innerHTML = `
+        <div class="dashboard-card profile-card">
+            <a href="account.html" class="edit-profile-btn" title="Edit Profil"><i class="ri-pencil-line"></i></a>
+            <div class="profile-banner" style="background-image: linear-gradient(to top, rgba(0,0,0,0.25), transparent), url(${bannerUrl})"></div>
+            <div class="profile-content">
+                <img class="profile-img" src="${avatar}" alt="Foto profil">
+                <h3 style="margin:0 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.displayName || 'Pengguna'}</h3>
+                <p style="color:var(--muted);margin:0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${userData.university || 'Universitas belum diatur'}</p>
+                <button id="logout-button-mobile" class="profile-logout-btn">Keluar</button>
+            </div>
+        </div>`;
+    }
+
+    async function renderClassCarousel(classes){
+      const section = document.getElementById('class-carousel-section');
+      if (!section) return;
+      section.innerHTML = `
+        <div class="section-header">
+          <h2 class="section-title" style="margin-bottom: 0;">Kelas Anda</h2>
+          <div class="carousel-controls">
+            <button id="carousel-prev" class="carousel-nav-btn" title="Sebelumnya"><i class="ri-arrow-left-s-line"></i></button>
+            <button id="carousel-next" class="carousel-nav-btn" title="Berikutnya"><i class="ri-arrow-right-s-line"></i></button>
+          </div>
+        </div>
+        <div class="class-carousel-wrapper"><div id="class-carousel-container" class="class-carousel"></div></div>`;
+
+      const container = document.getElementById('class-carousel-container');
+      const memberIds = new Set(classes.flatMap(c => (c.members || []).slice(0,3)));
+      const memberSnaps = await Promise.all(Array.from(memberIds).map(id => getDoc(doc(db,'users',id))));
+      const memberData = memberSnaps.reduce((acc,s)=>{ if(s.exists()) acc[s.id] = s.data(); return acc; },{});
+
+      const gradients = [ 'linear-gradient(135deg, #f3e7e9, #e3eeff)', 'linear-gradient(135deg, #f5f0ff, #e6f6ff)', 'linear-gradient(135deg, #e6fcf5, #e3f2fd)', 'linear-gradient(135deg, #fffbe6, #f0f9ff)', 'linear-gradient(135deg, #ffeef2, #eef2ff)' ];
+
+      classes.forEach((c,i)=>{
+        const memberAvatars = (c.members || []).slice(0,3).map(id => memberData[id] ? `<img src="${memberData[id].photoURL || `https://placehold.co/28x28`}" alt="member">` : '').join('');
+        const card = document.createElement('a');
+        card.href = `class_page.html?id=${c.id}`; card.className = 'class-card-lg';
+        card.innerHTML = `
+          <div class="card-thumb" style="background: ${gradients[i % gradients.length]}"> ${c.classIcon || '📚'} </div>
+          <h3 style="margin:0 0 4px;">${c.namaMataKuliah||''}</h3>
+          <p class="muted">${c.dosen || ''}</p>
+          <div class="card-meta">
+              <div class="member-avatars">${memberAvatars}</div>
+              <button class="arrow-btn" type="button" title="Lihat Kelas"> <i class="ri-arrow-right-s-line"></i> </button>
+          </div>`;
+        container.appendChild(card);
+      });
+
+      if(classes.length > 3 && window.innerWidth > 900){
+        const viewAll = document.createElement('a');
+        viewAll.href='classes.html'; viewAll.className='class-card-lg';
+        viewAll.style.cssText='align-items:center; justify-content:center; background:#FAFAFE;';
+        viewAll.innerHTML = `<h3 style="font-size:1rem;margin:0">Lihat Semua Kelas →</h3>`;
+        container.appendChild(viewAll);
+      }
+    }
+
+    function renderUpcomingClasses(upcoming){
+      const mainSection = document.getElementById('upcoming-class-section');
+      const otherSection = document.getElementById('other-upcoming-classes-section');
+      if(!mainSection || !otherSection) return;
+      if(!upcoming.length){
+        mainSection.innerHTML = `<div class="dashboard-card" style="text-align:center; color:var(--muted)">Tidak ada kelas yang akan datang.</div>`; otherSection.innerHTML=''; return;
+      }
+      
+      const { classData: nextClass, classTime } = upcoming[0];
+      mainSection.innerHTML = `
+        <div class="section-header"><h2 class="section-title" style="margin-bottom: 0;">Kelas Berikutnya</h2></div>
+        <div class="upcoming-class-card">
+          <div class="upcoming-header">${classTime.toLocaleDateString('id-ID',{weekday:'long', day:'numeric', month:'long'})}</div>
+          <div class="upcoming-body"><h2>${nextClass.namaMataKuliah||''}</h2><p>${nextClass.dosen || ''}</p></div>
+          <div class="upcoming-footer"><div>Ruang ${nextClass.ruang||''} • ${nextClass.waktu||''}</div><div id="countdown-display"></div></div>
+        </div>`;
+      if(countdownInterval) clearInterval(countdownInterval);
+      countdownInterval = setInterval(()=>updateCountdown(classTime),1000); updateCountdown(classTime);
+      
+      const others = upcoming.slice(1, 3);
+      otherSection.innerHTML = others.length ? `<h2 class="section-title" style="font-size: 15px; margin-bottom: 4px;">Selanjutnya</h2><div style="display:flex;flex-direction:column;gap:14px">${others.map(({classData, classTime})=>`
+        <a href="class_page.html?id=${classData.id}" style="text-decoration: none;">
+          <div class="dashboard-card" style="display:flex; align-items:center; gap:12px">
+            <div style="width:58px; text-align:center; flex-shrink:0;"><div class="calendar-day-name">${classTime.toLocaleDateString('id-ID',{weekday:'short'})}</div><div style="font-weight:700; color:var(--primary); font-size:18px">${classTime.getDate()}</div></div>
+            <div style="flex-grow:1; min-width:0;"><div style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${classData.namaMataKuliah||''}</div><div style="color:var(--muted)">${classData.waktu||''} • Ruang ${classData.ruang||''}</div></div>
+            <i class="ri-arrow-right-s-line" style="color:var(--muted); font-size: 20px;"></i>
+          </div>
+        </a>`).join('')}</div>` : '';
+    }
+
+    function renderUpcomingDeadlines(tasks){
+      const list = document.getElementById('deadline-list'); 
+      if (!list) return;
+      list.innerHTML='';
+      if(!tasks.length){ list.innerHTML = `<li style="text-align:center;color:var(--muted);padding:8px 0">Tidak ada tugas.</li>`; return; }
+      tasks.sort((a,b)=>a.dueDate.seconds - b.dueDate.seconds).slice(0,4).forEach(task=>{
+        const due = formatDueDate(task.dueDate);
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <a class="deadline-item" href="class_page.html?id=${task.classId}#task-${task.id}"> 
+            <div class="deadline-item-content"> 
+              <div class="deadline-icon"><i class="ri-edit-line"></i></div>
+              <div class="deadline-details"><h4>${task.title||''}</h4><p>${task.className||''}</p></div>
+              <span class="due-date ${due.className}">${due.text}</span>
+            </div>
+          </a>`;
+        list.appendChild(li);
+      });
+    }
+
+    function attachEventListeners(){
+        document.getElementById('main-container').addEventListener('click', (e) => {
+            if(e.target.closest('#prev-month-btn')) {
+                currentCalendarDate.setMonth(currentCalendarDate.getMonth()-1); 
+                renderCalendar(currentCalendarDate, classScheduleDays);
+            }
+            if(e.target.closest('#next-month-btn')) {
+                currentCalendarDate.setMonth(currentCalendarDate.getMonth()+1); 
+                renderCalendar(currentCalendarDate, classScheduleDays);
+            }
+            if(e.target.closest('#carousel-prev')) {
+                document.getElementById('class-carousel-container').scrollBy({left: -240, behavior:'smooth'});
+            }
+            if(e.target.closest('#carousel-next')) {
+                document.getElementById('class-carousel-container').scrollBy({left: 240, behavior:'smooth'});
+            }
+        });
+    }
+
+    function findUpcomingClasses(classes, count = 3){
+      const dayMap = { 'Minggu': 0, 'Senin': 1, 'Selasa': 2, 'Rabu': 3, 'Kamis': 4, 'Jumat': 5, 'Sabtu': 6 };
+      const now = new Date();
+      const upcoming = [];
+
+      for (let i = 0; i < 8; i++) {
+          const checkDate = new Date(now);
+          checkDate.setDate(now.getDate() + i);
+          const checkDayOfWeek = checkDate.getDay();
+          const dayName = Object.keys(dayMap).find(k => dayMap[k] === checkDayOfWeek);
+
+          const classesOnThisDay = classes.filter(c => c.hari === dayName).sort((a, b) => (a.waktu || '00:00').localeCompare(b.waktu || '00:00'));
+
+          for (const cls of classesOnThisDay) {
+              const [h, m] = String(cls.waktu || '00:00').split(':').map(Number);
+              const classTime = new Date(checkDate);
+              classTime.setHours(h || 0, m || 0, 0, 0);
+              if (classTime > now) upcoming.push({ classData: cls, classTime: classTime });
+          }
+      }
+      return upcoming.sort((a, b) => a.classTime - b.classTime).slice(0, count);
+    }
+
+    function updateCountdown(target){ const el=document.getElementById('countdown-display'); if(!el) return; const now=new Date(); const diff=target-now; if(diff<=0){ el.textContent='Sedang berlangsung'; if(countdownInterval) clearInterval(countdownInterval); return; } const d=Math.floor(diff/(1000*60*60*24)); const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60)); const m=Math.floor((diff%(1000*60*60))/(1000*60)); const s=Math.floor((diff%(1000*60))/1000); if(d>0) el.textContent=`Mulai dalam ${d} hari`; else if(h>0) el.textContent=`Mulai dalam ${h}j ${m}m`; else el.textContent=`Mulai dalam ${m}m ${s}d`; }
+    function renderCalendar(date,scheduleDays){ const grid=document.getElementById('calendar-grid'); const label=document.getElementById('month-year'); if(!grid||!label) return; grid.innerHTML=''; const m=date.getMonth(), y=date.getFullYear(); label.textContent=date.toLocaleString('id-ID',{month:'long',year:'numeric'}); const first=new Date(y,m,1); const days=new Date(y,m+1,0).getDate(); const start=(first.getDay()+6)%7; ['S','S','R','K','J','S','M'].forEach(d=>{ const n=document.createElement('div'); n.className='calendar-day-name'; n.textContent=d; grid.appendChild(n); }); for(let i=0;i<start;i++){ grid.appendChild(document.createElement('div')); } const today=new Date(); const map={'Senin':1,'Selasa':2,'Rabu':3,'Kamis':4,'Jumat':5,'Sabtu':6,'Minggu':0}; for(let d=1; d<=days; d++){ const cur=new Date(y,m,d); const cell=document.createElement('div'); cell.className='calendar-day'; cell.textContent=d; if(cur.toDateString()===today.toDateString()) cell.classList.add('today'); const dayName=Object.keys(map).find(k=>map[k]===cur.getDay()); if(scheduleDays.includes(dayName)) cell.classList.add('has-class'); grid.appendChild(cell); } }
+    function getGreeting(name){ const h=new Date().getHours(); const nm=name?`, ${name.split(' ')[0]}!`:'!'; if(h<4) return `Selamat Malam${nm}`; if(h<12) return `Selamat Pagi${nm}`; if(h<18) return `Selamat Siang${nm}`; return `Selamat Malam${nm}`; }
+    function formatDueDate(dueDate){ if(!dueDate||!dueDate.toDate) return {text:'Invalid date', className:''}; const now=new Date(); const due=dueDate.toDate(); now.setHours(0,0,0,0); due.setHours(0,0,0,0); const diffDays=Math.ceil((due-now)/(1000*60*60*24)); if(diffDays<0) return {text:'Telah lewat', className:'urgent'}; if(diffDays===0) return {text:'Tenggat hari ini', className:'urgent'}; if(diffDays===1) return {text:'Tenggat besok', className:'urgent'}; if(diffDays<=7) return {text:`${diffDays} hari lagi`, className:'soon'}; return {text:`${due.toLocaleDateString('id-ID',{day:'numeric',month:'short'})}`, className:''}; }
+    function renderEmptyStates(){ document.getElementById('class-carousel-section').innerHTML=`<div class="section-header"><h2 class="section-title">Kelas Anda</h2></div><div style="text-align:center;color:var(--muted);padding:16px">Anda belum bergabung dengan kelas. <a href="classes.html">Gabung atau Buat Kelas</a></div>`; document.getElementById('upcoming-class-section').innerHTML=''; document.getElementById('other-upcoming-classes-section').innerHTML=''; document.getElementById('deadline-list').innerHTML='<li style="text-align:center;color:var(--muted);padding:8px 0">Tidak ada tugas untuk ditampilkan.</li>'; }
+    function showContent() { document.getElementById('skeleton-loader')?.classList.add('hidden'); document.getElementById('actual-content')?.classList.remove('hidden'); }
+    
+    function renderSkeleton(){
+        const main = document.getElementById('main-container');
+        main.innerHTML = `
+        <div id="skeleton-loader" class="skeleton-wrapper">
+            <div class="main-content">
+                <header class="header">
+                    <div class="header-top">
+                        <div class="skeleton" style="width:110px; height:28px; border-radius:8px;"></div>
+                        <div class="header-actions">
+                            <div class="skeleton" style="width:38px; height:38px; border-radius:50%;"></div>
+                            <div class="skeleton" style="width:38px; height:38px; border-radius:50%;"></div>
+                        </div>
+                    </div>
+                    <div class="header-main">
+                        <div>
+                            <div class="skeleton" style="height:28px; width:240px; border-radius:8px;"></div>
+                            <div class="skeleton" style="height:16px; width:200px; border-radius:6px; margin-top:10px;"></div>
+                        </div>
+                    </div>
+                    <div class="header-toolbar">
+                        <div class="skeleton" style="width:280px; height:46px; border-radius:12px;"></div>
+                        <div class="skeleton" style="width:42px; height:42px; border-radius:50%;"></div>
+                    </div>
+                </header>
+                <div class="dashboard-grid">
+                    <div class="main-column">
+                        <section>
+                            <div class="section-header">
+                                <div class="skeleton" style="height:24px; width:120px; border-radius:8px;"></div>
+                                <div style="display:flex; gap:8px;">
+                                    <div class="skeleton" style="width:34px; height:34px; border-radius:50%;"></div>
+                                    <div class="skeleton" style="width:34px; height:34px; border-radius:50%;"></div>
+                                </div>
+                            </div>
+                            <div class="class-carousel" style="gap:14px;">
+                                <div class="skeleton" style="flex: 0 0 240px; height:240px; border-radius:16px;"></div>
+                                <div class="skeleton" style="flex: 0 0 240px; height:240px; border-radius:16px;"></div>
+                                <div class="skeleton" style="flex: 0 0 240px; height:240px; border-radius:16px;"></div>
+                            </div>
+                        </section>
+                        <section>
+                           <div class="skeleton" style="height:24px; width:150px; border-radius:8px; margin-bottom:12px;"></div>
+                           <div class="skeleton" style="height:120px; width:100%; border-radius:14px;"></div>
+                        </section>
+                    </div>
+                    <div class="side-column">
+                        <div class="skeleton" style="height:240px; border-radius:14px;"></div>
+                        <div class="skeleton" style="height:280px; border-radius:14px;"></div>
+                        <div class="skeleton" style="height:220px; border-radius:14px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="actual-content" class="hidden"></div>
+      `;
+    }
+  </script>
+</body>
+</html>
+
