@@ -4,9 +4,7 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 const db = admin.firestore();
 
-// --- HELPER FUNCTION ---
 async function sendNotificationToUser(userId, payload, notificationData) {
-    // --- Step 1: Create the In-App Notification (Guaranteed to run) ---
     try {
         await db.collection("users").doc(userId).collection("notifications").add(notificationData);
         console.log(`Successfully created in-app notification for ${userId}.`);
@@ -15,7 +13,6 @@ async function sendNotificationToUser(userId, payload, notificationData) {
         return;
     }
 
-    // --- Step 2: Attempt to Send the Push Notification (Runs separately) ---
     const userDoc = await db.collection("users").doc(userId).get();
     if (!userDoc.exists) {
         console.log(`User ${userId} not found, skipping push notification.`);
@@ -36,9 +33,7 @@ async function sendNotificationToUser(userId, payload, notificationData) {
 }
 
 
-// --- NOTIFICATION TRIGGERS ---
 
-// TRIGGER: When a new task is created
 exports.onNewTask = functions.region("asia-southeast2").firestore
     .document("classes/{classId}/tasks/{taskId}")
     .onCreate(async (snap, context) => {
@@ -75,8 +70,6 @@ exports.onNewTask = functions.region("asia-southeast2").firestore
         return Promise.all(promises);
     });
 
-// ... (The rest of your functions: taskDeadlineReminder, classStartingReminder, onMemberKicked remain exactly the same)
-// --- TRIGGER: Scheduled every hour for deadline reminders ---
 exports.taskDeadlineReminder = functions.region("asia-southeast2").pubsub
     .schedule("every 1 hours")
     .onRun(async (context) => {
@@ -122,7 +115,6 @@ exports.taskDeadlineReminder = functions.region("asia-southeast2").pubsub
         return Promise.all(promises);
     });
 
-// --- TRIGGER: Scheduled every 10 minutes for class reminders ---
 exports.classStartingReminder = functions.region("asia-southeast2").pubsub
     .schedule("every 10 minutes")
     .onRun(async (context) => {
@@ -164,7 +156,6 @@ exports.classStartingReminder = functions.region("asia-southeast2").pubsub
 
         return Promise.all(promises);
     });
-// --- TRIGGER: When a class document is updated (your original function) ---
 exports.onMemberKicked = functions.region("asia-southeast2").firestore
     .document("classes/{classId}")
     .onUpdate(async (change, context) => {
@@ -184,4 +175,38 @@ exports.onMemberKicked = functions.region("asia-southeast2").firestore
       });
 
       return Promise.all(promises);
+    });
+
+exports.onClassDeleted = functions.region("asia-southeast2").firestore
+    .document("classes/{classId}")
+    .onDelete(async (snap, context) => {
+        const deletedClass = snap.data();
+        const classId = context.params.classId;
+
+        const members = deletedClass.members || [];
+
+        if (members.length === 0) {
+            console.log(`Class ${classId} had no members. No user documents to update.`);
+            return null;
+        }
+
+        console.log(`Class ${classId} deleted. Updating ${members.length} member(s).`);
+
+        const batch = db.batch();
+
+        members.forEach(userId => {
+            const userRef = db.collection("users").doc(userId);
+            batch.update(userRef, {
+                joinedClasses: admin.firestore.FieldValue.arrayRemove(classId)
+            });
+        });
+
+        try {
+            await batch.commit();
+            console.log(`Successfully removed class ID ${classId} from all members' joinedClasses arrays.`);
+        } catch (error) {
+            console.error(`Error updating user documents after class deletion for class ${classId}:`, error);
+        }
+
+        return null;
     });
