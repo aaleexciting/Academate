@@ -5,7 +5,6 @@ admin.initializeApp();
 const db = admin.firestore();
 
 // --- HELPER FUNCTION ---
-// This reusable function sends notifications to a specific user.
 async function sendNotificationToUser(userId, payload, notificationData) {
     // --- Step 1: Create the In-App Notification (Guaranteed to run) ---
     try {
@@ -13,7 +12,6 @@ async function sendNotificationToUser(userId, payload, notificationData) {
         console.log(`Successfully created in-app notification for ${userId}.`);
     } catch (error) {
         console.error(`Failed to create in-app notification for ${userId}`, error);
-        // We stop here if we can't even write to our own database.
         return;
     }
 
@@ -26,7 +24,6 @@ async function sendNotificationToUser(userId, payload, notificationData) {
     const tokens = userDoc.data().fcmTokens || [];
 
     if (tokens.length > 0) {
-        console.log(`Attempting to send push notification to ${userId} with ${tokens.length} tokens.`);
         try {
             await admin.messaging().sendToDevice(tokens, payload);
             console.log(`Successfully sent push notification to ${userId}.`);
@@ -45,7 +42,6 @@ async function sendNotificationToUser(userId, payload, notificationData) {
 exports.onNewTask = functions.region("asia-southeast2").firestore
     .document("classes/{classId}/tasks/{taskId}")
     .onCreate(async (snap, context) => {
-        console.log("onNewTask function triggered.");
         const task = snap.data();
         const { classId } = context.params;
 
