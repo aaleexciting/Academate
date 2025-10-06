@@ -183,17 +183,17 @@
   </div>
   Academate
 </div>      <nav class="nav">
-        <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
-        <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
-        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
-        <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
-        <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
-        <a class="active" href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+        <a href="/dashboard"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+        <a href="/classes"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+        <a href="/task"><i class="ri-task-line"></i><span>Tugas</span></a>
+        <a href="/schedule"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+        <a href="/notes"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+        <a class="active" href="/account"><i class="ri-user-3-line"></i><span>Akun</span></a>
       </nav>
       <div class="spacer"></div>
       <div class="sidebar-footer">
         <button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
-<div class="sidebar-links"><a href="legal.html#terms">Terms of Service</a><a href="legal.html#privacy">Privacy Policy</a></div>        <p class="copyright">&copy; 2025 Academate</p>
+<div class="sidebar-links"><a href="/legal#terms">Terms of Service</a><a href="/legal#privacy">Privacy Policy</a></div>        <p class="copyright">&copy; 2025 Academate</p>
       </div>
     </aside>
 
@@ -293,11 +293,11 @@
   </div>
 
   <nav class="mobile-nav">
-    <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
-    <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
-    <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
-    <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
-    <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+    <a href="/dashboard"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+    <a href="/classes"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+    <a href="/task"><i class="ri-task-line"></i><span>Tugas</span></a>
+    <a href="/schedule"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+    <a href="/notes"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
   <div id="confirm-overlay" style="display:none;position:fixed;inset:0;background:rgba(17,24,39,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center">
@@ -346,7 +346,7 @@
     const classesList=document.getElementById('classes-list');
 
     onAuthStateChanged(auth, async (user)=>{
-      if(!user){ window.location.replace('auth.html'); return; }
+      if(!user){ window.location.replace('/auth'); return; }
       currentUser=user; 
       await hydrateUser(); 
       await hydrateClasses(); 
@@ -479,7 +479,7 @@
         await reauthenticateWithPopup(currentUser, provider);
         await deleteUser(currentUser);
         alert('Akun dihapus.');
-        window.location.replace('index.html');
+        window.location.replace('/');
       }catch(e){
         if(e.code==='auth/requires-recent-login') alert('Sesi berakhir. Login ulang untuk menghapus.');
         else if(e.code==='auth/popup-closed-by-user') alert('Dibatalkan.');

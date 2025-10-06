@@ -2,43 +2,35 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, query, orderBy, onSnapshot, doc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Your Firebase project configuration
 const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte" };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Listen for authentication state changes
 onAuthStateChanged(auth, user => {
     if (user) {
-        // If the user is logged in, load their notifications
         loadNotifications(user.uid);
     } else {
-        // If not logged in, redirect to the login page
         window.location.replace('auth.html');
     }
 });
 
 /**
- * Fetches and displays notifications for a given user ID.
- * @param {string} userId The ID of the logged-in user.
+ * @param {string} userId
  */
 function loadNotifications(userId) {
     const listEl = document.getElementById('notification-list');
-    // Create a query to get notifications, ordered by the newest first
     const q = query(collection(db, 'users', userId, 'notifications'), orderBy('timestamp', 'desc'));
 
-    // onSnapshot listens for real-time updates to the query
     onSnapshot(q, (snapshot) => {
         if (snapshot.empty) {
             listEl.innerHTML = `<div class="empty-state">Anda belum memiliki notifikasi.</div>`;
             return;
         }
 
-        listEl.innerHTML = ''; // Clear the list before adding new items
-        const batch = writeBatch(db); // Use a batch to perform multiple writes at once
+        listEl.innerHTML = '';
+        const batch = writeBatch(db);
 
         snapshot.forEach(docSnap => {
             const notif = docSnap.data();
@@ -58,14 +50,12 @@ function loadNotifications(userId) {
             `;
             listEl.appendChild(item);
 
-            // If a notification is unread, add an update operation to our batch to mark it as read
             if (!notif.read) {
                 const notifRef = doc(db, 'users', userId, 'notifications', docSnap.id);
                 batch.update(notifRef, { read: true });
             }
         });
 
-        // Commit all the "mark as read" updates to Firestore
         batch.commit().catch(err => console.error("Failed to mark notifications as read:", err));
 
     }, (error) => {
@@ -74,7 +64,6 @@ function loadNotifications(userId) {
     });
 }
 
-// Helper function to determine the correct icon based on notification type
 function getIcon(type) {
     switch(type) {
         case 'NEW_TASK': return 'ri-task-line';
@@ -84,7 +73,6 @@ function getIcon(type) {
     }
 }
 
-// Helper function to style the icon based on notification type
 function getIconColor(type) {
     switch(type) {
         case 'NEW_TASK': return { bg: '#E0F2FE', text: '#0EA5E9' }; // Blue
@@ -94,7 +82,6 @@ function getIconColor(type) {
     }
 }
 
-// Helper function to format the timestamp into a readable string (e.g., "5 menit yang lalu")
 function formatTimestamp(timestamp) {
     if (!timestamp?.toDate) return '';
     const date = timestamp.toDate();

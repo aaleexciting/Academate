@@ -229,12 +229,12 @@
   </div>
   Academate
 </div>      <nav class="nav">
-        <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
-        <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
-        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
-        <a class="active" href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
-        <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
-        <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+        <a href="/dashboard"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+        <a href="/classes"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+        <a href="/task"><i class="ri-task-line"></i><span>Tugas</span></a>
+        <a class="active" href="/schedule"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+        <a href="/notes"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+        <a href="/account"><i class="ri-user-3-line"></i><span>Akun</span></a>
       </nav>
       <div class="spacer"></div>
       <div class="sidebar-footer"><button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button></div>
@@ -275,7 +275,7 @@
                 <div class="header-brand">Academate</div>
                 <div class="header-actions">
                   <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
-                  <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+                  <a href="/notification" class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></a>
                 </div>
               </div>
               <div class="header-main">
@@ -283,7 +283,7 @@
                   <h1>Jadwal</h1>
                   <p>&nbsp;</p>
                 </div>
-                <a href="account.html" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
+                <a href="/account" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
               </div>
               <div class="header-toolbar">
                 <div class="search-bar">
@@ -295,8 +295,8 @@
                     <button class="icon-btn" id="prev-week-btn" title="Minggu sebelumnya"><i class="ri-arrow-left-s-line"></i></button>
                     <button class="icon-btn" id="next-week-btn" title="Minggu berikutnya"><i class="ri-arrow-right-s-line"></i></button>
                 </div>
-                <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
-                <a href="account.html" class="header-avatar-link-desktop"><img id="header-avatar-img-desktop" class="header-avatar" alt="Foto profil"></a>
+                <a href="/notification" class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></a>
+                <a href="/account" class="header-avatar-link-desktop"><img id="header-avatar-img-desktop" class="header-avatar" alt="Foto profil"></a>
               </div>
             </header>
         </div>
@@ -382,11 +382,11 @@
   </div>
 
   <nav class="mobile-nav">
-    <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
-    <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
-    <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
-    <a class="active" href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
-    <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+    <a href="/dashboard"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+    <a href="/classes"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+    <a href="/task"><i class="ri-task-line"></i><span>Tugas</span></a>
+    <a class="active" href="/schedule"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+    <a href="/notes"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
   <div class="modal-overlay" id="quick-look-modal">
@@ -430,7 +430,7 @@
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         if (timeIndicatorInterval) clearInterval(timeIndicatorInterval);
-        window.location.replace('auth.html');
+        window.location.replace('/auth');
         return;
       }
       currentUser = user;
@@ -840,7 +840,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn" id="modal-close-btn">Tutup</button>
-                        <a href="class_page.html?id=${c.id}" class="btn btn-primary">Buka Kelas</a>
+                        <a href="/class_page?id=${c.id}" class="btn btn-primary">Buka Kelas</a>
                     </div>`;
         } else if (data.task) {
         } else if (data.tasksForDay) {
@@ -886,4 +886,3 @@
   </script>
 </body>
 </html>
-

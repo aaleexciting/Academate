@@ -355,17 +355,17 @@
   </div>
   Academate
 </div>      <nav class="nav">
-        <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
-        <a href="classes.html" class="active"><i class="ri-book-open-line"></i><span>Kelas</span></a>
-        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
-        <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
-        <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
-        <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+        <a href="/dashboard"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+        <a href="/classes" class="active"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+        <a href="/task"><i class="ri-task-line"></i><span>Tugas</span></a>
+        <a href="/schedule"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+        <a href="/notes"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+        <a href="/account"><i class="ri-user-3-line"></i><span>Akun</span></a>
       </nav>
       <div class="spacer"></div>
       <div class="sidebar-footer">
         <button class="sidebar-logout-btn logout" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
-<div class="sidebar-links"><a href="legal.html#terms">Terms of Service</a><a href="legal.html#privacy">Privacy Policy</a></div>        <p class="copyright">&copy; 2025 Academate</p>
+<div class="sidebar-links"><a href="/legal#terms">Terms of Service</a><a href="/legal#privacy">Privacy Policy</a></div>        <p class="copyright">&copy; 2025 Academate</p>
       </div>
     </aside>
 
@@ -435,11 +435,11 @@
   </div>
 
   <nav class="mnav">
-    <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
-    <a href="classes.html" class="active"><i class="ri-book-open-line"></i><span>Kelas</span></a>
-    <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
-    <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
-    <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+    <a href="/dashboard"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+    <a href="/classes" class="active"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+    <a href="/task"><i class="ri-task-line"></i><span>Tugas</span></a>
+    <a href="/schedule"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+    <a href="/notes"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
   <div class="overlay" id="add-task-modal">
@@ -524,7 +524,7 @@
     }
 
     onAuthStateChanged(auth, async (user) => {
-      if (!user) { cleanup(); window.location.replace('auth.html'); return; }
+      if (!user) { cleanup(); window.location.replace('/auth'); return; }
       currentUser = user;
       const params = new URLSearchParams(location.search); 
       classId = params.get('id');
@@ -577,7 +577,7 @@
           <div class="header-right">
             <button class="icon-btn" id="settings-btn" title="Pengaturan Kelas" style="display: none;"><i class="ri-settings-3-line"></i></button>
             <button class="icon-btn" id="refresh-btn" title="Segarkan" aria-label="Segarkan"><i class="ri-refresh-line"></i></button>
-            <a href="account.html" title="Akun Anda">
+            <a href="/account" title="Akun Anda">
               <img id="avatar-top" class="avatar" src="${currentUser.photoURL || 'https://placehold.co/80x80'}" alt="Profile"/>
             </a>
           </div>
@@ -803,7 +803,7 @@
             if (snap.empty){ ul.innerHTML = '<div class="empty">Belum ada catatan bersama.</div>'; return; }
             snap.forEach(d=>{
                 const n = d.data();
-                const a = el('a', { class: 'note', href: `notes.html?note_id=${d.id}&class_id=${classId}` });
+                const a = el('a', { class: 'note', href: `/notes?note_id=${d.id}&class_id=${classId}` });
                 const safeTitle = (n.title || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
                 const safeBody = (n.body || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
                 a.innerHTML = `<h4>${safeTitle}</h4><p>${safeBody.substring(0,120)}${safeBody.length>120?'…':''}</p><small>Oleh ${n.sharedBy}</small>`;
@@ -825,7 +825,7 @@
             if(e.target.closest('#send-btn')) addMessage();
             if(e.target.closest('#jump-latest')) { const feed = $('discussion-feed'); feed.scrollTo({ top: feed.scrollHeight, behavior: 'smooth' }); }
             if(e.target.closest('#attach-btn')) $('file-input').click();
-            if(e.target.closest('#back-btn')) history.length > 1 ? history.back() : location.assign('classes.html');
+            if(e.target.closest('#back-btn')) history.length > 1 ? history.back() : location.assign('/classes');
             if(e.target.closest('#refresh-btn')) location.reload();
             if(e.target.closest('#class-members-display')) $('member-list-modal').classList.add('show');
             if(e.target.closest('#settings-btn')) { getDoc(doc(db, 'classes', classId)).then(cs => { if (cs.exists()) openSettingsModal(cs.data()); }); }
@@ -858,7 +858,7 @@
         window.addEventListener('resize', () => { fixVH(); updatePlaceholder(); });
         fixVH(); updatePlaceholder();
         const addNoteBtn = $('add-note-btn');
-        if (addNoteBtn) addNoteBtn.href = `notes.html?share_to=${classId}`;
+        if (addNoteBtn) addNoteBtn.href = `/notes?share_to=${classId}`;
 
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
@@ -958,7 +958,7 @@
 
     async function deleteClass() {
         if (await showConfirm('PERINGATAN: Anda akan menghapus kelas ini secara permanen untuk semua anggota. Semua data terkait akan hilang. Aksi ini tidak dapat dibatalkan.')) {
-            try { await deleteDoc(doc(db, 'classes', classId)); alert('Kelas telah dihapus.'); window.location.assign('classes.html'); } 
+            try { await deleteDoc(doc(db, 'classes', classId)); alert('Kelas telah dihapus.'); window.location.assign('/classes'); } 
             catch (err) { console.error("Gagal menghapus kelas:", err); alert("Gagal menghapus kelas."); }
         }
     }

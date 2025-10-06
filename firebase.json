@@ -9,6 +9,7 @@
       "**/.*",
       "**/node_modules/**",
       "academate-backend/**"
-    ]
+    ],
+    "cleanUrls": true
   }
 }

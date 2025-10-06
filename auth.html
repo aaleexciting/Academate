@@ -134,7 +134,7 @@
 <body>
 
     <div class="auth-card">
-        <a href="index.html" class="logo">Academate</a>
+        <a href="/" class="logo">Academate</a>
         
         <h1 class="card-title">Satu Langkah Lagi</h1>
         <p class="card-subtitle">Masuk atau daftar dengan akun Google Anda untuk memulai.</p>
@@ -147,13 +147,11 @@
         <div id="error-message" class="error-message"></div>
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, getAdditionalUserInfo } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA",
             authDomain: "acadmte.firebaseapp.com",
@@ -164,23 +162,19 @@
             measurementId: "G-ZEFYD7F650"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- Auth State Observer ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                window.location.replace('dashboard.html');
+                window.location.replace('/dashboard');
             }
         });
 
-        // --- DOM Elements ---
         const googleSignInBtn = document.getElementById('google-signin-btn');
         const errorMessageDiv = document.getElementById('error-message');
 
-        // --- Utility Functions ---
         function showErrorMessage(message) {
             errorMessageDiv.textContent = message;
             errorMessageDiv.style.display = 'block';
@@ -194,18 +188,16 @@
             }
         }
 
-        // --- Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
             googleSignInBtn.addEventListener('click', async () => {
                 const provider = new GoogleAuthProvider();
-                errorMessageDiv.style.display = 'none'; // Clear previous errors
+                errorMessageDiv.style.display = 'none';
                 googleSignInBtn.disabled = true;
 
                 try {
                     const result = await signInWithPopup(auth, provider);
                     const user = result.user;
                     
-                    // Check if the user document already exists. If not, create it.
                     const userDocRef = doc(db, "users", user.uid);
                     const userDoc = await getDoc(userDocRef);
 
@@ -218,7 +210,6 @@
                             provider: 'google'
                         });
                     }
-                    // Redirect is handled by onAuthStateChanged observer
                 } catch (error) {
                     console.error("Google Sign-In Error:", error);
                     showErrorMessage(getFriendlyErrorMessage(error.code));
@@ -230,4 +221,3 @@
     </script>
 </body>
 </html>
-

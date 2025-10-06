@@ -293,17 +293,17 @@
   </div>
   Academate
 </div>      <nav class="nav">
-        <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
-        <a class="active" href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
-        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
-        <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
-        <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
-        <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+        <a href="/dashboard"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+        <a class="active" href="/classes"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+        <a href="/task"><i class="ri-task-line"></i><span>Tugas</span></a>
+        <a href="/schedule"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+        <a href="/notes"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+        <a href="/account"><i class="ri-user-3-line"></i><span>Akun</span></a>
       </nav>
       <div class="spacer"></div>
       <div class="sidebar-footer">
         <button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
-<div class="sidebar-links"><a href="legal.html#terms">Terms of Service</a><a href="legal.html#privacy">Privacy Policy</a></div>        <p class="copyright">&copy; 2025 Academate</p>
+<div class="sidebar-links"><a href="/legal#terms">Terms of Service</a><a href="/legal#privacy">Privacy Policy</a></div>        <p class="copyright">&copy; 2025 Academate</p>
       </div>
     </aside>
 
@@ -355,7 +355,7 @@
                   <h1>Kelas Anda</h1>
                   <p>Kelola, akses, dan organisir semua mata kuliah Anda di satu tempat.</p>
                 </div>
-                <a href="account.html" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
+                <a href="/account" class="header-avatar-link"><img id="header-avatar-img" class="header-avatar" alt="Foto profil"></a>
               </div>
               <div class="header-toolbar">
                 <div class="search-bar">
@@ -385,11 +385,11 @@
   </div>
 
   <nav class="mobile-nav">
-    <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
-    <a class="active" href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
-    <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
-    <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
-    <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+    <a href="/dashboard"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+    <a class="active" href="/classes"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+    <a href="/task"><i class="ri-task-line"></i><span>Tugas</span></a>
+    <a href="/schedule"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+    <a href="/notes"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
   <div class="overlay" id="create-class-modal">
@@ -482,7 +482,7 @@
     });
     
     onAuthStateChanged(auth, async (user)=>{
-      if(!user){ window.location.replace('auth.html'); return; }
+      if(!user){ window.location.replace('/auth'); return; }
       currentUser = user;
       await loadClasses();
       attachEvents();
@@ -631,7 +631,7 @@
           <div class="x-people"></div>
           <div class="x-actions">
             <button class="btn-icon share" title="Bagikan"><i class="ri-share-forward-line"></i></button>
-            <a class="btn btn-primary" style="padding:8px 12px" href="class_page.html?id=${id}">Buka</a>
+            <a class="btn btn-primary" style="padding:8px 12px" href="/class_page?id=${id}">Buka</a>
           </div>
         </div>`;
 
@@ -770,4 +770,3 @@
   </script>
 </body>
 </html>
-
