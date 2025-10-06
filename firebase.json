@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "source": "academate-backend/functions"
+  },
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "academate-backend/**"
+    ]
+  }
+}

@@ -44,7 +44,7 @@
     .main{background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
     .main-content { padding: var(--gap); width: 100%; }
     
-    .icon-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); display: grid; place-items: center; cursor: pointer; color: var(--muted); font-size: 20px; transition: .2s; flex-shrink: 0; }
+    .icon-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); display: grid; place-items: center; cursor: pointer; color: var(--muted); font-size: 20px; transition: .2s; flex-shrink: 0; text-decoration: none;}
     .icon-btn:hover { color: var(--primary); border-color: #d8d8e0; }
 
     .header{ margin-top: var(--gap); margin-bottom: 24px; }
@@ -175,7 +175,7 @@
       .main-content { max-width:var(--content-max); margin: 0 auto; width: 100%;}
       
       .header { display: flex; justify-content: space-between; align-items: center; margin-top: var(--gap); }
-      .header-top, .header-avatar-link, .header-actions { display: none; }
+      .header-top, .header-avatar-link, .header-actions:not(.header-toolbar .header-actions) { display: none; }
       .header-main { display: block; }
       .header-main h1 { font-size: 26px; }
       .header-main p { font-size: 15px; margin-top: 6px; }
@@ -191,52 +191,52 @@
       .carousel-controls { display: flex; gap: 8px; }
       .dashboard-grid{ display: grid; grid-template-columns:minmax(0,1fr) clamp(320px, 24vw, 360px); }
       .brand .logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #8B7CFF, #6AC9FF);
-  
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  padding: 6px;
-}
+          width: 34px;
+          height: 34px;
+          border-radius: 10px;
+          background: linear-gradient(135deg, #8B7CFF, #6AC9FF);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+          padding: 6px;
+      }
 
-.brand .logo svg {
-  width: 100%;
-  height: 100%;
-}
+      .brand .logo svg {
+        width: 100%;
+        height: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <div class="app">
     <aside class="sidebar" aria-label="Navigasi utama">
-<div class="brand">
-  <div class="logo" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-      <g>
-        <path d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6c.494 0 .96-.12 1.37-.33A6.49 6.49 0 0 1 11 17.5a6.48 6.48 0 0 1 2-4.69V7a1 1 0 0 1 1-1h6v5.498a6.52 6.52 0 0 1 2 1.312V6a2 2 0 0 0-2-2h-6c-.768 0-1.47.289-2 .764A2.989 2.989 0 0 0 10 4H4Zm7 3v10a1 1 0 0 1-1 1H4V6h6a1 1 0 0 1 1 1Z"/>
-        <path d="M16.007 17c.04-1.415.248-2.669.553-3.585c.171-.513.364-.893.554-1.134c.195-.247.329-.281.386-.281c.057 0 .192.034.386.281c.19.241.383.62.554 1.134c.305.916.513 2.17.553 3.585h-2.986Zm-.396-3.9c.108-.323.23-.622.368-.887A5.504 5.504 0 0 0 12.023 17h2.984c.04-1.5.26-2.866.604-3.9Zm3.778 0a6.133 6.133 0 0 0-.368-.887A5.504 5.504 0 0 1 22.978 17h-2.985c-.04-1.5-.26-2.866-.604-3.9Zm.604 4.9h2.985a5.504 5.504 0 0 1-3.957 4.787c.138-.265.26-.564.368-.886c.345-1.035.564-2.4.604-3.901Zm-2.107 4.719c-.194.247-.329.281-.386-.281c-.057 0-.191-.034-.386-.281c-.19-.241-.383-.62-.554-1.135c-.305-.915-.513-2.17-.553-3.584h2.986c-.04 1.415-.248 2.669-.553 3.584c-.171.514-.364.894-.554 1.135ZM12.023 18a5.504 5.504 0 0 0 3.956 4.787a6.133 6.133 0 0 1-.367-.886c-.346-1.035-.565-2.4-.605-3.901h-2.984Z"/>
-      </g>
-    </svg>
-  </div>
-  Academate
-</div>
-      <nav class="nav">
-        <a href="dashboard.html" class="active"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
-        <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
-        <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
-        <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
-        <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
-        <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
-      </nav>
-      <div class="spacer"></div>
-      <div class="sidebar-footer">
-        <button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
-<div class="sidebar-links"><a href="legal.html#terms">Terms of Service</a><a href="legal.html#privacy">Privacy Policy</a></div>        <p class="copyright">&copy; 2025 Academate</p>
-      </div>
+        <div class="brand">
+        <div class="logo" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <g>
+                <path d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6c.494 0 .96-.12 1.37-.33A6.49 6.49 0 0 1 11 17.5a6.48 6.48 0 0 1 2-4.69V7a1 1 0 0 1 1-1h6v5.498a6.52 6.52 0 0 1 2 1.312V6a2 2 0 0 0-2-2h-6c-.768 0-1.47.289-2 .764A2.989 2.989 0 0 0 10 4H4Zm7 3v10a1 1 0 0 1-1 1H4V6h6a1 1 0 0 1 1 1Z"/>
+                <path d="M16.007 17c.04-1.415.248-2.669.553-3.585c.171-.513.364-.893.554-1.134c.195-.247.329-.281.386-.281c.057 0 .192.034.386.281c.19.241.383.62.554 1.134c.305.916.513 2.17.553 3.585h-2.986Zm-.396-3.9c.108-.323.23-.622.368-.887A5.504 5.504 0 0 0 12.023 17h2.984c.04-1.5.26-2.866.604-3.9Zm3.778 0a6.133 6.133 0 0 0-.368-.887A5.504 5.504 0 0 1 22.978 17h-2.985c-.04-1.5-.26-2.866-.604-3.9Zm.604 4.9h2.985a5.504 5.504 0 0 1-3.957 4.787c.138-.265.26-.564.368-.886c.345-1.035.564-2.4.604-3.901Zm-2.107 4.719c-.194.247-.329-.281-.386-.281c-.057 0-.191-.034-.386-.281c-.19-.241-.383-.62-.554-1.135c-.305-.915-.513-2.17-.553-3.584h2.986c-.04 1.415-.248 2.669-.553 3.584c-.171.514-.364.894-.554 1.135ZM12.023 18a5.504 5.504 0 0 0 3.956 4.787a6.133 6.133 0 0 1-.367-.886c-.346-1.035-.565-2.4-.605-3.901h-2.984Z"/>
+            </g>
+            </svg>
+        </div>
+        Academate
+        </div>
+        <nav class="nav">
+            <a href="dashboard.html" class="active"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
+            <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
+            <a href="task.html"><i class="ri-task-line"></i><span>Tugas</span></a>
+            <a href="schedule.html"><i class="ri-calendar-2-line"></i><span>Jadwal</span></a>
+            <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
+            <a href="account.html"><i class="ri-user-3-line"></i><span>Akun</span></a>
+        </nav>
+        <div class="spacer"></div>
+        <div class="sidebar-footer">
+            <button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button>
+            <div class="sidebar-links"><a href="legal.html#terms">Terms of Service</a><a href="legal.html#privacy">Privacy Policy</a></div>
+            <p class="copyright">&copy; 2025 Academate</p>
+        </div>
     </aside>
 
     <main class="main" id="main-container">
@@ -255,6 +255,9 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, doc, getDoc, collection, getDocs, query, where, Timestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    // ADDED: Notification-related imports
+    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
+    import { updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD-F650" };
 
@@ -272,7 +275,16 @@
     };
     
     document.addEventListener('DOMContentLoaded', renderSkeleton);
-    onAuthStateChanged(auth, user => { if (user) initialize(user); else window.location.replace('auth.html'); });
+    
+    // UPDATED: onAuthStateChanged to include notification setup
+    onAuthStateChanged(auth, user => { 
+        if (user) {
+            initialize(user); 
+            setupPushNotifications(user); // Request permission for notifications
+        } else {
+            window.location.replace('auth.html'); 
+        }
+    });
     
     document.addEventListener('click', (e)=>{
       const target = e.target.closest('button');
@@ -375,8 +387,8 @@
             <div class="header-top">
                 <div class="header-brand">Academate</div>
                 <div class="header-actions">
+                    <a href="notification.html" class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></a>
                     <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
-                    <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
                 </div>
             </div>
             <div class="header-main">
@@ -393,7 +405,7 @@
                     <i class="ri-search-line"></i>
                     <input type="text" placeholder="Cari kelas atau tugas...">
                 </div>
-                <button class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></button>
+                <a href="notification.html" class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></a>
             </div>`;
     }
 
@@ -614,6 +626,54 @@
         <div id="actual-content" class="hidden"></div>
       `;
     }
+
+    // --- NEW: NOTIFICATION SETUP FUNCTION ---
+    async function setupPushNotifications(user) {
+        const messaging = getMessaging(app);
+        
+        try {
+            const permission = await Notification.requestPermission();
+            if (permission === "granted") {
+                console.log('Notification permission granted.');
+                // IMPORTANT: You MUST get this key from your Firebase project settings
+                // Go to Project settings > Cloud Messaging > Web configuration > Web Push certificates
+                const vapidKey = "BGGKJYzSgSrCt22ALzgaPvlu1YdMx78VS2SlgLqOu8YsKqUe5pqx1ZR4w4CzJ-kn12V_sn6ERgRwvBY_LzSETho";
+                
+                if (!vapidKey.startsWith("YOUR_VAPID_KEY")) {
+                    const currentToken = await getToken(messaging, { vapidKey: vapidKey }); 
+                    
+                    if (currentToken) {
+                        console.log('FCM Token:', currentToken);
+                        const userDocRef = doc(db, 'users', user.uid);
+                        // Use arrayUnion to add the token without creating duplicates
+                        await updateDoc(userDocRef, {
+                            fcmTokens: arrayUnion(currentToken)
+                        });
+                    } else {
+                        console.log('No registration token available. Request permission to generate one.');
+                    }
+                } else {
+                    console.warn("VAPID key is not set. Push notifications will not work.");
+                }
+
+            } else {
+                console.log("Unable to get permission to notify.");
+            }
+        } catch (err) {
+            console.error('An error occurred while retrieving token or permission.', err);
+        }
+
+        // Handle messages that come in while the app is in the foreground
+        onMessage(messaging, (payload) => {
+            console.log('Message received in foreground: ', payload);
+            // Display a native browser notification
+            new Notification(payload.notification.title, {
+                body: payload.notification.body,
+                icon: '/icon/favicon-96x96.png'
+            });
+        });
+    }
+
   </script>
 </body>
 </html>

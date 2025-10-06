@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifikasi — Academate</title>
+  <link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#F7F7FA;--surface:#fff;--text:#1E1F24;--muted:#6C6F7F;--primary:#6F6CFF;--border:#ECECF1;--shadow:0 6px 24px rgba(30,31,36,.07);--radius:18px;--sidebar-w:280px;--gap:18px;
+    }
+    body{margin:0;font-family:"Poppins",sans-serif;background:var(--bg);color:var(--text);font-size:15px;}
+    .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;}
+    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+    .main-content{padding:var(--gap);max-width:800px;margin:0 auto;}
+    .header{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+    .header h1{font-size:26px;margin:0;}
+    .icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:20px;text-decoration:none;}
+    .notification-list{list-style:none;padding:0;margin:0;}
+    .notification-item{display:flex;gap:16px;padding:16px;border-bottom:1px solid var(--border);}
+    .notification-item:last-child{border-bottom:none;}
+    .notification-item.unread{background-color:#F9F9FC; font-weight: 500;}
+    .noti-icon{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:22px;flex-shrink:0;}
+    .noti-content p{margin:0;line-height:1.6;}
+    .noti-content .timestamp{font-size:12px;color:var(--muted);margin-top:4px; font-weight: 400;}
+    .empty-state{text-align:center;padding:40px;color:var(--muted);}
+    #loader{border:4px solid #f3f3f3;border-top:4px solid var(--primary);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:auto;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <main class="main">
+      <div class="main-content">
+        <header class="header">
+            <a href="dashboard.html" class="icon-btn" title="Kembali ke Dasbor"><i class="ri-arrow-left-line"></i></a>
+            <h1>Notifikasi</h1>
+        </header>
+        <ul id="notification-list" class="notification-list">
+            <div class="empty-state">
+                <div id="loader"></div>
+            </div>
+        </ul>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="notification.js"></script>
+</body>
+</html>
