@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="id" data-app="academate">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Legal — Academate</title>
+  <meta name="description" content="Ketentuan Penggunaan dan Kebijakan Privasi untuk Academate. Halaman mandiri siap terbit (standalone)." />
+  <meta name="theme-color" content="#6F6CFF" />
+
+  <!-- Fonts & Icons (kept lightweight/consistent) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+
+  <style>
+    :root{
+      --bg:#F7F7FA; --surface:#FFFFFF; --text:#1E1F24; --muted:#6C6F7F;
+      --primary:#6F6CFF; --primary-2:#8B7CFF; --border:#ECECF1;
+      --shadow:0 10px 36px rgba(30,31,36,.07);
+      --radius:18px; --content-max:960px; --gap:20px;
+    }
+    *,*:before,*:after{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; background:var(--bg); color:var(--text); font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif; font-size:15px; -webkit-font-smoothing:antialiased;}
+    a{color:inherit; text-decoration:none}
+
+    /* Page shell (no global navbar/sidebar) */
+    .wrap{min-height:100dvh; display:flex; flex-direction:column}
+
+    /* Header / Hero */
+    .hero{padding:32px 20px 8px}
+    .hero-inner{margin:0 auto; max-width:var(--content-max); display:flex; gap:18px; align-items:flex-start; justify-content:space-between}
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#8B7CFF,#6AC9FF); box-shadow:0 6px 16px rgba(139,124,255,.25)}
+    .title{margin:0; font-size:26px; font-weight:800; letter-spacing:.2px;}
+    .subtitle{margin:6px 0 0; color:var(--muted); font-size:14px}
+    .hero-actions{display:flex; gap:10px; flex-wrap:wrap}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:var(--surface); font-weight:700; cursor:pointer; transition:.2s}
+    .btn i{font-size:18px}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:var(--primary); color:#fff; border:none; box-shadow:0 10px 24px rgba(111,108,255,.28)}
+
+    /* Tabs */
+    .tabs{margin:18px auto 0; max-width:var(--content-max); background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:6px; display:flex; gap:8px}
+    .tab-btn{border:none; background:transparent; padding:10px 12px; border-radius:10px; font-weight:700; color:var(--muted); cursor:pointer}
+    .tab-btn.active{background:#F3F2FF; color:var(--primary)}
+
+    /* Content cards */
+    .container{width:100%; max-width:var(--content-max); margin:14px auto 32px; padding:0 20px}
+    .card{background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:0 2px 8px rgba(20,20,30,.03); overflow:hidden}
+    .card-head{display:flex; align-items:center; justify-content:space-between; padding:16px; border-bottom:1px solid var(--border)}
+    .card-title{margin:0; font-size:18px; font-weight:700}
+    .card-body{padding:16px}
+
+    .legal-section{display:none}
+    .legal-section.active{display:block}
+    .legal-section h2{font-size:20px; margin:0 0 8px}
+    .legal-section h3{font-size:16px; margin:16px 0 8px}
+    .legal-section p{margin:0 0 12px; line-height:1.7; color:var(--text)}
+    .legal-section ul{margin:8px 0 16px 18px}
+    .legal-section li{margin:6px 0}
+
+    .meta{display:flex; gap:10px; align-items:center; color:var(--muted)}
+    .pill{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted); background:#FAFAFE}
+
+    .note{display:flex; align-items:flex-start; gap:10px; background:#F9FAFF; border:1px solid #E8EBFF; padding:10px 12px; border-radius:12px; color:#2b2e45}
+
+    .hr{height:1px; background:var(--border); margin:18px 0}
+
+    /* Footer */
+    footer{margin-top:auto; padding:28px 20px}
+    .footer-inner{max-width:var(--content-max); margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-size:12px}
+
+    /* Print */
+    @media print{
+      .hero-actions,.tabs,.btn,.note{display:none !important}
+      body{background:#fff}
+      .card,.card-body{box-shadow:none; border:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero" role="banner">
+      <div class="hero-inner">
+        <div>
+          <div class="brand" aria-label="Academate">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+              <h1 class="title">Legal — Academate</h1>
+              <p class="subtitle">Ketentuan Penggunaan & Kebijakan Privasi • halaman mandiri</p>
+            </div>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <a class="btn primary" href="https://ardhan.my.id/contact" target="_blank" rel="noopener" title="Hubungi saya">
+            <i class="ri-customer-service-2-line" aria-hidden="true"></i> Hubungi Saya
+          </a>
+          <button class="btn" onclick="window.print()" title="Cetak / Simpan PDF">
+            <i class="ri-printer-line" aria-hidden="true"></i> Cetak / PDF
+          </button>
+        </div>
+      </div>
+      <div class="container" style="padding-top:0">
+        <div class="meta">
+          <span class="pill"><i class="ri-shield-check-line" aria-hidden="true"></i> Legal</span>
+          <span class="pill"><i class="ri-time-line" aria-hidden="true"></i> Diperbarui: <span id="lastUpdated">6 Oktober 2025</span></span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Pilih dokumen legal">
+      <button class="tab-btn active" data-tab="terms" role="tab" aria-controls="terms" aria-selected="true">Ketentuan</button>
+      <button class="tab-btn" data-tab="privacy" role="tab" aria-controls="privacy" aria-selected="false">Privasi</button>
+      <button class="tab-btn" data-tab="changelog" role="tab" aria-controls="changelog" aria-selected="false">Perubahan</button>
+    </nav>
+
+    <main class="container" role="main">
+      <!-- Terms of Use -->
+      <section id="terms" class="card legal-section active" aria-labelledby="terms-title">
+        <div class="card-head">
+          <h2 id="terms-title" class="card-title">Ketentuan Penggunaan</h2>
+          <div>
+            <button class="btn" onclick="copySection('#terms')" title="Salin teks"><i class="ri-file-copy-line"></i> Salin</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <p><strong>Selamat datang di Academate.</strong> Dengan mengakses atau menggunakan layanan ini (“Layanan”), Anda menyetujui Ketentuan Penggunaan ini (“Ketentuan”). Jika tidak setuju, mohon hentikan penggunaan Layanan.</p>
+
+          <h3>1. Gambaran Layanan</h3>
+          <p>Academate adalah pusat produktivitas untuk mengelola kelas, jadwal, tugas, dan catatan. Beberapa fitur mungkin bergantung pada penyimpanan peramban atau layanan pihak ketiga ringan (font, ikon).</p>
+
+          <h3>2. Kelayakan & Akun</h3>
+          <ul>
+            <li>Anda bertanggung jawab menjaga kerahasiaan kredensial dan aktivitas pada akun Anda.</li>
+            <li>Anda menjamin data yang diberikan akurat dan terkini.</li>
+          </ul>
+
+          <h3>3. Konten dan Perilaku Pengguna</h3>
+          <ul>
+            <li>Konten yang Anda masukkan tetap milik Anda. Anda memberi kami lisensi non‑eksklusif untuk menyimpan dan memprosesnya guna menyediakan fitur.</li>
+            <li>Dilarang mengunggah konten ilegal, melanggar hak cipta/privasi, berbahaya, menipu, atau yang bertentangan dengan kebijakan institusi pendidikan.</li>
+            <li>Dilarang menyalahgunakan Layanan (spam, scraping tanpa izin, mencoba mengakali pembatasan teknis).</li>
+          </ul>
+
+          <h3>4. Fitur Spesifik Produk</h3>
+          <ul>
+            <li><strong>Kelas & Jadwal:</strong> perubahan jadwal/ruangan dapat terjadi. Harap verifikasi sebelum hadir.</li>
+            <li><strong>Tugas & Pengingat:</strong> alat bantu manajemen; kepatuhan tenggat adalah tanggung jawab pengguna.</li>
+            <li><strong>Catatan:</strong> perhatikan etika berbagi dan hak cipta materi kuliah.</li>
+          </ul>
+
+          <h3>5. Kekayaan Intelektual</h3>
+          <p>Antarmuka, logo, dan identitas merek Academate dilindungi. Dilarang menyalin secara substansial tanpa izin.</p>
+
+          <h3>6. Layanan Pihak Ketiga</h3>
+          <p>Penggunaan Google Fonts dan Remix Icon tunduk pada ketentuan pihak tersebut. Kami tidak mengendalikan konten/kebijakan mereka.</p>
+
+          <h3>7. Perubahan Layanan</h3>
+          <p>Kami dapat menambah, mengubah, atau menghentikan fitur kapan saja. Perubahan material akan tercermin di halaman ini.</p>
+
+          <h3>8. Batasan Tanggung Jawab</h3>
+          <p>Sejauh diizinkan hukum, Academate tidak bertanggung jawab atas kerugian tidak langsung, insidental, khusus, konsekuensial, hilangnya keuntungan, atau kehilangan data akibat penggunaan Layanan.</p>
+
+          <h3>9. Pengakhiran</h3>
+          <p>Kami dapat menangguhkan atau menghentikan akses bila terjadi pelanggaran Ketentuan ini atau hukum yang berlaku.</p>
+
+          <h3>10. Hukum yang Berlaku</h3>
+          <p>Ketentuan ini diatur oleh hukum Republik Indonesia tanpa memperhatikan pertentangan kaidah hukumnya.</p>
+
+          <div class="note"><i class="ri-information-line"></i>
+            <div><strong>Catatan:</strong> Bila proyek ini beroperasi dalam lingkungan kampus, ketentuan internal kampus tetap berlaku dan mengikat pengguna.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Privacy Policy -->
+      <section id="privacy" class="card legal-section" aria-labelledby="privacy-title">
+        <div class="card-head">
+          <h2 id="privacy-title" class="card-title">Kebijakan Privasi</h2>
+          <div>
+            <button class="btn" onclick="copySection('#privacy')" title="Salin teks"><i class="ri-file-copy-line"></i> Salin</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <p>Kebijakan ini menjelaskan cara kami mengumpulkan, menggunakan, menyimpan, dan melindungi informasi Anda saat menggunakan Academate.</p>
+
+          <h3>1. Informasi yang Kami Kumpulkan</h3>
+          <ul>
+            <li><strong>Data Akun:</strong> nama tampilan, foto profil (opsional).</li>
+            <li><strong>Data Aktivitas:</strong> kelas, jadwal, tugas, catatan, dan metadata (tanggal dibuat/diperbarui).</li>
+            <li><strong>Data Perangkat:</strong> informasi teknis dasar (jenis peramban, preferensi tampilan) untuk peningkatan pengalaman.</li>
+          </ul>
+
+          <h3>2. Cara Kami Menggunakan Data</h3>
+          <ul>
+            <li>Menyediakan dan meningkatkan fitur inti.</li>
+            <li>Personalisasi tampilan dan pengalaman antarmuka.</li>
+            <li>Keamanan, pencegahan penyalahgunaan, dan dukungan.</li>
+          </ul>
+
+          <h3>3. Dasar Pemrosesan</h3>
+          <ul>
+            <li><strong>Pelaksanaan Layanan</strong> untuk menjalankan fitur aplikasi.</li>
+            <li><strong>Persetujuan</strong> untuk fitur opsional (mis. notifikasi tertentu).</li>
+            <li><strong>Kepentingan Sah</strong> untuk menjaga keamanan dan kualitas.</li>
+          </ul>
+
+          <h3>4. Penyimpanan & Retensi</h3>
+          <ul>
+            <li>Data disimpan selama akun aktif atau diperlukan untuk tujuan yang dijelaskan.</li>
+            <li>Anda dapat meminta penghapusan data; sebagian data mungkin disimpan minimal untuk kewajiban hukum/arsip.</li>
+          </ul>
+
+          <h3>5. Berbagi Data</h3>
+          <p>Kami tidak menjual data pribadi. Data dapat dibagikan dengan penyedia layanan pihak ketiga yang membantu operasional sesuai prinsip minimalitas dan kewajiban kerahasiaan.</p>
+
+          <h3>6. Cookies & Penyimpanan Lokal</h3>
+          <p>Kami dapat menggunakan penyimpanan lokal/peramban untuk preferensi UI dan data non‑sensitif demi kinerja. Anda dapat menghapusnya melalui pengaturan peramban.</p>
+
+          <h3>7. Keamanan</h3>
+          <p>Kami menerapkan langkah teknis dan organisasi yang wajar. Tidak ada metode yang 100% aman; gunakan kata sandi kuat dan amankan perangkat Anda.</p>
+
+          <h3>8. Hak Anda</h3>
+          <ul>
+            <li>Akses, koreksi, atau penghapusan data.</li>
+            <li>Menolak/menarik persetujuan untuk pemrosesan tertentu.</li>
+            <li>Menghubungi kami untuk pertanyaan/keluhan (tombol <em>Hubungi Saya</em> pada bagian atas halaman).</li>
+          </ul>
+
+          <h3>9. Anak di Bawah Umur</h3>
+          <p>Jika Anda berusia di bawah 18 tahun, gunakan Layanan dengan bimbingan orang tua/wali sesuai kebijakan institusi pendidikan.</p>
+
+          <h3>10. Transfer Internasional</h3>
+          <p>Jika server/penyedia pihak ketiga berada di negara lain, kami akan memastikan perlindungan wajar sesuai hukum yang berlaku.</p>
+
+          <h3>11. Perubahan Kebijakan</h3>
+          <p>Kami dapat memperbarui Kebijakan ini secara berkala. Tanggal pembaruan tercantum di bagian atas halaman.</p>
+
+          <div class="note"><i class="ri-customer-service-2-line"></i>
+            <div><strong>Kontak:</strong> Gunakan tombol <em>Hubungi Saya</em> untuk mengirim pesan: <a href="https://ardhan.my.id/contact" target="_blank" rel="noopener">ardhan.my.id/contact</a>.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Changelog -->
+      <section id="changelog" class="card legal-section" aria-labelledby="changelog-title">
+        <div class="card-head">
+          <h2 id="changelog-title" class="card-title">Riwayat Perubahan</h2>
+          <div>
+            <button class="btn" onclick="copySection('#changelog')" title="Salin teks"><i class="ri-file-copy-line"></i> Salin</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <p><strong>v1.0 — 6 Oktober 2025:</strong> Rilis awal Ketentuan Penggunaan dan Kebijakan Privasi (halaman mandiri).</p>
+        </div>
+      </section>
+
+      <div class="hr"></div>
+      <div class="note"><i class="ri-alert-line"></i>
+        <div>Template ini bersifat umum dan bukan nasihat hukum. Sesuaikan jika Anda menambahkan integrasi analitik, formulir, atau penyedia pihak ketiga baru.</div>
+      </div>
+    </main>
+
+    <footer role="contentinfo">
+      <div class="footer-inner">
+        <span>© <span id="y"></span> Academate</span>
+        <span>Versi dokumen: v1.0</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Footer year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Tabs
+    const tabs = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.legal-section');
+    function activateTab(id){
+      tabs.forEach(t=>{
+        const isActive = t.dataset.tab === id; t.classList.toggle('active', isActive); t.setAttribute('aria-selected', isActive);
+      });
+      sections.forEach(s=>s.classList.toggle('active', s.id === id));
+      if (!window.matchMedia('print').matches){ history.replaceState(null, '', '#'+id); }
+    }
+    tabs.forEach(t=>t.addEventListener('click', ()=>activateTab(t.dataset.tab)));
+
+    // Hash routing on load (default: terms)
+    const initial = (location.hash||'#terms').replace('#','');
+    activateTab(initial);
+
+    // Copy helper
+    window.copySection = async function(selector){
+      const node = document.querySelector(selector);
+      if(!node) return; const text = node.innerText;
+      try{ await navigator.clipboard.writeText(text); toast('Tersalin ke clipboard'); }
+      catch{ toast('Gagal menyalin.'); }
+    }
+
+    // Tiny toast
+    function toast(msg){
+      let t=document.createElement('div');
+      t.textContent=msg; t.style.cssText=`position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#1E1F24;color:#fff;padding:10px 14px;border-radius:12px;box-shadow:0 10px 24px rgba(30,31,36,.22);z-index:10000;font-weight:700`;
+      document.body.appendChild(t); setTimeout(()=>t.remove(),1800);
+    }
+  </script>
+</body>
+</html>
