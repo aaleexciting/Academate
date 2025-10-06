@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tugas — Academate</title>
 
-  <!-- Fonts & Icons (match dashboard/classes) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,12 +23,10 @@
     body{margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px;padding-bottom:90px} 
     a{color:inherit; text-decoration: none;}
 
-    /* App Shell - Consistent with other pages */
     .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
     .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
     .main-content{padding:var(--gap);width:100%}
 
-    /* Buttons - Consistent */
     .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
     .btn:hover{border-color:#d8d8e0}
     .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
@@ -37,7 +34,6 @@
     .icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:20px;transition:.2s;flex-shrink:0}
     .icon-btn:hover{color:var(--primary);border-color:#d8d8e0}
 
-    /* Header - Consistent */
     .header{margin-top:var(--gap);margin-bottom:24px}
     .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
     .header-brand{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
@@ -50,23 +46,19 @@
     .header-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0}
     .header-toolbar{display:none}
 
-    /* Mobile nav - Consistent */
     .mobile-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;height:70px;padding:0 10px;z-index:1000}
     .mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);text-decoration:none;font-size:10px;font-weight:500;padding:8px;border-radius:8px}
     .mobile-nav a i{font-size:20px}
     .mobile-nav a.active{color:var(--primary)}
 
-    /* Responsive layout - Consistent */
     .sidebar{display:none}
     .page-grid{display:flex;flex-direction:column;gap:var(--gap)}
     
-    /* Skeletons */
     .sk{position:relative;overflow:hidden;background:#F2F3F7 !important;border-radius:10px}
     .sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:shimmer 1.2s infinite}
     @keyframes shimmer{100%{transform:translateX(100%)}}
     .skeleton-wrapper.hidden { display: none; }
 
-    /* Desktop - Consistent */
     @media (min-width:901px){
       body{padding-bottom:0}
       .mobile-nav{display:none}
@@ -104,7 +96,6 @@
   border-radius: 10px;
   background: linear-gradient(135deg, #8B7CFF, #6AC9FF);
   
-  /* Add these lines */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,7 +109,6 @@
 }
     }
 
-    /* === Modern Progress Summary V3 (UPDATED) === */
     .progress-summary-v3 {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -177,7 +167,6 @@
         .progress-card.progress-main { grid-column: auto; }
     }
 
-    /* Task List Design */
     .toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 
     .tabs{
@@ -306,7 +295,6 @@
 
     .empty{ text-align:center; padding:40px; border:2px dashed var(--border); border-radius:14px; background:var(--surface); color:var(--muted); margin-top: var(--gap); }
 
-    /* Modal (Improved Styling) */
     .modal-overlay{ position:fixed; inset:0; background: rgba(30, 31, 36, 0.6); backdrop-filter: blur(5px); display:none; align-items:center; justify-content:center; z-index:1000; animation: fade-in .2s; }
     .modal-overlay.show { display: flex; }
     @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -322,7 +310,6 @@
     .full{ grid-column:1 / -1 }
     .modal-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:16px; grid-column:1 / -1 }
 
-    /* === MOBILE RESPONSIVENESS FIXES (REVISED) === */
     @media (max-width: 900px) {
         #global-search { display: none; }
     }
@@ -370,7 +357,6 @@
 </head>
 <body>
   <div class="app">
-    <!-- Sidebar -->
     <aside class="sidebar" aria-label="Navigasi utama">
 <div class="brand">
   <div class="logo" aria-hidden="true">
@@ -397,11 +383,9 @@
       </div>
     </aside>
 
-    <!-- Main -->
     <main class="main">
       <div class="main-content">
         
-        <!-- Skeleton Loader -->
         <div class="skeleton-wrapper">
             <header class="header">
                 <div class="header-top">
@@ -419,7 +403,6 @@
                 </div>
             </header>
             <div class="page-grid" id="skeleton-grid">
-                <!-- Skeleton for Progress -->
                 <section class="progress-summary-v3">
                     <div class="progress-card progress-main" style="border:none; box-shadow: none;">
                         <div class="sk" style="height:18px;width:60%;margin-bottom:8px;"></div>
@@ -441,19 +424,16 @@
                          </div>
                     </div>
                 </section>
-                <!-- Skeleton for Toolbar -->
                 <section>
                     <div class="toolbar">
                         <div class="sk" style="height:44px; flex-grow: 1; border-radius: 12px;"></div>
                         <div class="sk" style="height:44px; width: 200px; border-radius: 12px;"></div>
                     </div>
                 </section>
-                <!-- Skeleton for Task List -->
                 <section id="skeleton-task-list" class="task-list"></section>
             </div>
         </div>
 
-        <!-- Actual Content Wrapper -->
         <div id="actual-content" style="display: none;">
             <header class="header">
               <div class="header-top">
@@ -480,9 +460,7 @@
             </header>
 
             <div class="page-grid">
-              <!-- Progress Summary -->
               <section id="progress-section" class="progress-summary-v3"></section>
-              <!-- Toolbar -->
               <section>
                 <div class="toolbar">
                   <div class="tabs">
@@ -501,7 +479,6 @@
                   </div>
                 </div>
               </section>
-              <!-- Task Lists -->
               <section aria-live="polite">
                 <div id="list-container"></div>
                 <div id="empty" class="empty" style="display:none">Tidak ada tugas di sini. Kerja bagus! 😎</div>
@@ -512,7 +489,6 @@
     </main>
   </div>
 
-  <!-- Mobile Nav -->
   <nav class="mobile-nav">
     <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
     <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
@@ -521,7 +497,6 @@
     <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
-  <!-- Create Task Modal -->
   <div class="modal-overlay" id="create-task-modal">
     <div class="modal">
       <h2>Buat Tugas Baru</h2>
@@ -539,7 +514,6 @@
     </div>
   </div>
 
-  <!-- Firebase + Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";

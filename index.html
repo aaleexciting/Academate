@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Academate — Ngampus Bareng, Gak Pake Ribet</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='gradient' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%238B7CFF;stop-opacity:1' /><stop offset='100%' style='stop-color:%236AC9FF;stop-opacity:1' /></linearGradient></defs><rect width='24' height='24' fill='url(%23gradient)' rx='4'/><g fill='%23FFFFFF'><path d='M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6c.494 0 .96-.12 1.37-.33A6.49 6.49 0 0 1 11 17.5a6.48 6.48 0 0 1 2-4.69V7a1 1 0 0 1 1-1h6v5.498a6.52 6.52 0 0 1 2 1.312V6a2 2 0 0 0-2-2h-6c-.768 0-1.47.289-2 .764A2.989 2.989 0 0 0 10 4H4Zm7 3v10a1 1 0 0 1-1 1H4V6h6a1 1 0 0 1 1 1Z'/><path d='M16.007 17c.04-1.415.248-2.669.553-3.585c.171-.513.364-.893.554-1.134c.195-.247.329-.281.386-.281c.057 0 .192.034.386.281c.19.241.383.62.554 1.134c.305.916.513 2.17.553 3.585h-2.986Zm-.396-3.9c.108-.323.23-.622.368-.887A5.504 5.504 0 0 0 12.023 17h2.984c.04-1.5.26-2.866.604-3.9Zm3.778 0a6.133 6.133 0 0 0-.368-.887A5.504 5.504 0 0 1 22.978 17h-2.985c-.04-1.5-.26-2.866-.604-3.9Zm.604 4.9h2.985a5.504 5.504 0 0 1-3.957 4.787c.138-.265.26-.564.368-.886c.345-1.035.564-2.4.604-3.901Zm-2.107 4.719c-.194.247-.329.281-.386-.281c-.057 0-.191-.034-.386-.281c-.19-.241-.383-.62-.554-1.135c-.305-.915-.513-2.17-.553-3.584h2.986c-.04 1.415-.248 2.669-.553 3.584c-.171.514-.364.894-.554 1.135ZM12.023 18a5.504 5.504 0 0 0 3.956 4.787a6.133 6.133 0 0 1-.367-.886c-.346-1.035-.565-2.4-.605-3.901h-2.984Z'/></g></svg>">
 <meta name="description" content="Academate: hub anti-ribet buat manage kelas, tugas, dan jadwal bareng temen sekelas. Nggak ada lagi drama ketinggalan info." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,13 +34,10 @@
   }
   a{color:inherit; text-decoration: none;}
 
-  /* Top progress bar */
   .scroll-progress{position:fixed; left:0; top:0; height:4px; width:0%; background:linear-gradient(90deg,var(--primary),var(--primary-2)); z-index:9999; box-shadow:0 2px 6px rgba(111,108,255,.4); transition: width 0.1s linear;}
 
-  /* General Layout */
   .wrap{max-width:var(--max); margin:0 auto; padding:0 20px}
   
-  /* Navigation */
   .nav{position:sticky; top:0; z-index:50; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom:1px solid var(--border);
        background: rgba(247, 247, 250, 0.8);}
   .nav-inner{display:flex; align-items:center; justify-content:space-between; height:68px}
@@ -67,7 +65,6 @@
   .nav a.cta-primary:hover { filter: brightness(1.1); }
   .mobile-menu-btn { display: none; }
 
-  /* Hero Section */
   .hero{position:relative; padding:64px 0 40px}
   .hero-grid{display:grid; grid-template-columns: .8fr 1.2fr; gap:36px; align-items:center}
   .eyebrow{display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); background:#FAFAFE; padding:6px 10px; border-radius:999px; border:1px solid var(--border)}
@@ -83,18 +80,15 @@
   .chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:24px;}
   .chip{display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--surface); font-size: 13px; font-weight: 500;}
 
-  /* Hero Image */
   .hero-image {
     width: 100%;
     height: auto;
   }
 
-  /* Section Header */
   .section-header { text-align: center; margin-bottom: 40px; }
   .section-header h2 { font-size: clamp(24px, 4vw, 36px); margin: 0 0 8px; }
   .section-header p { max-width: 600px; margin: 0 auto; color: var(--muted); font-size: 16px; line-height: 1.6; }
 
-  /* Scrollytelling Section */
   .pin-grid { display:grid; grid-template-columns: 1fr 1fr; gap:36px; align-items:start; padding:40px 0 60px; }
   .pin-wrap{position:relative; height: 100%;}
   .pin{position:sticky; top:100px}
@@ -107,7 +101,6 @@
   .pin-visual{aspect-ratio:4/3; background:var(--surface); border-radius:16px; border:1px solid var(--border);
               display:flex; align-items:center; justify-content: center; overflow:hidden; box-shadow: var(--shadow); position: relative;}
   
-  /* --- SCROLLYTELLING VISUALS --- */
   .pin-visual .visual-content {
     width: 100%;
     height: 100%;
@@ -125,12 +118,10 @@
     transform: scale(1);
   }
   
-  /* --- FEATURES V2 VISUALS --- */
   .pin-visual .visual-content {
       background: linear-gradient(135deg, #f5f6fa, #ffffff);
   }
 
-  /* Chat v2 */
   .chat-ui-v2 {
       display: flex;
       flex-direction: column;
@@ -240,7 +231,6 @@
       font-size: 20px;
   }
 
-  /* Tasks v2 */
   .tasks-ui-v2 {
       background: var(--surface);
       border-radius: 14px;
@@ -297,7 +287,6 @@
   .task-v2.done p { text-decoration: line-through; color: var(--muted); }
   .task-v2.done i { color: var(--primary); }
 
-  /* Schedule v2 */
   .schedule-ui-v2 {
       display: flex;
       flex-direction: column;
@@ -387,7 +376,6 @@
       opacity: 0.7;
   }
 
-  /* Notes v2 */
   .notes-ui-v2 {
       column-count: 2;
       column-gap: 12px;
@@ -458,14 +446,12 @@
   }
   .note-card-v2.shared { background: #FAFAFD; }
   
-  /* "How it works" section */
   .how-it-works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .how-step { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); padding: 24px; text-align: center; }
   .how-step .step-number { font-size: 24px; font-weight: 700; color: var(--primary); background: #F3F2FF; width: 50px; height: 50px; line-height: 50px; border-radius: 50%; margin: 0 auto 16px; }
   .how-step h3 { font-size: 18px; margin: 0 0 8px; }
   .how-step p { color: var(--muted); line-height: 1.6; margin: 0; }
   
-  /* CTA section */
   .cta-section{padding:72px 0}
   .cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; border-radius:24px; padding: 48px; text-align: center;}
   .cta-box h2{margin:0 0 12px; font-size:clamp(24px, 4vw, 36px)}
@@ -473,7 +459,6 @@
   .cta-actions{display:flex; justify-content: center; gap:12px; flex-wrap:wrap}
   .cta-box .btn{background:#fff; border:none; color: var(--primary);}
 
-  /* Footer */
   footer{padding:40px 0; color:var(--muted); border-top: 1px solid var(--border); margin-top: 60px; font-size: 14px;}
   .footer-row{display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap: wrap;}
   .footer-copyright a { font-weight: 500; color: var(--text); transition: color .2s; }
@@ -482,7 +467,6 @@
   .footer-links a { text-decoration: none; color: var(--muted); transition: color .2s; }
   .footer-links a:hover { color: var(--primary); }
   
-  /* Responsive Adjustments */
   @media (max-width: 980px){
     .hero-grid{grid-template-columns: 1fr; text-align: center;}
     .hero p { max-width: 600px; margin-left: auto; margin-right: auto; }
@@ -531,7 +515,6 @@
 </header>
 
 <main>
-  <!-- HERO -->
   <section class="hero wrap" aria-label="intro">
     <div class="hero-grid">
       <div>
@@ -554,7 +537,6 @@
     </div>
   </section>
 
-  <!-- SCROLLYTELLING FEATURES -->
   <section id="features" class="wrap" style="padding: 80px 0;">
     <div class="section-header">
       <h2>Dibangun untuk Kolaborasi, Bukan Cuma Organisasi</h2>
@@ -564,7 +546,6 @@
       <div class="pin-wrap">
         <div class="pin">
           <div class="pin-visual">
-            <!-- CHAT PREVIEW -->
             <div id="visual-chat" class="visual-content">
                 <div class="chat-ui-v2">
                     <div class="chat-header-v2">
@@ -590,9 +571,9 @@
                             </div>
                         </div>
                          <div class="message-v2 other">
-                            <img src="https://i.pravatar.cc/32?u=budi" alt="avatar" onerror="this.style.display='none'">
+                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759732892/cropped-image_1_w60nso.png" alt="avatar" onerror="this.style.display='none'">
                             <div class="message-content-v2">
-                                <div class="sender-v2">Budi</div>
+                                <div class="sender-v2">Ardan</div>
                                 <div class="bubble-v2">Mantap! Aku bagian demo aplikasi. Nanti malam aku push kodenya.</div>
                             </div>
                         </div>
@@ -604,7 +585,6 @@
                     </div>
                 </div>
             </div>
-            <!-- TASKS PREVIEW -->
             <div id="visual-tasks" class="visual-content">
                 <div class="tasks-ui-v2">
                     <div class="tasks-header-v2">
@@ -634,7 +614,6 @@
                     </div>
                 </div>
             </div>
-            <!-- SCHEDULE PREVIEW -->
             <div id="visual-schedule" class="visual-content">
                 <div class="schedule-ui-v2">
                     <div class="schedule-header-v2">
@@ -661,7 +640,6 @@
                     </div>
                 </div>
             </div>
-            <!-- NOTES PREVIEW -->
             <div id="visual-notes" class="visual-content">
                 <div class="notes-ui-v2">
                     <div class="note-card-v2">
@@ -716,7 +694,6 @@
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
   <section id="how-it-works" class="wrap" style="padding:40px 0 80px">
     <div class="section-header">
         <h2>Gotong Royong Digital, Mulainya Gampang</h2>
@@ -741,7 +718,6 @@
     </div>
   </section>
 
-  <!-- CTA -->
   <section id="get-started" class="cta-section">
     <div class="wrap">
       <div class="cta-box">
@@ -768,15 +744,12 @@
 </footer>
 
 <script>
-  // Reset scroll position on every page load
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
   }
   window.scrollTo(0, 0);
 
-  // --- ROBUST SCROLL SCRIPT ---
 
-  // Top scroll progress bar
   const progressBar = document.getElementById('scroll-progress');
   function updateProgressBar() {
     if (!progressBar) return;
@@ -791,7 +764,6 @@
   }
   requestAnimationFrame(animationLoop);
 
-  // Scrollytelling logic
   const steps = document.querySelectorAll('.step');
   const visualContents = document.querySelectorAll('.pin-visual .visual-content');
   const pinGrid = document.querySelector('.pin-grid');
@@ -799,7 +771,7 @@
   if (pinGrid && steps.length > 0 && visualContents.length > 0) {
     let currentStepIndex = 0;
     let isAnimating = false;
-    const animationDuration = 1000; // This is the 'effort'. Lock interaction for 1s.
+    const animationDuration = 1000;
 
     function setActiveStep(index, scrollBehavior = 'smooth') {
       if (index < 0 || index >= steps.length || (index === currentStepIndex && scrollBehavior !== 'auto')) return;
@@ -816,7 +788,6 @@
         activeVisual.classList.add('active');
       }
 
-      // Only scroll into view for user interactions, not on initial page load.
       if (scrollBehavior !== 'auto') {
         steps[index].scrollIntoView({
             behavior: scrollBehavior,
@@ -825,10 +796,8 @@
       }
     }
 
-    // Initialize first step without smooth scroll on page load
     setActiveStep(0, 'auto');
 
-    // Click navigation
     steps.forEach((step, index) => {
       step.addEventListener('click', () => {
         if (isAnimating || currentStepIndex === index) return;
@@ -842,13 +811,11 @@
       });
     });
 
-    // --- SCROLL & TOUCH CONTROL LOGIC ---
     const handleInteraction = (deltaY) => {
       if (isAnimating) return;
 
       let nextStepIndex = currentStepIndex;
 
-      // Thresholds to prevent firing on minor movements
       if (deltaY > 20 && currentStepIndex < steps.length - 1) { // Scroll down
         nextStepIndex++;
       } else if (deltaY < -20 && currentStepIndex > 0) { // Scroll up
@@ -873,12 +840,10 @@
       const isAtFirstStep = currentStepIndex === 0;
       const isAtLastStep = currentStepIndex === steps.length - 1;
       
-      // If at the top and scrolling up, or at the bottom and scrolling down, allow default behavior.
       if ((!isScrollingDown && isAtFirstStep) || (isScrollingDown && isAtLastStep)) {
         return;
       }
       
-      // Otherwise, we are navigating between steps, so prevent default and handle it.
       e.preventDefault();
       handleInteraction(e.deltaY);
     };
@@ -893,35 +858,29 @@
     };
 
     const handleTouchMove = (e) => {
-      // We don't prevent default here to avoid trapping the user.
-      // The page might scroll a bit during the swipe, but it will snap on touchend.
       touchEndY = e.touches[0].clientY;
     };
     
     const handleTouchEnd = (e) => {
       if (isAnimating || touchEndY === 0) return;
       
-      const deltaY = touchStartY - touchEndY; // Positive for swipe up (scrolling down)
+      const deltaY = touchStartY - touchEndY;
       
       if (Math.abs(deltaY) > touchThreshold) {
           const isSwipingDown = deltaY > 0;
           const isAtFirstStep = currentStepIndex === 0;
           const isAtLastStep = currentStepIndex === steps.length - 1;
           
-          // Check if the user is trying to swipe out of the section
           if ((!isScrollingDown && isAtFirstStep) || (isScrollingDown && isAtLastStep)) {
-              return; // Do nothing, allow native scroll
+              return; 
           }
 
-          // If we're here, it's a swipe between steps
           handleInteraction(deltaY);
       }
-      // Reset values
       touchStartY = 0;
       touchEndY = 0;
     };
 
-    // This observer applies/removes the scroll/touch listeners
     const observer = new IntersectionObserver((entries) => {
       const [entry] = entries;
       if (entry.isIntersecting) {
@@ -936,7 +895,6 @@
         document.removeEventListener('touchend', handleTouchEnd, { passive: false });
       }
     }, {
-      // A smaller rootMargin makes the "activation zone" larger and feel more natural.
       rootMargin: "-40% 0px -40% 0px",
       threshold: 0
     });

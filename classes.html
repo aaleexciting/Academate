@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kelas — Academate</title>
 
-  <!-- Fonts & Icons (same as dashboard) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,12 +20,10 @@
     body{margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px;padding-bottom:80px}
     a{color:inherit}
 
-    /* App Shell */
     .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
     .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
     .main-content{padding:var(--gap);width:100%}
 
-    /* Buttons */
     .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
     .btn:hover{border-color:#d8d8e0}
     .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
@@ -35,7 +32,6 @@
     .icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:20px;transition:.2s;flex-shrink:0}
     .icon-btn:hover{color:var(--primary);border-color:#d8d8e0}
 
-    /* Header */
     .header{margin-top:var(--gap);margin-bottom:24px}
     .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
     .header-brand{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
@@ -48,17 +44,14 @@
     .header-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0}
     .header-toolbar{display:none}
 
-    /* Mobile nav */
     .mobile-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;height:70px;padding:0 10px;z-index:1000}
     .mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);text-decoration:none;font-size:10px;font-weight:500;padding:8px;border-radius:8px}
     .mobile-nav a i{font-size:20px}
     .mobile-nav a.active{color:var(--primary)}
 
-    /* Responsive layout */
     .sidebar{display:none}
     .page-grid{display:flex;flex-direction:column;gap:var(--gap)}
 
-    /* Desktop */
     @media (min-width:901px){
       body{padding-bottom:0}
       .mobile-nav{display:none}
@@ -99,7 +92,6 @@
   border-radius: 10px;
   background: linear-gradient(135deg, #8B7CFF, #6AC9FF);
   
-  /* Add these lines */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -113,7 +105,6 @@
 }
     }
 
-    /* === Modern Class Card System (functional) === */
     .class-toolbar{display:flex;gap:10px;flex-wrap:wrap}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:var(--gap)}
 
@@ -152,13 +143,11 @@
     .btn-icon{background:var(--surface);border:1px solid var(--border);width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--muted);cursor:pointer}
     .btn-icon:hover{color:var(--primary);border-color:#d8d8e0}
 
-    /* Skeletons */
     .sk{position:relative;overflow:hidden;background:#F2F3F7;border-radius:10px}
     .sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:shimmer 1.2s infinite}
     @keyframes shimmer{100%{transform:translateX(100%)}}
     .skeleton-wrapper.hidden { display: none; }
     
-    /* MODALS (NEWLY ADDED & FIXED) */
     .overlay {
       position: fixed;
       inset: 0;
@@ -166,13 +155,13 @@
       backdrop-filter: blur(5px);
       -webkit-backdrop-filter: blur(5px);
       z-index: 100;
-      display: none; /* Changed to none */
+      display: none;
       align-items: center;
       justify-content: center;
       padding: 16px;
       animation: fade-in 0.2s ease;
     }
-    .overlay.show { display: flex; } /* New class to show */
+    .overlay.show { display: flex; }
     @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
     
     .modal {
@@ -223,13 +212,10 @@
     .m-btn.ghost { border-color: var(--border); background: transparent; color: var(--muted); }
     .m-btn.ghost:hover { background: var(--bg); color: var(--text); }
 
-    /* ===== MOBILE RESPONSIVENESS FIXES ===== */
     @media (max-width: 900px) {
-      /* Fix: Allow page to scroll naturally on mobile */
       html, body {
         height: auto;
       }
-      /* Fix: Add padding to prevent content from being hidden by the fixed mobile nav */
       body {
         padding-bottom: 100px;
       }
@@ -243,7 +229,6 @@
     }
 
     @media (max-width: 480px) {
-      /* Adjust main layout padding for smaller screens */
       .app, .main-content {
         padding: 12px;
       }
@@ -256,24 +241,22 @@
       }
       .class-toolbar {
         flex-direction: column;
-        align-items: stretch; /* Make buttons take full width */
+        align-items: stretch;
       }
       .class-toolbar .btn {
-        justify-content: center; /* Center button content */
+        justify-content: center;
       }
 
-      /* Fix: Force a single-column layout for class cards */
       .grid {
         grid-template-columns: 1fr;
         gap: 12px;
       }
 
-      /* Fix: Make card content responsive */
       .x-body {
         padding: 12px;
       }
       .x-meta {
-        display: flex; /* Change from grid to flex for better wrapping */
+        display: flex;
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
@@ -285,7 +268,6 @@
         padding: 8px 12px;
       }
 
-      /* Fix: Make modal forms responsive */
       #create-class-modal .m-form > div[style*="grid"] {
         grid-template-columns: 1fr !important;
       }
@@ -294,7 +276,6 @@
 </head>
 <body>
   <div class="app">
-    <!-- Sidebar -->
     <aside class="sidebar" aria-label="Navigasi utama">
 <div class="brand">
   <div class="logo" aria-hidden="true">
@@ -321,11 +302,9 @@
       </div>
     </aside>
 
-    <!-- Main -->
     <main class="main">
       <div class="main-content">
           
-        <!-- Skeleton Loader (Mobile Only) -->
         <div class="skeleton-wrapper">
             <header class="header">
                 <div class="header-top">
@@ -357,7 +336,6 @@
             </div>
         </div>
         
-        <!-- Actual Content (Initially hidden on mobile) -->
         <div id="actual-content" style="display: none;">
             <header class="header">
               <div class="header-top">
@@ -401,7 +379,6 @@
     </main>
   </div>
 
-  <!-- Mobile Nav -->
   <nav class="mobile-nav">
     <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
     <a class="active" href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
@@ -410,7 +387,6 @@
     <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
-  <!-- Modals: Create / Join / Share -->
   <div class="overlay" id="create-class-modal">
     <div class="modal">
       <h2>Buat Kelas Baru</h2>
@@ -476,7 +452,6 @@
       </div>
   </div>
 
-  <!-- Firebase + App Logic (fully wired) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -491,7 +466,6 @@
     let currentUser = null; let joinedClassIds = [];
     const palette = ['#8B5CF6','#10B981','#F59E0B','#EF4444','#3B82F6','#EC4899'];
 
-    // Initial setup on DOM ready
     document.addEventListener('DOMContentLoaded', () => {
         if (window.innerWidth > 900) {
             document.querySelector('.skeleton-wrapper').style.display = 'none';

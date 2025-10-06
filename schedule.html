@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jadwal — Academate</title>
 
-  <!-- Fonts & Icons (Consistent with other pages) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
 
   <style>
-    /* === Global Styles (from classes.html) === */
     :root{
       --bg:#F7F7FA;--surface:#fff;--text:#1E1F24;--muted:#6C6F7F;--primary:#6F6CFF;--primary-2:#8B7CFF;--border:#ECECF1;--shadow:0 6px 24px rgba(30,31,36,.07);--radius:18px;--sidebar-w:280px;--content-max:1320px;--gap:18px;
       --danger:#EF4444; --hour-height: 60px;
@@ -22,7 +20,6 @@
     body{margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px;padding-bottom:80px}
     a{color:inherit; text-decoration: none;}
 
-    /* === App Shell & Common Components (from classes.html) === */
     .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
     .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden; display: flex;}
     .main-content{padding:var(--gap);width:100%; display: flex; flex-direction: column;}
@@ -33,7 +30,6 @@
     .icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:20px;transition:.2s;flex-shrink:0}
     .icon-btn:hover{color:var(--primary);border-color:#d8d8e0}
     
-    /* === Header (copied from classes.html) === */
     .header{margin-top:var(--gap); margin-bottom:24px; flex-shrink: 0;}
     .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
     .header-brand{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
@@ -47,7 +43,6 @@
     .header-toolbar{display:none}
     .header-avatar-link-desktop { display: none; }
 
-    /* === Mobile Nav (from classes.html) === */
     .mobile-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;height:70px;padding:0 10px;z-index:1000}
     .mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);text-decoration:none;font-size:10px;font-weight:500;padding:8px;border-radius:8px}
     .mobile-nav a i{font-size:20px}
@@ -59,7 +54,6 @@
     
     .empty{ text-align:center; padding:60px; border:2px dashed var(--border); border-radius:14px; background:var(--surface); color:var(--muted) }
 
-    /* === Skeleton Styles === */
     .sk{position:relative;overflow:hidden;background:#F2F3F7;border-radius:8px}
     .sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:shimmer 1.4s infinite}
     @keyframes shimmer{100%{transform:translateX(100%)}}
@@ -67,8 +61,6 @@
     .desktop-skeleton-view { display: none; }
     .mobile-skeleton-view { display: block; }
     
-
-    /* === Common Calendar Styles === */
     .time-column { flex-shrink: 0; width: 60px; }
     .time-label { height: var(--hour-height); text-align: right; padding-right: 12px; font-size: 12px; color: var(--muted); position: relative; }
     .time-label span { position: relative; top: -0.7em; }
@@ -95,7 +87,6 @@
     .current-time-indicator { position: absolute; left: 0; right: 0; height: 2px; background-color: var(--danger); z-index: 10; display: none; pointer-events: none; transition: all .2s; }
     .current-time-indicator::before { content: ''; position: absolute; left: -5px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background-color: var(--danger); }
 
-    /* ===== DESKTOP STYLES (from classes.html) ===== */
     @media (min-width:901px){
       body{padding-bottom:0}
       .mobile-nav, .mobile-schedule-header {display:none}
@@ -139,7 +130,6 @@
   border-radius: 10px;
   background: linear-gradient(135deg, #8B7CFF, #6AC9FF);
   
-  /* Add these lines */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,7 +142,6 @@
   height: 100%;
 }
 
-      /* Calendar Specific Desktop Styles */
       #desktop-date-nav { display: flex; align-items: center; gap: 8px; margin-left: auto;}
       .desktop-calendar { display: flex; flex-direction: column; flex-grow: 1; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
       .desktop-calendar-header { display: grid; grid-template-columns: 60px repeat(7, 1fr); text-align: center; padding: 12px 0; border-bottom: 1px solid var(--border); background: var(--bg); }
@@ -177,7 +166,6 @@
       .all-day-task-area { position: absolute; top: 0; left: 0; right: 0; }
     }
     
-    /* ===== MOBILE STYLES ===== */
     @media (max-width: 900px) {
       .desktop-calendar { display: none; }
 
@@ -207,7 +195,6 @@
       .header-main p { font-size: 13px; line-height: 1.4; min-height: 18.2px; }
     }
 
-    /* Quick Look Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(30,31,36,0.5); backdrop-filter: blur(4px); z-index: 1100; display: none; align-items: center; justify-content: center; animation: fade-in 0.2s; }
     .modal-overlay.show { display: flex; }
     @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -225,7 +212,6 @@
 </head>
 <body>
   <div class="app">
-    <!-- Sidebar -->
     <aside class="sidebar" aria-label="Navigasi utama">
 <div class="brand">
   <div class="logo" aria-hidden="true">
@@ -249,11 +235,9 @@
       <div class="sidebar-footer"><button id="logout-button-desktop" class="sidebar-logout-btn" type="button" title="Keluar"><i class="ri-logout-box-r-line"></i><span>Keluar</span></button></div>
     </aside>
 
-    <!-- Main -->
     <main class="main">
       <div class="main-content">
         
-        <!-- Skeleton Header -->
         <header class="header skeleton-wrapper">
             <div class="header-top">
                 <div class="sk" style="width: 120px; height: 28px;"></div>
@@ -280,7 +264,6 @@
             </div>
         </header>
 
-        <!-- Actual Header (hidden initially) -->
         <div id="actual-header" style="display: none;">
             <header class="header">
               <div class="header-top">
@@ -314,9 +297,7 @@
         </div>
 
 
-        <!-- Calendar Skeleton Loader -->
         <div class="page-grid skeleton-wrapper">
-            <!-- Mobile Skeleton -->
             <div class="mobile-skeleton-view">
                 <div class="mobile-schedule-header" style="border-bottom: none;">
                     <div class="month-nav">
@@ -356,7 +337,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Desktop Skeleton -->
             <div class="desktop-skeleton-view">
                 <div class="desktop-calendar" style="border-color: transparent; box-shadow: none;">
                     <div class="desktop-calendar-header">
@@ -390,14 +370,12 @@
 
         <div class="page-grid" id="actual-content-grid" style="display: none;">
             <div id="calendar-container" aria-live="polite" style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
-              <!-- Calendar will be rendered here -->
             </div>
         </div>
       </div>
     </main>
   </div>
 
-  <!-- Mobile Nav -->
   <nav class="mobile-nav">
     <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
     <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
@@ -406,14 +384,11 @@
     <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
-  <!-- Quick Look Modal -->
   <div class="modal-overlay" id="quick-look-modal">
     <div class="modal-content" id="quick-look-modal-content">
-      <!-- Content injected by JS -->
     </div>
   </div>
 
-  <!-- Firebase + Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -863,7 +838,6 @@
                         <a href="class_page.html?id=${c.id}" class="btn btn-primary">Buka Kelas</a>
                     </div>`;
         } else if (data.task) {
-            // This part of the modal logic is preserved but not triggered by the current calendar view
         } else if (data.tasksForDay) {
             const dateString = data.date.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long'});
             html = `<div class="modal-header">
@@ -890,7 +864,6 @@
         modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('show'); };
     }
     
-    // --- Helper Functions ---
     function safeGetDate(ts) {
         if (!ts) return null;
         if (typeof ts.toDate === 'function') return ts.toDate();

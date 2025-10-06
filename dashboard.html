@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dasbor — Academate</title>
 
-  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -35,18 +34,14 @@
       padding-bottom: 80px;
     }
 
-    /* App Shell */
     .app{padding:var(--gap); width:100%; max-width:1700px; margin:0 auto; min-height:100dvh}
 
-    /* Main Content Structure */
     .main{background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
     .main-content { padding: var(--gap); width: 100%; }
     
-    /* Icon Button Style */
     .icon-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); display: grid; place-items: center; cursor: pointer; color: var(--muted); font-size: 20px; transition: .2s; flex-shrink: 0; }
     .icon-btn:hover { color: var(--primary); border-color: #d8d8e0; }
 
-    /* Consistent Header Styling */
     .header{ margin-top: var(--gap); margin-bottom: 24px; }
     .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .header-brand{ font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
@@ -63,7 +58,6 @@
     .section-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
     .section-title{font-size:16px; font-weight:600; margin:0 0 12px;}
 
-    /* Course carousel */
     .class-carousel-wrapper{position:relative}
     .class-carousel{display:flex; gap:14px; overflow:auto; scroll-snap-type:x mandatory; padding-bottom:4px}
     .class-carousel::-webkit-scrollbar{display:none} 
@@ -83,7 +77,6 @@
     .class-card-lg .arrow-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; border: none; cursor: pointer; background: #F3F2FF; color: var(--primary); font-size: 18px; transition: transform 0.2s; flex-shrink: 0; }
     .class-card-lg .arrow-btn:hover { transform: scale(1.1); }
 
-    /* Profile card */
     .profile-card{ padding: 0; overflow: hidden; position: relative; }
     .profile-banner{ height: 80px; background-size: cover; background-position: center; }
     .profile-content{ padding: 12px; text-align: center; margin-top: -40px; }
@@ -91,7 +84,6 @@
     .profile-logout-btn{ margin-top:12px; border:1px solid var(--border); background:var(--surface); color:var(--muted); padding:8px 12px; border-radius:10px; font-weight:600; cursor:pointer; width:100% }
     .edit-profile-btn { position: absolute; top: 8px; right: 8px; z-index: 2; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); display: grid; place-items: center; color: var(--text); text-decoration: none; border: 1px solid var(--border); }
 
-    /* Calendar */
     .calendar-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
     .calendar-header button{background:var(--surface); border:1px solid var(--border); border-radius:50%; width:34px; height:34px; display:grid; place-items:center; cursor:pointer; flex-shrink: 0;}
     #month-year{font-weight:700; white-space: nowrap;}
@@ -102,7 +94,6 @@
     .calendar-day.has-class::after{content:""; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:6px; height:6px; background:var(--primary); border-radius:50%}
     .calendar-day.today.has-class::after{background:#fff}
 
-    /* Deadlines */
     #deadline-list{list-style:none; margin:0; padding:0}
     .deadline-item{display:block; text-decoration:none; color:inherit; border-radius:12px}
     .deadline-item-content{display:flex; align-items:center; gap:10px; padding:8px 4px}
@@ -114,24 +105,20 @@
     .due-date.soon{color:#F59E0B; background:#FEF3C7}
     .due-date.urgent{color:#EF5350; background:#FEE2E2}
 
-    /* Upcoming card */
     .upcoming-class-card{background:linear-gradient(135deg,var(--primary), var(--primary-2)); color:#fff; border-radius:14px; padding:14px; position:relative; overflow:hidden}
     .upcoming-header{opacity:.85; font-weight:600; font-size:13px}
     .upcoming-body h2{margin:6px 0; font-size:20px}
     .upcoming-footer{display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,.3); margin-top:8px; padding-top:8px}
 
-    /* Mobile Navigation */
     .mobile-nav{ position:fixed; bottom:0; left:0; right:0; background:rgba(255,255,255,.8); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; height:70px; padding:0 10px; z-index: 1000; }
     .mobile-nav a{ display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--muted); text-decoration:none; font-size:10px; font-weight:500; padding: 8px; border-radius: 8px; }
     .mobile-nav a i{font-size:20px}
     .mobile-nav a.active{color:var(--primary)}
 
-    /* SKELETON LOADER STYLES */
     .skeleton-wrapper.hidden, #actual-content.hidden { display: none; }
     .skeleton{background:#f0f1f5; background:linear-gradient(90deg, #f0f1f5 25%, #f7f8fa 37%, #f0f1f5 63%); background-size:400% 100%; animation:shimmer 1.4s ease infinite;}
     @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
 
-    /* --- MOBILE & RESPONSIVE LAYOUT --- */
     .sidebar { display: none; }
     .dashboard-grid { display: flex; flex-direction: column; gap: var(--gap); }
     .main-column, .side-column { display: flex; flex-direction: column; gap: var(--gap); }
@@ -156,13 +143,12 @@
       #calendar-grid { gap: 4px; }
     }
 
-    /* --- DESKTOP STYLES (SCROLL FIX) --- */
     @media (min-width: 901px) {
-      body { padding-bottom: 0; overflow: auto;} /* Allow body to scroll */
+      body { padding-bottom: 0; overflow: auto;}
       .mobile-nav { display: none; }
       .app { display:grid; grid-template-columns: var(--sidebar-w) 1fr; gap:24px; min-height: 100dvh; height: auto; } /* Allow app to grow */
       
-      .main { height: auto; } /* Allow main content area to grow */
+      .main { height: auto; }
 
       .sidebar{ display:flex; flex-direction:column; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; min-height:0; }
       .brand{ display:flex; align-items:center; gap:12px; font-weight:700; font-size:22px; margin-bottom:18px; }
@@ -205,7 +191,6 @@
   border-radius: 10px;
   background: linear-gradient(135deg, #8B7CFF, #6AC9FF);
   
-  /* Add these lines */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,7 +207,6 @@
 </head>
 <body>
   <div class="app">
-    <!-- Sidebar (Desktop Only) -->
     <aside class="sidebar" aria-label="Navigasi utama">
 <div class="brand">
   <div class="logo" aria-hidden="true">
@@ -250,13 +234,10 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="main" id="main-container">
-      <!-- JS injects skeleton or content here -->
     </main>
   </div>
 
-  <!-- Mobile Navigation -->
   <nav class="mobile-nav">
     <a href="dashboard.html" class="active"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
     <a href="classes.html"><i class="ri-book-open-line"></i><span>Kelas</span></a>
@@ -265,7 +246,6 @@
     <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
-  <!-- Firebase + App Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";

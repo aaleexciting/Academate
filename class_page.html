@@ -4,20 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Academate • Kelas</title>
-  <!-- Fonts & Icons (same as dashboard master) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
 
   <style>
-    /* ===== THEME — identical to dashboard ===== */
     :root{
       --bg:#F7F7FA; --surface:#FFFFFF; --text:#1E1F24; --muted:#6C6F7F;
       --primary:#6F6CFF; --primary-2:#8B7CFF; --border:#ECECF1;
       --shadow:0 6px 24px rgba(30,31,36,.07);
       --radius:18px; --sidebar-w:280px; --gap:18px; --content-max:1320px;
-      --bubble:#F3F2FF; /* Soft lavender, from dashboard hover */
+      --bubble:#F3F2FF; 
       --bubble-me-text:#fff;
       --ok:#10B981; --warn:#F59E0B; --danger:#EF4444;
     }
@@ -28,13 +26,11 @@
       background:var(--bg); color:var(--text); overflow:hidden; font-size:15px;
     }
 
-    /* App shell */
     .app{padding:var(--gap); width:100%; max-width:1700px; margin:0 auto; height:100dvh; display:grid; grid-template-rows:1fr}
     @media (min-width:901px){
       .app{grid-template-columns:var(--sidebar-w) 1fr; grid-template-rows:1fr; column-gap:24px}
     }
 
-    /* Sidebar (desktop) */
     .sidebar{display:none}
     @media (min-width:901px){
       .sidebar{display:flex; flex-direction:column; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; height:100%; min-height:0}
@@ -59,7 +55,6 @@
   border-radius: 10px;
   background: linear-gradient(135deg, #8B7CFF, #6AC9FF);
   
-  /* Add these lines */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,7 +68,6 @@
 }
     }
 
-    /* Main layout: FIXED expanded content (no layout jump) */
     .main{display:grid; grid-template-rows:auto 1fr; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; height:100%; min-height:0}
     .header{display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border)}
     .header-left{display:flex; align-items:center; gap:12px; min-width: 0;}
@@ -91,7 +85,6 @@
     .icon-btn:hover{color:var(--primary); border-color:#d8d8e0}
     .avatar{width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--border)}
 
-    /* Member Display in Header */
     .class-members-display { display: flex; align-items: center; cursor: pointer; }
     .member-avatar-stack { display: flex; }
     .member-avatar-stack .avatar-sm { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--surface); margin-left: -10px; object-fit: cover; transition: transform .2s; }
@@ -103,7 +96,6 @@
         .header-sub { width: auto; margin-top: 0; }
     }
 
-    /* Member List in Modal */
     .member-popup-list { list-style: none; margin: 0; padding: 0 4px; max-height: 50vh; overflow-y: auto; }
     .member-popup-item { display: flex; align-items: center; gap: 12px; padding: 10px 8px; border-radius: 8px; cursor: pointer; }
     .member-popup-item:hover { background-color: var(--bg); }
@@ -117,7 +109,6 @@
     .member-popup-list::-webkit-scrollbar-thumb { background-color: var(--primary-2); border-radius: 20px; }
 
 
-    /* CONTENT: fixed grid that fills remaining height */
     .content{display:grid; grid-template-columns:1fr; gap:18px; padding:18px; height:100%; min-height:0}
     @media (min-width:1100px){ .content{grid-template-columns:2fr 1fr} }
 
@@ -129,7 +120,6 @@
     .btn.primary{background:#F1EEFF; color:var(--primary); border-color:#E3E0FF}
     .btn.full{width:100%; justify-content:center}
 
-    /* === GROUP DISCUSSION — revamped alignment & scaling === */
     .chat-wrapper{display:grid; grid-template-rows:1fr auto; gap:12px; min-height:0; flex:1}
     .feed{position:relative; overflow:auto; padding:8px 12px 8px 0; min-height:0}
     .day-divider{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:12px; margin:10px 0}
@@ -153,14 +143,13 @@
         border-radius:14px;
         box-shadow:0 1px 3px rgba(0,0,0,.04);
         line-height:1.55;
-        justify-self: start; /* This is the fix! */
+        justify-self: start;
     }
     .meta{display:flex; align-items:center; gap:8px; font-size:11px; color:var(--muted); margin-top:6px}
     .m.me .meta { color: rgba(255, 255, 255, 0.75); }
     .sender{font-weight:600; font-size:12px}
     .msg-img{border-radius:12px; border:1px solid var(--border); max-width:260px; width:100%; height:auto}
 
-    /* Composer: sticky, auto-grow textarea, attach & emoji */
     .composer{display:flex; align-items:flex-end; gap:10px; background:var(--surface); border-top:1px solid var(--border); padding-top:10px}
     .composer .tools{display:flex; align-items:center; gap:6px}
     .i-btn{width:44px;height:44px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:18px}
@@ -168,7 +157,6 @@
     .composer button{height:44px; padding:12px 14px; border:none; border-radius:12px; background:var(--primary); color:#fff; font-weight:700; cursor:pointer}
     .typing{font-size:12px; color:var(--muted); margin-top:4px}
 
-    /* Better list sections */
     .tasks{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; overflow:auto}
     .task{border-top:1px solid var(--border)}
     .task:first-child{border-top:0}
@@ -195,7 +183,6 @@
     .pp-row img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin-left:-8px}
     .pp-row img:first-child{margin-left:0}
 
-    /* Notes */
     .notes{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; overflow:auto}
     .note{border:1px solid var(--border); background:#FAFAFF; border-radius:12px; padding:12px; cursor:pointer; transition:.2s; text-decoration: none; display: block;}
     .note:hover{background:#F3F2FF; border-color:#DCD9FF}
@@ -203,7 +190,6 @@
     .note p{margin:0; color:#3a3d4a; font-size:13px}
     .note small{display:block; color:var(--muted); margin-top:8px}
     
-    /* ===== MODERN SCROLLBAR (REVISED) ===== */
     .nav, .feed, .member-popup-list {
       scrollbar-width: thin; scrollbar-color: var(--primary-2) transparent;
     }
@@ -219,26 +205,22 @@
     body::-webkit-scrollbar-thumb { background: var(--primary-2); border-radius: 20px; }
     body::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-    /* ===== FIX 1: Decouple side panel to fix desktop layout ===== */
     .side-panel {
       display: flex; flex-direction: column; gap: var(--gap); min-height: 0;
     }
 
-    /* Mobile bottom nav */
     .mnav{position:fixed; left:0; right:0; bottom:0; height:70px; background:rgba(255,255,255,.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; z-index:40}
     .mnav a{display:flex; flex-direction:column; align-items:center; gap:4px; text-decoration:none; color:var(--muted); font-size:10px; font-weight:500}
     .mnav a i{font-size:20px}
     .mnav a.active{color:var(--primary)}
     @media (min-width:901px){ .mnav{display:none} }
 
-    /* Utilities */
     .skeleton{background:#f0f1f5; background:linear-gradient(90deg, #f0f1f5 25%, #f7f8fa 37%, #f0f1f5 63%); background-size:400% 100%; animation:shimmer 1.4s ease infinite; border-radius:12px}
     @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
     .loader{border:4px solid #f3f3f3;border-top:4px solid var(--primary);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:24px auto}
     @keyframes spin{to{transform:rotate(360deg)}}
     .empty{color:var(--muted); text-align:center; padding:18px}
 
-    /* ===== MOBILE RESPONSIVENESS ===== */
     @media (max-width: 900px) {
       html, body { height: auto; }
       body { overflow: auto; padding-bottom: 100px; }
@@ -250,7 +232,6 @@
       #discussion-card .card-body { flex-grow: 1; }
     }
     
-    /* ===== ENHANCED MOBILE STYLING (FIXES) - DISCORD STYLE ===== */
     @media (max-width: 450px) {
       .content { padding: 12px; gap: 12px; }
       .card-body { padding: 12px; }
@@ -279,7 +260,6 @@
       .header-right .avatar { width: 36px; height: 36px; flex-shrink: 0; }
     }
 
-    /* ===== MODALS (NEWLY ADDED & FIXED) ===== */
     .overlay {
       position: fixed;
       inset: 0;
@@ -333,7 +313,6 @@
     .m-btn.ghost { border-color: var(--border); background: transparent; color: var(--muted); }
     .m-btn.ghost:hover { background: var(--bg); color: var(--text); }
 
-    /* Profile Modal CSS */
     .profile-card-banner { height: 120px; background-size: cover; background-position: center; }
     .profile-card-body { padding: 16px; text-align: center; position: relative; }
     .profile-card-avatar { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid var(--surface); position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); }
@@ -346,7 +325,6 @@
     .profile-card-socials { display: flex; justify-content: center; gap: 12px; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; }
     .social-btn { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--bg); color: var(--text); font-size: 22px; text-decoration: none; }
     
-    /* Settings Modal Responsiveness */
     @media (max-width: 520px) {
         #settings-modal .modal { padding: 20px; }
         #settings-modal .m-form > div[style*="grid"] { grid-template-columns: 1fr !important; }
@@ -359,7 +337,6 @@
 </head>
 <body data-page="classes">
   <div class="app">
-    <!-- Sidebar (desktop) -->
     <aside class="sidebar" aria-label="Navigasi utama">
 <div class="brand">
   <div class="logo" aria-hidden="true">
@@ -386,9 +363,7 @@
       </div>
     </aside>
 
-    <!-- Main (contains skeleton and actual content) -->
     <section class="main" id="main">
-      <!-- SKELETON LOADER -->
       <div id="skeleton-loader">
         <header class="header">
           <div class="header-left" style="gap: 12px; align-items: center;">
@@ -448,13 +423,11 @@
         </div>
       </div>
       
-      <!-- ACTUAL CONTENT (Populated by JS) -->
       <header class="header" id="header"></header>
       <div class="content" id="content" role="main" aria-live="polite"></div>
     </section>
   </div>
 
-  <!-- Mobile bottom nav -->
   <nav class="mnav">
     <a href="dashboard.html"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
     <a href="classes.html" class="active"><i class="ri-book-open-line"></i><span>Kelas</span></a>
@@ -463,7 +436,6 @@
     <a href="notes.html"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
-  <!-- Modals -->
   <div class="overlay" id="add-task-modal">
     <div class="modal">
       <h2>Tambah Tugas Baru</h2>
@@ -512,7 +484,6 @@
       <div class="modal" id="profile-modal-content" style="padding: 0; width: min(95vw, 400px); overflow: hidden;"></div>
   </div>
 
-  <!-- ===== PAGE SCRIPT ===== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -532,7 +503,6 @@
     let listenersAttached = false;
     const BANNERS = { 'banner1': 'https://res.cloudinary.com/ddrtdofqo/image/upload/WhatsApp-Image-2024-02-28-at-3.02.13-PM_zmmjvb.jpg', 'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib-rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max', 'banner3': 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib-rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max' };
 
-    // --- Robust variables for Lazy Loading ---
     let firstMessageDoc = null; 
     let latestMessageDoc = null; 
     const renderedMessageIds = new Set(); 
@@ -748,10 +718,10 @@
         const snap = await getDocs(q);
 
         if (!snap.empty) {
-            const docs = snap.docs.reverse(); // ASC order for initial render
+            const docs = snap.docs.reverse();
             renderMessagesBatch(docs, false);
-            firstMessageDoc = snap.docs[snap.docs.length - 1]; // Oldest is last in DESC query
-            latestMessageDoc = snap.docs[0]; // Newest is first in DESC query
+            firstMessageDoc = snap.docs[snap.docs.length - 1];
+            latestMessageDoc = snap.docs[0];
         }
         if (snap.docs.length < MESSAGES_PER_PAGE) {
             allMessagesLoaded = true;
@@ -776,9 +746,9 @@
                 if ($('message-loader-sentinel')) $('message-loader-sentinel').style.display = 'none';
                 return;
             }
-            const docs = snap.docs.reverse(); // ASC order for prepending
+            const docs = snap.docs.reverse();
             renderMessagesBatch(docs, true);
-            firstMessageDoc = snap.docs[snap.docs.length - 1]; // New oldest doc
+            firstMessageDoc = snap.docs[snap.docs.length - 1];
         } catch(e) {
             console.error("Error fetching older messages:", e);
         } finally {
@@ -794,7 +764,6 @@
         if (latestMessageDoc) {
             q = query(discussionsRef, orderBy('createdAt', 'asc'), startAfter(latestMessageDoc));
         } else {
-            // If chat is empty, listen for the very first message
             q = query(discussionsRef, orderBy('createdAt', 'asc'));
         }
 
@@ -962,14 +931,10 @@
             
             if (await showConfirm(`Anda yakin ingin mengeluarkan ${memberName} dari kelas?`)) {
                 try {
-                    // CORRECTED: Only perform the action the admin is authorized to do.
                     const classRef = doc(db, 'classes', classId);
                     await updateDoc(classRef, { members: arrayRemove(userIdToKick) });
-                    
-                    // The rest of your UI logic is correct.
                     delete membersCache[userIdToKick];
                     renderClassMembers();
-                    // showToast(`${memberName} has been removed.`); // Optional: add a success toast
                 } catch (err) {
                     console.error("Gagal mengeluarkan anggota:", err);
                     alert("Gagal mengeluarkan anggota.");
