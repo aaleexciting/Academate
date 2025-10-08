@@ -1,210 +1,92 @@
-[debug] [2025-10-06T20:48:45.173Z] ----------------------------------------------------------------------
-[debug] [2025-10-06T20:48:45.174Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Hanser\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start
-[debug] [2025-10-06T20:48:45.175Z] CLI Version:   14.18.0
-[debug] [2025-10-06T20:48:45.175Z] Platform:      win32
-[debug] [2025-10-06T20:48:45.175Z] Node Version:  v22.20.0
-[debug] [2025-10-06T20:48:45.175Z] Time:          Tue Oct 07 2025 03:48:45 GMT+0700 (印度尼西亚西部时间)
-[debug] [2025-10-06T20:48:45.175Z] ----------------------------------------------------------------------
+[debug] [2025-10-08T13:45:04.070Z] ----------------------------------------------------------------------
+[debug] [2025-10-08T13:45:04.072Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Hanser\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2025-10-08T13:45:04.073Z] CLI Version:   14.18.0
+[debug] [2025-10-08T13:45:04.073Z] Platform:      win32
+[debug] [2025-10-08T13:45:04.073Z] Node Version:  v22.20.0
+[debug] [2025-10-08T13:45:04.073Z] Time:          Wed Oct 08 2025 20:45:04 GMT+0700 (印度尼西亚西部时间)
+[debug] [2025-10-08T13:45:04.073Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2025-10-06T20:48:45.342Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2025-10-06T20:48:45.342Z] > authorizing via signed-in user (ardhanridhoo@gmail.com)
+[debug] [2025-10-08T13:45:04.075Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2025-10-08T13:45:04.256Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-08T13:45:04.256Z] > authorizing via signed-in user (ardhanridhoo@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  E:\Websites\Academate 3.0-Firebase Deploy
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[debug] [2025-10-08T13:45:04.739Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2025-10-08T13:45:04.739Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2025-10-08T13:46:26.680Z] ----------------------------------------------------------------------
+[debug] [2025-10-08T13:46:26.683Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Hanser\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start
+[debug] [2025-10-08T13:46:26.683Z] CLI Version:   14.18.0
+[debug] [2025-10-08T13:46:26.683Z] Platform:      win32
+[debug] [2025-10-08T13:46:26.683Z] Node Version:  v22.20.0
+[debug] [2025-10-08T13:46:26.684Z] Time:          Wed Oct 08 2025 20:46:26 GMT+0700 (印度尼西亚西部时间)
+[debug] [2025-10-08T13:46:26.684Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-10-08T13:46:26.863Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-08T13:46:26.863Z] > authorizing via signed-in user (ardhanridhoo@gmail.com)
 [info] i  emulators: Starting emulators: functions, hosting, extensions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions, hosting, extensions"}}
-[debug] [2025-10-06T20:48:45.346Z] Checked if tokens are valid: true, expires at: 1759786823529
-[debug] [2025-10-06T20:48:45.346Z] Checked if tokens are valid: true, expires at: 1759786823529
-[debug] [2025-10-06T20:48:45.346Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/acadmte [none]
-[debug] [2025-10-06T20:48:46.469Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/acadmte 200
-[debug] [2025-10-06T20:48:46.469Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/acadmte {"projectNumber":"547286858993","projectId":"acadmte","lifecycleState":"ACTIVE","name":"Academate","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-09-28T19:17:16.525896Z"}
-[debug] [2025-10-06T20:48:46.479Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2025-10-06T20:48:46.479Z] [hosting] Hosting Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2025-10-06T20:48:46.479Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5000}]},"metadata":{"message":"assigned listening specs for emulators"}}
-[debug] [2025-10-06T20:48:46.483Z] Emulator locator file path: C:\Users\Hanser\AppData\Local\Temp\hub-acadmte.json
-[debug] [2025-10-06T20:48:46.483Z] [hub] writing locator at C:\Users\Hanser\AppData\Local\Temp\hub-acadmte.json
-[debug] [2025-10-06T20:48:46.489Z] [Extensions] Started Extensions emulator, this is a noop.
-[debug] [2025-10-06T20:48:46.493Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2025-10-06T20:48:46.493Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2025-10-06T20:48:46.493Z] [tasks] Cloud Tasks Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2025-10-06T20:48:46.493Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5000}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}],"tasks":[{"address":"127.0.0.1","family":"IPv4","port":9499}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[debug] [2025-10-08T13:46:26.867Z] Checked if tokens are valid: false, expires at: 1759794914133
+[debug] [2025-10-08T13:46:26.867Z] Checked if tokens are valid: false, expires at: 1759794914133
+[debug] [2025-10-08T13:46:26.867Z] > refreshing access token with scopes: []
+[debug] [2025-10-08T13:46:26.869Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-10-08T13:46:26.869Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-08T13:46:26.971Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-10-08T13:46:26.971Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-08T13:46:26.976Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/acadmte [none]
+[debug] [2025-10-08T13:46:28.139Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/acadmte 200
+[debug] [2025-10-08T13:46:28.139Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/acadmte {"projectNumber":"547286858993","projectId":"acadmte","lifecycleState":"ACTIVE","name":"Academate","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-09-28T19:17:16.525896Z"}
+[debug] [2025-10-08T13:46:28.148Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-10-08T13:46:28.149Z] [hosting] Hosting Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-10-08T13:46:28.149Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2025-10-08T13:46:28.152Z] Emulator locator file path: C:\Users\Hanser\AppData\Local\Temp\hub-acadmte.json
+[debug] [2025-10-08T13:46:28.153Z] [hub] writing locator at C:\Users\Hanser\AppData\Local\Temp\hub-acadmte.json
+[debug] [2025-10-08T13:46:28.158Z] [Extensions] Started Extensions emulator, this is a noop.
+[debug] [2025-10-08T13:46:28.162Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-10-08T13:46:28.162Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-10-08T13:46:28.162Z] [tasks] Cloud Tasks Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-10-08T13:46:28.162Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5000}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}],"tasks":[{"address":"127.0.0.1","family":"IPv4","port":9499}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
 [warn] !  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: apphosting, auth, firestore, database, pubsub, storage, dataconnect {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mapphosting, auth, firestore, database, pubsub, storage, dataconnect\u001b[22m"}}
-[debug] [2025-10-06T20:48:46.510Z] defaultcredentials: writing to file C:\Users\Hanser\AppData\Roaming\firebase\ardhanridhoo_gmail_com_application_default_credentials.json
-[debug] [2025-10-06T20:48:46.511Z] Setting GAC to C:\Users\Hanser\AppData\Roaming\firebase\ardhanridhoo_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\Hanser\\AppData\\Roaming\\firebase\\ardhanridhoo_gmail_com_application_default_credentials.json"}}
-[debug] [2025-10-06T20:48:46.512Z] Checked if tokens are valid: true, expires at: 1759786823529
-[debug] [2025-10-06T20:48:46.512Z] Checked if tokens are valid: true, expires at: 1759786823529
-[debug] [2025-10-06T20:48:46.512Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/adminSdkConfig [none]
-[debug] [2025-10-06T20:48:47.075Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/adminSdkConfig 200
-[debug] [2025-10-06T20:48:47.076Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/adminSdkConfig {"projectId":"acadmte","storageBucket":"acadmte.firebasestorage.app"}
-[debug] [2025-10-06T20:48:47.085Z] Checked if tokens are valid: true, expires at: 1759786823529
-[debug] [2025-10-06T20:48:47.085Z] Checked if tokens are valid: true, expires at: 1759786823529
-[debug] [2025-10-06T20:48:47.085Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/acadmte/sites 
-[debug] [2025-10-06T20:48:47.916Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/acadmte/sites 200
-[debug] [2025-10-06T20:48:47.916Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/acadmte/sites {"sites":[{"name":"projects/acadmte/sites/acadmte","defaultUrl":"https://acadmte.web.app","type":"DEFAULT_SITE"}]}
-[debug] [2025-10-06T20:48:47.917Z] Checked if tokens are valid: true, expires at: 1759786823529
-[debug] [2025-10-06T20:48:47.917Z] Checked if tokens are valid: true, expires at: 1759786823529
-[debug] [2025-10-06T20:48:47.917Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/webApps/-/config [none]
-[debug] [2025-10-06T20:48:48.934Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/webApps/-/config 200
-[debug] [2025-10-06T20:48:48.934Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/webApps/-/config {"projectId":"acadmte","appId":"1:547286858993:web:b83de49e7eb1cc35a67d50","storageBucket":"acadmte.firebasestorage.app","apiKey":"AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA","authDomain":"acadmte.firebaseapp.com","messagingSenderId":"547286858993","measurementId":"G-ZEFYD7F650","projectNumber":"547286858993","version":"2"}
-[debug] [2025-10-06T20:48:48.937Z] Checked if tokens are valid: true, expires at: 1759786823529
-[debug] [2025-10-06T20:48:48.937Z] Checked if tokens are valid: true, expires at: 1759786823529
-[debug] [2025-10-06T20:48:48.938Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/acadmte [none]
-[debug] [2025-10-06T20:48:49.450Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/acadmte 200
-[debug] [2025-10-06T20:48:49.450Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/acadmte {"projectId":"acadmte","projectNumber":"547286858993","displayName":"Academate","name":"projects/acadmte","resources":{"hostingSite":"acadmte"},"state":"ACTIVE","etag":"1_e69fe825-0bd8-40ab-9513-7ecb248d54a8"}
+[debug] [2025-10-08T13:46:28.180Z] defaultcredentials: writing to file C:\Users\Hanser\AppData\Roaming\firebase\ardhanridhoo_gmail_com_application_default_credentials.json
+[debug] [2025-10-08T13:46:28.181Z] Setting GAC to C:\Users\Hanser\AppData\Roaming\firebase\ardhanridhoo_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\Hanser\\AppData\\Roaming\\firebase\\ardhanridhoo_gmail_com_application_default_credentials.json"}}
+[debug] [2025-10-08T13:46:28.182Z] Checked if tokens are valid: true, expires at: 1759934785972
+[debug] [2025-10-08T13:46:28.182Z] Checked if tokens are valid: true, expires at: 1759934785972
+[debug] [2025-10-08T13:46:28.182Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/adminSdkConfig [none]
+[debug] [2025-10-08T13:46:28.800Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/adminSdkConfig 200
+[debug] [2025-10-08T13:46:28.800Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/adminSdkConfig {"projectId":"acadmte","storageBucket":"acadmte.firebasestorage.app"}
+[debug] [2025-10-08T13:46:28.810Z] Checked if tokens are valid: true, expires at: 1759934785972
+[debug] [2025-10-08T13:46:28.810Z] Checked if tokens are valid: true, expires at: 1759934785972
+[debug] [2025-10-08T13:46:28.810Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/acadmte/sites 
+[debug] [2025-10-08T13:46:29.669Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/acadmte/sites 200
+[debug] [2025-10-08T13:46:29.669Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/acadmte/sites {"sites":[{"name":"projects/acadmte/sites/acadmte","defaultUrl":"https://acadmte.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-10-08T13:46:29.669Z] Checked if tokens are valid: true, expires at: 1759934785972
+[debug] [2025-10-08T13:46:29.669Z] Checked if tokens are valid: true, expires at: 1759934785972
+[debug] [2025-10-08T13:46:29.669Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/webApps/-/config [none]
+[debug] [2025-10-08T13:46:30.385Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/webApps/-/config 200
+[debug] [2025-10-08T13:46:30.385Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/acadmte/webApps/-/config {"projectId":"acadmte","appId":"1:547286858993:web:b83de49e7eb1cc35a67d50","storageBucket":"acadmte.firebasestorage.app","apiKey":"AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA","authDomain":"acadmte.firebaseapp.com","messagingSenderId":"547286858993","measurementId":"G-ZEFYD7F650","projectNumber":"547286858993","version":"2"}
+[debug] [2025-10-08T13:46:30.389Z] Checked if tokens are valid: true, expires at: 1759934785972
+[debug] [2025-10-08T13:46:30.389Z] Checked if tokens are valid: true, expires at: 1759934785972
+[debug] [2025-10-08T13:46:30.389Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/acadmte [none]
+[debug] [2025-10-08T13:46:30.741Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/acadmte 200
+[debug] [2025-10-08T13:46:30.741Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/acadmte {"projectId":"acadmte","projectNumber":"547286858993","displayName":"Academate","name":"projects/acadmte","resources":{"hostingSite":"acadmte"},"state":"ACTIVE","etag":"1_e69fe825-0bd8-40ab-9513-7ecb248d54a8"}
 [info] +  hosting[acadmte]: Local server: http://127.0.0.1:5000 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://127.0.0.1:5000\u001b[22m\u001b[24m"}}
-[info] i  ui: downloading ui-v1.15.0.zip... {"metadata":{"emulator":{"name":"ui"},"message":"downloading ui-v1.15.0.zip..."}}
-[debug] [2025-10-06T20:48:49.464Z] >>> [apiv2][query] GET https://storage.googleapis.com/firebase-preview-drop/emulator/ui-v1.15.0.zip 
-[debug] [2025-10-06T20:48:49.850Z] <<< [apiv2][status] GET https://storage.googleapis.com/firebase-preview-drop/emulator/ui-v1.15.0.zip 200
-[debug] [2025-10-06T20:48:49.850Z] <<< [apiv2][body] GET https://storage.googleapis.com/firebase-preview-drop/emulator/ui-v1.15.0.zip [stream]
-[debug] [2025-10-06T20:48:51.261Z] Data is 3538469
-[debug] [2025-10-06T20:48:51.261Z] [unzip] Entry: client/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
-[debug] [2025-10-06T20:48:51.261Z] [unzip] Processing entry: client\
-[debug] [2025-10-06T20:48:51.261Z] [unzip] mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\
-[debug] [2025-10-06T20:48:51.262Z] [unzip] Entry: client/favicon-16x16.png (compressed_size=293 bytes, uncompressed_size=293 bytes)
-[debug] [2025-10-06T20:48:51.262Z] [unzip] Processing entry: client\favicon-16x16.png
-[debug] [2025-10-06T20:48:51.262Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.262Z] [unzip] Writing file: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\favicon-16x16.png
-[debug] [2025-10-06T20:48:51.263Z] [unzip] Entry: client/safari-pinned-tab.svg (compressed_size=1433 bytes, uncompressed_size=2611 bytes)
-[debug] [2025-10-06T20:48:51.263Z] [unzip] Processing entry: client\safari-pinned-tab.svg
-[debug] [2025-10-06T20:48:51.263Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.263Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\safari-pinned-tab.svg
-[debug] [2025-10-06T20:48:51.265Z] [unzip] Entry: client/favicon.ico (compressed_size=2933 bytes, uncompressed_size=13294 bytes)
-[debug] [2025-10-06T20:48:51.265Z] [unzip] Processing entry: client\favicon.ico
-[debug] [2025-10-06T20:48:51.265Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.265Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\favicon.ico
-[debug] [2025-10-06T20:48:51.266Z] [unzip] Entry: client/index.html (compressed_size=1364 bytes, uncompressed_size=3071 bytes)
-[debug] [2025-10-06T20:48:51.266Z] [unzip] Processing entry: client\index.html
-[debug] [2025-10-06T20:48:51.267Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.267Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\index.html
-[debug] [2025-10-06T20:48:51.267Z] [unzip] Entry: client/android-chrome-192x192.png (compressed_size=2684 bytes, uncompressed_size=2684 bytes)
-[debug] [2025-10-06T20:48:51.267Z] [unzip] Processing entry: client\android-chrome-192x192.png
-[debug] [2025-10-06T20:48:51.267Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.267Z] [unzip] Writing file: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\android-chrome-192x192.png
-[debug] [2025-10-06T20:48:51.268Z] [unzip] Entry: client/apple-touch-icon.png (compressed_size=2123 bytes, uncompressed_size=2152 bytes)
-[debug] [2025-10-06T20:48:51.268Z] [unzip] Processing entry: client\apple-touch-icon.png
-[debug] [2025-10-06T20:48:51.268Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.268Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\apple-touch-icon.png
-[debug] [2025-10-06T20:48:51.269Z] [unzip] Entry: client/android-chrome-512x512.png (compressed_size=5369 bytes, uncompressed_size=5411 bytes)
-[debug] [2025-10-06T20:48:51.269Z] [unzip] Processing entry: client\android-chrome-512x512.png
-[debug] [2025-10-06T20:48:51.269Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.269Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\android-chrome-512x512.png
-[debug] [2025-10-06T20:48:51.270Z] [unzip] Entry: client/manifest.json (compressed_size=245 bytes, uncompressed_size=551 bytes)
-[debug] [2025-10-06T20:48:51.270Z] [unzip] Processing entry: client\manifest.json
-[debug] [2025-10-06T20:48:51.270Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.270Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\manifest.json
-[debug] [2025-10-06T20:48:51.271Z] [unzip] Entry: client/robots.txt (compressed_size=26 bytes, uncompressed_size=26 bytes)
-[debug] [2025-10-06T20:48:51.271Z] [unzip] Processing entry: client\robots.txt
-[debug] [2025-10-06T20:48:51.271Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.271Z] [unzip] Writing file: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\robots.txt
-[debug] [2025-10-06T20:48:51.271Z] [unzip] Entry: client/mstile-150x150.png (compressed_size=2034 bytes, uncompressed_size=2034 bytes)
-[debug] [2025-10-06T20:48:51.271Z] [unzip] Processing entry: client\mstile-150x150.png
-[debug] [2025-10-06T20:48:51.271Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.272Z] [unzip] Writing file: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\mstile-150x150.png
-[debug] [2025-10-06T20:48:51.272Z] [unzip] Entry: client/assets/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
-[debug] [2025-10-06T20:48:51.272Z] [unzip] Processing entry: client\assets\
-[debug] [2025-10-06T20:48:51.272Z] [unzip] mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\
-[debug] [2025-10-06T20:48:51.272Z] [unzip] Entry: client/assets/index-BX-A56oj.js (compressed_size=582089 bytes, uncompressed_size=2092775 bytes)
-[debug] [2025-10-06T20:48:51.272Z] [unzip] Processing entry: client\assets\index-BX-A56oj.js
-[debug] [2025-10-06T20:48:51.272Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets
-[debug] [2025-10-06T20:48:51.272Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\index-BX-A56oj.js
-[debug] [2025-10-06T20:48:51.280Z] [unzip] Entry: client/assets/index-CjB9C900.css (compressed_size=35979 bytes, uncompressed_size=298654 bytes)
-[debug] [2025-10-06T20:48:51.280Z] [unzip] Processing entry: client\assets\index-CjB9C900.css
-[debug] [2025-10-06T20:48:51.280Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets
-[debug] [2025-10-06T20:48:51.281Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\index-CjB9C900.css
-[debug] [2025-10-06T20:48:51.282Z] [unzip] Entry: client/assets/index-BX-A56oj.js.map (compressed_size=2362482 bytes, uncompressed_size=10036679 bytes)
-[debug] [2025-10-06T20:48:51.282Z] [unzip] Processing entry: client\assets\index-BX-A56oj.js.map
-[debug] [2025-10-06T20:48:51.282Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets
-[debug] [2025-10-06T20:48:51.282Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\index-BX-A56oj.js.map
-[debug] [2025-10-06T20:48:51.313Z] [unzip] Entry: client/assets/extensions/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
-[debug] [2025-10-06T20:48:51.314Z] [unzip] Processing entry: client\assets\extensions\
-[debug] [2025-10-06T20:48:51.314Z] [unzip] mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\extensions\
-[debug] [2025-10-06T20:48:51.314Z] [unzip] Entry: client/assets/extensions/default-extension.png (compressed_size=1646 bytes, uncompressed_size=1657 bytes)
-[debug] [2025-10-06T20:48:51.314Z] [unzip] Processing entry: client\assets\extensions\default-extension.png
-[debug] [2025-10-06T20:48:51.314Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\extensions
-[debug] [2025-10-06T20:48:51.314Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\extensions\default-extension.png
-[debug] [2025-10-06T20:48:51.315Z] [unzip] Entry: client/assets/img/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
-[debug] [2025-10-06T20:48:51.315Z] [unzip] Processing entry: client\assets\img\
-[debug] [2025-10-06T20:48:51.315Z] [unzip] mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\img\
-[debug] [2025-10-06T20:48:51.315Z] [unzip] Entry: client/assets/img/database.png (compressed_size=29449 bytes, uncompressed_size=29988 bytes)
-[debug] [2025-10-06T20:48:51.315Z] [unzip] Processing entry: client\assets\img\database.png
-[debug] [2025-10-06T20:48:51.315Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\img
-[debug] [2025-10-06T20:48:51.315Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\img\database.png
-[debug] [2025-10-06T20:48:51.316Z] [unzip] Entry: client/assets/provider-icons/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
-[debug] [2025-10-06T20:48:51.316Z] [unzip] Processing entry: client\assets\provider-icons\
-[debug] [2025-10-06T20:48:51.316Z] [unzip] mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\
-[debug] [2025-10-06T20:48:51.316Z] [unzip] Entry: client/assets/provider-icons/auth_service_saml.svg (compressed_size=575 bytes, uncompressed_size=1226 bytes)
-[debug] [2025-10-06T20:48:51.316Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_saml.svg
-[debug] [2025-10-06T20:48:51.316Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.316Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_saml.svg
-[debug] [2025-10-06T20:48:51.317Z] [unzip] Entry: client/assets/provider-icons/auth_service_phone.svg (compressed_size=261 bytes, uncompressed_size=414 bytes)
-[debug] [2025-10-06T20:48:51.317Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_phone.svg
-[debug] [2025-10-06T20:48:51.317Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.317Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_phone.svg
-[debug] [2025-10-06T20:48:51.317Z] [unzip] Entry: client/assets/provider-icons/auth_service_facebook.svg (compressed_size=289 bytes, uncompressed_size=457 bytes)
-[debug] [2025-10-06T20:48:51.317Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_facebook.svg
-[debug] [2025-10-06T20:48:51.317Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.317Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_facebook.svg
-[debug] [2025-10-06T20:48:51.318Z] [unzip] Entry: client/assets/provider-icons/auth_service_game_center.svg (compressed_size=991 bytes, uncompressed_size=3921 bytes)
-[debug] [2025-10-06T20:48:51.318Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_game_center.svg
-[debug] [2025-10-06T20:48:51.318Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.318Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_game_center.svg
-[debug] [2025-10-06T20:48:51.319Z] [unzip] Entry: client/assets/provider-icons/auth_service_apple.svg (compressed_size=230 bytes, uncompressed_size=334 bytes)
-[debug] [2025-10-06T20:48:51.319Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_apple.svg
-[debug] [2025-10-06T20:48:51.319Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.319Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_apple.svg
-[debug] [2025-10-06T20:48:51.319Z] [unzip] Entry: client/assets/provider-icons/auth_service_github.svg (compressed_size=466 bytes, uncompressed_size=838 bytes)
-[debug] [2025-10-06T20:48:51.319Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_github.svg
-[debug] [2025-10-06T20:48:51.319Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.319Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_github.svg
-[debug] [2025-10-06T20:48:51.320Z] [unzip] Entry: client/assets/provider-icons/auth_service_mslive.svg (compressed_size=203 bytes, uncompressed_size=378 bytes)
-[debug] [2025-10-06T20:48:51.320Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_mslive.svg
-[debug] [2025-10-06T20:48:51.320Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.320Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_mslive.svg
-[debug] [2025-10-06T20:48:51.321Z] [unzip] Entry: client/assets/provider-icons/auth_service_yahoo.svg (compressed_size=577 bytes, uncompressed_size=1182 bytes)
-[debug] [2025-10-06T20:48:51.321Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_yahoo.svg
-[debug] [2025-10-06T20:48:51.321Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.321Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_yahoo.svg
-[debug] [2025-10-06T20:48:51.321Z] [unzip] Entry: client/assets/provider-icons/auth_service_twitter.svg (compressed_size=444 bytes, uncompressed_size=751 bytes)
-[debug] [2025-10-06T20:48:51.321Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_twitter.svg
-[debug] [2025-10-06T20:48:51.321Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.322Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_twitter.svg
-[debug] [2025-10-06T20:48:51.322Z] [unzip] Entry: client/assets/provider-icons/auth_service_play_games.svg (compressed_size=565 bytes, uncompressed_size=1173 bytes)
-[debug] [2025-10-06T20:48:51.322Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_play_games.svg
-[debug] [2025-10-06T20:48:51.322Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.322Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_play_games.svg
-[debug] [2025-10-06T20:48:51.323Z] [unzip] Entry: client/assets/provider-icons/auth_service_email.svg (compressed_size=228 bytes, uncompressed_size=326 bytes)
-[debug] [2025-10-06T20:48:51.323Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_email.svg
-[debug] [2025-10-06T20:48:51.323Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.323Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_email.svg
-[debug] [2025-10-06T20:48:51.323Z] [unzip] Entry: client/assets/provider-icons/auth_service_google.svg (compressed_size=409 bytes, uncompressed_size=720 bytes)
-[debug] [2025-10-06T20:48:51.323Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_google.svg
-[debug] [2025-10-06T20:48:51.323Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.324Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_google.svg
-[debug] [2025-10-06T20:48:51.324Z] [unzip] Entry: client/assets/provider-icons/auth_service_oidc.svg (compressed_size=414 bytes, uncompressed_size=858 bytes)
-[debug] [2025-10-06T20:48:51.324Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_oidc.svg
-[debug] [2025-10-06T20:48:51.324Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons
-[debug] [2025-10-06T20:48:51.324Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\assets\provider-icons\auth_service_oidc.svg
-[debug] [2025-10-06T20:48:51.325Z] [unzip] Entry: client/browserconfig.xml (compressed_size=491 bytes, uncompressed_size=822 bytes)
-[debug] [2025-10-06T20:48:51.325Z] [unzip] Processing entry: client\browserconfig.xml
-[debug] [2025-10-06T20:48:51.325Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.325Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\browserconfig.xml
-[debug] [2025-10-06T20:48:51.325Z] [unzip] Entry: client/favicon-32x32.png (compressed_size=475 bytes, uncompressed_size=475 bytes)
-[debug] [2025-10-06T20:48:51.325Z] [unzip] Processing entry: client\favicon-32x32.png
-[debug] [2025-10-06T20:48:51.325Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client
-[debug] [2025-10-06T20:48:51.325Z] [unzip] Writing file: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\client\favicon-32x32.png
-[debug] [2025-10-06T20:48:51.326Z] [unzip] Entry: server/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
-[debug] [2025-10-06T20:48:51.326Z] [unzip] Processing entry: server\
-[debug] [2025-10-06T20:48:51.326Z] [unzip] mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\server\
-[debug] [2025-10-06T20:48:51.326Z] [unzip] Entry: server/server.mjs.map (compressed_size=217845 bytes, uncompressed_size=944978 bytes)
-[debug] [2025-10-06T20:48:51.326Z] [unzip] Processing entry: server\server.mjs.map
-[debug] [2025-10-06T20:48:51.326Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\server
-[debug] [2025-10-06T20:48:51.326Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\server\server.mjs.map
-[debug] [2025-10-06T20:48:51.329Z] [unzip] Entry: server/server.mjs (compressed_size=276407 bytes, uncompressed_size=933701 bytes)
-[debug] [2025-10-06T20:48:51.329Z] [unzip] Processing entry: server\server.mjs
-[debug] [2025-10-06T20:48:51.329Z] [unzip] else mkdir: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\server
-[debug] [2025-10-06T20:48:51.329Z] [unzip] deflating: C:\Users\Hanser\.cache\firebase\emulators\ui-v1.15.0\server\server.mjs
-[debug] [2025-10-06T20:48:51.335Z] [Extensions] Connecting Extensions emulator, this is a noop.
+[debug] [2025-10-08T13:46:30.758Z] [Extensions] Connecting Extensions emulator, this is a noop.
 [info] i  functions: Watching "E:\Websites\Academate 3.0-Firebase Deploy\academate-backend\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"E:\\Websites\\Academate 3.0-Firebase Deploy\\academate-backend\\functions\" for Cloud Functions..."}}
-[debug] [2025-10-06T20:48:51.338Z] Validating nodejs source
+[debug] [2025-10-08T13:46:30.762Z] Validating nodejs source
 [warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
 [warn] !  functions: Please note that there will be breaking changes when you upgrade. 
-[debug] [2025-10-06T20:48:52.005Z] > [functions] package.json contents: {
+[debug] [2025-10-08T13:46:31.596Z] > [functions] package.json contents: {
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
@@ -225,23 +107,27 @@
   "devDependencies": {},
   "private": true
 }
-[debug] [2025-10-06T20:48:52.005Z] Building nodejs source
-[debug] [2025-10-06T20:48:52.006Z] Failed to find version of module node: reached end of search path E:\Websites\Academate 3.0-Firebase Deploy\academate-backend\functions\node_modules
+[debug] [2025-10-08T13:46:31.596Z] Building nodejs source
+[debug] [2025-10-08T13:46:31.596Z] Failed to find version of module node: reached end of search path E:\Websites\Academate 3.0-Firebase Deploy\academate-backend\functions\node_modules
 [warn] !  functions: Your requested "node" version "18" doesn't match your global version "22". Using node@22 from host. 
-[debug] [2025-10-06T20:48:52.007Z] Could not find functions.yaml. Must use http discovery
-[debug] [2025-10-06T20:48:52.012Z] Found firebase-functions binary at 'E:\Websites\Academate 3.0-Firebase Deploy\academate-backend\functions\node_modules\.bin\firebase-functions'
-[info] Serving at port 8076
+[debug] [2025-10-08T13:46:31.598Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-10-08T13:46:31.616Z] Found firebase-functions binary at 'E:\Websites\Academate 3.0-Firebase Deploy\academate-backend\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8501
 
-[debug] [2025-10-06T20:48:53.264Z] Got response from /__/functions.yaml {"endpoints":{"onNewTask":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","eventFilters":{"resource":"projects/acadmte/databases/(default)/documents/classes/{classId}/tasks/{taskId}"},"retry":false},"labels":{},"entryPoint":"onNewTask"},"taskDeadlineReminder":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"scheduleTrigger":{"schedule":"every 1 hours","retryConfig":{"retryCount":null,"maxDoublings":null,"maxRetryDuration":null,"maxBackoffDuration":null,"minBackoffDuration":null},"timeZone":null},"labels":{},"entryPoint":"taskDeadlineReminder"},"classStartingReminder":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"scheduleTrigger":{"schedule":"every 10 minutes","retryConfig":{"retryCount":null,"maxDoublings":null,"maxRetryDuration":null,"maxBackoffDuration":null,"minBackoffDuration":null},"timeZone":null},"labels":{},"entryPoint":"classStartingReminder"},"onMemberKicked":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.update","eventFilters":{"resource":"projects/acadmte/databases/(default)/documents/classes/{classId}"},"retry":false},"labels":{},"entryPoint":"onMemberKicked"},"onClassDeleted":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.delete","eventFilters":{"resource":"projects/acadmte/databases/(default)/documents/classes/{classId}"},"retry":false},"labels":{},"entryPoint":"onClassDeleted"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
-[debug] [2025-10-06T20:48:57.307Z] defaultcredentials: writing to file C:\Users\Hanser\AppData\Roaming\firebase\ardhanridhoo_gmail_com_application_default_credentials.json
-[debug] [2025-10-06T20:48:57.307Z] Setting GAC to C:\Users\Hanser\AppData\Roaming\firebase\ardhanridhoo_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\Hanser\\AppData\\Roaming\\firebase\\ardhanridhoo_gmail_com_application_default_credentials.json"}}
+[debug] [2025-10-08T13:46:32.562Z] Got response from /__/functions.yaml {"endpoints":{"onNewTask":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","eventFilters":{"resource":"projects/acadmte/databases/(default)/documents/classes/{classId}/tasks/{taskId}"},"retry":false},"labels":{},"entryPoint":"onNewTask"},"taskDeadlineReminder":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"scheduleTrigger":{"schedule":"every 1 hours","retryConfig":{"retryCount":null,"maxDoublings":null,"maxRetryDuration":null,"maxBackoffDuration":null,"minBackoffDuration":null},"timeZone":null},"labels":{},"entryPoint":"taskDeadlineReminder"},"classStartingReminder":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"scheduleTrigger":{"schedule":"every 10 minutes","retryConfig":{"retryCount":null,"maxDoublings":null,"maxRetryDuration":null,"maxBackoffDuration":null,"minBackoffDuration":null},"timeZone":null},"labels":{},"entryPoint":"classStartingReminder"},"onMemberKicked":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.update","eventFilters":{"resource":"projects/acadmte/databases/(default)/documents/classes/{classId}"},"retry":false},"labels":{},"entryPoint":"onMemberKicked"},"onClassDeleted":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.delete","eventFilters":{"resource":"projects/acadmte/databases/(default)/documents/classes/{classId}"},"retry":false},"labels":{},"entryPoint":"onClassDeleted"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:46:36 +0000] "GET / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:46:36 +0000] \"GET / HTTP/1.1\" 200 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:46:36 +0000] "GET /hero.webp HTTP/1.1" 200 80234 "http://127.0.0.1:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:46:36 +0000] \"GET /hero.webp HTTP/1.1\" 200 80234 \"http://127.0.0.1:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:46:36 +0000] "GET /icon/site.webmanifest HTTP/1.1" 200 446 "http://127.0.0.1:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:46:36 +0000] \"GET /icon/site.webmanifest HTTP/1.1\" 200 446 \"http://127.0.0.1:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:46:36 +0000] "GET /icon/favicon.ico HTTP/1.1" 200 - "http://127.0.0.1:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:46:36 +0000] \"GET /icon/favicon.ico HTTP/1.1\" 200 - \"http://127.0.0.1:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[debug] [2025-10-08T13:46:36.594Z] defaultcredentials: writing to file C:\Users\Hanser\AppData\Roaming\firebase\ardhanridhoo_gmail_com_application_default_credentials.json
+[debug] [2025-10-08T13:46:36.594Z] Setting GAC to C:\Users\Hanser\AppData\Roaming\firebase\ardhanridhoo_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\Hanser\\AppData\\Roaming\\firebase\\ardhanridhoo_gmail_com_application_default_credentials.json"}}
 [info] +  functions: Loaded functions definitions from source: onNewTask, taskDeadlineReminder, classStartingReminder, onMemberKicked, onClassDeleted. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onNewTask, taskDeadlineReminder, classStartingReminder, onMemberKicked, onClassDeleted."}}
 [info] i  functions[asia-southeast2-onNewTask]: function ignored because the firestore emulator does not exist or is not running. {"metadata":{"emulator":{"name":"functions"},"message":"function ignored because the firestore emulator does not exist or is not running."}}
 [info] i  functions[asia-southeast2-taskDeadlineReminder]: function ignored because the pubsub emulator does not exist or is not running. {"metadata":{"emulator":{"name":"functions"},"message":"function ignored because the pubsub emulator does not exist or is not running."}}
 [info] i  functions[asia-southeast2-classStartingReminder]: function ignored because the pubsub emulator does not exist or is not running. {"metadata":{"emulator":{"name":"functions"},"message":"function ignored because the pubsub emulator does not exist or is not running."}}
 [info] i  functions[asia-southeast2-onMemberKicked]: function ignored because the firestore emulator does not exist or is not running. {"metadata":{"emulator":{"name":"functions"},"message":"function ignored because the firestore emulator does not exist or is not running."}}
 [info] i  functions[asia-southeast2-onClassDeleted]: function ignored because the firestore emulator does not exist or is not running. {"metadata":{"emulator":{"name":"functions"},"message":"function ignored because the firestore emulator does not exist or is not running."}}
-[debug] [2025-10-06T20:48:57.314Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[debug] [2025-10-08T13:46:36.602Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
 [info] 
 ┌─────────────────────────────────────────────────────────────┐
 │ ✔  All emulators ready! It is now safe to connect your app. │
@@ -264,55 +150,14 @@
 └─────────────────────────┴───────────────┴─────────────────────┘
 Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
  
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:26 +0000] "GET / HTTP/1.1" 200 - "http://127.0.0.1:4000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:26 +0000] \"GET / HTTP/1.1\" 200 - \"http://127.0.0.1:4000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:26 +0000] "GET /hero.webp HTTP/1.1" 200 1945644 "http://127.0.0.1:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:26 +0000] \"GET /hero.webp HTTP/1.1\" 200 1945644 \"http://127.0.0.1:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:26 +0000] "GET /icon/site.webmanifest HTTP/1.1" 200 446 "http://127.0.0.1:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:26 +0000] \"GET /icon/site.webmanifest HTTP/1.1\" 200 446 \"http://127.0.0.1:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:26 +0000] "GET /icon/favicon.ico HTTP/1.1" 200 - "http://127.0.0.1:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:26 +0000] \"GET /icon/favicon.ico HTTP/1.1\" 200 - \"http://127.0.0.1:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:31 +0000] "GET /auth HTTP/1.1" 200 - "http://127.0.0.1:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:31 +0000] \"GET /auth HTTP/1.1\" 200 - \"http://127.0.0.1:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:41 +0000] "GET /dashboard HTTP/1.1" 200 - "http://127.0.0.1:5000/auth" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:41 +0000] \"GET /dashboard HTTP/1.1\" 200 - \"http://127.0.0.1:5000/auth\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:45 +0000] "GET /firebase-messaging-sw.js HTTP/1.1" 200 719 "http://127.0.0.1:5000/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:45 +0000] \"GET /firebase-messaging-sw.js HTTP/1.1\" 200 719 \"http://127.0.0.1:5000/dashboard\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:45 +0000] "GET /firebase-messaging-sw.js HTTP/1.1" 200 719 "http://127.0.0.1:5000/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:45 +0000] \"GET /firebase-messaging-sw.js HTTP/1.1\" 200 719 \"http://127.0.0.1:5000/dashboard\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:46 +0000] "GET /classes HTTP/1.1" 200 - "http://127.0.0.1:5000/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:46 +0000] \"GET /classes HTTP/1.1\" 200 - \"http://127.0.0.1:5000/dashboard\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:47 +0000] "GET /firebase-messaging-sw.js HTTP/1.1" 200 719 "http://127.0.0.1:5000/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:47 +0000] \"GET /firebase-messaging-sw.js HTTP/1.1\" 200 719 \"http://127.0.0.1:5000/dashboard\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:57 +0000] "GET /notes HTTP/1.1" 200 - "http://127.0.0.1:5000/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:57 +0000] \"GET /notes HTTP/1.1\" 200 - \"http://127.0.0.1:5000/dashboard\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:49:59 +0000] "GET /firebase-messaging-sw.js HTTP/1.1" 200 719 "http://127.0.0.1:5000/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:49:59 +0000] \"GET /firebase-messaging-sw.js HTTP/1.1\" 200 719 \"http://127.0.0.1:5000/dashboard\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:50:08 +0000] "GET /index HTTP/1.1" 301 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:50:08 +0000] \"GET /index HTTP/1.1\" 301 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:50:24 +0000] "GET / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:50:24 +0000] \"GET / HTTP/1.1\" 200 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Oct/2025:20:50:29 +0000] "GET / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Oct/2025:20:50:29 +0000] \"GET / HTTP/1.1\" 200 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
-[debug] [2025-10-06T20:58:56.202Z] File E:\Websites\Academate 3.0-Firebase Deploy\academate-backend\functions\index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File E:\\Websites\\Academate 3.0-Firebase Deploy\\academate-backend\\functions\\index.js changed, reloading triggers"}}
-[debug] [2025-10-06T20:58:56.371Z] File E:\Websites\Academate 3.0-Firebase Deploy\academate-backend\functions\index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File E:\\Websites\\Academate 3.0-Firebase Deploy\\academate-backend\\functions\\index.js changed, reloading triggers"}}
-[debug] [2025-10-06T20:58:57.376Z] Validating nodejs source
-[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
-[warn] !  functions: Please note that there will be breaking changes when you upgrade. 
-[debug] [2025-10-06T20:58:57.867Z] > [functions] package.json contents: {
-  "name": "functions",
-  "description": "Cloud Functions for Firebase",
-  "scripts": {
-    "serve": "firebase emulators:start --only functions",
-    "shell": "firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
-  },
-  "engines": {
-    "node": "18"
-  },
-  "main": "index.js",
-  "dependencies": {
-    "firebase-admin": "^12.1.0",
-    "firebase-functions": "^5.0.1"
-  },
-  "devDependencies": {},
-  "private": true
-}
-[debug] [2025-10-06T20:58:57.867Z] Building nodejs source
-[debug] [2025-10-06T20:58:57.867Z] Failed to find version of module node: reached end of search path E:\Websites\Academate 3.0-Firebase Deploy\academate-backend\functions\node_modules
-[warn] !  functions: Your requested "node" version "18" doesn't match your global version "22". Using node@22 from host. 
-[debug] [2025-10-06T20:58:57.868Z] Could not find functions.yaml. Must use http discovery
-[debug] [2025-10-06T20:58:57.872Z] Found firebase-functions binary at 'E:\Websites\Academate 3.0-Firebase Deploy\academate-backend\functions\node_modules\.bin\firebase-functions'
-[info] Serving at port 8876
-
-[debug] [2025-10-06T20:58:58.191Z] Got response from /__/functions.yaml {"endpoints":{"onNewTask":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","eventFilters":{"resource":"projects/acadmte/databases/(default)/documents/classes/{classId}/tasks/{taskId}"},"retry":false},"labels":{},"entryPoint":"onNewTask"},"taskDeadlineReminder":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"scheduleTrigger":{"schedule":"every 1 hours","retryConfig":{"retryCount":null,"maxDoublings":null,"maxRetryDuration":null,"maxBackoffDuration":null,"minBackoffDuration":null},"timeZone":null},"labels":{},"entryPoint":"taskDeadlineReminder"},"classStartingReminder":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"scheduleTrigger":{"schedule":"every 10 minutes","retryConfig":{"retryCount":null,"maxDoublings":null,"maxRetryDuration":null,"maxBackoffDuration":null,"minBackoffDuration":null},"timeZone":null},"labels":{},"entryPoint":"classStartingReminder"},"onMemberKicked":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.update","eventFilters":{"resource":"projects/acadmte/databases/(default)/documents/classes/{classId}"},"retry":false},"labels":{},"entryPoint":"onMemberKicked"},"onClassDeleted":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["asia-southeast2"],"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.delete","eventFilters":{"resource":"projects/acadmte/databases/(default)/documents/classes/{classId}"},"retry":false},"labels":{},"entryPoint":"onClassDeleted"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
-[debug] [2025-10-06T20:59:02.223Z] defaultcredentials: writing to file C:\Users\Hanser\AppData\Roaming\firebase\ardhanridhoo_gmail_com_application_default_credentials.json
-[debug] [2025-10-06T20:59:02.223Z] Setting GAC to C:\Users\Hanser\AppData\Roaming\firebase\ardhanridhoo_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\Hanser\\AppData\\Roaming\\firebase\\ardhanridhoo_gmail_com_application_default_credentials.json"}}
-[info] +  functions: Loaded functions definitions from source: onNewTask, taskDeadlineReminder, classStartingReminder, onMemberKicked, onClassDeleted. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onNewTask, taskDeadlineReminder, classStartingReminder, onMemberKicked, onClassDeleted."}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:46:38 +0000] "GET /auth HTTP/1.1" 200 - "http://127.0.0.1:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:46:38 +0000] \"GET /auth HTTP/1.1\" 200 - \"http://127.0.0.1:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:46:39 +0000] "GET /dashboard HTTP/1.1" 200 - "http://127.0.0.1:5000/auth" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:46:39 +0000] \"GET /dashboard HTTP/1.1\" 200 - \"http://127.0.0.1:5000/auth\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:46:39 +0000] "GET /firebase-messaging-sw.js HTTP/1.1" 200 558 "http://127.0.0.1:5000/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:46:39 +0000] \"GET /firebase-messaging-sw.js HTTP/1.1\" 200 558 \"http://127.0.0.1:5000/dashboard\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:46:54 +0000] "GET / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:46:54 +0000] \"GET / HTTP/1.1\" 200 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:46:57 +0000] "GET / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:46:57 +0000] \"GET / HTTP/1.1\" 200 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:47:31 +0000] "GET / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:47:31 +0000] \"GET / HTTP/1.1\" 200 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:48:22 +0000] "GET / HTTP/1.1" 200 - "http://127.0.0.1:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:48:22 +0000] \"GET / HTTP/1.1\" 200 - \"http://127.0.0.1:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:48:22 +0000] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 187 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:48:22 +0000] \"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1\" 404 187 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:48:32 +0000] "GET / HTTP/1.1" 200 - "http://127.0.0.1:5000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:48:32 +0000] \"GET / HTTP/1.1\" 200 - \"http://127.0.0.1:5000/\" \"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:48:32 +0000] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 187 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:48:32 +0000] \"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1\" 404 187 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [08/Oct/2025:13:48:38 +0000] "GET / HTTP/1.1" 200 - "http://127.0.0.1:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [08/Oct/2025:13:48:38 +0000] \"GET / HTTP/1.1\" 200 - \"http://127.0.0.1:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\""}}

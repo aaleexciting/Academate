@@ -68,8 +68,7 @@
   .nav a.cta:hover { background: var(--surface); color: var(--text); border-color: var(--border); }
   .nav a.cta-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; border:none; box-shadow:0 4px 12px rgba(111,108,255,.2)}
   .nav a.cta-primary:hover { filter: brightness(1.1); }
-  .mobile-menu-btn { display: none; }
-
+  
   .hero{position:relative; padding:64px 0 40px}
   .hero-grid{display:grid; grid-template-columns: .8fr 1.2fr; gap:36px; align-items:center}
   .eyebrow{display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); background:#FAFAFE; padding:6px 10px; border-radius:999px; border:1px solid var(--border)}
@@ -89,6 +88,7 @@
     width: 100%;
     height: auto;
   }
+  .phone-wrap { display: block; }
 
   .section-header { text-align: center; margin-bottom: 40px; }
   .section-header h2 { font-size: clamp(24px, 4vw, 36px); margin: 0 0 8px; }
@@ -472,24 +472,153 @@
   .footer-links a { text-decoration: none; color: var(--muted); transition: color .2s; }
   .footer-links a:hover { color: var(--primary); }
   
+  /* --- DESKTOP FIRST STYLES END HERE --- */
+  
+  /* --- MOBILE & TABLET RESPONSIVE STYLES --- */
+  
   @media (max-width: 980px){
-    .hero-grid{grid-template-columns: 1fr; text-align: center;}
+    /* Hero section layout change */
+    .hero-grid{
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+    }
+    .phone-wrap {
+      order: -1; /* This moves the image to the top */
+      max-width: 340px; 
+      margin: 20px auto -40px; /* Pushed down from top, negative margin for overlap */
+      position: relative;
+      z-index: 1;
+    }
+
     .hero p { max-width: 600px; margin-left: auto; margin-right: auto; }
     .hero-cta, .chips { justify-content: center; }
-    .phone-wrap { display: none; }
-    .pin {position:relative; top:auto; margin-bottom: 24px;}
     .pin-grid{grid-template-columns:1fr}
-    .steps { gap: 60px; }
     .how-it-works-grid { grid-template-columns: 1fr; }
+    
+    /* Mobile Features Section: Show illustrations individually */
+    .pin-wrap { display: none; }
+    .steps { gap: 24px; }
+    .step {
+        opacity: 1 !important;
+        transform: none !important;
+        background: linear-gradient(145deg, #f3f2ff, #eff9ff);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+    }
+    .step .pin-visual {
+        margin-bottom: 16px;
+    }
   }
+  
   @media (max-width: 768px) {
+    /* General Mobile Adjustments */
+    .wrap { padding: 0 16px; }
+    
+    /* Consistent Section Spacing */
+    #features, #how-it-works, .cta-section { 
+        padding-top: 60px; 
+        padding-bottom: 60px; 
+    }
+    .section-header { 
+        margin-bottom: 32px; 
+    }
+    .section-header h2 { 
+        font-size: 24px; 
+    }
+    
+    /* Mobile Header Scaling */
+    .nav-inner { height: 60px; }
+    .brand { font-size: 18px; gap: 8px; }
+    .logo { width: 30px; height: 30px; border-radius: 8px; }
     .nav-links { display: none; }
-    .mobile-menu-btn { display: block; background: none; border: none; font-size: 24px; cursor: pointer; }
+
+    /* Mobile Hero Revamp */
+    .hero { 
+        padding: 40px 0; 
+    }
+    .hero-grid > div:first-of-type {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    .hero .eyebrow { font-size: 11px; padding: 5px 8px; }
+    .hero h1 { font-size: 26px; margin: 12px 0 8px; }
+    .hero p { font-size: 14px; margin-bottom: 20px; }
+    .hero .btn { padding: 10px 16px; font-size: 14px; }
+    .hero .chip { font-size: 12px; padding: 8px 10px; }
+
+    /* Features Section Spacing & Typography */
+    .steps { gap: 20px; }
+    .step h3 { 
+        font-size: 18px; 
+    }
+    .step p { 
+        line-height: 1.6; 
+        font-size: 14px;
+    }
+
+    /* How it Works Spacing */
+    .how-it-works-grid { gap: 20px; } /* Now works for single column too */
+
+    
+    /* Mobile UI Previews Scaling Fix */
+    .step .visual-content { font-size: 11px; }
+    /* Chat UI */
+    .step .chat-header-v2, .step .chat-composer-v2 { padding: 8px 12px; }
+    .step .chat-messages-v2 { padding: 10px; gap: 8px; }
+    .step .message-v2 { gap: 8px; }
+    .step .message-v2 img { width: 28px; height: 28px; }
+    .step .bubble-v2 { padding: 8px 10px; }
+    .step .chat-header-v2 h4 { font-size: 12px; }
+    /* Tasks UI */
+    .step .tasks-ui-v2 { padding: 12px; }
+    .step .tasks-header-v2 h4 { font-size: 13px; }
+    .step .due-badge-v2 { padding: 4px 8px; font-size: 11px; }
+    .step .task-v2 { font-size: 12px; gap: 8px; }
+    .step .task-v2 img { width: 20px; height: 20px; }
+    /* Schedule UI Fix */
+    .step .schedule-ui-v2 .schedule-body-v2 {
+        min-height: 280px; 
+    }
+    .step .schedule-header-v2 { padding: 8px; }
+    .step .date-display-v2 { padding: 4px 6px; }
+    .step .date-display-v2 .date-v2 { font-size: 14px; }
+    .step .schedule-event-v2 { padding: 4px 8px; font-size: 10px; }
+    .step .schedule-event-v2 strong { font-size: 11px; }
+    /* Notes UI */
+    .step .notes-ui-v2 { padding: 16px; column-count: 1; }
+    .step .note-card-v2 { padding: 12px; }
+    .step .note-card-v2 h4 { font-size: 13px; }
+    .step .note-card-v2 p { font-size: 12px; }
+
+    /* CTA Section */
     .cta-box { padding: 32px 24px; }
+    .cta-box h2 { font-size: 22px; }
+
+    /* Footer */
+    footer { margin-top: 40px; padding: 32px 0; }
     .footer-row {
         flex-direction: column-reverse;
         justify-content: center;
-        gap: 12px;
+        gap: 16px;
+        text-align: center;
+    }
+    .footer-links {
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+  }
+
+  /* --- Full Screen Hero for Desktop --- */
+  @media (min-width: 981px) {
+    .hero {
+      padding: 0; /* Reset padding */
+      height: 100vh; /* Full viewport height */
+      display: flex;
+      align-items: center;
     }
   }
 </style>
@@ -501,12 +630,7 @@
   <div class="wrap nav-inner">
     <a href="#" class="brand">
       <div class="logo" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-          <g>
-            <path d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6c.494 0 .96-.12 1.37-.33A6.49 6.49 0 0 1 11 17.5a6.48 6.48 0 0 1 2-4.69V7a1 1 0 0 1 1-1h6v5.498a6.52 6.52 0 0 1 2 1.312V6a2 2 0 0 0-2-2h-6c-.768 0-1.47.289-2 .764A2.989 2.989 0 0 0 10 4H4Zm7 3v10a1 1 0 0 1-1 1H4V6h6a1 1 0 0 1 1 1Z"/>
-            <path d="M16.007 17c.04-1.415.248-2.669.553-3.585c.171-.513.364-.893.554-1.134c.195-.247.329-.281.386-.281c.057 0 .192.034.386.281c.19.241.383.62.554 1.134c.305.916.513 2.17.553 3.585h-2.986Zm-.396-3.9c.108-.323.23-.622.368-.887A5.504 5.504 0 0 0 12.023 17h2.984c.04-1.5.26-2.866.604-3.9Zm3.778 0a6.133 6.133 0 0 0-.368-.887A5.504 5.504 0 0 1 22.978 17h-2.985c-.04-1.5-.26-2.866-.604-3.9Zm.604 4.9h2.985a5.504 5.504 0 0 1-3.957 4.787c.138-.265.26-.564.368-.886c.345-1.035.564-2.4.604-3.901Zm-2.107 4.719c-.194.247-.329.281-.386-.281c-.057 0-.191-.034-.386-.281c-.19-.241-.383-.62-.554-1.135c-.305-.915-.513-2.17-.553-3.584h2.986c-.04 1.415-.248 2.669-.553 3.584c-.171.514-.364.894-.554 1.135ZM12.023 18a5.504 5.504 0 0 0 3.956 4.787a6.133 6.133 0 0 1-.367-.886c-.346-1.035-.565-2.4-.605-3.901h-2.984Z"/>
-          </g>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><g><path d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6c.494 0 .96-.12 1.37-.33A6.49 6.49 0 0 1 11 17.5a6.48 6.48 0 0 1 2-4.69V7a1 1 0 0 1 1-1h6v5.498a6.52 6.52 0 0 1 2 1.312V6a2 2 0 0 0-2-2h-6c-.768 0-1.47.289-2 .764A2.989 2.989 0 0 0 10 4H4Zm7 3v10a1 1 0 0 1-1 1H4V6h6a1 1 0 0 1 1 1Z"/><path d="M16.007 17c.04-1.415.248-2.669.553-3.585c.171-.513.364-.893.554-1.134c.195-.247.329-.281.386-.281c.057 0 .192.034.386.281c.19.241.383.62.554 1.134c.305.916.513 2.17.553 3.585h-2.986Zm-.396-3.9c.108-.323.23-.622.368-.887A5.504 5.504 0 0 0 12.023 17h2.984c.04-1.5.26-2.866.604-3.9Zm3.778 0a6.133 6.133 0 0 0-.368-.887A5.504 5.504 0 0 1 22.978 17h-2.985c-.04-1.5-.26-2.866-.604-3.9Zm.604 4.9h2.985a5.504 5.504 0 0 1-3.957 4.787c.138-.265.26-.564.368-.886c.345-1.035.564-2.4.604-3.901Zm-2.107 4.719c-.194.247-.329.281-.386-.281c-.057 0-.191-.034-.386-.281c-.19-.241-.383-.62-.554-1.135c-.305-.915-.513-2.17-.553-3.584h2.986c-.04 1.415-.248 2.669-.553 3.584c-.171.514-.364.894-.554 1.135ZM12.023 18a5.504 5.504 0 0 0 3.956 4.787a6.133 6.133 0 0 1-.367-.886c-.346-1.035-.565-2.4-.605-3.901h-2.984Z"/></g></svg>
       </div>
       Academate
     </a>
@@ -515,7 +639,6 @@
       <a class="cta" href="#how-it-works">Cara Kerja</a>
       <a class="cta cta-primary" href="/auth">Mulai Sekarang</a>
     </nav>
-    <button class="mobile-menu-btn" aria-label="Menu"><i class="ri-menu-line"></i></button>
   </div>
 </header>
 
@@ -542,7 +665,7 @@
     </div>
   </section>
 
-  <section id="features" class="wrap" style="padding: 80px 0;">
+  <section id="features" class="wrap">
     <div class="section-header">
       <h2>Dibangun untuk Kolaborasi, Bukan Cuma Organisasi</h2>
       <p>Ini bukan cuma agenda biasa. Academate adalah ruang hidup tempat semua anggota kelas bisa berkontribusi.</p>
@@ -556,15 +679,15 @@
                     <div class="chat-header-v2">
                         <h4><i class="ri-hashtag"></i>Statistika A3</h4>
                         <div class="members-v2">
-                            <img src="https://i.pravatar.cc/24?u=a" alt="member" onerror="this.style.display='none'">
-                            <img src="https://i.pravatar.cc/24?u=b" alt="member" onerror="this.style.display='none'">
+                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="member" onerror="this.style.display='none'">
+                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair1_wa8kag.webp" alt="member" onerror="this.style.display='none'">
                             <span>3 online</span>
                         </div>
                     </div>
                     <div class="chat-messages-v2">
                         <div class="day-divider-v2"><span>Hari Ini</span></div>
                         <div class="message-v2 other">
-                            <img src="https://i.pravatar.cc/32?u=citra" alt="avatar" onerror="this.style.display='none'">
+                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="avatar" onerror="this.style.display='none'">
                             <div class="message-content-v2">
                                 <div class="sender-v2">Citra</div>
                                 <div class="bubble-v2">Guys, jangan lupa besok presentasi kelompok ya! Slide-nya udah di-upload di folder kelas.</div>
@@ -576,7 +699,7 @@
                             </div>
                         </div>
                          <div class="message-v2 other">
-                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759732892/cropped-image_1_w60nso.png" alt="avatar" onerror="this.style.display='none'">
+                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair1_wa8kag.webp" alt="avatar" onerror="this.style.display='none'">
                             <div class="message-content-v2">
                                 <div class="sender-v2">Ardan</div>
                                 <div class="bubble-v2">Mantap! Aku bagian demo aplikasi. Nanti malam aku push kodenya.</div>
@@ -601,12 +724,12 @@
                         <div class="task-v2 done">
                             <i class="ri-checkbox-circle-fill"></i>
                             <p>Finalisasi riset pengguna</p>
-                            <img src="https://i.pravatar.cc/24?u=a" alt="user" onerror="this.style.display='none'">
+                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair1_wa8kag.webp" alt="user" onerror="this.style.display='none'">
                         </div>
                         <div class="task-v2 done">
                             <i class="ri-checkbox-circle-fill"></i>
                             <p>Membuat wireframe</p>
-                            <img src="https://i.pravatar.cc/24?u=b" alt="user" onerror="this.style.display='none'">
+                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="user" onerror="this.style.display='none'">
                         </div>
                         <div class="task-v2">
                             <i class="ri-checkbox-blank-circle-line"></i>
@@ -699,7 +822,7 @@
     </div>
   </section>
 
-  <section id="how-it-works" class="wrap" style="padding:40px 0 80px">
+  <section id="how-it-works" class="wrap">
     <div class="section-header">
         <h2>Gotong Royong Digital, Mulainya Gampang</h2>
         <p>Mulai kolaborasi bareng sekelas dalam hitungan menit.</p>
@@ -749,12 +872,9 @@
 </footer>
 
 <script>
-  if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual';
-  }
-  window.scrollTo(0, 0);
+document.addEventListener('DOMContentLoaded', function() {
 
-
+  // --- SCROLL PROGRESS BAR ---
   const progressBar = document.getElementById('scroll-progress');
   function updateProgressBar() {
     if (!progressBar) return;
@@ -763,149 +883,140 @@
     const scrollPercent = totalScrollable > 0 ? (scrollTop / totalScrollable) * 100 : 0;
     progressBar.style.width = `${scrollPercent}%`;
   }
-  function animationLoop() {
-    updateProgressBar();
-    requestAnimationFrame(animationLoop);
-  }
-  requestAnimationFrame(animationLoop);
+  window.addEventListener('scroll', updateProgressBar);
+  
+  // --- FEATURE SECTION LOGIC ---
+  const isDesktop = () => window.innerWidth > 980;
+  let currentViewIsDesktop = isDesktop();
 
-  const steps = document.querySelectorAll('.step');
-  const visualContents = document.querySelectorAll('.pin-visual .visual-content');
-  const pinGrid = document.querySelector('.pin-grid');
+  function runDesktopFeatures() {
+    const steps = document.querySelectorAll('.step');
+    const visualContents = document.querySelectorAll('.pin-visual .visual-content');
+    const pinGrid = document.querySelector('.pin-grid');
+    if (!pinGrid || steps.length === 0) return;
 
-  if (pinGrid && steps.length > 0 && visualContents.length > 0) {
     let currentStepIndex = 0;
     let isAnimating = false;
     const animationDuration = 1000;
 
     function setActiveStep(index, scrollBehavior = 'smooth') {
-      if (index < 0 || index >= steps.length || (index === currentStepIndex && scrollBehavior !== 'auto')) return;
-
-      currentStepIndex = index;
-
-      steps.forEach(step => step.classList.remove('active'));
-      visualContents.forEach(content => content.classList.remove('active'));
-
-      steps[index].classList.add('active');
-      const visualId = steps[index].dataset.visual;
-      const activeVisual = document.getElementById(visualId);
-      if (activeVisual) {
-        activeVisual.classList.add('active');
-      }
-
-      if (scrollBehavior !== 'auto') {
-        steps[index].scrollIntoView({
-            behavior: scrollBehavior,
-            block: 'center'
-        });
-      }
+        if (index < 0 || index >= steps.length || (index === currentStepIndex && scrollBehavior !== 'auto')) return;
+        currentStepIndex = index;
+        steps.forEach(s => s.classList.remove('active'));
+        visualContents.forEach(v => v.classList.remove('active'));
+        steps[index].classList.add('active');
+        const visualId = steps[index].dataset.visual;
+        const activeVisual = document.getElementById(visualId);
+        if (activeVisual) activeVisual.classList.add('active');
+        if (scrollBehavior !== 'auto') {
+            steps[index].scrollIntoView({ behavior: scrollBehavior, block: 'center' });
+        }
     }
-
     setActiveStep(0, 'auto');
 
     steps.forEach((step, index) => {
-      step.addEventListener('click', () => {
-        if (isAnimating || currentStepIndex === index) return;
-
-        isAnimating = true;
-        setActiveStep(index, 'smooth');
-
-        setTimeout(() => {
-          isAnimating = false;
-        }, animationDuration);
-      });
+        step.addEventListener('click', () => {
+            if (isAnimating || currentStepIndex === index) return;
+            isAnimating = true;
+            setActiveStep(index, 'smooth');
+            setTimeout(() => { isAnimating = false; }, animationDuration);
+        });
     });
 
     const handleInteraction = (deltaY) => {
-      if (isAnimating) return;
-
-      let nextStepIndex = currentStepIndex;
-
-      if (deltaY > 20 && currentStepIndex < steps.length - 1) { // Scroll down
-        nextStepIndex++;
-      } else if (deltaY < -20 && currentStepIndex > 0) { // Scroll up
-        nextStepIndex--;
-      }
-
-      if (nextStepIndex !== currentStepIndex) {
-        isAnimating = true;
-        setActiveStep(nextStepIndex, 'smooth');
-        setTimeout(() => {
-          isAnimating = false;
-        }, animationDuration);
-      }
+        if (isAnimating) return;
+        let nextStepIndex = currentStepIndex;
+        if (deltaY > 20 && currentStepIndex < steps.length - 1) nextStepIndex++;
+        else if (deltaY < -20 && currentStepIndex > 0) nextStepIndex--;
+        if (nextStepIndex !== currentStepIndex) {
+            isAnimating = true;
+            setActiveStep(nextStepIndex, 'smooth');
+            setTimeout(() => { isAnimating = false; }, animationDuration);
+        }
     };
 
     const handleWheel = (e) => {
-      if (isAnimating) {
+        if (isAnimating) { e.preventDefault(); return; }
+        const isScrollingDown = e.deltaY > 0;
+        if ((!isScrollingDown && currentStepIndex === 0) || (isScrollingDown && currentStepIndex === steps.length - 1)) return;
         e.preventDefault();
-        return;
-      }
-      const isScrollingDown = e.deltaY > 0;
-      const isAtFirstStep = currentStepIndex === 0;
-      const isAtLastStep = currentStepIndex === steps.length - 1;
-      
-      if ((!isScrollingDown && isAtFirstStep) || (isScrollingDown && isAtLastStep)) {
-        return;
-      }
-      
-      e.preventDefault();
-      handleInteraction(e.deltaY);
-    };
-
-    let touchStartY = 0;
-    let touchEndY = 0;
-    const touchThreshold = 30; // Min swipe distance in pixels
-
-    const handleTouchStart = (e) => {
-      touchStartY = e.touches[0].clientY;
-      touchEndY = 0; // Reset endY on new touch
-    };
-
-    const handleTouchMove = (e) => {
-      touchEndY = e.touches[0].clientY;
-    };
-    
-    const handleTouchEnd = (e) => {
-      if (isAnimating || touchEndY === 0) return;
-      
-      const deltaY = touchStartY - touchEndY;
-      
-      if (Math.abs(deltaY) > touchThreshold) {
-          const isSwipingDown = deltaY > 0;
-          const isAtFirstStep = currentStepIndex === 0;
-          const isAtLastStep = currentStepIndex === steps.length - 1;
-          
-          if ((!isScrollingDown && isAtFirstStep) || (isScrollingDown && isAtLastStep)) {
-              return; 
-          }
-
-          handleInteraction(deltaY);
-      }
-      touchStartY = 0;
-      touchEndY = 0;
+        handleInteraction(e.deltaY);
     };
 
     const observer = new IntersectionObserver((entries) => {
-      const [entry] = entries;
-      if (entry.isIntersecting) {
-        document.addEventListener('wheel', handleWheel, { passive: false });
-        document.addEventListener('touchstart', handleTouchStart, { passive: false });
-        document.addEventListener('touchmove', handleTouchMove, { passive: false });
-        document.addEventListener('touchend', handleTouchEnd, { passive: false });
-      } else {
-        document.removeEventListener('wheel', handleWheel, { passive: false });
-        document.removeEventListener('touchstart', handleTouchStart, { passive: false });
-        document.removeEventListener('touchmove', handleTouchMove, { passive: false });
-        document.removeEventListener('touchend', handleTouchEnd, { passive: false });
-      }
-    }, {
-      rootMargin: "-40% 0px -40% 0px",
-      threshold: 0
-    });
-
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+            document.addEventListener('wheel', handleWheel, { passive: false });
+        } else {
+            document.removeEventListener('wheel', handleWheel);
+        }
+    }, { rootMargin: "-40% 0px -40% 0px", threshold: 0 });
     observer.observe(pinGrid);
   }
+
+  function runMobileFeatures() {
+    // A flag to prevent cloning more than once
+    if (document.querySelector('.step .mobile-visual-wrapper')) return; 
+
+    const steps = document.querySelectorAll('.step');
+    steps.forEach(step => {
+        const visualId = step.dataset.visual;
+        const visualEl = document.getElementById(visualId);
+        if (visualEl) {
+            const visualClone = visualEl.cloneNode(true);
+            visualClone.classList.add('active');
+
+            // Create a wrapper to handle border-radius and overflow
+            const wrapper = document.createElement('div');
+            wrapper.className = 'mobile-visual-wrapper';
+             Object.assign(wrapper.style, {
+                position: 'relative',
+                marginBottom: '20px',
+                borderRadius: '16px',
+                border: '1px solid var(--border)',
+                boxShadow: 'var(--shadow)',
+                overflow: 'hidden'
+            });
+
+            // Style the inner cloned element
+            Object.assign(visualClone.style, {
+                position: 'relative',
+                opacity: '1',
+                pointerEvents: 'auto',
+                transform: 'none'
+            });
+
+            const innerUi = visualClone.querySelector('[class*="-ui-"]');
+            if (innerUi) {
+                // Let height be determined by content, remove extra margin
+                Object.assign(innerUi.style, { 
+                    margin: '0', 
+                    transform: 'none', 
+                    height: 'auto',
+                    borderRadius: '0' // Let the wrapper handle rounding
+                });
+            }
+            wrapper.appendChild(visualClone);
+            step.prepend(wrapper);
+        }
+    });
+  }
+
+  // --- INITIALIZE BASED ON VIEWPORT ---
+  if (currentViewIsDesktop) {
+    runDesktopFeatures();
+  } else {
+    runMobileFeatures();
+  }
+
+  // --- RELOAD ON RESIZE ACROSS BREAKPOINT ---
+  window.addEventListener('resize', () => {
+    if (isDesktop() !== currentViewIsDesktop) {
+      window.location.reload();
+    }
+  });
+});
 </script>
 </body>
 </html>
+
