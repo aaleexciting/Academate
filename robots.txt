@@ -1,0 +1,21 @@
+# Allow all search engines
+User-agent: *
+
+# Allow crawlers to access the main public pages
+Allow: /
+Allow: /legal
+Allow: /auth
+
+# Disallow crawlers from accessing private/user-specific pages
+Disallow: /dashboard
+Disallow: /classes
+Disallow: /class_page
+Disallow: /task
+Disallow: /schedule
+Disallow: /notes
+Disallow: /grades
+Disallow: /account
+Disallow: /notification
+
+# Location of the sitemap
+Sitemap: https://academate.ardhan.my.id/sitemap.xml

@@ -10,12 +10,10 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/icon/apple-touch-icon.png" />
 <meta name="apple-mobile-web-app-title" content="MyWebSite" />
 <link rel="manifest" href="/icon/site.webmanifest" />
-  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
-  <!-- Quill -->
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
   <style>
@@ -28,12 +26,10 @@
     body{margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:15px;padding-bottom:80px}
     a{color:inherit; text-decoration: none;}
 
-    /* App Shell */
     .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;min-height:100dvh}
     .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);}
     .main-content{padding:var(--gap);width:100%}
 
-    /* Sidebar */
     .sidebar{display:none}
     @media (min-width:901px){
       body{padding-bottom:0}
@@ -60,7 +56,6 @@
   border-radius: 10px;
   background: linear-gradient(135deg, #8B7CFF, #6AC9FF);
   
-  /* Add these lines */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,7 +69,6 @@
 }
     }
 
-    /* === HEADER (CONSISTENT) === */
     .header{margin-top:var(--gap);margin-bottom:24px}
     .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
     .header-brand{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
@@ -85,11 +79,10 @@
     .header-main p{color:var(--muted);margin:4px 0 0;font-size:14px}
     .header-avatar-link{text-decoration:none}
     .header-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0}
-    .header-toolbar{display:none} /* Hidden on mobile */
+    .header-toolbar{display:none}
     .icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:20px;transition:.2s;flex-shrink:0}
     .icon-btn:hover{color:var(--primary);border-color:#d8d8e0}
     
-    /* Toolbar & Filters */
     .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600;text-decoration:none;transition:.2s}
     .btn:hover{border-color:#d8d8e0}
     .btn-primary{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(111,108,255,.28)}
@@ -118,13 +111,11 @@
     .tab-btn{padding:6px 12px;border:none;background:none;border-radius:8px;font-weight:600;color:var(--muted);cursor:pointer}
     .tab-btn.active{background:#F3F2FF;color:var(--primary)}
 
-    /* === SKELETON LOADER === */
     .sk{position:relative;overflow:hidden;background:#F2F3F7;border-radius:10px}
     .sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:shimmer 1.2s infinite}
     @keyframes shimmer{100%{transform:translateX(100%)}}
     .skeleton-wrapper.hidden { display: none; }
 
-    /* === DESKTOP HEADER OVERRIDES (CONSISTENT) === */
     @media (min-width:901px){
       .main-content{max-width:min(var(--content-max),calc(100vw - var(--sidebar-w) - 120px));margin:0 auto}
       .header{display:flex;justify-content:space-between;align-items:center}
@@ -139,14 +130,12 @@
       .search-bar i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted)}
     }
 
-    /* Mobile nav */
     .mobile-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;height:70px;padding:0 10px;z-index:1000}
     .mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);text-decoration:none;font-size:10px;font-weight:500;padding:8px;border-radius:8px}
     .mobile-nav a i{font-size:20px}
     .mobile-nav a.active{color:var(--primary)}
     @media (min-width:901px){.mobile-nav{display:none}}
 
-    /* === NOTES PAGE REDESIGN === */
     .notes-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -154,7 +143,6 @@
         margin-top: 24px;
     }
 
-    /* === "Add New" Card Style === */
     .add-note-card {
         border: 2px dashed var(--border);
         background-color: var(--bg);
@@ -167,7 +155,7 @@
         color: var(--muted);
         cursor: pointer;
         transition: background-color .2s, border-color .2s, color .2s;
-        min-height: 220px; /* Ensure consistent height */
+        min-height: 220px;
     }
     .add-note-card:hover {
         background-color: #F3F2FF;
@@ -280,7 +268,6 @@
     }
     .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
 
-    /* === EDITOR / READER OVERLAY === */
     .overlay-container {
         position: fixed;
         inset: 0;
@@ -329,7 +316,6 @@
     .modal-overlay.show { display: flex; }
     .modal { background:#fff; padding:20px; border-radius:16px; width:90%; max-width:420px; box-shadow:var(--shadow); }
     
-    /* === MOBILE RESPONSIVENESS FIXES === */
     @media (max-width: 900px) {
       html, body {
         height: auto;
@@ -398,7 +384,6 @@
 </head>
 <body>
   <div class="app">
-    <!-- Sidebar -->
     <aside class="sidebar" aria-label="Navigasi utama">
 <div class="brand">
   <div class="logo" aria-hidden="true">
@@ -425,11 +410,9 @@
       </div>
     </aside>
 
-    <!-- Main -->
     <main class="main">
       <div class="main-content">
 
-        <!-- Skeleton Loader -->
         <div class="skeleton-wrapper">
             <header class="header">
                 <div class="header-top">
@@ -448,11 +431,9 @@
             </header>
             <div class="filter-bar sk" style="height: 60px; padding: 0;"></div>
             <div id="skeleton-notes-grid" class="notes-grid">
-                <!-- Skeletons will be painted here by JS -->
             </div>
         </div>
 
-        <!-- Actual Content -->
         <div id="actual-content" style="display: none;">
             <header class="header">
               <div class="header-top">
@@ -493,14 +474,12 @@
             </div>
 
             <div id="notes-grid" class="notes-grid" aria-live="polite">
-                <!-- Notes will be loaded here -->
             </div>
         </div>
       </div>
     </main>
   </div>
 
-  <!-- Mobile Nav -->
   <nav class="mobile-nav">
     <a href="/dashboard"><i class="ri-dashboard-2-line"></i><span>Dasbor</span></a>
     <a href="/classes"><i class="ri-book-open-line"></i><span>Kelas</span></a>
@@ -509,7 +488,6 @@
     <a class="active" href="/notes"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
-  <!-- Editor Overlay -->
   <div id="editor-overlay" class="overlay-container">
     <div class="overlay-content">
         <div class="overlay-header">
@@ -537,7 +515,6 @@
     </div>
   </div>
 
-  <!-- Reader Overlay for Shared Notes -->
   <div id="reader-overlay" class="overlay-container">
     <div class="overlay-content">
         <div class="overlay-header">
@@ -555,7 +532,6 @@
   </div>
 
 
-  <!-- Share Modal -->
   <div class="modal-overlay" id="share-modal">
     <div class="modal">
       <h3 style="margin:0 0 8px">Bagikan ke Kelas</h3>
@@ -580,7 +556,7 @@
 
     let currentUser = null, currentNoteId = null, notesUnsubscriber = null, quill, classesCache = {}, allNotes = [];
     let saveTimer = null, isSaving = false, currentNoteTags = [];
-    let shareTargetClassId = null; // New variable to hold share target
+    let shareTargetClassId = null;
     let currentFilters = { type: 'all', class: 'all' };
     let isFirstLoad = true;
 
@@ -613,14 +589,13 @@
         const grid = $('#skeleton-notes-grid');
         if (!grid) return;
         grid.innerHTML = '';
-        // Add a skeleton for the "Add New" card
         const addCard = document.createElement('div');
         addCard.className = 'add-note-card sk';
         grid.appendChild(addCard);
 
-        for (let i = 0; i < n - 1; i++) { // n-1 because add card is one
+        for (let i = 0; i < n - 1; i++) {
             const card = document.createElement('div');
-            card.className = 'note-card'; // Use existing class for dimensions
+            card.className = 'note-card';
             card.innerHTML = `
                 <div class="note-card-body">
                     <div class="sk" style="height: 20px; width: 80%; margin-bottom: 12px; border-radius: 6px;"></div>
@@ -688,7 +663,7 @@
             updateAndRenderNotes(personalNotes, sharedNotes);
         }, (error) => {
             console.error("Error fetching personal notes:", error);
-            if(isFirstLoad) showContent(); // Show content even if there's an error
+            if(isFirstLoad) showContent();
         });
 
         const sharedUnsubs = classIds.map(classId => {
@@ -699,7 +674,7 @@
                 updateAndRenderNotes(personalNotes, sharedNotes);
             }, (error) => {
                 console.error(`Error fetching shared notes for class ${classId}:`, error);
-                if(isFirstLoad) showContent(); // Show content even if there's an error
+                if(isFirstLoad) showContent();
             });
         });
         
@@ -720,9 +695,8 @@
 
     function renderNotesGrid() {
         const grid = $('#notes-grid');
-        grid.innerHTML = ''; // Clear the grid first
+        grid.innerHTML = '';
 
-        // Create and prepend the "Add New" card
         const addCard = document.createElement('div');
         addCard.className = 'add-note-card';
         addCard.title = 'Buat Catatan Baru';
@@ -750,7 +724,6 @@
         }
 
         if (allNotes.length === 0) {
-            // No need for a separate empty state message, the "Add New" card serves as a prompt
             return;
         }
 
@@ -809,7 +782,6 @@
             $('#note-title-input').value = '';
             quill.setContents([]);
             currentNoteTags = [];
-            // If creating a note to be shared, automatically add the tag
             if (shareTargetClassId && classesCache[shareTargetClassId]) {
                  currentNoteTags.push(shareTargetClassId);
             }
@@ -847,11 +819,11 @@
     }
 
     function closeEditor() {
-        scheduleAutoSave(true); // Force save on close
+        scheduleAutoSave(true);
         $('#editor-overlay').classList.remove('show');
         document.body.classList.remove('focus-mode');
         currentNoteId = null;
-        shareTargetClassId = null; // Reset share target on close
+        shareTargetClassId = null;
     }
     
     function closeReader() {
@@ -878,10 +850,9 @@
                     payload.createdAt = serverTimestamp();
                     const ref = await addDoc(collection(db, 'users', currentUser.uid, 'notes'), payload);
                     currentNoteId = ref.id;
-                    // If this was meant to be shared, share it now
                     if (shareTargetClassId) {
                         await shareNoteToClass(ref.id, shareTargetClassId);
-                        shareTargetClassId = null; // Clear after sharing
+                        shareTargetClassId = null;
                     }
                 } else {
                     await updateDoc(doc(db, 'users', currentUser.uid, 'notes', currentNoteId), payload);
@@ -1001,10 +972,9 @@
         const classId = $('#share-class').value;
         if (!classId) return;
         
-        await scheduleAutoSave(true); // Ensure latest version is saved
+        await scheduleAutoSave(true);
         await shareNoteToClass(currentNoteId, classId);
         
-        // Also update tags locally to reflect the share
         if (!currentNoteTags.includes(classId)) {
             currentNoteTags.push(classId);
             updateTagEditor();
@@ -1021,15 +991,12 @@
         const shareToClassId = params.get('share_to');
 
         if (noteId && classId) {
-            // Open a shared note for reading
             openReader(noteId, classId);
         } else if (shareToClassId) {
-            // Open editor to create a new note and share it
             shareTargetClassId = shareToClassId;
             openEditor('new');
         }
         
-        // Clean the URL after processing params
         if (noteId || shareToClassId) {
            window.history.replaceState({}, document.title, window.location.pathname); 
         }
@@ -1038,7 +1005,6 @@
     function attachEventListeners() {
         $('#logout-button-desktop')?.addEventListener('click', () => signOut(auth));
         
-        // Filters
         $('.tabs').addEventListener('click', (e) => {
             if (e.target.matches('.tab-btn')) {
                 $('.tabs .active').classList.remove('active');
@@ -1053,7 +1019,6 @@
         });
         $('#search-input').addEventListener('input', renderNotesGrid);
 
-        // Editor controls
         $('#back-to-list-btn').addEventListener('click', closeEditor);
         $('#reader-back-btn').addEventListener('click', closeReader);
         $('#delete-btn').addEventListener('click', deleteCurrentNote);
@@ -1077,12 +1042,10 @@
             }
         });
         
-        // Share modal
         $('#share-confirm').addEventListener('click', confirmShare);
         $('#share-cancel').addEventListener('click', () => $('#share-modal').classList.remove('show'));
     }
 
-    // --- Helpers ---
     function escapeHTML(s){ return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
     function formatDate(ts){ try{ return ts?.toDate?.().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) || ''; }catch{ return '' } }
     function colorFor(id) {
