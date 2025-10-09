@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super Admin Dashboard — Academate</title>
+    <link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .page-grid { grid-template-columns: 1fr; gap: 24px; }
+        .table-container { max-height: 500px; overflow-y: auto; }
+        .placeholder-row td { color: var(--muted); text-align: center; padding: 24px; font-size: 0.9em; }
+        .btn i, .icon-btn i { font-size: 1.2em; vertical-align: middle; }
+        .ri-loader-4-line { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .search-bar { margin-bottom: 1rem; }
+        .modal-body { max-height: 60vh; overflow-y: auto; }
+        .member-item { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 8px; cursor: pointer; }
+        .member-item:hover { background-color: var(--bg); }
+        .member-info { display: flex; align-items: center; gap: 10px; }
+        .member-info img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        #users-table tbody tr, #classes-table tbody tr { cursor: pointer; }
+        #users-table tbody tr:hover, #classes-table tbody tr:hover { background-color: #f9f9fd; }
+        .profile-card-banner { height: 120px; background-size: cover; background-position: center; }
+        .profile-card-body { padding: 16px; text-align: center; position: relative; }
+        .profile-card-avatar { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid var(--surface); position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); }
+        .profile-card-info { padding-top: 45px; }
+        .profile-card-info h3 { margin: 0; font-size: 20px; }
+        .profile-card-info p { margin: 4px 0 12px; color: var(--muted); }
+        .profile-card-details { font-size: 13px; text-align: left; padding: 0 8px; }
+        .detail-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .detail-item i { color: var(--muted); }
+        .profile-card-socials { display: flex; justify-content: center; gap: 12px; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; }
+        .social-btn { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--bg); color: var(--text); font-size: 22px; text-decoration: none; }
+        .m-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+        .class-info-cell { display: flex; align-items: center; gap: 12px; }
+        .class-info-cell .x-icon { flex-shrink: 0; }
+        
+        /* Access Denied Styles */
+        .access-denied-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+            padding: 2rem;
+        }
+        .access-denied-container svg {
+            width: 150px;
+            height: auto;
+            margin-bottom: 2rem;
+        }
+        .access-denied-container h1 {
+            font-size: 2rem;
+            color: var(--danger);
+            margin: 0;
+        }
+        .access-denied-container p {
+            font-size: 1.1rem;
+            color: var(--muted);
+            max-width: 400px;
+            margin: 0.5rem 0 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar" aria-label="Navigasi utama"></aside>
+        <main class="main">
+            <div id="main-content" class="main-content"></div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="overlay" id="details-modal"></div>
+    <div class="overlay" id="edit-modal"></div>
+    <div class="overlay" id="confirm-modal"></div>
+    <div class="overlay" id="profile-modal"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte" };
+        const app = initializeApp(firebaseConfig);
+        const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider('6LeCCuQrAAAAAETuv-d3fMG5dtZ4pC_Mz9vPlabc'),
+  isTokenAutoRefreshEnabled: true
+});
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const ADMIN_UID = "a3Z1eNTrJSY8nQhZVFYxnWOI2LJ2";
+        const BANNERS = { 'banner1': 'https://res.cloudinary.com/ddrtdofqo/image/upload/WhatsApp-Image-2024-02-28-at-3.02.13-PM_zmmjvb.jpg', 'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max', 'banner3': 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max' };
+
+        let currentUser = null;
+        let allUsers = [], allClasses = [];
+        const mainContent = document.getElementById('main-content');
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) { window.location.replace('/auth'); return; }
+            currentUser = user;
+
+            if (user.uid !== ADMIN_UID) {
+                renderAccessDenied();
+                return;
+            }
+            
+            renderAdminShell();
+            await fetchAllData();
+        });
+
+        function renderAccessDenied() {
+            document.querySelector('.sidebar').remove();
+            document.querySelector('.app').style.display = 'block';
+            mainContent.innerHTML = `
+                <div class="access-denied-container">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="${getComputedStyle(document.documentElement).getPropertyValue('--danger').trim()}"/><path d="M8.5 10.5l-1.42 1.42L12 16.84l4.92-4.92L15.5 10.5 12 14.01 8.5 10.5z" fill="${getComputedStyle(document.documentElement).getPropertyValue('--danger').trim()}" transform="rotate(180 12 12)"/></svg>
+                    <h1>Akses Ditolak. Mau Ngapain?</h1>
+                    <p>Halaman ini khusus untuk 'The Chosen One'. Sayangnya, bukan kamu. Silakan kembali ke jalan yang benar.</p>
+                    <a href="/dashboard" class="btn btn-primary"><i class="ri-arrow-left-line"></i> Kembali ke Jalan yang Benar</a>
+                </div>
+            `;
+        }
+        
+        function renderAdminShell() {
+            mainContent.innerHTML = `
+                <header class="header"><div class="header-main"><div>
+                    <h1><i class="ri-shield-user-fill"></i> Super Admin</h1>
+                    <p>Manage all users and classes on the Academate platform.</p>
+                </div></div></header>
+                <div class="stats-grid" id="stats-grid"></div>
+                <div class="page-grid" style="margin-top: 24px;">
+                    <section class="card">
+                        <div class="card-head"><h2>Users (<span id="user-count">...</span>)</h2></div>
+                        <div class="card-body">
+                            <div class="search-bar"><i class="ri-search-line"></i><input id="user-search" type="text" placeholder="Search by name or email..."></div>
+                            <div class="table-container"><table id="users-table">
+                                <thead><tr><th>User</th><th>Account Created</th><th>Classes (Joined/Created)</th></tr></thead>
+                                <tbody><tr class="placeholder-row"><td colspan="3"><i class="ri-loader-4-line"></i> Loading...</td></tr></tbody>
+                            </table></div>
+                        </div>
+                    </section>
+                    <section class="card">
+                        <div class="card-head"><h2>Classes (<span id="class-count">...</span>)</h2></div>
+                        <div class="card-body">
+                             <div class="search-bar"><i class="ri-search-line"></i><input id="class-search" type="text" placeholder="Search by name or lecturer..."></div>
+                             <div class="table-container"><table id="classes-table">
+                                <thead><tr><th>Class</th><th>Lecturer</th><th>Created By</th><th>Created On</th><th>Members</th><th>Actions</th></tr></thead>
+                                <tbody><tr class="placeholder-row"><td colspan="6"><i class="ri-loader-4-line"></i> Loading...</td></tr></tbody>
+                             </table></div>
+                        </div>
+                    </section>
+                </div>
+            `;
+        }
+
+        async function fetchAllData() {
+            try {
+                const [usersSnapshot, classesSnapshot] = await Promise.all([ getDocs(collection(db, "users")), getDocs(collection(db, "classes")) ]);
+                allUsers = usersSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                allClasses = classesSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderStats();
+                renderUsers();
+                renderClasses();
+                attachEventListeners();
+            } catch (error) {
+                console.error("Error fetching admin data:", error);
+                mainContent.insertAdjacentHTML('beforeend', `<div style="color:var(--danger); margin-top: 1rem;"><strong>Error:</strong> ${error.message}</div>`);
+            }
+        }
+
+        function renderStats() {
+            document.getElementById('stats-grid').innerHTML = `
+                <div class="stat-card"><div class="stat-top"><div class="stat-icon ipk"><i class="ri-group-fill"></i></div><div><div class="stat-label">Total Users</div><div class="stat-value">${allUsers.length}</div></div></div></div>
+                <div class="stat-card"><div class="stat-top"><div class="stat-icon sks"><i class="ri-book-open-fill"></i></div><div><div class="stat-label">Total Classes</div><div class="stat-value">${allClasses.length}</div></div></div></div>
+            `;
+        }
+
+        function renderUsers(filter = '') {
+            const tableBody = document.querySelector("#users-table tbody");
+            const filteredUsers = allUsers.filter(u => (u.name || '').toLowerCase().includes(filter) || (u.email || '').toLowerCase().includes(filter));
+            document.getElementById("user-count").textContent = filteredUsers.length;
+            tableBody.innerHTML = "";
+            if (!filteredUsers.length) { tableBody.innerHTML = `<tr class="placeholder-row"><td colspan="3">No users found.</td></tr>`; return; }
+            filteredUsers.forEach(user => {
+                const joinedCount = (user.joinedClasses || []).length;
+                const createdCount = allClasses.filter(c => c.creatorId === user.id).length;
+                const createdAt = user.createdAt?.toDate ? user.createdAt.toDate().toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
+                
+                const row = tableBody.insertRow();
+                row.dataset.userId = user.id;
+                row.innerHTML = `
+                    <td><div class="member-info">
+                        <img src="${user.photoURL || 'https://placehold.co/40x40/eee/333?text=?'}" alt="Avatar">
+                        <div>
+                            <div>${user.name || '<i>No Name</i>'}</div>
+                            <div style="font-size:0.8em; color: var(--muted);">${user.email || '<i>No Email</i>'}</div>
+                        </div>
+                    </div></td>
+                    <td>${createdAt}</td>
+                    <td>${joinedCount} / ${createdCount}</td>
+                `;
+            });
+        }
+        
+        function renderClasses(filter = '') {
+            const tableBody = document.querySelector("#classes-table tbody");
+            const filteredClasses = allClasses.filter(c => (c.namaMataKuliah || '').toLowerCase().includes(filter) || (c.dosen || '').toLowerCase().includes(filter));
+            document.getElementById("class-count").textContent = filteredClasses.length;
+            tableBody.innerHTML = "";
+            if (!filteredClasses.length) { tableBody.innerHTML = `<tr class="placeholder-row"><td colspan="6">No classes found.</td></tr>`; return; }
+            filteredClasses.forEach(classData => {
+                const creator = allUsers.find(u => u.id === classData.creatorId);
+                const isMember = (classData.members || []).includes(currentUser.uid);
+                const createdAt = classData.createdAt?.toDate ? classData.createdAt.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : 'N/A';
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td><div class="class-info-cell"><div class="x-icon">${classData.classIcon || '📚'}</div><div>${classData.namaMataKuliah || '<i>No Name</i>'}</div></div></td>
+                    <td>${classData.dosen || '<i>N/A</i>'}</td>
+                    <td>${creator ? creator.name : '<i>Unknown</i>'}</td>
+                    <td>${createdAt}</td>
+                    <td>${(classData.members || []).length}</td>
+                    <td style="display:flex; gap: 8px;">
+                        <button class="btn" data-action="jump" data-class-id="${classData.id}" title="Jump In" ${isMember ? 'disabled' : ''}>${isMember ? 'Joined' : 'Jump In'}</button>
+                        <button class="icon-btn" data-action="details" data-class-id="${classData.id}" title="Details & Members"><i class="ri-group-line"></i></button>
+                        <button class="icon-btn" data-action="edit" data-class-id="${classData.id}" title="Edit Class"><i class="ri-pencil-line"></i></button>
+                        <button class="btn btn-danger" data-action="delete" data-class-id="${classData.id}" title="Delete Class"><i class="ri-delete-bin-line"></i></button>
+                    </td>
+                `;
+            });
+        }
+
+        function attachEventListeners() {
+            document.getElementById('user-search').addEventListener('input', (e) => renderUsers(e.target.value.toLowerCase()));
+            document.getElementById('class-search').addEventListener('input', (e) => renderClasses(e.target.value.toLowerCase()));
+            document.querySelector('#classes-table tbody').addEventListener('click', handleClassAction);
+            document.querySelector('#users-table tbody').addEventListener('click', (e) => {
+                const row = e.target.closest('tr[data-user-id]');
+                if (row) { showProfileModal(row.dataset.userId); }
+            });
+        }
+
+        async function handleClassAction(e) {
+            const button = e.target.closest('button[data-class-id]');
+            if (!button) return;
+            const classId = button.dataset.classId;
+            const action = button.dataset.action;
+            const classData = allClasses.find(c => c.id === classId);
+
+            switch(action) {
+                case 'jump':
+                    button.disabled = true; button.innerHTML = '<i class="ri-loader-4-line"></i> Joining...';
+                    try {
+                        const classRef = doc(db, "classes", classId); const userRef = doc(db, "users", currentUser.uid);
+                        await Promise.all([ updateDoc(classRef, { members: arrayUnion(currentUser.uid) }), updateDoc(userRef, { joinedClasses: arrayUnion(classId) }) ]);
+                        button.innerHTML = '<i class="ri-check-line"></i> Joined!';
+                        window.open(`/class_page.html?id=${classId}`, '_blank');
+                    } catch (error) { button.innerHTML = '<i class="ri-error-warning-line"></i> Error!'; }
+                    break;
+                case 'delete':
+                    showConfirmModal({ title: 'Delete Class?', text: `Delete "${classData.namaMataKuliah}" permanently?`, confirmText: 'Yes, Delete',
+                        onConfirm: async () => {
+                            await deleteDoc(doc(db, "classes", classId));
+                            allClasses = allClasses.filter(c => c.id !== classId);
+                            renderClasses(document.getElementById('class-search').value.toLowerCase());
+                            renderStats();
+                        }
+                    });
+                    break;
+                case 'details': showDetailsModal(classData); break;
+                case 'edit': showEditModal(classData); break;
+            }
+        }
+
+        function showDetailsModal(classData) {
+            const modal = document.getElementById('details-modal');
+            let membersHtml = (classData.members || []).map(memberId => {
+                const user = allUsers.find(u => u.id === memberId);
+                if (!user) return `<div class="member-item"><i>Unknown user: ${memberId}</i></div>`;
+                
+                let badge = '';
+                if (user.id === ADMIN_UID) {
+                    badge = '<span class="chip" style="background-color: var(--danger); color: white;"><i class="ri-shield-user-fill"></i> Super Admin</span>';
+                } else if (user.id === classData.creatorId) {
+                    badge = '<span class="chip">Class Admin</span>';
+                }
+
+                return `
+                    <div class="member-item" data-user-id="${user.id}">
+                        <div class="member-info">
+                            <img src="${user.photoURL || 'https://placehold.co/32x32'}" alt="Avatar">
+                            <div>
+                                <div>${user.name} ${badge}</div>
+                                <div style="font-size:0.8em; color: var(--muted);">${user.email}</div>
+                            </div>
+                        </div>
+                        ${user.id !== ADMIN_UID ? `<button class="btn btn-danger" data-action="kick" data-user-id="${user.id}" data-user-name="${user.name}" data-class-id="${classData.id}"><i class="ri-user-unfollow-line"></i> Kick</button>` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            modal.innerHTML = `<div class="modal"><div class="card-head"><h2>${classData.namaMataKuliah} Members</h2></div><div class="modal-body">${membersHtml}</div><div class="m-foot"><button class="btn btn-primary" data-action="close">Close</button></div></div>`;
+            modal.classList.add('show');
+            modal.onclick = (e) => {
+                const memberItem = e.target.closest('.member-item[data-user-id]');
+                if (e.target.closest('[data-action="close"]') || e.target.classList.contains('overlay')) {
+                    modal.classList.remove('show');
+                } else if (e.target.closest('[data-action="kick"]')) {
+                    const btn = e.target.closest('[data-action="kick"]');
+                    showConfirmModal({
+                        title: 'Kick User?', text: `Remove ${btn.dataset.userName} from this class?`, confirmText: 'Yes, Kick',
+                        onConfirm: async () => {
+                            await updateDoc(doc(db, "classes", btn.dataset.classId), { members: arrayRemove(btn.dataset.userId) });
+                            const targetClass = allClasses.find(c => c.id === btn.dataset.classId);
+                            if (targetClass) targetClass.members = targetClass.members.filter(id => id !== btn.dataset.userId);
+                            showDetailsModal(targetClass);
+                            renderClasses(document.getElementById('class-search').value.toLowerCase());
+                            renderStats();
+                        }
+                    });
+                } else if (memberItem) {
+                    showProfileModal(memberItem.dataset.userId);
+                }
+            };
+        }
+
+        function showEditModal(classData) {
+            const modal = document.getElementById('edit-modal');
+            modal.innerHTML = `<div class="modal"><h2>Edit Class</h2><form id="edit-class-form" class="m-form">
+                <input type="text" id="edit-namaMataKuliah" value="${classData.namaMataKuliah || ''}" placeholder="Class Name" required>
+                <input type="text" id="edit-dosen" value="${classData.dosen || ''}" placeholder="Lecturer" required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"><input type="text" id="edit-ruang" value="${classData.ruang || ''}" placeholder="Room"><input type="number" id="edit-sks" value="${classData.sks || ''}" placeholder="SKS" min="1"></div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;"><select id="edit-hari">${['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'].map(d => `<option ${d === classData.hari ? 'selected' : ''}>${d}</option>`).join('')}</select><input type="time" id="edit-waktu" value="${classData.waktu || ''}"><input type="time" id="edit-waktuSelesai" value="${classData.waktuSelesai || ''}"></div>
+                <div class="m-foot"><button type="button" class="btn" data-action="close">Cancel</button><button type="submit" class="btn btn-primary">Save Changes</button></div>
+            </form></div>`;
+            modal.classList.add('show');
+            modal.querySelector('#edit-class-form').onsubmit = async (e) => {
+                e.preventDefault();
+                const updatedData = {
+                    namaMataKuliah: document.getElementById('edit-namaMataKuliah').value, dosen: document.getElementById('edit-dosen').value,
+                    ruang: document.getElementById('edit-ruang').value, sks: Number(document.getElementById('edit-sks').value),
+                    hari: document.getElementById('edit-hari').value, waktu: document.getElementById('edit-waktu').value, waktuSelesai: document.getElementById('edit-waktuSelesai').value,
+                };
+                await updateDoc(doc(db, "classes", classData.id), updatedData);
+                const targetClass = allClasses.find(c => c.id === classData.id);
+                Object.assign(targetClass, updatedData);
+                renderClasses(document.getElementById('class-search').value.toLowerCase());
+                modal.classList.remove('show');
+            };
+            modal.querySelector('[data-action="close"]').onclick = () => modal.classList.remove('show');
+        }
+
+        function showProfileModal(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+            const modal = document.getElementById('profile-modal');
+            const bannerUrl = BANNERS[user.bannerId] || BANNERS['banner1'];
+            const avatarUrl = user.photoURL || `https://placehold.co/90x90/eee/333?text=${(user.name || 'A').charAt(0)}`;
+            modal.innerHTML = `<div class="modal" style="padding: 0; width: min(95vw, 400px); overflow: hidden;">
+                <div class="profile-card-banner" style="background-image: url(${bannerUrl})"></div>
+                <div class="profile-card-body">
+                    <img src="${avatarUrl}" alt="${user.name}" class="profile-card-avatar">
+                    <div class="profile-card-info">
+                        <h3>${user.name || 'User'}</h3>
+                        <p>${user.major || 'Major not set'} at ${user.university || 'University not set'}</p>
+                        <div class="profile-card-details">
+                            <div class="detail-item"><i class="ri-mail-line"></i><span>${user.email}</span></div>
+                            <div class="detail-item"><i class="ri-book-open-line"></i><span>${user.semester ? `Semester ${user.semester}` : 'Semester not set'}</span></div>
+                        </div>
+                        <div class="profile-card-socials">
+                            ${user.instagramUrl ? `<a href="${user.instagramUrl}" target="_blank" class="social-btn"><i class="ri-instagram-line"></i></a>` : ''}
+                            ${user.spotifyUrl ? `<a href="${user.spotifyUrl}" target="_blank" class="social-btn"><i class="ri-spotify-line"></i></a>` : ''}
+                        </div>
+                    </div>
+                </div>
+                <div class="m-foot" style="background: var(--bg); padding: 12px 16px; justify-content: flex-end;">
+                    <button class="btn btn-primary" data-action="close">Close</button>
+                </div>
+            </div>`;
+            modal.classList.add('show');
+            modal.onclick = (e) => {
+                if (e.target.closest('[data-action="close"]') || e.target.classList.contains('overlay')) {
+                    modal.classList.remove('show');
+                }
+            };
+        }
+
+        function showConfirmModal({ title, text, confirmText, onConfirm }) {
+            const modal = document.getElementById('confirm-modal');
+            modal.innerHTML = `<div class="modal"><h3>${title}</h3><p>${text}</p><div class="m-foot"><button class="btn" data-action="close">Cancel</button><button class="btn btn-danger" id="confirm-ok">${confirmText}</button></div></div>`;
+            modal.classList.add('show');
+            modal.querySelector('[data-action="close"]').onclick = () => modal.classList.remove('show');
+            modal.querySelector('#confirm-ok').onclick = () => { onConfirm(); modal.classList.remove('show'); };
+        }
+    </script>
+</body>
+</html>
+

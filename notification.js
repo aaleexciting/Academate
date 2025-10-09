@@ -1,10 +1,17 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, query, orderBy, onSnapshot, doc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 
 const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte" };
 
 const app = initializeApp(firebaseConfig);
+
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider('6LeCCuQrAAAAAETuv-d3fMG5dtZ4pC_Mz9vPlabc'),
+  isTokenAutoRefreshEnabled: true
+});
+
 const auth = getAuth(app);
 const db = getFirestore(app);
 
@@ -12,7 +19,7 @@ onAuthStateChanged(auth, user => {
     if (user) {
         loadNotifications(user.uid);
     } else {
-        window.location.replace('auth.html');
+        window.location.replace('/auth');
     }
 });
 
@@ -56,7 +63,9 @@ function loadNotifications(userId) {
             }
         });
 
-        batch.commit().catch(err => console.error("Failed to mark notifications as read:", err));
+        if (!snapshot.empty) {
+            batch.commit().catch(err => console.error("Failed to mark notifications as read:", err));
+        }
 
     }, (error) => {
         console.error("Error fetching notifications:", error);
@@ -75,10 +84,10 @@ function getIcon(type) {
 
 function getIconColor(type) {
     switch(type) {
-        case 'NEW_TASK': return { bg: '#E0F2FE', text: '#0EA5E9' }; // Blue
-        case 'DEADLINE_REMINDER': return { bg: '#FEF3C7', text: '#F59E0B' }; // Yellow
-        case 'CLASS_STARTING': return { bg: '#ECFDF5', text: '#10B981' }; // Green
-        default: return { bg: '#F3F2FF', text: '#6F6CFF' }; // Primary Purple
+        case 'NEW_TASK': return { bg: '#E0F2FE', text: '#0EA5E9' }; 
+        case 'DEADLINE_REMINDER': return { bg: '#FEF3C7', text: '#F59E0B' }; 
+        case 'CLASS_STARTING': return { bg: '#ECFDF5', text: '#10B981' }; 
+        default: return { bg: '#F3F2FF', text: '#6F6CFF' }; 
     }
 }
 

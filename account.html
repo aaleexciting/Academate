@@ -253,7 +253,7 @@
                 <div class="form-row"><label for="display-name">Nama Tampilan</label><input id="display-name" placeholder="Nama Anda"></div>
                 <div class="form-row"><label>Email</label><input id="email" disabled></div>
                 <div class="form-row"><label for="university">Universitas</label><input id="university" placeholder="Nama Universitas"></div>
-                <div class="form-row"><label for="major">Jurusan/Major</label><input id="major" placeholder="Contoh: Informatika"></div>
+                <div class="form-row"><label for="major">Jurusan</label><input id="major" placeholder="Contoh: Informatika"></div>
                 <div class="form-row"><label for="semester">Semester</label>
                   <input type="number" id="semester" placeholder="e.g., 5" min="1">
                 </div>
@@ -317,11 +317,15 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut, updateProfile, GoogleAuthProvider, reauthenticateWithPopup, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, doc, getDoc, updateDoc, arrayRemove, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 
     const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD7F650" };
 
     const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
-
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider('6LeCCuQrAAAAAETuv-d3fMG5dtZ4pC_Mz9vPlabc'),
+  isTokenAutoRefreshEnabled: true
+});
     let currentUser=null; let userData={}; let classes=[]; let classMap={};
     let isFirstLoad = true;
 
