@@ -88,12 +88,22 @@
         import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte" };
+        // --- FIX: Using the full Firebase config object ---
+        const firebaseConfig = { 
+            apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", 
+            authDomain: "acadmte.firebaseapp.com", 
+            projectId: "acadmte", 
+            storageBucket: "acadmte.appspot.com", 
+            messagingSenderId: "547286858993", 
+            appId: "1:547286858993:web:b83de49e7eb1cc35a67d50",
+            measurementId: "G-ZEFYD7F650"
+        };
+
         const app = initializeApp(firebaseConfig);
         const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider('6LeCCuQrAAAAAETuv-d3fMG5dtZ4pC_Mz9vPlabc'),
-  isTokenAutoRefreshEnabled: true
-});
+          provider: new ReCaptchaV3Provider('6LeCCuQrAAAAAETuv-d3fMG5dtZ4pC_Mz9vPlabc'),
+          isTokenAutoRefreshEnabled: true
+        });
         const auth = getAuth(app);
         const db = getFirestore(app);
         const ADMIN_UID = "a3Z1eNTrJSY8nQhZVFYxnWOI2LJ2";
@@ -123,7 +133,7 @@
                 <div class="access-denied-container">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="${getComputedStyle(document.documentElement).getPropertyValue('--danger').trim()}"/><path d="M8.5 10.5l-1.42 1.42L12 16.84l4.92-4.92L15.5 10.5 12 14.01 8.5 10.5z" fill="${getComputedStyle(document.documentElement).getPropertyValue('--danger').trim()}" transform="rotate(180 12 12)"/></svg>
                     <h1>Akses Ditolak. Mau Ngapain?</h1>
-                    <p>Halaman ini khusus untuk 'The Chosen One'. Sayangnya, bukan kamu. Silakan kembali ke jalan yang benar.</p>
+                    <p>Silakan kembali ke jalan yang benar.</p>
                     <a href="/dashboard" class="btn btn-primary"><i class="ri-arrow-left-line"></i> Kembali ke Jalan yang Benar</a>
                 </div>
             `;
@@ -402,4 +412,3 @@
     </script>
 </body>
 </html>
-
