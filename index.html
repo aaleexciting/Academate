@@ -28,6 +28,7 @@
     --radius: 18px;
     --max: 1200px;
     --danger: #EF4444;
+    --warning: #F59E0B;
   }
   *,*:before,*:after{box-sizing:border-box}
   html{scroll-behavior: smooth;}
@@ -69,26 +70,224 @@
   .nav a.cta-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; border:none; box-shadow:0 4px 12px rgba(111,108,255,.2)}
   .nav a.cta-primary:hover { filter: brightness(1.1); }
   
-  .hero{position:relative; padding:64px 0 40px}
-  .hero-grid{display:grid; grid-template-columns: .8fr 1.2fr; gap:36px; align-items:center}
-  .eyebrow{display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); background:#FAFAFE; padding:6px 10px; border-radius:999px; border:1px solid var(--border)}
-  .hero h1{font-size:clamp(28px, 5vw, 48px); line-height:1.15; letter-spacing: -0.02em; margin:14px 0 10px; font-weight: 700;}
-  .hero h1 .highlight { background:linear-gradient(135deg,var(--primary),var(--primary-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .hero p{color:var(--muted); font-size:clamp(15px, 1.8vw, 18px); line-height: 1.6; margin:0 0 24px}
-  .hero-cta{display:flex; gap:12px; flex-wrap:wrap}
-  .btn{display:inline-flex; align-items:center; justify-content: center; gap:8px; padding:12px 20px; border-radius:14px; border:1px solid var(--border); background:var(--surface); text-decoration:none; font-weight:600; transition: all .2s;}
-  .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
-  .btn-primary{background:var(--primary); color:#fff; border:none; box-shadow: 0 6px 20px rgba(111,108,255,.3);}
-  .btn-primary:hover { background: var(--primary-2); }
-  .subtle{font-size:12px; color:var(--muted)}
-  .chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:24px;}
-  .chip{display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--surface); font-size: 13px; font-weight: 500;}
+  /* --- START: Interactive Hero Styles --- */
+  .hero {
+    position: relative;
+    padding: 64px 0 40px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
 
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  
+  .hero-content h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 14px 0 24px;
+    font-weight: 700;
+    max-width: 800px;
+  }
+  .hero-content h1 .highlight {
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-content p {
+    color: var(--muted);
+    font-size: clamp(16px, 1.8vw, 20px);
+    line-height: 1.6;
+    margin: 0 auto 32px;
+    max-width: 600px;
+  }
+  
+  .hero-state-clarity {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease-in 0.5s; /* Fade in after chaos clears */
+  }
+  
+  .hero.clarity-mode .hero-state-chaos {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.95);
+  }
+  .hero.clarity-mode .hero-state-clarity {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all .2s;
+    cursor: pointer;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    box-shadow: 0 6px 20px rgba(111, 108, 255, .3);
+  }
+  .btn-primary:hover {
+    background: var(--primary-2);
+  }
+  .btn-organize {
+    padding: 16px 32px;
+    font-size: 18px;
+    border-radius: 999px;
+  }
+  
+  #chaos-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  .chaos-element {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    animation-name: fadeIn;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s ease-out;
+  }
+  
+  .chaos-bubble {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 16px 16px 16px 4px;
+  }
+  .chaos-bubble.alt {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 16px 16px 4px 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  
+  .chaos-file {
+    background: #F9FAFB;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .chaos-file i { color: var(--muted); }
+  
+  .chaos-task {
+    background: #FEF3C7;
+    color: #92400E;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+  .chaos-task i { color: var(--warning); }
+  
+  .notification {
+    background: var(--text);
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 14px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    animation-name: slideIn, fadeIn;
+    animation-duration: 15s, 1s;
+    animation-iteration-count: infinite, 1;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+  }
+  .notification i { color: #fff; }
+
+  .hero.clarity-mode .chaos-element {
+    transform: translate(var(--tx, 0), var(--ty, 0)) scale(0) !important;
+    opacity: 0 !important;
+  }
+
+  @keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(15px, 20px) rotate(-3deg); }
+    50% { transform: translate(-10px, -15px) rotate(2deg); }
+    75% { transform: translate(10px, -10px) rotate(3deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+   @keyframes float2 {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(-12px, 18px) rotate(2.5deg); }
+    50% { transform: translate(8px, -10px) rotate(-1.5deg); }
+    75% { transform: translate(-15px, -15px) rotate(3.5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes slideIn {
+    0%, 100% { transform: translateX(200%); opacity: 0; }
+    10%, 90% { transform: translateX(0); opacity: 1; }
+  }
+  
+  .hero-image-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    z-index: 5;
+    opacity: 0;
+    transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s, opacity 1s ease 0.2s;
+    pointer-events: none;
+  }
   .hero-image {
     width: 100%;
+    max-width: 600px;
     height: auto;
   }
-  .phone-wrap { display: block; }
+  .hero.clarity-mode .hero-image-wrapper {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  /* --- END: Interactive Hero Styles --- */
+
+  .hero-grid{display:grid; grid-template-columns: .8fr 1.2fr; gap:36px; align-items:center}
+  .eyebrow{display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); background:#FAFAFE; padding:6px 10px; border-radius:999px; border:1px solid var(--border)}
+  .hero-cta{display:flex; justify-content: center; gap:12px; flex-wrap:wrap}
+  .subtle{font-size:12px; color:var(--muted)}
+  .chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; justify-content: center;}
+  .chip{display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--surface); font-size: 13px; font-weight: 500;}
 
   .section-header { text-align: center; margin-bottom: 40px; }
   .section-header h2 { font-size: clamp(24px, 4vw, 36px); margin: 0 0 8px; }
@@ -477,26 +676,13 @@
   /* --- MOBILE & TABLET RESPONSIVE STYLES --- */
   
   @media (max-width: 980px){
-    /* Hero section layout change */
-    .hero-grid{
-      display: flex;
-      flex-direction: column;
-      text-align: center;
+    .hero {
+      height: auto;
+      padding: 120px 0 80px;
     }
-    .phone-wrap {
-      order: -1; /* This moves the image to the top */
-      max-width: 340px; 
-      margin: 20px auto -40px; /* Pushed down from top, negative margin for overlap */
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero p { max-width: 600px; margin-left: auto; margin-right: auto; }
-    .hero-cta, .chips { justify-content: center; }
     .pin-grid{grid-template-columns:1fr}
     .how-it-works-grid { grid-template-columns: 1fr; }
     
-    /* Mobile Features Section: Show illustrations individually */
     .pin-wrap { display: none; }
     .steps { gap: 24px; }
     .step {
@@ -514,10 +700,7 @@
   }
   
   @media (max-width: 768px) {
-    /* General Mobile Adjustments */
     .wrap { padding: 0 16px; }
-    
-    /* Consistent Section Spacing */
     #features, #how-it-works, .cta-section { 
         padding-top: 60px; 
         padding-bottom: 60px; 
@@ -529,27 +712,15 @@
         font-size: 24px; 
     }
     
-    /* Mobile Header Scaling */
     .nav-inner { height: 60px; }
     .brand { font-size: 18px; gap: 8px; }
     .logo { width: 30px; height: 30px; border-radius: 8px; }
     .nav-links { display: none; }
 
-    /* Mobile Hero Revamp */
-    .hero { 
-        padding: 40px 0; 
-    }
-    .hero-grid > div:first-of-type {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-    .hero .eyebrow { font-size: 11px; padding: 5px 8px; }
-    .hero h1 { font-size: 26px; margin: 12px 0 8px; }
-    .hero p { font-size: 14px; margin-bottom: 20px; }
-    .hero .btn { padding: 10px 16px; font-size: 14px; }
-    .hero .chip { font-size: 12px; padding: 8px 10px; }
+    .hero-content h1 { font-size: 28px; }
+    .hero-content p { font-size: 15px; }
+    .chaos-element { font-size: 11px; padding: 6px 10px; }
 
-    /* Features Section Spacing & Typography */
     .steps { gap: 20px; }
     .step h3 { 
         font-size: 18px; 
@@ -559,26 +730,20 @@
         font-size: 14px;
     }
 
-    /* How it Works Spacing */
-    .how-it-works-grid { gap: 20px; } /* Now works for single column too */
-
+    .how-it-works-grid { gap: 20px; }
     
-    /* Mobile UI Previews Scaling Fix */
     .step .visual-content { font-size: 11px; }
-    /* Chat UI */
     .step .chat-header-v2, .step .chat-composer-v2 { padding: 8px 12px; }
     .step .chat-messages-v2 { padding: 10px; gap: 8px; }
     .step .message-v2 { gap: 8px; }
     .step .message-v2 img { width: 28px; height: 28px; }
     .step .bubble-v2 { padding: 8px 10px; }
     .step .chat-header-v2 h4 { font-size: 12px; }
-    /* Tasks UI */
     .step .tasks-ui-v2 { padding: 12px; }
     .step .tasks-header-v2 h4 { font-size: 13px; }
     .step .due-badge-v2 { padding: 4px 8px; font-size: 11px; }
     .step .task-v2 { font-size: 12px; gap: 8px; }
     .step .task-v2 img { width: 20px; height: 20px; }
-    /* Schedule UI Fix */
     .step .schedule-ui-v2 .schedule-body-v2 {
         min-height: 280px; 
     }
@@ -587,17 +752,14 @@
     .step .date-display-v2 .date-v2 { font-size: 14px; }
     .step .schedule-event-v2 { padding: 4px 8px; font-size: 10px; }
     .step .schedule-event-v2 strong { font-size: 11px; }
-    /* Notes UI */
     .step .notes-ui-v2 { padding: 16px; column-count: 1; }
     .step .note-card-v2 { padding: 12px; }
     .step .note-card-v2 h4 { font-size: 13px; }
     .step .note-card-v2 p { font-size: 12px; }
 
-    /* CTA Section */
     .cta-box { padding: 32px 24px; }
     .cta-box h2 { font-size: 22px; }
 
-    /* Footer */
     footer { margin-top: 40px; padding: 32px 0; }
     .footer-row {
         flex-direction: column-reverse;
@@ -612,14 +774,14 @@
     }
   }
 
-  /* --- Full Screen Hero for Desktop --- */
+  /* Remove full screen hero for desktop to accommodate the new design */
   @media (min-width: 981px) {
-    .hero {
-      padding: 0; /* Reset padding */
-      height: 100vh; /* Full viewport height */
+    /* .hero {
+      padding: 0; 
+      height: 100vh;
       display: flex;
       align-items: center;
-    }
+    } */
   }
 </style>
 </head>
@@ -643,25 +805,36 @@
 </header>
 
 <main>
-  <section class="hero wrap" aria-label="intro">
-    <div class="hero-grid">
-      <div>
-        <span class="eyebrow"><i class="ri-sparkling-2-fill"></i> Dirancang untuk Kolaborasi Kelas</span>
-        <h1>Basecamp Digital Kelasmu. <span class="highlight">Semua Jadi Terpusat.</span></h1>
-        <p>Stop bolak-balik scroll grup chat untuk cari jadwal, tugas, atau catatan. Satukan semua informasi penting kelas di satu tempat yang bisa diakses siapa saja, kapan saja.</p>
-        <div class="hero-cta">
-          <a class="btn btn-primary" href="/auth"><i class="ri-rocket-2-fill"></i>Mulai Gratis</a>
-          <a class="btn" href="#features"><i class="ri-play-circle-line"></i>Lihat Fitur</a>
-        </div>
-        <div class="chips">
-          <div class="chip"><i class="ri-calendar-event-line" style="color: var(--primary);"></i> Jadwal Otomatis</div>
-          <div class="chip"><i class="ri-task-line" style="color: var(--primary);"></i> Tugas Terpusat</div>
-          <div class="chip"><i class="ri-file-copy-2-line" style="color: var(--primary);"></i> Catatan Bersama</div>
-        </div>
-      </div>
-      <div class="phone-wrap" aria-hidden="true">
+  <section class="hero" id="hero-section" aria-label="intro">
+    <div id="chaos-container"></div>
+    
+    <div class="hero-image-wrapper" aria-hidden="true">
         <img src="hero.webp" alt="Academate user interface preview" class="hero-image">
-      </div>
+    </div>
+
+    <div class="hero-content">
+        <div class="hero-state-chaos">
+            <h1>Pusing sama grup kelas yang berantakan?</h1>
+            <p>Tugas, jadwal, dan info penting tenggelam di antara ratusan chat. Saatnya rapikan semuanya.</p>
+            <button class="btn btn-primary btn-organize" id="organize-btn">
+                <i class="ri-sparkling-2-fill"></i>
+                Ciptakan Keteraturan
+            </button>
+        </div>
+        <div class="hero-state-clarity">
+            <span class="eyebrow"><i class="ri-sparkling-2-fill"></i> Dirancang untuk Kolaborasi Kelas</span>
+            <h1>Basecamp Digital Kelasmu. <span class="highlight">Semua Jadi Terpusat.</span></h1>
+            <p>Stop bolak-balik scroll grup chat untuk cari jadwal, tugas, atau catatan. Satukan semua informasi penting kelas di satu tempat yang bisa diakses siapa saja, kapan saja.</p>
+            <div class="hero-cta">
+                <a class="btn btn-primary" href="/auth"><i class="ri-rocket-2-fill"></i>Mulai Gratis</a>
+                <a class="btn" href="#features"><i class="ri-play-circle-line"></i>Lihat Fitur</a>
+            </div>
+            <div class="chips">
+                <div class="chip"><i class="ri-calendar-event-line" style="color: var(--primary);"></i> Jadwal Otomatis</div>
+                <div class="chip"><i class="ri-task-line" style="color: var(--primary);"></i> Tugas Terpusat</div>
+                <div class="chip"><i class="ri-file-copy-2-line" style="color: var(--primary);"></i> Catatan Bersama</div>
+            </div>
+        </div>
     </div>
   </section>
 
@@ -874,6 +1047,73 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
+  // --- INTERACTIVE HERO SCRIPT ---
+  const heroSection = document.getElementById('hero-section');
+  const organizeBtn = document.getElementById('organize-btn');
+  const chaosContainer = document.getElementById('chaos-container');
+
+  if (heroSection && organizeBtn && chaosContainer) {
+    const chaosElementsConfig = [
+        // Left Column
+        { type: 'bubble', alt: true, text: 'Lho, kelasnya diganti?', top: '30%', left: '15%', targetX: '-15vw', targetY: '15vh'},
+        { type: 'file', icon: 'ri-file-word-2-line', text: 'Tugas_Revisi_Final_v3.docx', top: '45%', left: '5%', targetX: '-5vw', targetY: '-25vh' },
+        { type: 'file', icon: 'ri-file-pdf-line', text: 'Catatan_Penting(1).pdf', top: '60%', left: '18%', targetX: '25vw', targetY: '0vh' },
+        { type: 'bubble', alt: true, text: 'Ada yg punya catatan Bab 5?', top: '75%', left: '10%', targetX: '-20vw', targetY: '-15vh' },
+
+        // Right Column
+        { type: 'bubble', text: 'Guys, deadline kapan?', top: '20%', left: '75%', targetX: '-10vw', targetY: '5vh' },
+        { type: 'bubble', text: 'Info uts donggg', top: '35%', left: '80%', targetX: '15vw', targetY: '10vh' },
+        { type: 'task', icon: 'ri-alarm-warning-line', text: 'Deadline Aljabar!', top: '60%', left: '78%', targetX: '5vw', targetY: '20vh' },
+        { type: 'task', icon: 'ri-presentation-line', text: 'Besok Presentasi!', top: '75%', left: '70%', targetX: '10vw', targetY: '-20vh'},
+        
+        // Top Notification
+        { type: 'notification', icon: 'ri-error-warning-fill', text: '@everyone jangan lupa!', top: '10%', right: '5%' }
+    ];
+
+    function createChaos() {
+      chaosContainer.innerHTML = '';
+      chaosElementsConfig.forEach((config, i) => {
+        const el = document.createElement('div');
+        el.className = 'chaos-element';
+        
+        let content = '';
+        if (config.icon) content += `<i class="${config.icon}"></i>`;
+        if (config.text) content += `<span>${config.text}</span>`;
+        el.innerHTML = content;
+
+        if(config.type === 'notification') {
+          el.classList.add('notification');
+          el.style.top = config.top;
+          el.style.right = config.right;
+        } else {
+           el.classList.add(`chaos-${config.type}`);
+           if (config.alt) el.classList.add('alt');
+           el.style.top = config.top;
+           el.style.left = config.left;
+           el.style.setProperty('--tx', config.targetX);
+           el.style.setProperty('--ty', config.targetY);
+           
+           // Add floating animation
+           el.style.animationName = Math.random() > 0.5 ? 'float, fadeIn' : 'float2, fadeIn';
+           el.style.animationDuration = `${Math.random() * 7 + 8}s, 1s`;
+           el.style.animationIterationCount = 'infinite, 1';
+           el.style.animationTimingFunction = 'ease-in-out';
+           el.style.zIndex = Math.floor(Math.random() * 5);
+        }
+       
+        el.style.animationDelay = `${i * 0.15}s`;
+        chaosContainer.appendChild(el);
+      });
+    }
+
+    organizeBtn.addEventListener('click', () => {
+      heroSection.classList.add('clarity-mode');
+    });
+    
+    createChaos();
+  }
+
+
   // --- SCROLL PROGRESS BAR ---
   const progressBar = document.getElementById('scroll-progress');
   function updateProgressBar() {
@@ -896,11 +1136,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!pinGrid || steps.length === 0) return;
 
     let currentStepIndex = 0;
-    let isAnimating = false;
-    const animationDuration = 1000;
-
-    function setActiveStep(index, scrollBehavior = 'smooth') {
-        if (index < 0 || index >= steps.length || (index === currentStepIndex && scrollBehavior !== 'auto')) return;
+    
+    function setActiveStep(index, isClick = false) {
+        if (index < 0 || index >= steps.length) return;
         currentStepIndex = index;
         steps.forEach(s => s.classList.remove('active'));
         visualContents.forEach(v => v.classList.remove('active'));
@@ -908,50 +1146,29 @@ document.addEventListener('DOMContentLoaded', function() {
         const visualId = steps[index].dataset.visual;
         const activeVisual = document.getElementById(visualId);
         if (activeVisual) activeVisual.classList.add('active');
-        if (scrollBehavior !== 'auto') {
-            steps[index].scrollIntoView({ behavior: scrollBehavior, block: 'center' });
+        
+        if(isClick) {
+             steps[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
-    setActiveStep(0, 'auto');
+    setActiveStep(0);
 
     steps.forEach((step, index) => {
         step.addEventListener('click', () => {
-            if (isAnimating || currentStepIndex === index) return;
-            isAnimating = true;
-            setActiveStep(index, 'smooth');
-            setTimeout(() => { isAnimating = false; }, animationDuration);
+            setActiveStep(index, true);
         });
     });
 
-    const handleInteraction = (deltaY) => {
-        if (isAnimating) return;
-        let nextStepIndex = currentStepIndex;
-        if (deltaY > 20 && currentStepIndex < steps.length - 1) nextStepIndex++;
-        else if (deltaY < -20 && currentStepIndex > 0) nextStepIndex--;
-        if (nextStepIndex !== currentStepIndex) {
-            isAnimating = true;
-            setActiveStep(nextStepIndex, 'smooth');
-            setTimeout(() => { isAnimating = false; }, animationDuration);
-        }
-    };
-
-    const handleWheel = (e) => {
-        if (isAnimating) { e.preventDefault(); return; }
-        const isScrollingDown = e.deltaY > 0;
-        if ((!isScrollingDown && currentStepIndex === 0) || (isScrollingDown && currentStepIndex === steps.length - 1)) return;
-        e.preventDefault();
-        handleInteraction(e.deltaY);
-    };
-
     const observer = new IntersectionObserver((entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-            document.addEventListener('wheel', handleWheel, { passive: false });
-        } else {
-            document.removeEventListener('wheel', handleWheel);
-        }
-    }, { rootMargin: "-40% 0px -40% 0px", threshold: 0 });
-    observer.observe(pinGrid);
+        entries.forEach(entry => {
+            if(entry.isIntersecting){
+                const stepIndex = Array.from(steps).indexOf(entry.target);
+                setActiveStep(stepIndex);
+            }
+        });
+    }, { rootMargin: "-50% 0px -50% 0px", threshold: 0 });
+
+    steps.forEach(step => observer.observe(step));
   }
 
   function runMobileFeatures() {
@@ -966,7 +1183,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const visualClone = visualEl.cloneNode(true);
             visualClone.classList.add('active');
 
-            // Create a wrapper to handle border-radius and overflow
             const wrapper = document.createElement('div');
             wrapper.className = 'mobile-visual-wrapper';
              Object.assign(wrapper.style, {
@@ -978,7 +1194,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 overflow: 'hidden'
             });
 
-            // Style the inner cloned element
             Object.assign(visualClone.style, {
                 position: 'relative',
                 opacity: '1',
@@ -988,12 +1203,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const innerUi = visualClone.querySelector('[class*="-ui-"]');
             if (innerUi) {
-                // Let height be determined by content, remove extra margin
                 Object.assign(innerUi.style, { 
                     margin: '0', 
                     transform: 'none', 
                     height: 'auto',
-                    borderRadius: '0' // Let the wrapper handle rounding
+                    borderRadius: '0'
                 });
             }
             wrapper.appendChild(visualClone);
@@ -1002,14 +1216,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // --- INITIALIZE BASED ON VIEWPORT ---
   if (currentViewIsDesktop) {
     runDesktopFeatures();
   } else {
     runMobileFeatures();
   }
 
-  // --- RELOAD ON RESIZE ACROSS BREAKPOINT ---
   window.addEventListener('resize', () => {
     if (isDesktop() !== currentViewIsDesktop) {
       window.location.reload();
