@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dasbor — Academate</title>
-<link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="/icon/favicon.svg" />
-<link rel="shortcut icon" href="/icon/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="/icon/apple-touch-icon.png" />
-<meta name="apple-mobile-web-app-title" content="MyWebSite" />
-<link rel="manifest" href="/icon/site.webmanifest" />
+  <link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/icon/favicon.svg" />
+  <link rel="shortcut icon" href="/icon/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/icon/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="MyWebSite" />
+  <link rel="manifest" href="/icon/site.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
     .icon-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); display: grid; place-items: center; cursor: pointer; color: var(--muted); font-size: 20px; transition: .2s; flex-shrink: 0; text-decoration: none;}
     .icon-btn:hover { color: var(--primary); border-color: #d8d8e0; }
 
-    .header{ margin-top: var(--gap); margin-bottom: 24px; }
+    .header{ margin-top: var(--gap); margin-bottom: 24px; position: relative; transition: all 0.2s;}
     .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .header-brand{ font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
     .header-actions { display: flex; gap: 8px; }
@@ -59,6 +59,24 @@
     .header-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); flex-shrink: 0; }
     .header-toolbar { display: none; }
     
+    /* Mobile Search Active State */
+    .header.mobile-search-active .header-top, 
+    .header.mobile-search-active .header-main {
+        display: none !important;
+    }
+    .header.mobile-search-active .header-toolbar {
+        display: flex !important;
+        width: 100%;
+        animation: fadeIn 0.2s ease-out;
+    }
+    .header.mobile-search-active .desktop-only-noti {
+        display: none !important;
+    }
+    .header.mobile-search-active .mobile-only-close {
+        display: grid !important;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
     .dashboard-card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:0 2px 8px rgba(20,20,30,.03)}
     .section-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
     .section-title{font-size:16px; font-weight:600; margin:0 0 12px;}
@@ -138,6 +156,9 @@
       #tasks-wrapper { order: 2; }
       #calendar-wrapper { order: 3; }
       #profile-card-wrapper { order: 4; }
+
+      .header-toolbar { width: 100%; }
+      .header-toolbar .search-bar input { width: 100%; }
     }
     
     @media (max-width: 420px) {
@@ -268,11 +289,17 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
     
-
+    // Globals for App State & Caching
     let currentCalendarDate = new Date();
     let classScheduleDays = [];
     let countdownInterval = null;
-    let currentUserForPush = null; // Stored user for push permissions
+    let currentUserForPush = null; 
+    
+    // Globals for Robust Search
+    let globalClasses = [];
+    let globalTasks = [];
+    const globalUserCache = {};
+
     const BANNERS = {
       'banner1': 'https://res.cloudinary.com/ddrtdofqo/image/upload/WhatsApp-Image-2024-02-28-at-3.02.13-PM_zmmjvb.jpg',
       'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max',
@@ -285,13 +312,11 @@
         if (user) {
             currentUserForPush = user;
             initialize(user); 
-            // Removed automatic call to setupPushNotifications here to fix permission prompt
         } else {
             window.location.replace('/auth'); 
         }
     });
 
-    // Request Notification permission when user clicks anywhere on the body
     document.body.addEventListener('click', () => {
         if (currentUserForPush && Notification.permission === 'default') {
             setupPushNotifications(currentUserForPush);
@@ -308,8 +333,14 @@
         const { userData, classesData, allTasks } = await fetchAll(user);
         const incompleteTasks = allTasks.filter(task => !(task.completedBy?.includes(user.uid)));
         classScheduleDays = [...new Set(classesData.map(c => c.hari))];
+        
+        // Save to global variables for lightning-fast search
+        globalClasses = classesData;
+        globalTasks = incompleteTasks;
+
         renderDashboard(user, userData, classesData, incompleteTasks);
         attachEventListeners();
+        setupSearch();
         showContent();
       }catch(err){
         console.error('Error loading dashboard:', err);
@@ -395,12 +426,13 @@
     function renderHeader(user) {
         const header = document.getElementById('dashboard-header');
         if (!header) return;
+        header.className = 'header';
         header.innerHTML = `
             <div class="header-top">
                 <div class="header-brand">Academate</div>
                 <div class="header-actions">
                     <a href="/notification" class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></a>
-                    <button class="icon-btn" title="Cari"><i class="ri-search-line"></i></button>
+                    <button class="icon-btn" id="mobile-search-btn" title="Pencarian Cepat"><i class="ri-search-line"></i></button>
                 </div>
             </div>
             <div class="header-main">
@@ -413,11 +445,12 @@
                 </a>
             </div>
             <div class="header-toolbar">
-                <div class="search-bar">
+                <div class="search-bar" style="flex-grow:1;">
                     <i class="ri-search-line"></i>
-                    <input type="text" placeholder="Cari kelas atau tugas...">
+                    <input id="global-search" type="text" placeholder="Cari kelas, dosen, ruang, atau tugas..." autocomplete="off">
                 </div>
-                <a href="/notification" class="icon-btn" title="Notifikasi"><i class="ri-notification-3-line"></i></a>
+                <button class="icon-btn mobile-only-close" id="close-mobile-search" style="display:none;" title="Tutup Pencarian"><i class="ri-close-line"></i></button>
+                <a href="/notification" class="icon-btn desktop-only-noti" title="Notifikasi"><i class="ri-notification-3-line"></i></a>
             </div>`;
     }
 
@@ -439,9 +472,21 @@
         </div>`;
     }
 
-    async function renderClassCarousel(classes){
+    async function renderClassCarousel(classes, isSearch = false){
       const section = document.getElementById('class-carousel-section');
       if (!section) return;
+
+      if (classes.length === 0 && isSearch) {
+          section.innerHTML = `
+            <div class="section-header">
+              <h2 class="section-title" style="margin-bottom: 0;">Kelas Anda</h2>
+            </div>
+            <div class="dashboard-card" style="text-align:center; color:var(--muted); padding: 24px;">
+              Tidak ada kelas yang cocok dengan pencarian Anda.
+            </div>`;
+          return;
+      }
+
       section.innerHTML = `
         <div class="section-header">
           <h2 class="section-title" style="margin-bottom: 0;">Kelas Anda</h2>
@@ -454,13 +499,23 @@
 
       const container = document.getElementById('class-carousel-container');
       const memberIds = new Set(classes.flatMap(c => (c.members || []).slice(0,3)));
-      const memberSnaps = await Promise.all(Array.from(memberIds).map(id => getDoc(doc(db,'users',id))));
-      const memberData = memberSnaps.reduce((acc,s)=>{ if(s.exists()) acc[s.id] = s.data(); return acc; },{});
+      
+      // Robust caching: fetch only if not in cache
+      const memberData = {};
+      await Promise.all(Array.from(memberIds).map(async id => {
+          if (!globalUserCache[id]) {
+              try {
+                  const snap = await getDoc(doc(db, 'users', id));
+                  if (snap.exists()) globalUserCache[id] = snap.data();
+              } catch(e) {}
+          }
+          if (globalUserCache[id]) memberData[id] = globalUserCache[id];
+      }));
 
       const gradients = [ 'linear-gradient(135deg, #f3e7e9, #e3eeff)', 'linear-gradient(135deg, #f5f0ff, #e6f6ff)', 'linear-gradient(135deg, #e6fcf5, #e3f2fd)', 'linear-gradient(135deg, #fffbe6, #f0f9ff)', 'linear-gradient(135deg, #ffeef2, #eef2ff)' ];
 
       classes.forEach((c,i)=>{
-        const memberAvatars = (c.members || []).slice(0,3).map(id => memberData[id] ? `<img src="${memberData[id].photoURL || `https://placehold.co/28x28`}" alt="member">` : '').join('');
+        const memberAvatars = (c.members || []).slice(0,3).map(id => memberData[id] ? `<img src="${memberData[id].photoURL || `https://placehold.co/28x28/E5E7EB/6B7280?text=${(memberData[id].name || 'A').charAt(0)}`}" alt="member">` : '').join('');
         const card = document.createElement('a');
         card.href = `/class_page?id=${c.id}`; card.className = 'class-card-lg';
         card.innerHTML = `
@@ -474,7 +529,7 @@
         container.appendChild(card);
       });
 
-      if(classes.length > 3 && window.innerWidth > 900){
+      if(!isSearch && classes.length > 3 && window.innerWidth > 900){
         const viewAll = document.createElement('a');
         viewAll.href='/classes'; viewAll.className='class-card-lg';
         viewAll.style.cssText='align-items:center; justify-content:center; background:#FAFAFE;';
@@ -483,12 +538,14 @@
       }
     }
 
-    function renderUpcomingClasses(upcoming){
+    function renderUpcomingClasses(upcoming, isSearch = false){
       const mainSection = document.getElementById('upcoming-class-section');
       const otherSection = document.getElementById('other-upcoming-classes-section');
       if(!mainSection || !otherSection) return;
       if(!upcoming.length){
-        mainSection.innerHTML = `<div class="dashboard-card" style="text-align:center; color:var(--muted)">Tidak ada kelas yang akan datang.</div>`; otherSection.innerHTML=''; return;
+        mainSection.innerHTML = `<div class="dashboard-card" style="text-align:center; color:var(--muted)">${isSearch ? 'Tidak ada kelas mendatang yang cocok dengan pencarian.' : 'Tidak ada kelas yang akan datang.'}</div>`; 
+        otherSection.innerHTML=''; 
+        return;
       }
       
       const { classData: nextClass, classTime } = upcoming[0];
@@ -513,11 +570,14 @@
         </a>`).join('')}</div>` : '';
     }
 
-    function renderUpcomingDeadlines(tasks){
+    function renderUpcomingDeadlines(tasks, isSearch = false){
       const list = document.getElementById('deadline-list'); 
       if (!list) return;
       list.innerHTML='';
-      if(!tasks.length){ list.innerHTML = `<li style="text-align:center;color:var(--muted);padding:8px 0">Tidak ada tugas.</li>`; return; }
+      if(!tasks.length){ 
+          list.innerHTML = `<li style="text-align:center;color:var(--muted);padding:8px 0">${isSearch ? 'Tidak ada tugas yang cocok.' : 'Tidak ada tugas.'}</li>`; 
+          return; 
+      }
       tasks.sort((a,b)=>a.dueDate.seconds - b.dueDate.seconds).slice(0,4).forEach(task=>{
         const due = formatDueDate(task.dueDate);
         const li = document.createElement('li');
@@ -533,6 +593,78 @@
       });
     }
 
+    // --- ROBUST SEARCH LOGIC ---
+    function setupSearch() {
+        const searchInput = document.getElementById('global-search');
+        const mobileSearchBtn = document.getElementById('mobile-search-btn');
+        const closeMobileBtn = document.getElementById('close-mobile-search');
+        
+        if (!searchInput) return;
+
+        // Debounce helper
+        function debounce(func, timeout = 250){
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => { func.apply(this, args); }, timeout);
+            };
+        }
+
+        const handleSearch = debounce((e) => {
+            const query = e.target.value.trim().toLowerCase();
+            
+            if (!query) {
+                // Restore default view immediately
+                renderClassCarousel(globalClasses.slice(0,8));
+                renderUpcomingClasses(findUpcomingClasses(globalClasses, 3));
+                renderUpcomingDeadlines(globalTasks);
+                return;
+            }
+
+            const terms = query.split(/\s+/).filter(Boolean);
+            
+            // Advanced fuzzy multi-term matching
+            const match = (str) => {
+                if (!str) return false;
+                const lower = str.toLowerCase();
+                return terms.every(term => lower.includes(term));
+            };
+
+            const filteredClasses = globalClasses.filter(c => 
+                match(c.namaMataKuliah) || match(c.dosen) || match(c.ruang) || match(c.hari)
+            );
+            
+            const filteredTasks = globalTasks.filter(t => 
+                match(t.title) || match(t.className) || match(t.description)
+            );
+
+            // Trigger targeted UI re-renders with search state
+            renderClassCarousel(filteredClasses.slice(0, 8), true);
+            renderUpcomingClasses(findUpcomingClasses(filteredClasses, 3), true);
+            renderUpcomingDeadlines(filteredTasks, true);
+        });
+
+        searchInput.addEventListener('input', handleSearch);
+
+        // Mobile Search Toggle Logic
+        if (mobileSearchBtn) {
+            mobileSearchBtn.addEventListener('click', () => {
+                const header = document.querySelector('.header');
+                header.classList.add('mobile-search-active');
+                setTimeout(() => searchInput.focus(), 50); // slight delay for transition
+            });
+        }
+        
+        if (closeMobileBtn) {
+            closeMobileBtn.addEventListener('click', () => {
+                const header = document.querySelector('.header');
+                header.classList.remove('mobile-search-active');
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input')); // Trigger reset
+            });
+        }
+    }
+
     function attachEventListeners(){
         document.getElementById('main-container').addEventListener('click', (e) => {
             if(e.target.closest('#prev-month-btn')) {
@@ -544,10 +676,12 @@
                 renderCalendar(currentCalendarDate, classScheduleDays);
             }
             if(e.target.closest('#carousel-prev')) {
-                document.getElementById('class-carousel-container').scrollBy({left: -240, behavior:'smooth'});
+                const container = document.getElementById('class-carousel-container');
+                if (container) container.scrollBy({left: -240, behavior:'smooth'});
             }
             if(e.target.closest('#carousel-next')) {
-                document.getElementById('class-carousel-container').scrollBy({left: 240, behavior:'smooth'});
+                const container = document.getElementById('class-carousel-container');
+                if (container) container.scrollBy({left: 240, behavior:'smooth'});
             }
         });
     }

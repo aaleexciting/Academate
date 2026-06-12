@@ -154,7 +154,33 @@
     .meta{display:flex; align-items:center; gap:8px; font-size:11px; color:var(--muted); margin-top:6px}
     .m.me .meta { color: rgba(255, 255, 255, 0.75); }
     .sender{font-weight:600; font-size:12px}
-    .msg-img{border-radius:12px; border:1px solid var(--border); max-width:260px; width:100%; height:auto}
+    
+    /* --- NEW ATTACHMENT STYLES --- */
+    .msg-img{border-radius:8px; max-width:260px; width:100%; height:auto; cursor: zoom-in; transition: transform 0.2s ease, box-shadow 0.2s ease; display: block;}
+    .msg-img:hover{transform: scale(1.02); box-shadow: 0 6px 16px rgba(0,0,0,0.12);}
+    
+    .bubble.img-only { background: transparent !important; padding: 0; box-shadow: none; }
+    .bubble.img-only .msg-img { border-radius: 18px; max-width: 280px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+    .m.me .bubble.img-only .sender { display: none; }
+    .m:not(.me) .bubble.img-only .sender { margin-bottom: 6px; padding-left: 4px; }
+    .m.me .bubble.img-only .meta { color: var(--muted); justify-content: flex-end; padding-right: 4px; }
+    .m:not(.me) .bubble.img-only .meta { padding-left: 4px; }
+    
+    .msg-doc{display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); padding: 10px 14px; border-radius: 12px; text-decoration: none; color: var(--text); max-width: 260px; transition: background 0.2s;}
+    .msg-doc:hover{background: var(--bg);}
+    .m.me .msg-doc { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); color: #fff; }
+    .m.me .msg-doc:hover { background: rgba(255,255,255,0.25); }
+    .m.me .msg-doc i { color: #fff; }
+    .msg-doc i { font-size: 24px; color: var(--primary); }
+    .msg-doc-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+
+    #image-preview-modal { position: fixed; inset: 0; background: rgba(17,24,39,.85); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; transition: opacity 0.2s; }
+    #image-preview-modal.show { display: flex; opacity: 1; }
+    #image-preview-img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    #image-preview-modal.show #image-preview-img { transform: scale(1); }
+    #image-preview-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); width: 44px; height: 44px; border-radius: 50%; font-size: 24px; cursor: pointer; display: grid; place-items: center; transition: all 0.2s; z-index: 3001; }
+    #image-preview-close:hover { background: rgba(255,255,255,0.25); transform: scale(1.05); }
+    /* ------------------------------ */
 
     .composer{display:flex; align-items:flex-end; gap:10px; background:var(--surface); border-top:1px solid var(--border); padding-top:10px}
     .composer .tools{display:flex; align-items:center; gap:6px}
@@ -442,6 +468,7 @@
     <a href="/notes"><i class="ri-file-list-3-line"></i><span>Catatan</span></a>
   </nav>
 
+  <!-- Modals -->
   <div class="overlay" id="add-task-modal">
     <div class="modal">
       <h2>Tambah Tugas Baru</h2>
@@ -456,6 +483,7 @@
       </form>
     </div>
   </div>
+  
   <div class="overlay" id="member-list-modal">
       <div class="modal" style="width:min(95vw, 420px);">
         <h2>Anggota Kelas</h2>
@@ -463,6 +491,7 @@
         <div class="m-foot"><button class="m-btn primary" data-close-modal>Tutup</button></div>
       </div>
   </div>
+
   <div class="overlay" id="settings-modal">
     <div class="modal" style="width:min(95vw, 520px);">
       <h2>Pengaturan Kelas</h2>
@@ -486,27 +515,32 @@
       </form>
     </div>
   </div>
+
   <div class="overlay" id="profile-modal">
       <div class="modal" id="profile-modal-content" style="padding: 0; width: min(95vw, 400px); overflow: hidden;"></div>
+  </div>
+
+  <!-- New Image Preview Modal -->
+  <div id="image-preview-modal">
+      <button id="image-preview-close" title="Tutup"><i class="ri-close-line"></i></button>
+      <img id="image-preview-img" src="" alt="Preview">
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, Timestamp, arrayUnion, arrayRemove, limit, startAfter, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
     import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 
     const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD7F650" };
 
     const app = initializeApp(firebaseConfig);
     const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider('6LeCCuQrAAAAAETuv-d3fMG5dtZ4pC_Mz9vPlabc'),
-  isTokenAutoRefreshEnabled: true
-});
+      provider: new ReCaptchaV3Provider('6LeCCuQrAAAAAETuv-d3fMG5dtZ4pC_Mz9vPlabc'),
+      isTokenAutoRefreshEnabled: true
+    });
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
     let currentUser = null, classId = null, membersCache = {}, classCreatorId = null, classMemberCount = 0;
     let discussionUnsub = null, tasksUnsub = null, notesUnsub = null;
@@ -606,7 +640,7 @@
                  <div id="feed-spinner" class="loader" style="display: none;"></div>
               </div>
               <div class="composer">
-                <div class="tools"><button class="i-btn" id="attach-btn" title="Lampirkan"><i class="ri-attachment-line"></i></button><input id="file-input" type="file" accept="image/*" hidden></div>
+                <div class="tools"><button class="i-btn" id="attach-btn" title="Lampirkan Dokumen/Gambar"><i class="ri-attachment-line"></i></button><input id="file-input" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" hidden></div>
                 <textarea id="discussion-input" placeholder="Ketik pesan…" rows="1"></textarea>
                 <button id="send-btn" class="btn primary"><i class="ri-send-plane-2-line"></i> Kirim</button>
               </div>
@@ -689,10 +723,45 @@
         const ava = el('img', { class: 'ava', src: data.senderPhotoURL || 'https://placehold.co/80x80', alt: data.senderName || 'avatar', 'data-user-id': data.senderId });
         const bubble = el('div', { class: 'bubble' });
         const sender = el('div', { class: 'sender' }, data.senderName || 'Anonymous');
-        const msgContent = data.text ? data.text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : (data.image ? `<img class="msg-img" src="${data.image}" alt="lampiran">` : '');
-        const msg = el('div', {}, msgContent);
+        
+        const msg = el('div', {});
+        if (data.text) {
+            const textEl = document.createElement('div');
+            textEl.innerHTML = escapeHTML(data.text).replace(/\n/g, '<br>');
+            msg.appendChild(textEl);
+        }
+
+        const attachmentData = data.attachmentData || data.image;
+        const attachmentType = data.attachmentType || (data.image ? 'image' : null);
+        const attachmentName = data.attachmentName || 'Lampiran';
+
+        if (attachmentData) {
+            const margin = data.text ? 'margin-top: 8px;' : '';
+            if (attachmentType === 'image') {
+                const imgContainer = document.createElement('div');
+                imgContainer.style = margin;
+                imgContainer.innerHTML = `<img class="msg-img" src="${attachmentData}" alt="${escapeHTML(attachmentName)}" title="Klik untuk memperbesar">`;
+                msg.appendChild(imgContainer);
+            } else {
+                const docContainer = document.createElement('div');
+                docContainer.style = margin;
+                docContainer.innerHTML = `
+                    <a href="${attachmentData}" download="${escapeHTML(attachmentName)}" class="msg-doc">
+                        <i class="ri-file-text-line"></i>
+                        <span class="msg-doc-name">${escapeHTML(attachmentName)}</span>
+                        <i class="ri-download-2-line" style="font-size: 18px; margin-left: auto;"></i>
+                    </a>`;
+                msg.appendChild(docContainer);
+            }
+        }
+
         const time = data.createdAt?.toDate?.() || new Date();
         const meta = el('div', { class: 'meta' }, time.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }));
+        
+        if (!data.text && attachmentType === 'image') {
+            bubble.classList.add('img-only');
+        }
+
         bubble.append(sender, msg, meta);
         if (isMe) { wrap.append(bubble, ava); } else { wrap.append(ava, bubble); }
         return wrap;
@@ -819,13 +888,16 @@
 
     function attachEventListeners() {
         document.querySelectorAll('.logout').forEach(btn => btn.addEventListener('click', () => signOut(auth)));
+        
         document.body.addEventListener('click', (e) => {
+            // Modal close handlers
             const closeModalButton = e.target.closest('[data-close-modal]');
             const overlay = e.target.closest('.overlay');
-            if (closeModalButton || (overlay && e.target === overlay)) { (closeModalButton || e.target).closest('.overlay').classList.remove('show'); }
-        });
-        
-        $('main').addEventListener('click', (e) => {
+            if (closeModalButton || (overlay && e.target === overlay)) { 
+                (closeModalButton || e.target).closest('.overlay').classList.remove('show'); 
+            }
+            
+            // Action buttons
             if(e.target.closest('#add-task-btn')) $('add-task-modal').classList.add('show');
             if(e.target.closest('#send-btn')) addMessage();
             if(e.target.closest('#jump-latest')) { const feed = $('discussion-feed'); feed.scrollTo({ top: feed.scrollHeight, behavior: 'smooth' }); }
@@ -834,14 +906,32 @@
             if(e.target.closest('#refresh-btn')) location.reload();
             if(e.target.closest('#class-members-display')) $('member-list-modal').classList.add('show');
             if(e.target.closest('#settings-btn')) { getDoc(doc(db, 'classes', classId)).then(cs => { if (cs.exists()) openSettingsModal(cs.data()); }); }
+            
+            // Image Preview Handlers
+            if(e.target.classList.contains('msg-img')) {
+                $('image-preview-img').src = e.target.src;
+                $('image-preview-modal').classList.add('show');
+            }
+            
+            if (e.target.id === 'image-preview-modal' || e.target.closest('#image-preview-close')) {
+                $('image-preview-modal').classList.remove('show');
+                setTimeout(() => { if($('image-preview-img')) $('image-preview-img').src = ''; }, 300); // clear src after animation
+            }
+            
             const userId = e.target.closest('[data-user-id]');
             if(userId) showProfileModal(userId.dataset.userId);
+            
             handleTaskListClick(e);
         });
         
         $('add-task-form').addEventListener('submit', addTask);
         $('main').addEventListener('input', (e) => {
-            if(e.target.id === 'file-input') { if (e.target.files.length > 0) uploadImage(e.target.files[0]); }
+            if(e.target.id === 'file-input') { 
+                if (e.target.files.length > 0) {
+                    uploadFile(e.target.files[0]); 
+                    e.target.value = ''; // Reset input to allow uploading the same file again
+                }
+            }
         });
         $('main').addEventListener('keydown', (e) => {
             if (e.target.id === 'discussion-input' && e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); addMessage(); }
@@ -909,24 +999,100 @@
       }
     }
 
-    async function addMessage(imageUrl = null){
+    async function addMessage(attachmentData = null, attachmentName = null, attachmentType = null){
       const ta = $('discussion-input'); if (!ta) return;
       const text = (ta.value||'').trim();
-      if (!text && !imageUrl) return;
+      if (!text && !attachmentData) return;
+      
       ta.disabled = true; $('send-btn').disabled = true;
       try{
-        await addDoc(collection(db,'classes',classId,'discussions'),{ text: text || null, image: imageUrl || null, senderId: currentUser.uid, senderName: currentUser.displayName || 'Anonymous', senderPhotoURL: currentUser.photoURL || null, createdAt: serverTimestamp() });
+        const payload = { 
+            text: text || null, 
+            senderId: currentUser.uid, 
+            senderName: currentUser.displayName || 'Anonymous', 
+            senderPhotoURL: currentUser.photoURL || null, 
+            createdAt: serverTimestamp() 
+        };
+        
+        if (attachmentData) {
+            payload.attachmentData = attachmentData;
+            payload.attachmentName = attachmentName;
+            payload.attachmentType = attachmentType;
+        }
+        
+        await addDoc(collection(db,'classes',classId,'discussions'), payload);
         ta.value=''; ta.dispatchEvent(new Event('input'));
       }catch(e){ console.error("Gagal kirim pesan:", e); alert('Gagal mengirim pesan.'); }
       finally{ ta.disabled=false; $('send-btn').disabled=false; ta.focus(); }
     }
     
-    async function uploadImage(file) {
-        if (!file.type.startsWith('image/')) { alert('Hanya file gambar yang diizinkan.'); return; }
-        const filePath = `class_attachments/${classId}/${currentUser.uid}_${Date.now()}_${file.name}`;
-        const fileRef = ref(storage, filePath);
-        try { await uploadBytes(fileRef, file); const url = await getDownloadURL(fileRef); await addMessage(url); } 
-        catch (error) { console.error('Gagal mengunggah gambar:', error); alert('Gagal mengunggah gambar.'); }
+    // --- HELPER FUNCTION: CLIENT-SIDE IMAGE COMPRESSION ---
+    function compressImage(file, maxSizeKB) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    const MAX_DIMENSION = 1200;
+                    if (width > height && width > MAX_DIMENSION) {
+                        height *= MAX_DIMENSION / width;
+                        width = MAX_DIMENSION;
+                    } else if (height > MAX_DIMENSION) {
+                        width *= MAX_DIMENSION / height;
+                        height = MAX_DIMENSION;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    let quality = 0.8;
+                    let dataUrl = canvas.toDataURL('image/jpeg', quality);
+
+                    while (dataUrl.length > maxSizeKB * 1024 * 1.33 && quality > 0.1) {
+                        quality -= 0.1;
+                        dataUrl = canvas.toDataURL('image/jpeg', quality);
+                    }
+                    resolve(dataUrl);
+                };
+            };
+            reader.onerror = reject;
+        });
+    }
+
+    async function uploadFile(file) {
+        try {
+            let attachmentData = null;
+            let attachmentType = 'document';
+
+            if (file.type.startsWith('image/')) {
+                attachmentType = 'image';
+                attachmentData = await compressImage(file, 700); 
+            } else {
+                if (file.size > 750 * 1024) { 
+                    alert('Gagal! Untuk dokumen (PDF/Word/dll), ukuran maksimal adalah 750KB karena batasan database. Jika Anda ingin mengunggah file besar, silakan unggah format Gambar, sistem akan mengompresnya otomatis.');
+                    return;
+                }
+                attachmentData = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file); 
+                });
+            }
+            await addMessage(attachmentData, file.name, attachmentType); 
+        } 
+        catch (error) { 
+            console.error('Gagal memproses file:', error); 
+            alert('Gagal memproses file.'); 
+        }
     }
 
     function openSettingsModal(classData) {
@@ -982,6 +1148,8 @@
     function el(tag, attrs={}, children){ const e = document.createElement(tag); Object.entries(attrs||{}).forEach(([k,v])=> e.setAttribute(k,v)); if (children != null) e.innerHTML = children; return e; }
     function formatDue(ts){ const now = new Date(); const due = ts?.toDate?.() || new Date(); now.setHours(0,0,0,0); due.setHours(0,0,0,0); const diff = Math.ceil((due-now)/(1000*60*60*24)); if (diff < 0) return {text:'Telah lewat', cls:'overdue'}; if (diff === 0) return {text:'Tenggat hari ini', cls:'urgent'}; if (diff === 1) return {text:'Tenggat besok', cls:'urgent'}; if (diff <= 7) return {text:`Tenggat ${diff} hari`, cls:'soon'}; return {text: due.toLocaleDateString('id-ID',{day:'numeric',month:'short'}), cls:'normal'}; }
     function showConfirm(message) { return new Promise(resolve => { const cO = el('div', { class: 'overlay show' }); const cM = el('div', { class: 'modal' }); const msg = el('p', {style: "line-height:1.6;"}, message); const foot = el('div', { class: 'm-foot' }); const yes = el('button', { class: 'm-btn primary' }, 'Ya, Lanjutkan'); const no = el('button', { class: 'm-btn ghost' }, 'Batal'); foot.append(no, yes); cM.append(msg, foot); cO.append(cM); document.body.appendChild(cO); const close = (r) => { resolve(r); cO.remove(); }; yes.onclick = () => close(true); no.onclick = () => close(false); }); }
+
+    function escapeHTML(s){ return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
   </script>
 </body>
 </html>
