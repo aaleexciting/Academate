@@ -4,35 +4,84 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 const db = admin.firestore();
 
-async function sendNotificationToUser(userId, payload, notificationData) {
+// --- TELEGRAM HELPER ---
+async function sendTelegramNotification(telegramChatId, message) {
+    if (!telegramChatId) return;
+
+    const token = functions.config().telegram.token;
+    const url = `https://api.telegram.org/bot${token}/sendMessage`;
+
     try {
-        await db.collection("users").doc(userId).collection("notifications").add(notificationData);
-        console.log(`Successfully created in-app notification for ${userId}.`);
+        await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: telegramChatId,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        });
     } catch (error) {
-        console.error(`Failed to create in-app notification for ${userId}`, error);
-        return;
-    }
-
-    const userDoc = await db.collection("users").doc(userId).get();
-    if (!userDoc.exists) {
-        console.log(`User ${userId} not found, skipping push notification.`);
-        return;
-    }
-    const tokens = userDoc.data().fcmTokens || [];
-
-    if (tokens.length > 0) {
-        try {
-            await admin.messaging().sendToDevice(tokens, payload);
-            console.log(`Successfully sent push notification to ${userId}.`);
-        } catch (error) {
-            console.error(`ERROR sending push notification to ${userId}:`, error.message);
-        }
-    } else {
-        console.log(`No FCM tokens found for user ${userId}. Skipping push notification.`);
+        console.error("Telegram Error:", error);
     }
 }
 
+// --- FCM/IN-APP HELPER ---
+async function sendNotificationToUser(userId, payload, notificationData) {
+    // 1. Save in-app notification
+    try {
+        await db.collection("users").doc(userId).collection("notifications").add(notificationData);
+    } catch (error) {
+        console.error(`Failed to create in-app notification for ${userId}`, error);
+    }
 
+    // 2. Fetch User to get tokens and Telegram ID
+    const userDoc = await db.collection("users").doc(userId).get();
+    if (!userDoc.exists) return;
+    const userData = userDoc.data();
+
+    // 3. Send Push Notification (FCM)
+    const tokens = userData.fcmTokens || [];
+    if (tokens.length > 0) {
+        try {
+            await admin.messaging().sendToDevice(tokens, payload);
+        } catch (error) {
+            console.error(`ERROR sending push to ${userId}:`, error.message);
+        }
+    }
+
+    // 4. Send Telegram Notification
+    if (userData.telegramChatId) {
+        await sendTelegramNotification(userData.telegramChatId, notificationData.message);
+    }
+}
+
+// --- WEBHOOK FOR TELEGRAM CONNECTION ---
+exports.telegramWebhook = functions.region("asia-southeast2").https.onRequest(async (req, res) => {
+    const update = req.body;
+    if (update.message && update.message.text && update.message.text.startsWith('/start')) {
+        const parts = update.message.text.split(' ');
+        const firebaseUid = parts[1]; // The user's ID passed from your button
+        
+        if (firebaseUid) {
+            const chatId = update.message.chat.id;
+            await db.collection("users").doc(firebaseUid).update({ telegramChatId: chatId });
+            
+            const token = functions.config().telegram.token;
+            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    chat_id: chatId, 
+                    text: "✅ Academate berhasil dihubungkan! Anda sekarang akan menerima notifikasi di sini." 
+                })
+            });
+        }
+    }
+    res.status(200).send("OK");
+});
+
+// --- TRIGGERS ---
 
 exports.onNewTask = functions.region("asia-southeast2").firestore
     .document("classes/{classId}/tasks/{taskId}")
@@ -56,7 +105,12 @@ exports.onNewTask = functions.region("asia-southeast2").firestore
         };
 
         const notificationData = {
-            message: `${task.creatorName || 'Seseorang'} menambahkan tugas baru "${task.title || 'Tanpa Judul'}" di kelas ${classData.namaMataKuliah || 'Kelas'}.`,
+            message: `🔔 <b>Tugas Baru: ${task.title || 'Tanpa Judul'}</b>\n` +
+                     `━━━━━━━━━━━━━━━━━━━━\n` +
+                     `📚 <b>Kelas:</b> ${classData.namaMataKuliah || 'Kelas'}\n` +
+                     `👤 <b>Oleh:</b> ${task.creatorName || 'Seseorang'}\n` +
+                     `📅 <b>Tenggat:</b> ${task.dueDate ? new Date(task.dueDate.seconds * 1000).toLocaleDateString('id-ID') : 'Tidak ditentukan'}\n` +
+                     `📝 <b>Detail:</b> ${task.description || 'Tidak ada detail tambahan.'}`,
             type: 'NEW_TASK',
             timestamp: admin.firestore.FieldValue.serverTimestamp(),
             read: false,
@@ -89,6 +143,7 @@ exports.taskDeadlineReminder = functions.region("asia-southeast2").pubsub
 
             const classData = classDoc.data();
             const members = classData.members || [];
+            
             const payload = {
                 notification: {
                     title: `Tenggat Mendatang: ${classData.namaMataKuliah || 'Kelas'}`,
@@ -96,8 +151,14 @@ exports.taskDeadlineReminder = functions.region("asia-southeast2").pubsub
                     icon: "https://acadmte.web.app/icon/favicon-96x96.png",
                 }
             };
+
             const notificationData = {
-                message: `Jangan lupa, tugas "${task.title || 'Tanpa Judul'}" untuk kelas ${classData.namaMataKuliah || 'Kelas'} akan berakhir dalam 24 jam.`,
+                message: `⚠️ <b>Tenggat Mendatang!</b>\n` +
+                         `━━━━━━━━━━━━━━━━━━━━\n` +
+                         `📌 <b>Tugas:</b> ${task.title || 'Tanpa Judul'}\n` +
+                         `📚 <b>Kelas:</b> ${classData.namaMataKuliah || 'Kelas'}\n` +
+                         `⏳ <b>Berakhir:</b> ${task.dueDate ? new Date(task.dueDate.seconds * 1000).toLocaleString('id-ID') : 'Segera'}\n` +
+                         `<i>Jangan sampai terlewat ya!</i>`,
                 type: 'DEADLINE_REMINDER',
                 timestamp: admin.firestore.FieldValue.serverTimestamp(),
                 read: false,
@@ -118,9 +179,10 @@ exports.taskDeadlineReminder = functions.region("asia-southeast2").pubsub
 exports.classStartingReminder = functions.region("asia-southeast2").pubsub
     .schedule("every 10 minutes")
     .onRun(async (context) => {
-        const now = new Date();
+        const nowWIBString = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
+        const now = new Date(nowWIBString);
         const tenMinutesFromNow = new Date(now.getTime() + 10 * 60 * 1000);
-        const dayName = now.toLocaleDateString('id-ID', { weekday: 'long' });
+        const dayName = new Intl.DateTimeFormat('id-ID', { weekday: 'long', timeZone: 'Asia/Jakarta' }).format(now);
 
         const classesSnapshot = await db.collection("classes").where("hari", "==", dayName).get();
         if (classesSnapshot.empty) return;
@@ -142,20 +204,27 @@ exports.classStartingReminder = functions.region("asia-southeast2").pubsub
                         icon: "https://acadmte.web.app/icon/favicon-96x96.png",
                     }
                 };
+
                 const notificationData = {
-                    message: `Kelas ${classData.namaMataKuliah || 'Kelas'} akan dimulai dalam 10 menit di Ruang ${classData.ruang || '?'}.`,
+                    message: `🕒 <b>Kelas Segera Dimulai!</b>\n` +
+                             `━━━━━━━━━━━━━━━━━━━━\n` +
+                             `📚 <b>Matkul:</b> ${classData.namaMataKuliah || 'Kelas'}\n` +
+                             `🏫 <b>Ruangan:</b> ${classData.ruang || '?'}\n` +
+                             `⏰ <b>Waktu:</b> ${classData.waktu || 'TBA'}\n` +
+                             `<i>Segera menuju ke kelas!</i>`,
                     type: 'CLASS_STARTING',
                     timestamp: admin.firestore.FieldValue.serverTimestamp(),
                     read: false,
                 };
+
                 (classData.members || []).forEach(memberId => {
                     promises.push(sendNotificationToUser(memberId, payload, notificationData));
                 });
             }
         });
-
         return Promise.all(promises);
     });
+
 exports.onMemberKicked = functions.region("asia-southeast2").firestore
     .document("classes/{classId}")
     .onUpdate(async (change, context) => {
@@ -182,31 +251,14 @@ exports.onClassDeleted = functions.region("asia-southeast2").firestore
     .onDelete(async (snap, context) => {
         const deletedClass = snap.data();
         const classId = context.params.classId;
-
         const members = deletedClass.members || [];
-
-        if (members.length === 0) {
-            console.log(`Class ${classId} had no members. No user documents to update.`);
-            return null;
-        }
-
-        console.log(`Class ${classId} deleted. Updating ${members.length} member(s).`);
-
+        if (members.length === 0) return null;
         const batch = db.batch();
-
         members.forEach(userId => {
             const userRef = db.collection("users").doc(userId);
             batch.update(userRef, {
                 joinedClasses: admin.firestore.FieldValue.arrayRemove(classId)
             });
         });
-
-        try {
-            await batch.commit();
-            console.log(`Successfully removed class ID ${classId} from all members' joinedClasses arrays.`);
-        } catch (error) {
-            console.error(`Error updating user documents after class deletion for class ${classId}:`, error);
-        }
-
-        return null;
+        return batch.commit();
     });
