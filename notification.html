@@ -8,44 +8,276 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#F7F7FA;--surface:#fff;--text:#1E1F24;--muted:#6C6F7F;--primary:#6F6CFF;--border:#ECECF1;--shadow:0 6px 24px rgba(30,31,36,.07);--radius:18px;--sidebar-w:280px;--gap:18px;
+    :root {
+      --bg: #F7F7FA;
+      --surface: #FFFFFF;
+      --text: #1E1F24;
+      --muted: #6C6F7F;
+      --primary: #6F6CFF;
+      --primary-light: #F3F2FF;
+      --border: #ECECF1;
+      --shadow-sm: 0 4px 12px rgba(30, 31, 36, 0.04);
+      --shadow-md: 0 8px 24px rgba(111, 108, 255, 0.08);
+      --radius: 20px;
+      --gap: 24px;
     }
-    body{margin:0;font-family:"Poppins",sans-serif;background:var(--bg);color:var(--text);font-size:15px;}
-    .app{padding:var(--gap);width:100%;max-width:1700px;margin:0 auto;}
-    .main{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
-    .main-content{padding:var(--gap);max-width:800px;margin:0 auto;}
-    .header{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
-    .header h1{font-size:26px;margin:0;}
-    .icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:20px;text-decoration:none;}
-    .notification-list{list-style:none;padding:0;margin:0;}
-    .notification-item{display:flex;gap:16px;padding:16px;border-bottom:1px solid var(--border);}
-    .notification-item:last-child{border-bottom:none;}
-    .notification-item.unread{background-color:#F9F9FC; font-weight: 500;}
-    .noti-icon{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:22px;flex-shrink:0;}
-    .noti-content p{margin:0;line-height:1.6;}
-    .noti-content .timestamp{font-size:12px;color:var(--muted);margin-top:4px; font-weight: 400;}
-    .empty-state{text-align:center;padding:40px;color:var(--muted);}
-    #loader{border:4px solid #f3f3f3;border-top:4px solid var(--primary);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:auto;}
-    @keyframes spin{to{transform:rotate(360deg)}}
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Sticky, Glassmorphic Header */
+    .header-container {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(247, 247, 250, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 20px var(--gap);
+      border-bottom: 1px solid rgba(236, 236, 241, 0.5);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #1E1F24, #4A4D5E);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 20px;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .icon-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: transparent;
+      transform: translateY(-2px);
+    }
+
+    /* Main Content Area */
+    .main-content {
+      padding: 12px var(--gap) 40px;
+      flex-grow: 1;
+    }
+
+    /* Card-based Notification List */
+    .notification-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Smooth Entrance Animation for Items */
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .notification-item {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: slideUpFade 0.4s ease-out forwards;
+      cursor: default;
+    }
+
+    .notification-item:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(111, 108, 255, 0.15);
+    }
+
+    /* Unread State Styling */
+    .notification-item.unread {
+      background: linear-gradient(to right, #ffffff, #Fcfcff);
+      border: 1px solid rgba(111, 108, 255, 0.2);
+      position: relative;
+    }
+
+    .notification-item.unread::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 40px;
+      background: var(--primary);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .noti-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .notification-item:hover .noti-icon {
+      transform: scale(1.05) rotate(-5deg);
+    }
+
+    .noti-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .notification-item.unread .noti-content p {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .noti-content p {
+      margin: 0;
+      line-height: 1.5;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .noti-content .timestamp {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Enhanced Empty State */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 2px dashed var(--border);
+      margin-top: 20px;
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      color: #D1D5DB;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      color: var(--text);
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    /* Modern Pulse Loader */
+    .loader-container {
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .modern-loader {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--primary-light);
+      border-bottom-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Tweaks */
+    @media (max-width: 480px) {
+      :root {
+        --gap: 16px;
+      }
+      .header h1 { font-size: 20px; }
+      .notification-item { padding: 16px; }
+      .noti-icon { width: 44px; height: 44px; font-size: 20px; border-radius: 14px; }
+      .noti-content p { font-size: 14px; }
+    }
   </style>
 </head>
 <body>
   <div class="app">
-    <main class="main">
-      <div class="main-content">
-        <header class="header">
-            <a href="/dashboard" class="icon-btn" title="Kembali ke Dasbor"><i class="ri-arrow-left-line"></i></a>
-            <h1>Notifikasi</h1>
-        </header>
-        <ul id="notification-list" class="notification-list">
-            <div class="empty-state">
-                <div id="loader"></div>
-            </div>
-        </ul>
-      </div>
+    <div class="header-container">
+      <header class="header">
+          <a href="/dashboard" class="icon-btn" title="Kembali ke Dasbor">
+            <i class="ri-arrow-left-line"></i>
+          </a>
+          <h1>Notifikasi</h1>
+      </header>
+    </div>
+    
+    <main class="main-content">
+      <ul id="notification-list" class="notification-list">
+          <div class="loader-container">
+              <div class="modern-loader"></div>
+          </div>
+      </ul>
     </main>
   </div>
-  <script type="module" src="notification.js"></script>
+
+  <script type="module" src="notification.js?v=3"></script>
 </body>
 </html>

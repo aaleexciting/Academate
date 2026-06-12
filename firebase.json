@@ -1,6 +1,7 @@
 {
   "functions": {
-    "source": "academate-backend/functions"
+    "source": "academate-backend/functions",
+    "runtime": "nodejs20"
   },
   "hosting": {
     "public": ".",

@@ -3,7 +3,15 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, query, orderBy, onSnapshot, doc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 
-const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte" };
+const firebaseConfig = { 
+    apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", 
+    authDomain: "acadmte.firebaseapp.com", 
+    projectId: "acadmte",
+    storageBucket: "acadmte.appspot.com", 
+    messagingSenderId: "547286858993", 
+    appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", 
+    measurementId: "G-ZEFYD7F650"
+};
 
 const app = initializeApp(firebaseConfig);
 
@@ -23,16 +31,18 @@ onAuthStateChanged(auth, user => {
     }
 });
 
-/**
- * @param {string} userId
- */
 function loadNotifications(userId) {
     const listEl = document.getElementById('notification-list');
     const q = query(collection(db, 'users', userId, 'notifications'), orderBy('timestamp', 'desc'));
 
     onSnapshot(q, (snapshot) => {
         if (snapshot.empty) {
-            listEl.innerHTML = `<div class="empty-state">Anda belum memiliki notifikasi.</div>`;
+            listEl.innerHTML = `
+                <div class="empty-state">
+                    <i class="ri-notification-off-line"></i>
+                    <h3>Tidak Ada Notifikasi</h3>
+                    <p>Anda sudah membaca semuanya!</p>
+                </div>`;
             return;
         }
 
@@ -52,7 +62,10 @@ function loadNotifications(userId) {
                 </div>
                 <div class="noti-content">
                     <p>${notif.message}</p>
-                    <div class="timestamp">${formatTimestamp(notif.timestamp)}</div>
+                    <div class="timestamp">
+                        <i class="ri-time-line" style="font-size: 12px;"></i> 
+                        ${formatTimestamp(notif.timestamp)}
+                    </div>
                 </div>
             `;
             listEl.appendChild(item);
@@ -69,27 +82,44 @@ function loadNotifications(userId) {
 
     }, (error) => {
         console.error("Error fetching notifications:", error);
-        listEl.innerHTML = `<div class="empty-state">Gagal memuat notifikasi. Silakan coba lagi.</div>`;
+        listEl.innerHTML = `
+            <div class="empty-state">
+                <i class="ri-error-warning-line" style="color: #EF4444;"></i>
+                <h3>Gagal Memuat</h3>
+                <p>Silakan periksa koneksi internet Anda.</p>
+            </div>`;
     });
 }
 
+// --- UPDATED ICON AND COLOR LOGIC ---
+
 function getIcon(type) {
     switch(type) {
-        case 'NEW_TASK': return 'ri-task-line';
-        case 'DEADLINE_REMINDER': return 'ri-time-line';
-        case 'CLASS_STARTING': return 'ri-vidicon-line';
-        default: return 'ri-notification-3-line';
+        case 'NEW_TASK': 
+            return 'ri-file-edit-fill'; // Ikon catatan/tugas
+        case 'DEADLINE_REMINDER': 
+            return 'ri-alarm-warning-fill'; // Ikon alarm berdering
+        case 'CLASS_STARTING': 
+            return 'ri-presentation-fill'; // Ikon papan presentasi kelas
+        default: 
+            return 'ri-notification-4-fill'; // Default bel
     }
 }
 
 function getIconColor(type) {
     switch(type) {
-        case 'NEW_TASK': return { bg: '#E0F2FE', text: '#0EA5E9' }; 
-        case 'DEADLINE_REMINDER': return { bg: '#FEF3C7', text: '#F59E0B' }; 
-        case 'CLASS_STARTING': return { bg: '#ECFDF5', text: '#10B981' }; 
-        default: return { bg: '#F3F2FF', text: '#6F6CFF' }; 
+        case 'NEW_TASK': 
+            return { bg: '#E0E7FF', text: '#4F46E5' }; // Indigo (Info)
+        case 'DEADLINE_REMINDER': 
+            return { bg: '#FEE2E2', text: '#EF4444' }; // Merah (Urgent)
+        case 'CLASS_STARTING': 
+            return { bg: '#DCFCE7', text: '#16A34A' }; // Hijau (Action)
+        default: 
+            return { bg: '#F3F2FF', text: '#6F6CFF' }; // Purple (Default)
     }
 }
+
+// ------------------------------------
 
 function formatTimestamp(timestamp) {
     if (!timestamp?.toDate) return '';

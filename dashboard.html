@@ -151,7 +151,7 @@
     @media (min-width: 901px) {
       body { padding-bottom: 0; overflow: auto;}
       .mobile-nav { display: none; }
-      .app { display:grid; grid-template-columns: var(--sidebar-w) 1fr; gap:24px; min-height: 100dvh; height: auto; } /* Allow app to grow */
+      .app { display:grid; grid-template-columns: var(--sidebar-w) 1fr; gap:24px; min-height: 100dvh; height: auto; }
       
       .main { height: auto; }
 
@@ -254,18 +254,17 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, getDocs, query, where, Timestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, query, where, Timestamp, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
-    import { updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 
     const firebaseConfig = { apiKey: "AIzaSyCGr2zchpiAiTn-bMFk-eLNE-1OgGzaSdA", authDomain: "acadmte.firebaseapp.com", projectId: "acadmte", storageBucket: "acadmte.appspot.com", messagingSenderId: "547286858993", appId: "1:547286858993:web:b83de49e7eb1cc35a67d50", measurementId: "G-ZEFYD-F650" };
 
     const app = initializeApp(firebaseConfig);
     const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider('6LeCCuQrAAAAAETuv-d3fMG5dtZ4pC_Mz9vPlabc'),
-  isTokenAutoRefreshEnabled: true
-});
+      provider: new ReCaptchaV3Provider('6LeCCuQrAAAAAETuv-d3fMG5dtZ4pC_Mz9vPlabc'),
+      isTokenAutoRefreshEnabled: true
+    });
     const auth = getAuth(app);
     const db = getFirestore(app);
     
@@ -273,6 +272,7 @@
     let currentCalendarDate = new Date();
     let classScheduleDays = [];
     let countdownInterval = null;
+    let currentUserForPush = null; // Stored user for push permissions
     const BANNERS = {
       'banner1': 'https://res.cloudinary.com/ddrtdofqo/image/upload/WhatsApp-Image-2024-02-28-at-3.02.13-PM_zmmjvb.jpg',
       'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max',
@@ -283,12 +283,20 @@
     
     onAuthStateChanged(auth, user => { 
         if (user) {
+            currentUserForPush = user;
             initialize(user); 
-            setupPushNotifications(user);
+            // Removed automatic call to setupPushNotifications here to fix permission prompt
         } else {
             window.location.replace('/auth'); 
         }
     });
+
+    // Request Notification permission when user clicks anywhere on the body
+    document.body.addEventListener('click', () => {
+        if (currentUserForPush && Notification.permission === 'default') {
+            setupPushNotifications(currentUserForPush);
+        }
+    }, { once: true });
     
     document.addEventListener('click', (e)=>{
       const target = e.target.closest('button');
@@ -665,10 +673,14 @@
 
         onMessage(messaging, (payload) => {
             console.log('Message received in foreground: ', payload);
-            new Notification(payload.notification.title, {
-                body: payload.notification.body,
-                icon: '/icon/favicon-96x96.png'
-            });
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.ready.then((registration) => {
+                    registration.showNotification(payload.notification.title, {
+                        body: payload.notification.body,
+                        icon: payload.notification.icon || '/icon/favicon-96x96.png'
+                    });
+                });
+            }
         });
     }
 
