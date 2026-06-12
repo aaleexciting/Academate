@@ -14,6 +14,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+  
+  <!-- Jitsi Meet API (8x8 JaaS) -->
+  <script src="https://8x8.vc/vpaas-magic-cookie-889e861450a1472c803508843052351f/external_api.js" async></script>
 
   <style>
     :root{
@@ -56,22 +59,20 @@
       .sidebar-links a:hover { text-decoration: underline; }
       .copyright { font-size: 11px; color: #C0C3D2; text-align: center; margin-top: 12px; }
       .brand .logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #8B7CFF, #6AC9FF);
-  
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  padding: 6px;
-}
-
-.brand .logo svg {
-  width: 100%;
-  height: 100%;
-}
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #8B7CFF, #6AC9FF);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        padding: 6px;
+      }
+      .brand .logo svg {
+        width: 100%;
+        height: 100%;
+      }
     }
 
     .main{display:grid; grid-template-rows:auto 1fr; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; height:100%; min-height:0}
@@ -114,17 +115,68 @@
     .member-popup-list::-webkit-scrollbar-track { background: transparent; }
     .member-popup-list::-webkit-scrollbar-thumb { background-color: var(--primary-2); border-radius: 20px; }
 
-
     .content{display:grid; grid-template-columns:1fr; gap:18px; padding:18px; height:100%; min-height:0}
     @media (min-width:1100px){ .content{grid-template-columns:2fr 1fr} }
 
     .card{background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:0 2px 8px rgba(20,20,30,.03); display:flex; flex-direction:column; min-height:0}
     .card-body{padding:16px; display:flex; flex-direction:column; min-height:0; flex-grow: 1;}
+    
     .card-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px}
-    .card-title{font-size:16px; font-weight:600; margin:0}
-    .btn{display:inline-flex; align-items:center; gap:8px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--text); padding:8px 12px; cursor:pointer; font-weight:600; text-decoration:none}
+    .card-title{font-size:15px; font-weight:600; margin:0}
+    
+    /* New utility for minimalist right-panel buttons */
+    .card-action-btn { background: transparent; border: none; font-size: 12px; font-weight: 600; color: var(--primary); display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 8px; cursor: pointer; transition: 0.2s; text-decoration: none;}
+    .card-action-btn:hover { background: var(--bubble); }
+
+    .count-badge {
+        font-size: 11px;
+        background: var(--border);
+        color: var(--muted);
+        padding: 2px 6px;
+        border-radius: 6px;
+        margin-left: 8px;
+        font-weight: 600;
+        vertical-align: middle;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+    }
+    
+    .more-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(30, 31, 36, 0.65);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        font-weight: 600;
+        z-index: 5;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .more-overlay:hover { background: rgba(30, 31, 36, 0.8); }
+
+    .btn{display:inline-flex; align-items:center; gap:8px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--text); padding:8px 12px; cursor:pointer; font-weight:600; text-decoration:none; transition: 0.2s;}
     .btn.primary{background:#F1EEFF; color:var(--primary); border-color:#E3E0FF}
     .btn.full{width:100%; justify-content:center}
+
+    /* NEW CSS for Live Meeting Button */
+    .btn-live {
+        background: #EF4444 !important;
+        color: #FFFFFF !important;
+        border-color: #DC2626 !important;
+        animation: pulse-live 2s infinite;
+    }
+    @keyframes pulse-live {
+        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .btn-live i { color: #FFFFFF !important; }
 
     .chat-wrapper{display:grid; grid-template-rows:1fr auto; gap:12px; min-height:0; flex:1}
     .feed{position:relative; overflow:auto; padding:8px 12px 8px 0; min-height:0}
@@ -155,7 +207,6 @@
     .m.me .meta { color: rgba(255, 255, 255, 0.75); }
     .sender{font-weight:600; font-size:12px}
     
-    /* --- NEW ATTACHMENT STYLES --- */
     .msg-img{border-radius:8px; max-width:260px; width:100%; height:auto; cursor: zoom-in; transition: transform 0.2s ease, box-shadow 0.2s ease; display: block;}
     .msg-img:hover{transform: scale(1.02); box-shadow: 0 6px 16px rgba(0,0,0,0.12);}
     
@@ -180,7 +231,6 @@
     #image-preview-modal.show #image-preview-img { transform: scale(1); }
     #image-preview-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); width: 44px; height: 44px; border-radius: 50%; font-size: 24px; cursor: pointer; display: grid; place-items: center; transition: all 0.2s; z-index: 3001; }
     #image-preview-close:hover { background: rgba(255,255,255,0.25); transform: scale(1.05); }
-    /* ------------------------------ */
 
     .composer{display:flex; align-items:flex-end; gap:10px; background:var(--surface); border-top:1px solid var(--border); padding-top:10px}
     .composer .tools{display:flex; align-items:center; gap:6px}
@@ -189,39 +239,72 @@
     .composer button{height:44px; padding:12px 14px; border:none; border-radius:12px; background:var(--primary); color:#fff; font-weight:700; cursor:pointer}
     .typing{font-size:12px; color:var(--muted); margin-top:4px}
 
-    .tasks{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; overflow:auto}
-    .task{border-top:1px solid var(--border)}
-    .task:first-child{border-top:0}
-    .task-h{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 0; cursor:pointer}
-    .task-left{display:flex; align-items:center; gap:12px; min-width:0}
-    .checkbox{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);display:grid;place-items:center;flex-shrink:0;background:#fff}
-    .task.done .checkbox{background:var(--primary); border-color:var(--primary)}
-    .checkbox i{font-size:14px; color:#fff; opacity:0; transform:scale(.6); transition:.15s}
-    .task.done .checkbox i{opacity:1; transform:scale(1)}
-    .task-title{font-weight:600; white-space:nowrap; text-overflow:ellipsis; overflow:hidden}
-    .due{font-size:11px; padding:4px 8px; border-radius:99px; flex-shrink:0}
-    .due.normal{background:#F5F6FA; color:var(--muted)}
-    .due.soon{background:#FEF3C7; color:#B45309}
-    .due.urgent,.due.overdue{background:#FEE2E2; color:#B91C1C}
-    .expand i{color:var(--muted)}
-    .task-details{max-height:0; overflow:hidden; transition:max-height .3s ease, padding .3s ease}
-    .task.expanded .task-details{max-height:600px; padding-bottom:12px}
-    .task-desc{margin:0 0 10px 32px; color:#3a3d4a; line-height:1.6; white-space:pre-wrap}
-    .task-foot{display:flex; justify-content:space-between; align-items:center; gap:10px; padding-left:32px}
-    .task-foot .who{font-size:12px; color:var(--muted)}
-    .task-foot .del{border:none; background:transparent; color:var(--muted); cursor:pointer; padding:6px 8px; border-radius:8px}
-    .task-foot .del:hover{background:#FEE2E2; color:#B91C1C}
-    .pp-row{display:flex}
-    .pp-row img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin-left:-8px}
-    .pp-row img:first-child{margin-left:0}
-
-    .notes{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; overflow:auto}
-    .note{border:1px solid var(--border); background:#FAFAFF; border-radius:12px; padding:12px; cursor:pointer; transition:.2s; text-decoration: none; display: block;}
-    .note:hover{background:#F3F2FF; border-color:#DCD9FF}
-    .note h4{margin:0 0 4px; font-size:14px; color: var(--text);}
-    .note p{margin:0; color:#3a3d4a; font-size:13px}
-    .note small{display:block; color:var(--muted); margin-top:8px}
+    .side-panel {
+      display: flex; flex-direction: column; gap: 14px; min-height: 0;
+    }
     
+    .side-panel .card-body { padding: 14px; }
+    .side-panel .card-head { border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 8px; }
+
+    /* Modern Minimalist Media Gallery */
+    .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 4px 0; }
+    .media-item { aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: var(--bg); cursor: pointer; position: relative; transition: opacity 0.2s, transform 0.2s; border: 1px solid var(--border); }
+    .media-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); opacity: 0.95; }
+    .media-item img { width: 100%; height: 100%; object-fit: cover; }
+    .media-doc { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--primary); background: #f7f6ff; padding: 6px; text-align: center; text-decoration: none; }
+    .media-doc i { font-size: 24px; margin-bottom: 2px; }
+    .media-doc span { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; word-break: break-all; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* Modern Minimalist Tasks */
+    .tasks { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; overflow-x:hidden; overflow-y:auto; }
+    .task { border-bottom: 1px solid var(--border); padding: 10px 0; transition: background 0.2s; }
+    .task:last-child { border-bottom: none; }
+    .task-h { display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer }
+    .task-left { display:flex; align-items:center; gap:10px; min-width:0 }
+    .checkbox { width:18px; height:18px; border-radius:4px; border:2px solid #D1D5DB; display:grid; place-items:center; flex-shrink:0; background:transparent; transition: .2s; }
+    .task.done .checkbox { background:var(--primary); border-color:var(--primary); }
+    .checkbox i { font-size:12px; color:#fff; opacity:0; transform:scale(.6); transition:.15s }
+    .task.done .checkbox i { opacity:1; transform:scale(1) }
+    .task-title { font-weight:500; font-size: 13px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; color: var(--text); transition: color .2s;}
+    .task.done .task-title { color: var(--muted); text-decoration: line-through; }
+    .due { font-size:10px; padding:2px 6px; border-radius:4px; flex-shrink:0; font-weight: 500; }
+    .due.normal { background: var(--bg); color:var(--muted) }
+    .due.soon { background:#FEF3C7; color:#B45309 }
+    .due.urgent,.due.overdue { background:#FEE2E2; color:#B91C1C }
+    .expand i { color:var(--muted); font-size: 16px; transition: transform .3s; }
+    .task.expanded .expand i { transform: rotate(180deg); }
+    .task-details { max-height:0; overflow:hidden; transition:max-height .3s ease, padding .3s ease }
+    .task.expanded .task-details { max-height:600px; padding: 8px 0; }
+    .task-desc { margin:0 0 10px 28px; color:var(--muted); font-size: 12px; line-height:1.5; white-space:pre-wrap; }
+    .task-foot { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-left: 28px; }
+    .task-foot .who { font-size:11px; color:var(--muted); display: block; }
+    .task-foot .del { border:none; background:transparent; color:var(--danger); cursor:pointer; padding:4px; border-radius:6px; font-weight: 500; font-size: 12px; opacity: 0.8;}
+    .task-foot .del:hover { opacity: 1; background: #FEE2E2; }
+    .pp-row { display:flex; margin-top: 4px; }
+    .pp-row img { width:22px; height:22px; border-radius:50%; object-fit:cover; border:2px solid #fff; margin-left:-6px; }
+    .pp-row img:first-child { margin-left:0 }
+
+    /* Modern Minimalist Notes */
+    .notes { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; overflow-x:hidden; overflow-y:auto; }
+    .note-container { position: relative; border-bottom: 1px solid var(--border); }
+    .note-container:last-child { border-bottom: none; }
+    .note { padding: 12px 4px; display: block; text-decoration: none; transition: background .2s; border-radius: 6px; }
+    .note:hover { background: #f9f9fa; }
+    .note h4 { margin:0 0 2px; font-size:13px; color: var(--text); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 24px;}
+    .note p { margin:0; color:var(--muted); font-size:12px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    .note small { display:block; color:var(--muted); margin-top:6px; font-size: 10px; }
+    
+    .note-del-btn {
+        position: absolute; top: 10px; right: 4px;
+        background: transparent; border: none; color: var(--muted); cursor: pointer;
+        font-size: 16px; padding: 4px; border-radius: 6px; transition: .2s; z-index: 2; opacity: 0;
+    }
+    .note-container:hover .note-del-btn { opacity: 1; }
+    .note-del-btn:hover { color: var(--danger); background: #fee2e2; }
+
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 10px; color: var(--muted); text-align: center; gap: 8px; font-size: 12px; }
+    .empty-state i { font-size: 24px; color: #d1d5db; }
+
     .nav, .feed, .member-popup-list {
       scrollbar-width: thin; scrollbar-color: var(--primary-2) transparent;
     }
@@ -229,20 +312,16 @@
     .nav::-webkit-scrollbar-track, .feed::-webkit-scrollbar-track, .member-popup-list::-webkit-scrollbar-track { background: transparent; }
     .nav::-webkit-scrollbar-thumb, .feed::-webkit-scrollbar-thumb, .member-popup-list::-webkit-scrollbar-thumb { background-color: var(--primary-2); border-radius: 20px; }
     .nav::-webkit-scrollbar-thumb:hover, .feed::-webkit-scrollbar-thumb:hover, .member-popup-list::-webkit-scrollbar-thumb:hover { background-color: var(--primary); }
-    .tasks, .notes, .composer textarea { -ms-overflow-style: none; scrollbar-width: none; }
-    .tasks::-webkit-scrollbar, .notes::-webkit-scrollbar, .composer textarea::-webkit-scrollbar { display: none; }
+    .composer textarea { -ms-overflow-style: none; scrollbar-width: none; }
+    .composer textarea::-webkit-scrollbar { display: none; }
     body { scrollbar-width: thin; scrollbar-color: var(--primary-2) var(--bg); }
     body::-webkit-scrollbar { width: 8px; }
     body::-webkit-scrollbar-track { background: var(--bg); }
     body::-webkit-scrollbar-thumb { background: var(--primary-2); border-radius: 20px; }
     body::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-    .side-panel {
-      display: flex; flex-direction: column; gap: var(--gap); min-height: 0;
-    }
-
-    .mnav{position:fixed; left:0; right:0; bottom:0; height:70px; background:rgba(255,255,255,.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; z-index:40}
-    .mnav a{display:flex; flex-direction:column; align-items:center; gap:4px; text-decoration:none; color:var(--muted); font-size:10px; font-weight:500}
+    .mnav{position:fixed; left:0; right:0; bottom:0; height:70px; background:rgba(255,255,255,.8); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; padding:0 10px; z-index:1000}
+    .mnav a{display:flex; flex-direction:column; align-items:center; gap:4px; text-decoration:none; color:var(--muted); font-size:10px; font-weight:500; padding: 8px; border-radius: 8px;}
     .mnav a i{font-size:20px}
     .mnav a.active{color:var(--primary)}
     @media (min-width:901px){ .mnav{display:none} }
@@ -262,7 +341,17 @@
       .card-body { flex-grow: 0; }
       #discussion-card { height: 75dvh; display: flex; flex-direction: column; }
       #discussion-card .card-body { flex-grow: 1; }
+      
+      /* Mobile Horizontal Scroll for Media Grid */
+      .media-grid { display: flex; overflow-x: auto; scrollbar-width: none; gap: 8px; padding: 4px 0 8px 0; }
+      .media-grid::-webkit-scrollbar { display: none; }
+      .media-item { flex: 0 0 85px; height: 85px; }
+      
+      /* Reset media-item size specifically inside the modal so it stays a responsive grid */
+      #all-media-grid .media-item { flex: none; width: 100%; height: auto; }
     }
+    
+    #all-media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 10px; align-content: start; }
     
     @media (max-width: 450px) {
       .content { padding: 12px; gap: 12px; }
@@ -276,7 +365,6 @@
       .composer textarea { min-height: 42px; font-size: 14px; padding: 10px 12px; }
       #send-btn { width: 42px; height: 42px; padding: 0; font-size: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
       #send-btn i { font-size: 20px; margin: 0; }
-      #add-note-btn { padding: 6px 10px; font-size: 13px; }
       .header { padding: 10px 12px; justify-content: space-between; gap: 10px; align-items: center; }
       .header-left { align-items: center; min-width: 0; }
       .header-right { display: flex; gap: 8px; flex-shrink: 0; padding: 0; align-items: center; }
@@ -290,6 +378,7 @@
       .icon-btn { width: 36px !important; height: 36px !important; border-radius: 50% !important; flex-shrink: 0; }
       .header-left .icon-btn { margin-top: 0; }
       .header-right .avatar { width: 36px; height: 36px; flex-shrink: 0; }
+      .note-del-btn { opacity: 1; } /* Always show delete btn on mobile */
     }
 
     .overlay {
@@ -364,6 +453,32 @@
         #settings-modal .m-foot > div { flex-basis: 100%; order: 1; display: flex; gap: 10px; }
         #settings-modal .m-foot > div .m-btn { flex-grow: 1; justify-content: center; }
         #settings-modal .m-foot #delete-class-btn { flex-basis: 100%; order: 2; justify-content: center !important; background-color: #fef2f2; }
+    }
+
+    /* --- NEW CSS for Jitsi Meeting Modal --- */
+    #meeting-overlay {
+      position: fixed; inset: 0; background: var(--bg); z-index: 4000;
+      display: none; flex-direction: column; animation: fade-in 0.3s ease;
+    }
+    #meeting-overlay.show { display: flex; }
+    .meeting-header {
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 12px 24px; background: var(--surface); border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .meeting-title { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; color: var(--text); }
+    .leave-meeting-btn {
+      background: #FEE2E2; color: #B91C1C; border: none; padding: 8px 16px;
+      border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;
+      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    }
+    .leave-meeting-btn:hover { background: #FCA5A5; }
+    #jitsi-container { flex: 1; width: 100%; height: 100%; background: #1E1F24; }
+    @media (max-width: 600px) {
+        .hide-mobile { display: none; }
+        .meeting-header { padding: 10px 12px; }
+        .meeting-title { font-size: 14px; }
+        .leave-meeting-btn { padding: 6px 12px; font-size: 13px; }
     }
   </style>
 </head>
@@ -520,10 +635,45 @@
       <div class="modal" id="profile-modal-content" style="padding: 0; width: min(95vw, 400px); overflow: hidden;"></div>
   </div>
 
-  <!-- New Image Preview Modal -->
+  <!-- All Media Modal -->
+  <div class="overlay" id="all-media-modal">
+      <div class="modal" style="width: min(95vw, 600px); max-height: 85vh; display: flex; flex-direction: column; padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h2 style="margin: 0; font-size: 18px;">Semua Media & File</h2>
+              <button class="icon-btn" data-close-modal style="width: 32px; height: 32px; font-size: 18px;"><i class="ri-close-line"></i></button>
+          </div>
+          <div id="all-media-grid" style="overflow-y: auto; overflow-x: hidden; padding-bottom: 10px;"></div>
+      </div>
+  </div>
+
+  <!-- Image Preview Modal -->
   <div id="image-preview-modal">
       <button id="image-preview-close" title="Tutup"><i class="ri-close-line"></i></button>
       <img id="image-preview-img" src="" alt="Preview">
+  </div>
+  
+  <!-- Jitsi Meeting Modal Overlay -->
+  <div id="meeting-overlay">
+      <div class="meeting-header">
+          <div style="display:flex; align-items:center; gap:12px; min-width: 0;">
+              <!-- Academate Branding -->
+              <div class="brand" style="margin:0; font-size:18px; flex-shrink: 0;">
+                <div class="logo" style="width:30px;height:30px;padding:5px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><g><path d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6c.494 0 .96-.12 1.37-.33A6.49 6.49 0 0 1 11 17.5a6.48 6.48 0 0 1 2-4.69V7a1 1 0 0 1 1-1h6v5.498a6.52 6.52 0 0 1 2 1.312V6a2 2 0 0 0-2-2h-6c-.768 0-1.47.289-2 .764A2.989 2.989 0 0 0 10 4H4Zm7 3v10a1 1 0 0 1-1 1H4V6h6a1 1 0 0 1 1 1Z"/><path d="M16.007 17c.04-1.415.248-2.669.553-3.585c.171-.513.364-.893.554-1.134c.195-.247.329-.281.386-.281c.057 0 .192.034.386.281c.19.241.383.62.554 1.134c.305.916.513 2.17.553 3.585h-2.986Zm-.396-3.9c.108-.323.23-.622.368-.887A5.504 5.504 0 0 0 12.023 17h2.984c.04-1.5.26-2.866.604-3.9Zm3.778 0a6.133 6.133 0 0 0-.368-.887A5.504 5.504 0 0 1 22.978 17h-2.985c-.04-1.5-.26-2.866-.604-3.9Zm.604 4.9h2.985a5.504 5.504 0 0 1-3.957 4.787c.138-.265.26-.564.368-.886c.345-1.035.564-2.4.604-3.901Zm-2.107 4.719c-.194.247-.329.281-.386-.281c-.057 0-.191-.034-.386-.281c-.19-.241-.383-.62-.554-1.135c-.305-.915-.513-2.17-.553-3.584h2.986c-.04 1.415-.248 2.669-.553 3.584c-.171.514-.364.894-.554 1.135ZM12.023 18a5.504 5.504 0 0 0 3.956 4.787a6.133 6.133 0 0 1-.367-.886c-.346-1.035-.565-2.4-.605-3.901h-2.984Z"/></g></svg>
+                </div>
+                <span class="hide-mobile" style="color: var(--primary);">Academate</span>
+              </div>
+              <div class="hide-mobile" style="width:1px; height:20px; background:var(--border); margin:0 4px;"></div>
+              
+              <!-- Dynamic Class Info -->
+              <div class="meeting-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">
+                  <span id="meeting-class-icon" style="background: var(--bubble); width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center;">📚</span> 
+                  <span id="meeting-room-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Academate Meet</span>
+              </div>
+          </div>
+          <button class="leave-meeting-btn" id="leave-meeting-btn"><i class="ri-phone-fill"></i> Keluar</button>
+      </div>
+      <div id="jitsi-container"></div>
   </div>
 
   <script type="module">
@@ -543,7 +693,10 @@
     const db = getFirestore(app);
 
     let currentUser = null, classId = null, membersCache = {}, classCreatorId = null, classMemberCount = 0;
-    let discussionUnsub = null, tasksUnsub = null, notesUnsub = null;
+    let discussionUnsub = null, tasksUnsub = null, notesUnsub = null, meetingUnsub = null;
+    let hiddenNotes = []; 
+    let jitsiApi = null; // Track Meeting Session
+    
     const VISIBLE_AVATARS = 5; 
     let listenersAttached = false;
     const BANNERS = { 'banner1': 'https://res.cloudinary.com/ddrtdofqo/image/upload/WhatsApp-Image-2024-02-28-at-3.02.13-PM_zmmjvb.jpg', 'banner2': 'https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib-rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max', 'banner3': 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib-rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1200&fit=max' };
@@ -551,6 +704,7 @@
     let firstMessageDoc = null; 
     let latestMessageDoc = null; 
     const renderedMessageIds = new Set(); 
+    const mediaItemsMap = new Map(); 
     let isLoadingMessages = false;
     let allMessagesLoaded = false;
     const MESSAGES_PER_PAGE = 25;
@@ -583,7 +737,11 @@
         const data = classSnap.data();
         classCreatorId = data.creatorId;
         const userDoc = await getDoc(doc(db,'users',currentUser.uid));
-        if (!(userDoc.data()?.joinedClasses||[]).includes(classId)){ renderEmpty('Anda tidak memiliki akses ke kelas ini.'); return; }
+        const userData = userDoc.exists() ? userDoc.data() : {};
+        
+        if (!(userData.joinedClasses||[]).includes(classId)){ renderEmpty('Anda tidak memiliki akses ke kelas ini.'); return; }
+
+        hiddenNotes = userData.hiddenNotes || []; 
 
         await cacheMembers(data.members || []);
 
@@ -594,6 +752,7 @@
         await initialMessagesLoad();
         listenTasks();
         listenNotes();
+        listenMeetingState();
         showContent();
       }catch(e){ 
         console.error("Gagal memuat kelas:", e); 
@@ -614,6 +773,9 @@
             </div>
           </div>
           <div class="header-right">
+            <button class="btn primary" id="start-meeting-btn" title="Mulai Video Conference" style="padding: 6px 12px; font-size: 13px; margin-right: 4px;">
+                <i class="ri-video-chat-fill" style="font-size: 16px; margin: 0;"></i> <span class="hide-mobile">Meet</span>
+            </button>
             <button class="icon-btn" id="settings-btn" title="Pengaturan Kelas" style="display: none;"><i class="ri-settings-3-line"></i></button>
             <button class="icon-btn" id="refresh-btn" title="Segarkan" aria-label="Segarkan"><i class="ri-refresh-line"></i></button>
             <a href="/account" title="Akun Anda">
@@ -632,7 +794,7 @@
           <div class="card-body">
             <div class="card-head">
               <h3 class="card-title">Diskusi Kelas</h3>
-              <button class="btn" id="jump-latest"><i class="ri-arrow-down-line"></i> Terbaru</button>
+              <button class="btn" id="jump-latest" style="font-size: 13px; padding: 6px 10px;"><i class="ri-arrow-down-line"></i> Terbaru</button>
             </div>
             <div class="chat-wrapper">
               <div id="discussion-feed" class="feed" aria-label="Utas diskusi">
@@ -642,27 +804,46 @@
               <div class="composer">
                 <div class="tools"><button class="i-btn" id="attach-btn" title="Lampirkan Dokumen/Gambar"><i class="ri-attachment-line"></i></button><input id="file-input" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" hidden></div>
                 <textarea id="discussion-input" placeholder="Ketik pesan…" rows="1"></textarea>
-                <button id="send-btn" class="btn primary"><i class="ri-send-plane-2-line"></i> Kirim</button>
+                <button id="send-btn" class="btn primary"><i class="ri-send-plane-2-fill"></i> Kirim</button>
               </div>
             </div>
             <div id="typing" class="typing" aria-live="polite" hidden>Beberapa orang sedang mengetik…</div>
           </div>
         </div>
         <div class="side-panel">
-          <div class="card">
-            <div class="card-body" style="min-height:0">
-              <div class="card-head"><h3 class="card-title">Tugas</h3></div>
-              <ul id="task-list" class="tasks" aria-label="Daftar tugas">
-                <div class="skeleton" style="height: 45px; width: 100%; border-radius: 8px; margin-bottom: 8px;"></div>
-              </ul>
-              <button id="add-task-btn" class="btn primary full"><i class="ri-add-line"></i> Tambah Tugas Baru</button>
+          <!-- MINIMAL MEDIA GALLERY -->
+          <div class="card" id="media-card" style="flex-shrink: 0;">
+            <div class="card-body">
+              <div class="card-head">
+                 <h3 class="card-title" style="display:flex; align-items:center;">Media & File <span id="media-count" class="count-badge">0</span></h3>
+                 <button id="view-all-media-btn" class="card-action-btn">Semua <i class="ri-arrow-right-s-line"></i></button>
+              </div>
+              <div id="media-gallery" class="media-grid" aria-label="Galeri Media">
+                <div class="empty-state" style="grid-column: 1 / -1;"><i class="ri-folder-image-line"></i>Belum ada media</div>
+              </div>
             </div>
           </div>
+          <!-- MINIMAL TASKS -->
           <div class="card">
-            <div class="card-body" style="min-height:0">
-              <div class="card-head"><h3 class="card-title">Catatan Bersama</h3><a id="add-note-btn" class="btn primary"><i class="ri-add-line"></i> Tambah</a></div>
+            <div class="card-body">
+              <div class="card-head">
+                 <h3 class="card-title" style="display:flex; align-items:center;">Tugas <span id="task-count" class="count-badge">0</span></h3>
+                 <button id="add-task-btn" class="card-action-btn"><i class="ri-add-line"></i> Tambah</button>
+              </div>
+              <ul id="task-list" class="tasks" aria-label="Daftar tugas">
+                <div class="skeleton" style="height: 40px; width: 100%; border-radius: 4px; margin-bottom: 6px;"></div>
+              </ul>
+            </div>
+          </div>
+          <!-- MINIMAL NOTES -->
+          <div class="card">
+            <div class="card-body">
+              <div class="card-head">
+                 <h3 class="card-title" style="display:flex; align-items:center;">Catatan Bersama <span id="note-count" class="count-badge">0</span></h3>
+                 <a id="add-note-btn" class="card-action-btn"><i class="ri-add-line"></i> Tambah</a>
+              </div>
               <ul id="shared-notes-list" class="notes" aria-label="Catatan bersama">
-                 <div class="skeleton" style="height: 80px; width: 100%; border-radius: 12px;"></div>
+                 <div class="skeleton" style="height: 40px; width: 100%; border-radius: 4px; margin-bottom: 6px;"></div>
               </ul>
             </div>
           </div>
@@ -713,7 +894,7 @@
       const avatars = (t.completedBy||[]).map(uid=>{ const u = membersCache[uid]; return u?`<img src="${u.photoURL}" title="${u.displayName || u.name}" alt="${u.displayName || u.name}">`:''; }).join('');
       const safeTitle = (t.title || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
       const safeDesc = (t.description || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      li.innerHTML = `<div class="task-h"><div class="task-left"><div class="checkbox" data-id="${id}"><i class="ri-check-line"></i></div><div class="task-title">${safeTitle}</div></div><div style="display:flex; align-items:center; gap:10px"><span class="due ${due.cls}">${due.text}</span><div class="expand"><i class="ri-arrow-down-s-line"></i></div></div></div><div class="task-details">${t.description ? `<p class="task-desc">${safeDesc.replace(/\n/g,'<br>')}</p>` : ''}<div class="task-foot"><div><div class="who">${(t.completedBy?.length||0)} dari ${classMemberCount} selesai</div><div class="pp-row">${avatars}</div></div> ${isClassAdmin ? `<button class="del" data-id="${id}" aria-label="Hapus tugas"><i class="ri-delete-bin-6-line"></i> Hapus</button>`:''}</div></div>`;
+      li.innerHTML = `<div class="task-h"><div class="task-left"><div class="checkbox" data-id="${id}"><i class="ri-check-line"></i></div><div class="task-title">${safeTitle}</div></div><div style="display:flex; align-items:center; gap:8px"><span class="due ${due.cls}">${due.text}</span><div class="expand"><i class="ri-arrow-down-s-line"></i></div></div></div><div class="task-details">${t.description ? `<p class="task-desc">${safeDesc.replace(/\n/g,'<br>')}</p>` : ''}<div class="task-foot"><div><span class="who">${(t.completedBy?.length||0)} dari ${classMemberCount} selesai</span><div class="pp-row">${avatars}</div></div> ${isClassAdmin ? `<button class="del" data-id="${id}" aria-label="Hapus tugas"><i class="ri-delete-bin-line"></i></button>`:''}</div></div>`;
       ul.appendChild(li);
     }
     
@@ -767,15 +948,87 @@
         return wrap;
     }
 
+    function renderMediaGallery() {
+        const container = $('media-gallery');
+        const countEl = $('media-count');
+        if (!container) return;
+
+        const mediaArr = Array.from(mediaItemsMap.values())
+            .sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+
+        if (countEl) countEl.innerText = mediaArr.length;
+
+        if (mediaArr.length === 0) {
+            container.innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><i class="ri-folder-image-line"></i>Belum ada media</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+        const maxItems = 6;
+        const displayArr = mediaArr.slice(0, maxItems);
+        const hasMore = mediaArr.length > maxItems;
+
+        displayArr.forEach((media, index) => {
+            const isImg = media.attachmentType === 'image' || (media.attachmentType == null && media.image);
+            const attData = media.attachmentData || media.image;
+            const el = document.createElement('div');
+            el.className = 'media-item';
+            el.title = media.attachmentName || 'Media';
+            
+            let innerHTML = '';
+            if (isImg) {
+                innerHTML = `<img src="${attData}" alt="Media" class="gallery-img" style="width:100%; height:100%; object-fit:cover;">`;
+            } else {
+                const ext = (media.attachmentName || 'DOC').split('.').pop().toUpperCase();
+                innerHTML = `<a href="${attData}" download="${media.attachmentName}" class="media-doc" onclick="event.stopPropagation()"><i class="ri-file-text-fill"></i><span>${ext.substring(0,4)}</span></a>`;
+            }
+
+            if (hasMore && index === maxItems - 1) {
+                el.innerHTML = innerHTML + `<div class="more-overlay">+${mediaArr.length - maxItems + 1}</div>`;
+                el.onclick = () => showAllMediaModal(mediaArr);
+            } else {
+                el.innerHTML = innerHTML;
+            }
+            container.appendChild(el);
+        });
+    }
+
+    function showAllMediaModal(mediaArr) {
+        const grid = $('all-media-grid');
+        grid.innerHTML = '';
+        mediaArr.forEach(media => {
+            const isImg = media.attachmentType === 'image' || (media.attachmentType == null && media.image);
+            const attData = media.attachmentData || media.image;
+            const el = document.createElement('div');
+            el.className = 'media-item';
+            el.title = media.attachmentName || 'Media';
+            if (isImg) {
+                el.innerHTML = `<img src="${attData}" alt="Media" class="gallery-img" style="width:100%; height:100%; object-fit:cover;">`;
+            } else {
+                const ext = (media.attachmentName || 'DOC').split('.').pop().toUpperCase();
+                el.innerHTML = `<a href="${attData}" download="${media.attachmentName}" class="media-doc"><i class="ri-file-text-fill"></i><span>${ext.substring(0,4)}</span></a>`;
+            }
+            grid.appendChild(el);
+        });
+        $('all-media-modal').classList.add('show');
+    }
+
     function renderMessagesBatch(docs, prepend) {
         const feed = $('discussion-feed');
         if (!feed || docs.length === 0) return;
         
+        let mediaUpdated = false;
         const fragment = document.createDocumentFragment();
         docs.forEach(doc => {
             if (renderedMessageIds.has(doc.id)) return;
-            fragment.appendChild(createMsgElement(doc.data()));
+            const data = doc.data();
+            fragment.appendChild(createMsgElement(data));
             renderedMessageIds.add(doc.id);
+            
+            if (data.attachmentData || data.image) {
+                mediaItemsMap.set(doc.id, { id: doc.id, ...data });
+                mediaUpdated = true;
+            }
         });
 
         if (prepend) {
@@ -789,10 +1042,13 @@
                 requestAnimationFrame(() => feed.scrollTop = feed.scrollHeight);
             }
         }
+        
+        if (mediaUpdated) renderMediaGallery();
     }
 
     async function initialMessagesLoad() {
         renderedMessageIds.clear();
+        mediaItemsMap.clear();
         const discussionsRef = collection(db, 'classes', classId, 'discussions');
         const q = query(discussionsRef, orderBy('createdAt', 'desc'), limit(MESSAGES_PER_PAGE));
         const snap = await getDocs(q);
@@ -865,7 +1121,10 @@
       const qRef = query(collection(db,'classes',classId,'tasks'), orderBy('dueDate','asc'));
       tasksUnsub = onSnapshot(qRef,(snap)=>{
         const ul = $('task-list'); ul.innerHTML='';
-        if (snap.empty){ ul.innerHTML = '<div class="empty">Tidak ada tugas.</div>'; return; }
+        const countEl = $('task-count');
+        if (countEl) countEl.innerText = snap.size;
+
+        if (snap.empty){ ul.innerHTML = '<div class="empty-state"><i class="ri-check-double-line"></i>Belum ada tugas</div>'; return; }
         snap.forEach(d=> renderTask(d.id, d.data(), ul));
       });
     }
@@ -874,30 +1133,96 @@
         const qRef = query(collection(db,'classes',classId,'sharedNotes'), orderBy('sharedAt','desc'));
         notesUnsub = onSnapshot(qRef,(snap)=>{
             const ul = $('shared-notes-list'); ul.innerHTML='';
-            if (snap.empty){ ul.innerHTML = '<div class="empty">Belum ada catatan bersama.</div>'; return; }
-            snap.forEach(d=>{
+            
+            const visibleNotes = snap.docs.filter(d => !hiddenNotes.includes(d.id));
+            
+            const countEl = $('note-count');
+            if (countEl) countEl.innerText = visibleNotes.length;
+            
+            if (visibleNotes.length === 0){ 
+                ul.innerHTML = '<div class="empty-state"><i class="ri-sticky-note-line"></i>Belum ada catatan</div>'; 
+                return; 
+            }
+            
+            visibleNotes.forEach(d=>{
                 const n = d.data();
-                const a = el('a', { class: 'note', href: `/notes?note_id=${d.id}&class_id=${classId}` });
+                const li = el('li', { class: 'note-container', id: `shared-note-${d.id}` });
                 const safeTitle = (n.title || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
                 const safeBody = (n.body || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                a.innerHTML = `<h4>${safeTitle}</h4><p>${safeBody.substring(0,120)}${safeBody.length>120?'…':''}</p><small>Oleh ${n.sharedBy}</small>`;
-                ul.appendChild(a);
+                
+                li.innerHTML = `
+                    <a class="note" href="/notes?note_id=${d.id}&class_id=${classId}">
+                        <h4>${safeTitle}</h4>
+                        <p>${safeBody}</p>
+                        <small>Oleh ${n.sharedBy}</small>
+                    </a>
+                    <button class="note-del-btn" data-note-id="${d.id}" title="Hapus"><i class="ri-close-circle-line"></i></button>
+                `;
+                ul.appendChild(li);
             });
         });
+    }
+    
+    function listenMeetingState(){
+        const btn = $('start-meeting-btn');
+        if (!btn) return;
+        if (meetingUnsub) meetingUnsub();
+        
+        meetingUnsub = onSnapshot(doc(db, 'classes', classId), (snap) => {
+            if (!snap.exists()) return;
+            const activeUsers = snap.data().activeMeetUsers || [];
+            
+            if (activeUsers.length > 0) {
+                btn.classList.add('btn-live');
+                btn.innerHTML = `<i class="ri-live-fill" style="font-size: 16px; margin: 0; animation: pulse-live 2s infinite;"></i> <span class="hide-mobile">Live (${activeUsers.length})</span>`;
+            } else {
+                btn.classList.remove('btn-live');
+                btn.innerHTML = `<i class="ri-video-chat-fill" style="font-size: 16px; margin: 0;"></i> <span class="hide-mobile">Meet</span>`;
+            }
+        });
+    }
+
+    async function deleteSharedNoteFromClassPage(noteId) {
+        if (await showConfirm('Hapus catatan ini dari daftar Anda?')) {
+            try {
+                await deleteDoc(doc(db, 'classes', classId, 'sharedNotes', noteId));
+            } catch (err) {
+                if (err.code === 'permission-denied' || (err.message && err.message.toLowerCase().includes('permission'))) {
+                    try {
+                        await updateDoc(doc(db, 'users', currentUser.uid), {
+                            hiddenNotes: arrayUnion(noteId)
+                        });
+                        
+                        hiddenNotes.push(noteId);
+                        
+                        const noteEl = document.getElementById(`shared-note-${noteId}`);
+                        if (noteEl) noteEl.remove();
+                        
+                        if(document.querySelectorAll('.note-container').length === 0) {
+                            $('shared-notes-list').innerHTML = '<div class="empty-state"><i class="ri-sticky-note-line"></i>Belum ada catatan</div>';
+                        }
+                    } catch (hideErr) {
+                        console.error("Gagal menyembunyikan catatan:", hideErr);
+                        showAlert('Terjadi kesalahan saat menyembunyikan catatan.');
+                    }
+                } else {
+                    console.error("Gagal menghapus catatan:", err);
+                    showAlert('Gagal menghapus catatan.');
+                }
+            }
+        }
     }
 
     function attachEventListeners() {
         document.querySelectorAll('.logout').forEach(btn => btn.addEventListener('click', () => signOut(auth)));
         
         document.body.addEventListener('click', (e) => {
-            // Modal close handlers
             const closeModalButton = e.target.closest('[data-close-modal]');
             const overlay = e.target.closest('.overlay');
             if (closeModalButton || (overlay && e.target === overlay)) { 
                 (closeModalButton || e.target).closest('.overlay').classList.remove('show'); 
             }
             
-            // Action buttons
             if(e.target.closest('#add-task-btn')) $('add-task-modal').classList.add('show');
             if(e.target.closest('#send-btn')) addMessage();
             if(e.target.closest('#jump-latest')) { const feed = $('discussion-feed'); feed.scrollTo({ top: feed.scrollHeight, behavior: 'smooth' }); }
@@ -907,15 +1232,30 @@
             if(e.target.closest('#class-members-display')) $('member-list-modal').classList.add('show');
             if(e.target.closest('#settings-btn')) { getDoc(doc(db, 'classes', classId)).then(cs => { if (cs.exists()) openSettingsModal(cs.data()); }); }
             
-            // Image Preview Handlers
-            if(e.target.classList.contains('msg-img')) {
+            // Jitsi Events
+            if(e.target.closest('#start-meeting-btn')) { startMeeting(); }
+            if(e.target.closest('#leave-meeting-btn')) { leaveMeeting(); }
+            
+            if(e.target.closest('#view-all-media-btn')) {
+                const mediaArr = Array.from(mediaItemsMap.values()).sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+                if(mediaArr.length > 0) showAllMediaModal(mediaArr);
+            }
+
+            const noteDelBtn = e.target.closest('.note-del-btn');
+            if (noteDelBtn) {
+                e.preventDefault();
+                e.stopPropagation();
+                deleteSharedNoteFromClassPage(noteDelBtn.dataset.noteId);
+            }
+
+            if(e.target.classList.contains('msg-img') || e.target.classList.contains('gallery-img')) {
                 $('image-preview-img').src = e.target.src;
                 $('image-preview-modal').classList.add('show');
             }
             
             if (e.target.id === 'image-preview-modal' || e.target.closest('#image-preview-close')) {
                 $('image-preview-modal').classList.remove('show');
-                setTimeout(() => { if($('image-preview-img')) $('image-preview-img').src = ''; }, 300); // clear src after animation
+                setTimeout(() => { if($('image-preview-img')) $('image-preview-img').src = ''; }, 300);
             }
             
             const userId = e.target.closest('[data-user-id]');
@@ -929,7 +1269,7 @@
             if(e.target.id === 'file-input') { 
                 if (e.target.files.length > 0) {
                     uploadFile(e.target.files[0]); 
-                    e.target.value = ''; // Reset input to allow uploading the same file again
+                    e.target.value = ''; 
                 }
             }
         });
@@ -963,6 +1303,12 @@
 
         const sentinel = $('message-loader-sentinel');
         if (sentinel) observer.observe(sentinel);
+        
+        window.addEventListener('beforeunload', () => {
+            if (jitsiApi && classId && currentUser) {
+                updateDoc(doc(db, 'classes', classId), { activeMeetUsers: arrayRemove(currentUser.uid) }).catch(()=>{});
+            }
+        });
     }
     
     function handleTaskListClick(e) {
@@ -980,7 +1326,7 @@
       try{
         await addDoc(collection(db,'classes',classId,'tasks'),{ title, description: desc||null, dueDate: Timestamp.fromDate(new Date(dateStr)), createdAt: serverTimestamp(), creatorId: currentUser.uid, creatorName: currentUser.displayName||'—', completedBy: [] });
         $('add-task-form').reset(); $('add-task-modal').classList.remove('show');
-      }catch(err){ console.error("Gagal menambah tugas:", err); alert('Gagal menambahkan tugas.'); } 
+      }catch(err){ console.error("Gagal menambah tugas:", err); showAlert('Gagal menambahkan tugas.'); } 
       finally { $('confirm-add-task-btn').disabled = false; }
     }
 
@@ -989,13 +1335,13 @@
       const taskDoc = await getDoc(ref); if (!taskDoc.exists()) return;
       const isDone = (taskDoc.data().completedBy || []).includes(currentUser.uid);
       try { await updateDoc(ref, { completedBy: isDone ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid) }); } 
-      catch (e) { console.error("Gagal update tugas:", e); alert('Gagal memperbarui status tugas.'); }
+      catch (e) { console.error("Gagal update tugas:", e); showAlert('Gagal memperbarui status tugas.'); }
     }
 
     async function deleteTask(id){
-      if (await showConfirm('Hapus tugas ini untuk semua anggota kelas? Aksi ini tidak dapat dibatalkan.')) {
+      if (await showConfirm('Hapus tugas ini untuk semua anggota kelas?')) {
         try{ await deleteDoc(doc(db,'classes',classId,'tasks',id)); }
-        catch(e){ console.error("Gagal hapus tugas:",e); alert('Gagal menghapus tugas.'); }
+        catch(e){ console.error("Gagal hapus tugas:",e); showAlert('Gagal menghapus tugas.'); }
       }
     }
 
@@ -1022,11 +1368,10 @@
         
         await addDoc(collection(db,'classes',classId,'discussions'), payload);
         ta.value=''; ta.dispatchEvent(new Event('input'));
-      }catch(e){ console.error("Gagal kirim pesan:", e); alert('Gagal mengirim pesan.'); }
+      }catch(e){ console.error("Gagal kirim pesan:", e); showAlert('Gagal mengirim pesan.'); }
       finally{ ta.disabled=false; $('send-btn').disabled=false; ta.focus(); }
     }
     
-    // --- HELPER FUNCTION: CLIENT-SIDE IMAGE COMPRESSION ---
     function compressImage(file, maxSizeKB) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -1077,7 +1422,7 @@
                 attachmentData = await compressImage(file, 700); 
             } else {
                 if (file.size > 750 * 1024) { 
-                    alert('Gagal! Untuk dokumen (PDF/Word/dll), ukuran maksimal adalah 750KB karena batasan database. Jika Anda ingin mengunggah file besar, silakan unggah format Gambar, sistem akan mengompresnya otomatis.');
+                    showAlert('Dokumen maksimal 750KB. Jika gambar, sistem akan kompres otomatis.');
                     return;
                 }
                 attachmentData = await new Promise((resolve, reject) => {
@@ -1091,7 +1436,7 @@
         } 
         catch (error) { 
             console.error('Gagal memproses file:', error); 
-            alert('Gagal memproses file.'); 
+            showAlert('Gagal memproses file.'); 
         }
     }
 
@@ -1106,15 +1451,15 @@
             const userIdToKick = kickButton.dataset.kickUid;
             const memberName = membersCache[userIdToKick]?.name || 'anggota ini';
             
-            if (await showConfirm(`Anda yakin ingin mengeluarkan ${memberName} dari kelas?`)) {
+            if (await showConfirm(`Keluarkan ${memberName} dari kelas?`)) {
                 try {
                     const classRef = doc(db, 'classes', classId);
                     await updateDoc(classRef, { members: arrayRemove(userIdToKick) });
                     delete membersCache[userIdToKick];
                     renderClassMembers();
                 } catch (err) {
-                    console.error("Gagal mengeluarkan anggota:", err);
-                    alert("Gagal mengeluarkan anggota.");
+                    console.error("Gagal mengeluarkan:", err);
+                    showAlert("Gagal mengeluarkan anggota.");
                 }
             }
         }
@@ -1124,13 +1469,13 @@
         e.preventDefault();
         const settings = { classIcon: $('settings-icon').value, namaMataKuliah: $('settings-name').value, dosen: $('settings-lecturer').value, ruang: $('settings-room').value, sks: Number($('settings-sks').value), hari: $('settings-day').value, waktu: $('settings-start-time').value, waktuSelesai: $('settings-end-time').value, };
         try { await updateDoc(doc(db, 'classes', classId), settings); $('settings-modal').classList.remove('show'); loadClass(); } 
-        catch (err) { console.error("Gagal menyimpan pengaturan:", err); alert("Gagal menyimpan pengaturan."); }
+        catch (err) { console.error("Gagal menyimpan:", err); showAlert("Gagal menyimpan pengaturan."); }
     }
 
     async function deleteClass() {
-        if (await showConfirm('PERINGATAN: Anda akan menghapus kelas ini secara permanen untuk semua anggota. Semua data terkait akan hilang. Aksi ini tidak dapat dibatalkan.')) {
-            try { await deleteDoc(doc(db, 'classes', classId)); alert('Kelas telah dihapus.'); window.location.assign('/classes'); } 
-            catch (err) { console.error("Gagal menghapus kelas:", err); alert("Gagal menghapus kelas."); }
+        if (await showConfirm('PERINGATAN: Hapus kelas ini secara permanen? Semua data terkait akan hilang.')) {
+            try { await deleteDoc(doc(db, 'classes', classId)); showAlert('Kelas dihapus.').then(() => window.location.assign('/classes')); } 
+            catch (err) { console.error("Gagal menghapus:", err); showAlert("Gagal menghapus kelas."); }
         }
     }
     
@@ -1141,13 +1486,151 @@
         $('profile-modal').classList.add('show');
     }
 
-    function cleanup(){ if(discussionUnsub) discussionUnsub(); if(tasksUnsub) tasksUnsub(); if(notesUnsub) notesUnsub(); }
+    // --- NEW Jitsi Meeting Functions (Updated 8x8 Integration) ---
+    function startMeeting() {
+        if (!classId) return showAlert("Kelas tidak ditemukan.");
+        
+        // Consistent room name based on ClassId so all class members enter the same meeting automatically
+        const baseRoomName = `Academate_Class_${classId.replace(/[^a-zA-Z0-9]/g, '')}`;
+        // Prefix with your specific 8x8 JaaS tenant ID snippet
+        const consistentRoomName = `vpaas-magic-cookie-889e861450a1472c803508843052351f/${baseRoomName}`;
+        
+        // Extract dynamically Class Icon and Class Name from DOM
+        const titleEl = $('class-title');
+        let className = 'Kelas';
+        let classIcon = '📚';
+        
+        if (titleEl) {
+            const iconEl = titleEl.querySelector('.header-icon');
+            if (iconEl) {
+                classIcon = iconEl.innerText.trim();
+                className = titleEl.innerText.replace(classIcon, '').trim();
+            } else {
+                className = titleEl.innerText.trim();
+            }
+        }
+        
+        $('meeting-class-icon').innerText = classIcon;
+        $('meeting-room-name').innerText = className;
+        $('meeting-overlay').classList.add('show');
+        
+        const options = {
+            roomName: consistentRoomName,
+            jwt: "eyJraWQiOiJ2cGFhcy1tYWdpYy1jb29raWUtODg5ZTg2MTQ1MGExNDcyYzgwMzUwODg0MzA1MjM1MWYvNjIzYWY4LVNBTVBMRV9BUFAiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJqaXRzaSIsImlzcyI6ImNoYXQiLCJpYXQiOjE3ODEyOTQ2MTAsImV4cCI6MTc4MTMwMTgxMCwibmJmIjoxNzgxMjk0NjA1LCJzdWIiOiJ2cGFhcy1tYWdpYy1jb29raWUtODg5ZTg2MTQ1MGExNDcyYzgwMzUwODg0MzA1MjM1MWYiLCJjb250ZXh0Ijp7ImZlYXR1cmVzIjp7ImxpdmVzdHJlYW1pbmciOmZhbHNlLCJmaWxlLXVwbG9hZCI6ZmFsc2UsIm91dGJvdW5kLWNhbGwiOmZhbHNlLCJzaXAtb3V0Ym91bmQtY2FsbCI6ZmFsc2UsInRyYW5zY3JpcHRpb24iOmZhbHNlLCJsaXN0LXZpc2l0b3JzIjpmYWxzZSwicmVjb3JkaW5nIjpmYWxzZSwiZmxpcCI6ZmFsc2V9LCJ1c2VyIjp7ImhpZGRlbi1mcm9tLXJlY29yZGVyIjpmYWxzZSwibW9kZXJhdG9yIjp0cnVlLCJuYW1lIjoiVGVzdCBVc2VyIiwiaWQiOiJnb29nbGUtb2F1dGgyfDEwMzM4NzU1NDc4NjU4Nzc1MDU5NiIsImF2YXRhciI6IiIsImVtYWlsIjoidGVzdC51c2VyQGNvbXBhbnkuY29tIn19LCJyb29tIjoiKiJ9.I-1i9TiU4kbVfnVVtv7ETDwEdeb3iqHZnUqk-JHchz1K9t8Sx9dNDV8-klaTdulyhuPMuhpvOEtSLKJ11ywMRHQGJHDb3svycymRVn1YG_bp1FQ4P1o6P7JG_WXC33YQGdHHaoQDdyuLyeqEbt-JxAm2I2hWZXJFMqY17bBW09mCFPRa_DIIGkqGYc8fsjySDWCvFBCOHN7_nusO7tstSre6nUyTXXkHxEv2bAdr9cvzbvr1mPUSSnTAUBp8RICJCZlZ6wsimnk7beIoTqLXMX1sBZKmhvLwbyWvcy_ia-8kEEysT_STzOqwUYX4M7zZqIcXKNb_EDS3_fz6I-BZLQ",
+            width: '100%',
+            height: '100%',
+            parentNode: document.querySelector('#jitsi-container'),
+            userInfo: {
+                email: currentUser.email || '',
+                displayName: currentUser.displayName || currentUser.name || 'Anggota Kelas',
+                avatarUrl: currentUser.photoURL || ''
+            },
+            configOverwrite: {
+                startWithAudioMuted: false,
+                startWithVideoMuted: false,
+                prejoinPageEnabled: false, // SKIP PRE-JOIN LOBBY FOR FASTER ACCESS
+                disableDeepLinking: true,
+                requireDisplayName: false
+            },
+            interfaceConfigOverwrite: {
+                APP_NAME: 'Academate Meet',
+                SHOW_JITSI_WATERMARK: false,
+                SHOW_WATERMARK_FOR_GUESTS: false,
+                SHOW_BRAND_WATERMARK: false,
+                BRAND_WATERMARK_LINK: '',
+                DEFAULT_LOGO_URL: '',
+                DEFAULT_BACKGROUND: '#1E1F24',
+                TOOLBAR_BUTTONS: [
+                    'microphone', 'camera', 'desktop', 'fullscreen',
+                    'fodeviceselection', 'profile', 'chat',
+                    'settings', 'raisehand',
+                    'videoquality', 'filmstrip', 'shortcuts',
+                    'tileview', 'videobackgroundblur', 'mute-everyone', 'security'
+                ]
+            }
+        };
+
+        jitsiApi = new JitsiMeetExternalAPI('8x8.vc', options);
+        
+        const userName = currentUser.displayName || currentUser.name || 'Anggota Kelas';
+        const userEmail = currentUser.email || '';
+        const userAvatar = currentUser.photoURL || '';
+
+        // 1. Force override immediately so the Pre-Join / Onboarding screen catches it
+        jitsiApi.executeCommand('displayName', userName);
+        jitsiApi.executeCommand('email', userEmail);
+        if (userAvatar) {
+            jitsiApi.executeCommand('avatarUrl', userAvatar);
+        }
+        
+        // 2. Force override again once the user fully joins (Fallback to ensure it sticks)
+        jitsiApi.on('videoConferenceJoined', () => {
+            jitsiApi.executeCommand('displayName', userName);
+            jitsiApi.executeCommand('email', userEmail);
+            if (userAvatar) {
+                jitsiApi.executeCommand('avatarUrl', userAvatar);
+            }
+        });
+
+        // Auto close overlay when meeting is hung up natively via Jitsi red button
+        jitsiApi.addEventListener('readyToClose', () => {
+            leaveMeeting();
+        });
+        
+        // Track active meeting users in Firestore
+        updateDoc(doc(db, 'classes', classId), {
+            activeMeetUsers: arrayUnion(currentUser.uid)
+        }).catch(err => console.error("Error setting active meet user:", err));
+    }
+
+    function leaveMeeting() {
+        if (jitsiApi) {
+            jitsiApi.dispose();
+            jitsiApi = null;
+        }
+        $('meeting-overlay').classList.remove('show');
+        
+        // Remove tracking from active meeting users
+        if (classId && currentUser) {
+            updateDoc(doc(db, 'classes', classId), {
+                activeMeetUsers: arrayRemove(currentUser.uid)
+            }).catch(err => console.error("Error removing active meet user:", err));
+        }
+    }
+
+    function cleanup(){ if(discussionUnsub) discussionUnsub(); if(tasksUnsub) tasksUnsub(); if(notesUnsub) notesUnsub(); if(meetingUnsub) meetingUnsub(); if(jitsiApi) leaveMeeting(); }
     function updatePlaceholder() { const input = $('discussion-input'); if (!input) return; if (window.innerWidth <= 600) input.placeholder = "Ketik pesan…"; else input.placeholder = "Ketik pesan…"; }
     function fixVH(){ document.documentElement.style.setProperty('--vh', window.innerHeight + 'px'); }
-    function renderEmpty(msg){ showContent(); $('content').innerHTML = `<div class="empty">${msg}</div>`; $('header').innerHTML = ''; }
+    function renderEmpty(msg){ showContent(); $('content').innerHTML = `<div class="empty-state"><i class="ri-error-warning-line"></i>${msg}</div>`; $('header').innerHTML = ''; }
     function el(tag, attrs={}, children){ const e = document.createElement(tag); Object.entries(attrs||{}).forEach(([k,v])=> e.setAttribute(k,v)); if (children != null) e.innerHTML = children; return e; }
-    function formatDue(ts){ const now = new Date(); const due = ts?.toDate?.() || new Date(); now.setHours(0,0,0,0); due.setHours(0,0,0,0); const diff = Math.ceil((due-now)/(1000*60*60*24)); if (diff < 0) return {text:'Telah lewat', cls:'overdue'}; if (diff === 0) return {text:'Tenggat hari ini', cls:'urgent'}; if (diff === 1) return {text:'Tenggat besok', cls:'urgent'}; if (diff <= 7) return {text:`Tenggat ${diff} hari`, cls:'soon'}; return {text: due.toLocaleDateString('id-ID',{day:'numeric',month:'short'}), cls:'normal'}; }
-    function showConfirm(message) { return new Promise(resolve => { const cO = el('div', { class: 'overlay show' }); const cM = el('div', { class: 'modal' }); const msg = el('p', {style: "line-height:1.6;"}, message); const foot = el('div', { class: 'm-foot' }); const yes = el('button', { class: 'm-btn primary' }, 'Ya, Lanjutkan'); const no = el('button', { class: 'm-btn ghost' }, 'Batal'); foot.append(no, yes); cM.append(msg, foot); cO.append(cM); document.body.appendChild(cO); const close = (r) => { resolve(r); cO.remove(); }; yes.onclick = () => close(true); no.onclick = () => close(false); }); }
+    function formatDue(ts){ const now = new Date(); const due = ts?.toDate?.() || new Date(); now.setHours(0,0,0,0); due.setHours(0,0,0,0); const diff = Math.ceil((due-now)/(1000*60*60*24)); if (diff < 0) return {text:'Telah lewat', cls:'overdue'}; if (diff === 0) return {text:'Hari ini', cls:'urgent'}; if (diff === 1) return {text:'Besok', cls:'urgent'}; if (diff <= 7) return {text:`${diff} hari`, cls:'soon'}; return {text: due.toLocaleDateString('id-ID',{day:'numeric',month:'short'}), cls:'normal'}; }
+    
+    // Custom minimalist Alert & Confirm dialogs to comply with rules
+    function showAlert(message) {
+        return new Promise(resolve => {
+            const cO = el('div', { class: 'overlay show' });
+            const cM = el('div', { class: 'modal', style: 'width: min(90vw, 360px); text-align: center;' });
+            const msg = el('p', {style: "line-height:1.6; color: var(--text); margin-bottom: 20px;"}, message);
+            const foot = el('div', { class: 'm-foot', style: 'justify-content:center; margin-top:0;' });
+            const ok = el('button', { class: 'm-btn primary full' }, 'OK');
+            foot.append(ok); cM.append(msg, foot); cO.append(cM); document.body.appendChild(cO);
+            ok.onclick = () => { resolve(); cO.remove(); };
+        });
+    }
+    
+    function showConfirm(message) { 
+        return new Promise(resolve => { 
+            const cO = el('div', { class: 'overlay show' }); 
+            const cM = el('div', { class: 'modal', style: 'width: min(90vw, 360px);' }); 
+            const msg = el('p', {style: "line-height:1.6; color: var(--text); margin-bottom: 20px; font-weight: 500;"}, message); 
+            const foot = el('div', { class: 'm-foot', style: 'margin-top:0;' }); 
+            const yes = el('button', { class: 'm-btn primary' }, 'Ya'); 
+            const no = el('button', { class: 'm-btn ghost' }, 'Batal'); 
+            foot.append(no, yes); cM.append(msg, foot); cO.append(cM); document.body.appendChild(cO); 
+            const close = (r) => { resolve(r); cO.remove(); }; 
+            yes.onclick = () => close(true); no.onclick = () => close(false); 
+        }); 
+    }
 
     function escapeHTML(s){ return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
   </script>

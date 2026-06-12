@@ -193,6 +193,7 @@
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
     }
     .note-card .excerpt {
         font-size: 14px;
@@ -526,6 +527,7 @@
                     <span id="reader-date"></span>
                 </div>
             </div>
+            <button id="reader-delete-btn" class="icon-btn" title="Hapus Catatan" style="display:none; color: var(--danger); border-color: #ffd2d2; background-color: #fff;"><i class="ri-delete-bin-line"></i></button>
         </div>
         <div id="reader-body"></div>
     </div>
@@ -564,6 +566,11 @@ const appCheck = initializeAppCheck(app, {
     let shareTargetClassId = null;
     let currentFilters = { type: 'all', class: 'all' };
     let isFirstLoad = true;
+    
+    // VARIABEL GLOBAL BARU
+    let currentSharedNoteId = null;
+    let currentSharedClassId = null;
+    let hiddenNotes = []; // Menyimpan ID catatan yang "dihapus" oleh user ini
 
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => document.querySelectorAll(selector);
@@ -637,8 +644,12 @@ const appCheck = initializeAppCheck(app, {
     }
     
     async function loadClasses(){
+        // Fetch hiddenNotes dari dokumen pengguna saat ini
         const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-        const classIds = userDoc.exists() ? (userDoc.data().joinedClasses || []) : [];
+        const userData = userDoc.exists() ? userDoc.data() : {};
+        const classIds = userData.joinedClasses || [];
+        hiddenNotes = userData.hiddenNotes || [];
+        
         if (!classIds.length) return;
         const snaps = await Promise.all(classIds.map(id => getDoc(doc(db, 'classes', id))));
         snaps.forEach(s => { if(s.exists()) classesCache[s.id] = s.data(); });
@@ -688,7 +699,10 @@ const appCheck = initializeAppCheck(app, {
 
     function updateAndRenderNotes(personal, shared) {
         const externalSharedNotes = shared.filter(note => note.originalOwnerId !== currentUser.uid);
-        allNotes = [...personal, ...externalSharedNotes];
+        
+        // Gabungkan dan SEMBUNYIKAN (filter) catatan yang "dihapus" oleh user ini
+        allNotes = [...personal, ...externalSharedNotes].filter(note => !hiddenNotes.includes(note.id));
+
         allNotes.sort((a,b) => (b.updatedAt?.toMillis() || b.sharedAt?.toMillis() || 0) - (a.updatedAt?.toMillis() || a.sharedAt?.toMillis() || 0));
         renderNotesGrid();
         
@@ -812,10 +826,20 @@ const appCheck = initializeAppCheck(app, {
                 return;
             }
             const note = noteSnap.data();
+            
+            // Set ke variabel global
+            currentSharedNoteId = noteId;
+            currentSharedClassId = classId;
+
             $('#reader-title').textContent = escapeHTML(note.title);
             $('#reader-author').textContent = `Oleh ${escapeHTML(note.sharedBy)}`;
             $('#reader-date').textContent = formatDate(note.sharedAt);
             $('#reader-body').innerHTML = escapeHTML(note.body).replace(/\n/g, '<br>');
+            
+            // Tampilkan tombol hapus untuk SEMUA orang tanpa batasan
+            const deleteBtn = $('#reader-delete-btn');
+            deleteBtn.style.display = 'grid';
+
             overlay.classList.add('show');
         } catch (err) {
             console.error("Error fetching shared note:", err);
@@ -833,6 +857,8 @@ const appCheck = initializeAppCheck(app, {
     
     function closeReader() {
         $('#reader-overlay').classList.remove('show');
+        currentSharedNoteId = null;
+        currentSharedClassId = null;
     }
 
     function scheduleAutoSave(force = false) {
@@ -939,15 +965,59 @@ const appCheck = initializeAppCheck(app, {
             }
         }
     }
+    
+    // FUNGSI MENGHAPUS CATATAN BERSAMA (FALLBACK KE HIDE JIKA TIDAK ADA IZIN)
+    async function deleteSharedNote() {
+        if (!currentSharedNoteId || !currentSharedClassId) return;
+        
+        if (confirm('Anda yakin ingin menghapus catatan ini dari daftar Anda?')) {
+            try {
+                // Mencoba untuk menghapus dokumen sepenuhnya dari backend (Untuk Pemilik / Admin)
+                await deleteDoc(doc(db, 'classes', currentSharedClassId, 'sharedNotes', currentSharedNoteId));
+                closeReader();
+            } catch (err) {
+                // Apabila akun pengguna ini tidak punya izin untuk menghapus catatan tersebut sepenuhnya
+                // Kita secara halus akan menyembunyikan saja catatan tersebut dari list user ini!
+                if (err.code === 'permission-denied' || (err.message && err.message.toLowerCase().includes('permission'))) {
+                    try {
+                        // Tambahkan ID catatan ke array 'hiddenNotes' di database user
+                        await updateDoc(doc(db, 'users', currentUser.uid), {
+                            hiddenNotes: arrayUnion(currentSharedNoteId)
+                        });
+                        
+                        // Perbarui status lokal
+                        hiddenNotes.push(currentSharedNoteId);
+                        allNotes = allNotes.filter(n => n.id !== currentSharedNoteId);
+                        
+                        // Render ulang antarmuka
+                        renderNotesGrid();
+                        closeReader();
+                    } catch (hideErr) {
+                        console.error("Gagal menyembunyikan catatan:", hideErr);
+                        alert('Terjadi kesalahan saat menghapus catatan dari daftar.');
+                    }
+                } else {
+                    console.error("Gagal menghapus catatan:", err);
+                    alert('Gagal menghapus catatan.');
+                }
+            }
+        }
+    }
 
     async function shareNoteToClass(noteId, classId) {
         const noteRef = doc(db, 'users', currentUser.uid, 'notes', noteId);
         const noteSnap = await getDoc(noteRef);
         if (!noteSnap.exists()) {
             console.error('Note to be shared does not exist.');
-            return;
+            return false;
         }
         const noteData = noteSnap.data();
+
+        // MENCEGAH DUPLIKASI
+        if (noteData.sharedTo && noteData.sharedTo.includes(classId)) {
+            alert('Catatan ini sudah dibagikan ke kelas tersebut.');
+            return false;
+        }
 
         try {
             await addDoc(collection(db, 'classes', classId, 'sharedNotes'), {
@@ -960,8 +1030,10 @@ const appCheck = initializeAppCheck(app, {
                 sharedAt: serverTimestamp()
             });
             await updateDoc(noteRef, { sharedTo: arrayUnion(classId) });
+            return true;
         } catch(e) {
             console.error("Failed to auto-share note:", e);
+            return false;
         }
     }
     
@@ -978,15 +1050,18 @@ const appCheck = initializeAppCheck(app, {
         if (!classId) return;
         
         await scheduleAutoSave(true);
-        await shareNoteToClass(currentNoteId, classId);
+        const success = await shareNoteToClass(currentNoteId, classId);
         
-        if (!currentNoteTags.includes(classId)) {
-            currentNoteTags.push(classId);
-            updateTagEditor();
+        // Hanya tambahkan tag jika sukses dibagikan
+        if (success) {
+            if (!currentNoteTags.includes(classId)) {
+                currentNoteTags.push(classId);
+                updateTagEditor();
+            }
+            alert('Catatan berhasil dibagikan!');
         }
 
         $('#share-modal').classList.remove('show');
-        alert('Catatan berhasil dibagikan!');
     }
 
     function handleUrlParams() {
@@ -1028,6 +1103,9 @@ const appCheck = initializeAppCheck(app, {
         $('#reader-back-btn').addEventListener('click', closeReader);
         $('#delete-btn').addEventListener('click', deleteCurrentNote);
         $('#share-btn').addEventListener('click', handleShareModal);
+        
+        // Event listener untuk hapus catatan bersama di Overlay Reader
+        $('#reader-delete-btn')?.addEventListener('click', deleteSharedNote);
 
         $('#toggle-focus-btn').addEventListener('click', () => {
             document.body.classList.toggle('focus-mode');
