@@ -1,5 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const jwt = require("jsonwebtoken"); // Added for Jitsi token generation
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -262,3 +263,78 @@ exports.onClassDeleted = functions.region("asia-southeast2").firestore
         });
         return batch.commit();
     });
+
+
+// --- JITSI TOKEN GENERATOR ---
+exports.generateJitsiToken = functions.region("asia-southeast2").https.onCall((data, context) => {
+    // 1. Verify user is logged in
+    if (!context.auth) {
+        throw new functions.https.HttpsError("unauthenticated", "Anda harus login untuk membuat sesi rapat.");
+    }
+
+    // 2. Your 8x8 JaaS Credentials (Hardcoded for direct deployment)
+    const APP_ID = "vpaas-magic-cookie-889e861450a1472c803508843052351f";
+    const KEY_ID = "f53cee";
+    const PRIVATE_KEY = `-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCg76zMBqbQUoTu
+IB8WjdORudzX2bw063LxWczJFTFk+TguzVEet8PHtjRAaXDt9fpybYwY6U4yMZvd
+/HWcEBomPxtXXleQNcZzheSsSIWqw5qWD3dfjVAS6TmzFhGzjlrWyGCgv7zu8MVY
+I/YtLLyup2ZAfs3aki79iIadclj8Kw5sIpRWiP0edNS84reOcL1i8eKirqEeWXkW
+jfNU90mq/ydMRNnzZUid8ZGRKTbRWhgHWP77WglcHU3Ibl3YmMvf6YRROVvwNGDx
+qKg+ZHJ/+B+QNIC2Uv8tjpm4RGdap0/3+K0GlzaE+0wNf5moGdwC/NR7OsqVs4Wt
+exPGLUS7AgMBAAECggEAfuLZE3d/GCqngfOzbx3dHD01QL375KFqW53YlwXtjtXr
+lQLuHVD3vEMMyWgY0JUqpAN4/L8dlveEE66Tr7sGUvdYgDbyxNGRKM39MFRxhuR3
+wi5piN2qr25QvsD8rdvkBQmxHaxustkETuzzkESAcxeqx9jyRo0RHXYB5KseO5oY
+ZuiYSqY91irckzutGrxEA7sFIWuCl6u1BBypvCmWQJDvEfx2bpVO8IhZHO6qcLjM
+esob2zathow7pXt/OHJv+HbNws6+aZ/NkfzYErp+8BdPrWMZCDPZy59mc8WHFtje
+VxvBbJeVwJj+8G0+NXSy9Sc+3v/p4PhJQLrZRpICcQKBgQDld/s/IvjhzxokBKA3
+zCJLW+IsBKesq1VwvRBrfeB4ovfpooTWZLczo3d3fqoHf9L5QnOv1iHCU6UL0Ybd
+4PTgMc/FUsJz/vWg6tvReUfNbRlC4JlXiNWCSS5rudqnHUg1JWTxygmutBq1K0Al
+eH4wT+iMv0JgpVoj0KBTAW03CQKBgQCzizWFc4qsmfMVrjdFSjHLlCxPm5JRWo3l
+XMHExoekPNdtcuq0PyhotX6+8vkRFvDJgWslDlPnlcLdiOaJBPRdEALQ3dUHcNXW
+17xstTIKJ+knTleLtviXJe/F+Y7PisZQe+nwz9uTaxR7+++GpIcpjC0TtObG1HW6
++lPu5u3qowKBgGz+bXeSy/at4XPEQrneG1gCH87asy4f/6haFWeJVcrXVbxCtqgD
+FMXRWliG8Io5W+OLfdnCcyyTgGy5rD7NsGKhJlhKtBRWwSMbCyhXXBSmQn5yokNi
+uk91JTiEAeiozvh3d5glaC30XE87aO+jaQTXn9Tir8uqHsOuP8jNf6vJAoGAXhoP
+YjONsis6IdnetB1P/gBaPRsv1B3fEyDLmkPnoegVjRLW+sPDfSXrGU+lxRQ9/Y8s
+Rg69YTq4GH6BPb1wCjqzDx/FYJH+Mg1+f4d0g6gpZmWEMwEiR64lfqDu/c4hZNud
+YI7A6gIMiXMhNnOTN+51TcfZ0MpYLji3txYoCnsCgYBwnJ1diCLMMOBcq8deV7h+
+78gMjOU5s/6uc+0H7GYGSCBiXM7q+4ZE5jISXXdRWtekHK3x/l3KBXQr5KYiFZUZ
+TAS5d/efC5b7lyLKQC1jF8B1FNipwDT0dgqRjSlQd3cxR5XY5xhskitMfCAByshz
+d9thVHhsmsVFizEO1dV+iA==
+-----END PRIVATE KEY-----`;
+
+    // 3. Get user data from context
+    const user = context.auth.token;
+
+    // 4. Construct the Jitsi Payload
+    const payload = {
+        aud: "jitsi",
+        iss: "chat",
+        sub: APP_ID,
+        room: "*", // Allows this token to be used for any room name
+        context: {
+            user: {
+                name: user.name || "Anggota Kelas",
+                email: user.email || "",
+                avatar: user.picture || "",
+                moderator: true // IMPORTANT: Makes everyone a moderator so the room opens instantly without waiting
+            },
+            features: {
+                livestreaming: false,
+                recording: false,
+                "outbound-call": false
+            }
+        }
+    };
+
+    // 5. Sign the token (Valid for 2 hours)
+    const options = {
+        expiresIn: "2h",
+        algorithm: "RS256",
+        keyid: `${APP_ID}/${KEY_ID}`
+    };
+
+    const token = jwt.sign(payload, PRIVATE_KEY, options);
+    return { token: token };
+});
