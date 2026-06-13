@@ -28,8 +28,8 @@ async function sendTelegramNotification(telegramChatId, message) {
 }
 
 // --- FCM/IN-APP HELPER ---
-async function sendNotificationToUser(userId, payload, notificationData) {
-    // 1. Save in-app notification
+async function sendNotificationToUser(userId, payload, notificationData, telegramMessage) {
+    // 1. Save in-app notification (Simpler text for web UI)
     try {
         await db.collection("users").doc(userId).collection("notifications").add(notificationData);
     } catch (error) {
@@ -51,9 +51,10 @@ async function sendNotificationToUser(userId, payload, notificationData) {
         }
     }
 
-    // 4. Send Telegram Notification
+    // 4. Send Telegram Notification (Uses specific formatted text if provided)
     if (userData.telegramChatId) {
-        await sendTelegramNotification(userData.telegramChatId, notificationData.message);
+        const finalTelegramMessage = telegramMessage || notificationData.message;
+        await sendTelegramNotification(userData.telegramChatId, finalTelegramMessage);
     }
 }
 
@@ -105,21 +106,25 @@ exports.onNewTask = functions.region("asia-southeast2").firestore
             }
         };
 
+        // Format simpel untuk Web App
         const notificationData = {
-            message: `🔔 <b>Tugas Baru: ${task.title || 'Tanpa Judul'}</b>\n` +
-                     `━━━━━━━━━━━━━━━━━━━━\n` +
-                     `📚 <b>Kelas:</b> ${classData.namaMataKuliah || 'Kelas'}\n` +
-                     `👤 <b>Oleh:</b> ${task.creatorName || 'Seseorang'}\n` +
-                     `📅 <b>Tenggat:</b> ${task.dueDate ? new Date(task.dueDate.seconds * 1000).toLocaleDateString('id-ID') : 'Tidak ditentukan'}\n` +
-                     `📝 <b>Detail:</b> ${task.description || 'Tidak ada detail tambahan.'}`,
+            title: `Tugas Baru: ${task.title || 'Tanpa Judul'}`,
+            message: `Tugas baru telah ditambahkan di kelas ${classData.namaMataKuliah || 'Kelas'} oleh ${task.creatorName || 'Seseorang'}.`,
             type: 'NEW_TASK',
             timestamp: admin.firestore.FieldValue.serverTimestamp(),
             read: false,
         };
 
+        // Format detail untuk Telegram (Tanpa garis putus-putus)
+        const telegramMessage = `🔔 <b>Tugas Baru: ${task.title || 'Tanpa Judul'}</b>\n` +
+                                `📚 <b>Kelas:</b> ${classData.namaMataKuliah || 'Kelas'}\n` +
+                                `👤 <b>Oleh:</b> ${task.creatorName || 'Seseorang'}\n` +
+                                `📅 <b>Tenggat:</b> ${task.dueDate ? new Date(task.dueDate.seconds * 1000).toLocaleDateString('id-ID') : 'Tidak ditentukan'}\n` +
+                                `📝 <b>Detail:</b> ${task.description || 'Tidak ada detail tambahan.'}`;
+
         const promises = members.map(memberId => {
             if (memberId === taskCreatorId) return null;
-            return sendNotificationToUser(memberId, payload, notificationData);
+            return sendNotificationToUser(memberId, payload, notificationData, telegramMessage);
         });
 
         return Promise.all(promises);
@@ -153,21 +158,25 @@ exports.taskDeadlineReminder = functions.region("asia-southeast2").pubsub
                 }
             };
 
+            // Format simpel untuk Web App
             const notificationData = {
-                message: `⚠️ <b>Tenggat Mendatang!</b>\n` +
-                         `━━━━━━━━━━━━━━━━━━━━\n` +
-                         `📌 <b>Tugas:</b> ${task.title || 'Tanpa Judul'}\n` +
-                         `📚 <b>Kelas:</b> ${classData.namaMataKuliah || 'Kelas'}\n` +
-                         `⏳ <b>Berakhir:</b> ${task.dueDate ? new Date(task.dueDate.seconds * 1000).toLocaleString('id-ID') : 'Segera'}\n` +
-                         `<i>Jangan sampai terlewat ya!</i>`,
+                title: `Tenggat Mendatang!`,
+                message: `Tugas "${task.title || 'Tanpa Judul'}" di kelas ${classData.namaMataKuliah || 'Kelas'} akan berakhir dalam 24 jam!`,
                 type: 'DEADLINE_REMINDER',
                 timestamp: admin.firestore.FieldValue.serverTimestamp(),
                 read: false,
             };
 
+            // Format detail untuk Telegram (Tanpa garis putus-putus)
+            const telegramMessage = `⚠️ <b>Tenggat Mendatang!</b>\n` +
+                                    `📌 <b>Tugas:</b> ${task.title || 'Tanpa Judul'}\n` +
+                                    `📚 <b>Kelas:</b> ${classData.namaMataKuliah || 'Kelas'}\n` +
+                                    `⏳ <b>Berakhir:</b> ${task.dueDate ? new Date(task.dueDate.seconds * 1000).toLocaleString('id-ID') : 'Segera'}\n` +
+                                    `<i>Jangan sampai terlewat ya!</i>`;
+
             const memberPromises = members.map(memberId => {
                 if (!task.completedBy || !task.completedBy.includes(memberId)) {
-                    return sendNotificationToUser(memberId, payload, notificationData);
+                    return sendNotificationToUser(memberId, payload, notificationData, telegramMessage);
                 }
                 return null;
             });
@@ -206,20 +215,24 @@ exports.classStartingReminder = functions.region("asia-southeast2").pubsub
                     }
                 };
 
+                // Format simpel untuk Web App
                 const notificationData = {
-                    message: `🕒 <b>Kelas Segera Dimulai!</b>\n` +
-                             `━━━━━━━━━━━━━━━━━━━━\n` +
-                             `📚 <b>Matkul:</b> ${classData.namaMataKuliah || 'Kelas'}\n` +
-                             `🏫 <b>Ruangan:</b> ${classData.ruang || '?'}\n` +
-                             `⏰ <b>Waktu:</b> ${classData.waktu || 'TBA'}\n` +
-                             `<i>Segera menuju ke kelas!</i>`,
+                    title: `Kelas Segera Dimulai!`,
+                    message: `Kelas ${classData.namaMataKuliah || 'Kelas'} di Ruang ${classData.ruang || '?'} akan dimulai dalam 10 menit.`,
                     type: 'CLASS_STARTING',
                     timestamp: admin.firestore.FieldValue.serverTimestamp(),
                     read: false,
                 };
 
+                // Format detail untuk Telegram (Tanpa garis putus-putus)
+                const telegramMessage = `🕒 <b>Kelas Segera Dimulai!</b>\n` +
+                                        `📚 <b>Matkul:</b> ${classData.namaMataKuliah || 'Kelas'}\n` +
+                                        `🏫 <b>Ruangan:</b> ${classData.ruang || '?'}\n` +
+                                        `⏰ <b>Waktu:</b> ${classData.waktu || 'TBA'}\n` +
+                                        `<i>Segera menuju ke kelas!</i>`;
+
                 (classData.members || []).forEach(memberId => {
-                    promises.push(sendNotificationToUser(memberId, payload, notificationData));
+                    promises.push(sendNotificationToUser(memberId, payload, notificationData, telegramMessage));
                 });
             }
         });
