@@ -339,15 +339,31 @@
   .section-header h2 { font-size: clamp(24px, 4vw, 36px); margin: 0 0 8px; }
   .section-header p { max-width: 600px; margin: 0 auto; color: var(--muted); font-size: 16px; line-height: 1.6; }
 
-  .pin-grid { display:grid; grid-template-columns: 1.35fr 0.65fr; gap:64px; align-items:start; padding:40px 0 60px; height: 300vh; }
+  .pin-grid { display:grid; grid-template-columns: 1.35fr 0.65fr; gap:64px; align-items:start; padding:40px 0 60px; height: 540vh; }
   .pin-wrap{position:sticky; top:100px; height: calc(100vh - 140px); display:flex; align-items:center;}
   .pin{position:relative; width: 100%;}
-  .steps{display:flex; flex-direction:column; gap:40px; padding:0; position: sticky; top: max(20vh, 100px);}
   
-  .step{min-height: auto; display: block; background:transparent; border:none; border-radius:16px; padding:0; box-shadow:none; opacity:.35; transform: translateX(-15px); transition:transform .5s cubic-bezier(0.22, 1, 0.36, 1), opacity .5s cubic-bezier(0.22, 1, 0.36, 1); cursor: pointer; text-align: left;}
+  .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 0;
+      position: sticky;
+      top: max(20vh, 100px);
+  }
+  
+  .step{
+      min-height: auto; 
+      display: block; 
+      background:transparent; border:none; border-radius:16px; padding:0; box-shadow:none; 
+      opacity:.35; transform: translateX(-15px); transition:transform .5s cubic-bezier(0.22, 1, 0.36, 1), opacity .5s cubic-bezier(0.22, 1, 0.36, 1); cursor: pointer; text-align: left;
+  }
   .step.active{opacity:1; transform:translateX(0);}
-  .step h3{margin:0 0 8px; font-size:22px; display: flex; align-items: center; gap: 12px; transition: color 0.3s;}
-  .step h3 i { color: var(--muted); font-size: 24px; transition: color 0.3s; }
+  .step h3{
+      margin:0 0 8px; font-size:22px; display: flex; align-items: center; gap: 12px; transition: color 0.3s;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .step h3 i { color: var(--muted); font-size: 24px; transition: color 0.3s; flex-shrink: 0; }
   .step.active h3 i { color: var(--primary); }
   .step p{margin:0; color:var(--muted); line-height: 1.6; font-size: 15px;}
   
@@ -432,217 +448,6 @@
       50% { border-color: rgba(111,108,255,0.4); }
   }
 
-  .visual-content img { flex-shrink: 0; object-fit: cover; }
-
-  /* --- 1. CHAT UI ENHANCEMENTS --- */
-  .chat-ui-v2 {
-      display: flex;
-      flex-direction: column;
-      width: 100%; max-width: 550px; height: 520px;
-      font-size: 13px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.6);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
-      overflow: hidden;
-      margin: auto;
-  }
-  
-  .chat-header-v2 { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid rgba(0,0,0,0.04); flex-shrink: 0; background: rgba(255,255,255,0.8); }
-  .chat-header-v2 h4 { margin: 0; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--text); }
-  
-  .members-v2 { display: flex; align-items: center; }
-  .members-v2 img { width: 28px !important; height: 28px !important; border-radius: 50%; border: 2px solid var(--surface); margin-left: -8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-  .members-v2 span { font-size: 12px; color: var(--muted); margin-left: 8px; font-weight: 500; background: #F3F2FF; padding: 4px 8px; border-radius: 20px; color: var(--primary); }
-  
-  .chat-messages-v2 { flex-grow: 1; padding: 24px; display: flex; flex-direction: column; gap: 16px; overflow: hidden; }
-  .day-divider-v2 { display: flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--muted); margin: 8px 0; }
-  .day-divider-v2:before, .day-divider-v2:after { content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.06); }
-  
-  .message-v2 { display: flex; gap: 12px; max-width: 80%; opacity: 0; will-change: transform, opacity; }
-  .active .message-v2:nth-child(2) { animation: popIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards, floatLoop 4s ease-in-out infinite 0.7s; }
-  .active .message-v2:nth-child(3) { animation: popIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s forwards, floatLoop 4.2s ease-in-out infinite 0.9s; }
-  .active .message-v2:nth-child(4) { animation: popIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s forwards, floatLoop 3.8s ease-in-out infinite 1.1s; }
-  .active .message-v2:nth-child(5) { animation: popIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.8s forwards, floatLoop 4.5s ease-in-out infinite 1.3s; }
-  
-  .message-v2.other { align-self: flex-start; }
-  .message-v2.me { align-self: flex-end; flex-direction: row-reverse; }
-  .message-v2 img { width: 36px !important; height: 36px !important; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-  .message-content-v2 { display: flex; flex-direction: column; }
-  .message-v2.me .message-content-v2 { align-items: flex-end; }
-  
-  .sender-v2 { font-weight: 600; font-size: 13px; margin-bottom: 6px; color: var(--muted); }
-  .bubble-v2 { padding: 12px 16px; border-radius: 16px; line-height: 1.5; font-size: 13px; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: transform 0.2s; }
-  .message-v2:hover .bubble-v2 { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-  
-  .message-v2.other .bubble-v2 { background: #F3F4F6; border-top-left-radius: 4px; color: var(--text); }
-  .message-v2.me .bubble-v2 { background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #fff; border-top-right-radius: 4px; box-shadow: 0 4px 12px rgba(111,108,255,0.2); }
-  
-  .typing-indicator { display: flex; gap: 4px; padding: 14px 16px; background: #F3F4F6; border-radius: 16px; border-top-left-radius: 4px; width: fit-content; }
-  .typing-indicator span { width: 6px; height: 6px; background: var(--muted); border-radius: 50%; animation: typingDot 1.4s infinite ease-in-out; }
-  .typing-indicator span:nth-child(1) { animation-delay: 0s; }
-  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-
-  .chat-composer-v2 { display: flex; align-items: center; gap: 12px; padding: 16px 24px; border-top: 1px solid rgba(0,0,0,0.04); background: rgba(255,255,255,0.8); }
-  .chat-composer-inner { flex-grow: 1; display: flex; align-items: center; background: var(--bg); padding: 10px 16px; border-radius: 24px; border: 1px solid var(--border); transition: border 0.2s; pointer-events: none; }
-  .chat-composer-inner input { flex-grow: 1; border: none; background: transparent; outline: none; font-size: 13px; margin-left: 8px; cursor: default; }
-  .chat-composer-v2 i { color: var(--muted); font-size: 20px; transition: color 0.2s; }
-  .btn-send { background: var(--primary); color: #fff !important; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 4px 10px rgba(111,108,255,0.3); border: none; }
-  .btn-send i { color: #ffffff !important; }
-
-  /* --- 2. TASKS UI ENHANCEMENTS --- */
-  .tasks-ui-v2 {
-      width: 100%; max-width: 550px; height: 520px; margin: auto;
-      display: flex; flex-direction: column;
-      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-radius: 20px; border: 1px solid rgba(255,255,255,0.6);
-      padding: 24px 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.06);
-      overflow: hidden;
-  }
-  
-  .tasks-header-v2 { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; flex-shrink: 0; }
-  .tasks-header-v2 h4 { margin: 0 0 6px; font-size: 20px; font-weight: 600; color: var(--text); }
-  .tasks-header-v2 p { margin: 0; font-size: 13px; color: var(--muted); }
-  .due-badge-v2 { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; background: #FEF2F2; color: var(--danger); box-shadow: 0 2px 10px rgba(239, 68, 68, 0.1); }
-  
-  .task-progress-v2 { margin-bottom: 16px; flex-shrink: 0; }
-  .tp-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--muted); }
-  .tp-bar { width: 100%; height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
-  .tp-bar div { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-2)); width: 50%; border-radius: 999px; }
-
-  .tasks-filter-v2 { display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.04); padding-bottom: 10px; flex-shrink: 0; white-space: nowrap; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none;}
-  .tasks-filter-v2::-webkit-scrollbar { display: none; }
-  .tf-btn { font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 10px; color: var(--muted); display: flex; align-items: center; gap: 6px;}
-  .tf-btn.active { background: #F3F4F6; color: var(--text); }
-  .tf-badge { background: var(--danger); color: #fff; padding: 2px 6px; border-radius: 10px; font-size: 10px; }
-
-  .task-list-v2 { display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
-  .task-v2 {
-      display: flex; align-items: center; gap: 12px; font-size: 14px; padding: 12px 16px; border-radius: 14px;
-      background: #fff; border: 1px solid var(--border); transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.02); opacity: 0; flex-shrink: 0; will-change: transform, opacity;
-  }
-  .active .task-v2:nth-child(1) { animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s forwards, glowTask 3s ease-in-out infinite 0.6s; }
-  .active .task-v2:nth-child(2) { animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards, glowTask 3.2s ease-in-out infinite 0.7s; }
-  .active .task-v2:nth-child(3) { animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s forwards, glowTask 2.8s ease-in-out infinite 0.8s; }
-  .active .task-v2:nth-child(4) { animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s forwards, glowTask 3.1s ease-in-out infinite 0.9s; }
-
-  .task-v2 p { margin: 0; flex-grow: 1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
-  
-  .task-v2 i.checkbox { font-size: 24px; color: var(--muted); }
-  .task-v2 img { width: 32px !important; height: 32px !important; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-  .task-v2.done p { text-decoration: line-through; color: var(--muted); opacity: 0.7; }
-  .task-v2.done i.checkbox { color: var(--primary); }
-  .task-v2.done { background: #FAFAFD; }
-  .task-tag { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 600; letter-spacing: 0.5px; flex-shrink: 0; }
-  .task-tag.research { background: #DBEAFE; color: #1E40AF; }
-  .task-tag.design { background: #FCE7F3; color: #BE185D; }
-
-  /* --- 3. SCHEDULE UI ENHANCEMENTS --- */
-  .schedule-ui-wrapper { width: 100%; max-width: 650px; height: 520px; margin: auto; display: flex; gap: 24px; }
-  .schedule-sidebar { width: 200px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.6); padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.06); display: flex; flex-direction: column; }
-  .mini-cal-month { font-weight: 600; font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-  .mini-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 11px; }
-  .mini-cal-day { padding: 4px 0; color: var(--muted); }
-  .mini-cal-date { padding: 6px 0; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
-  .mini-cal-date:hover { background: var(--bg); }
-  .mini-cal-date.active { background: var(--primary); color: #fff; font-weight: 600; box-shadow: 0 4px 8px rgba(111,108,255,0.3); }
-  .mini-cal-date.has-event { position: relative; }
-  .mini-cal-date.has-event::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--warning); border-radius: 50%; }
-  
-  .upcoming-events { margin-top: 24px; flex-grow: 1; }
-  .upcoming-events h5 { margin: 0 0 12px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-  .up-event { border-left: 3px solid var(--primary); padding-left: 10px; margin-bottom: 16px; }
-  .up-event.yellow { border-color: var(--warning); }
-  .up-event h6 { margin: 0 0 4px; font-size: 13px; color: var(--text); }
-  .up-event span { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
-
-  .schedule-ui-v2 {
-      flex-grow: 1; display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 20px 40px rgba(0,0,0,0.06);
-  }
-  .schedule-header-v2 { display: flex; justify-content: space-around; padding: 12px; border-bottom: 1px solid var(--border); background: #FBFCFE; }
-  .date-display-v2 { text-align: center; padding: 8px 16px; border-radius: 14px; cursor: pointer; transition: all 0.2s; position: relative; }
-  .date-display-v2:hover { background: rgba(111,108,255,0.05); }
-  .date-display-v2 .day-v2 { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
-  .date-display-v2 .date-v2 { display: block; font-size: 18px; font-weight: 700; color: var(--text); }
-  .date-display-v2.active { background: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 16px rgba(111,108,255,0.25); }
-  .date-display-v2.active .day-v2 { color: rgba(255,255,255,0.8); }
-  .date-display-v2.active .date-v2 { color: #fff; }
-  
-  .schedule-body-v2 {
-      --hr-size: 50px;
-      --pad-top: 12px;
-      flex-grow: 1; position: relative; padding: var(--pad-top) 16px 12px 60px;
-      background-image: repeating-linear-gradient(to bottom, transparent, transparent calc(var(--hr-size) - 1px), var(--border) var(--hr-size)); 
-      background-size: 100% var(--hr-size);
-      min-height: calc(var(--pad-top) + 6.5 * var(--hr-size));
-  }
-  .time-labels { position: absolute; left: 16px; top: 0; bottom: 0; display: flex; flex-direction: column; font-size: 11px; color: var(--muted); font-weight: 500; padding-top: 8px; }
-  .time-labels span { height: var(--hr-size); }
-  
-  .time-indicator-v2 { position: absolute; left: 50px; right: 0; height: 2px; background: var(--danger); z-index: 10; box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); animation: pulseLine 2s infinite, slowMoveLine 15s infinite alternate ease-in-out; }
-  .time-indicator-v2::before { content: ''; position: absolute; left: 0; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2); }
-  
-  .schedule-event-v2 {
-      position: absolute; left: 60px; right: 20px; border-radius: 12px; padding: 12px; font-size: 12px; color: var(--text); border-left: 4px solid; overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; opacity: 0;
-      top: calc(var(--pad-top) + var(--start) * var(--hr-size));
-      height: calc(var(--duration) * var(--hr-size));
-      will-change: transform, opacity;
-  }
-  .active .schedule-event-v2 { animation: popIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-  .active .schedule-event-v2:nth-of-type(2) { animation: popIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s forwards, floatLoop 4s ease-in-out infinite 0.55s; }
-  .active .schedule-event-v2:nth-of-type(3) { animation: popIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s forwards, floatLoop 4.5s ease-in-out infinite 0.7s; }
-  .active .schedule-event-v2:nth-of-type(4) { animation: popIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.45s forwards, floatLoop 3.5s ease-in-out infinite 0.85s; }
-
-  .schedule-event-v2 strong { font-size: 14px; display: block; margin-bottom: 4px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-  .schedule-event-v2 span { display: flex; align-items: center; gap: 6px; font-size: 12px; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-  .schedule-event-v2 .avatars { position: absolute; right: 12px; top: 12px; display: flex; }
-  .schedule-event-v2 .avatars img { width: 24px !important; height: 24px !important; border-radius: 50%; border: 2px solid #fff; margin-left: -8px; }
-
-  /* --- 4. NOTES UI ENHANCEMENTS --- */
-  .notes-ui-wrapper { width: 100%; max-width: 650px; height: 520px; margin: auto; display: flex; flex-direction: column; gap: 20px; }
-  .notes-topbar { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); border-radius: 20px; padding: 16px 24px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-  .search-mockup { display: flex; align-items: center; gap: 10px; background: var(--bg); padding: 10px 16px; border-radius: 12px; color: var(--muted); font-size: 13px; width: 300px; border: 1px solid var(--border); }
-  .notes-filters { display: flex; gap: 10px; }
-  .filter-btn { padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
-  .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
-  
-  .notes-ui-v2 {
-      column-count: 2; column-gap: 20px; flex-grow: 1; padding: 4px;
-  }
-  .note-card-v2 {
-      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.6);
-      padding: 24px; margin-bottom: 20px; break-inside: avoid; box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-      position: relative; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); opacity: 0; will-change: transform, opacity;
-  }
-  .active .note-card-v2:nth-child(1) { animation: popIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s forwards, floatLoop 5s ease-in-out infinite 0.6s; }
-  .active .note-card-v2:nth-child(2) { animation: popIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards, floatLoop 4.8s ease-in-out infinite 0.7s; }
-  .active .note-card-v2:nth-child(3) { animation: popIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s forwards, floatLoop 5.2s ease-in-out infinite 0.8s; }
-  
-  .note-card-v2::before { content: ''; position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.03) 50%); border-bottom-left-radius: 8px; pointer-events: none; }
-  
-  .note-card-v2 h4 { font-size: 16px; margin: 0 0 10px; font-weight: 600; color: var(--text); line-height: 1.4; }
-  .note-card-v2 p { font-size: 13px; margin: 0; color: var(--muted); line-height: 1.6; }
-  
-  .checklist-v2 { list-style: none; padding: 0; margin: 12px 0 0; font-size: 13px; display: flex; flex-direction: column; gap: 8px; }
-  .checklist-v2 li { display: flex; align-items: center; gap: 10px; color: var(--text); background: #F9FAFB; padding: 8px 12px; border-radius: 8px; }
-  .checklist-v2 li.done { text-decoration: line-through; color: var(--muted); background: transparent; }
-  .checklist-v2 li.done i { color: var(--primary); }
-  .checklist-v2 li i { font-size: 18px; color: var(--muted); }
-  
-  .note-footer-v2 { margin-top: 20px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(0,0,0,0.04); padding-top: 16px; }
-  .tag-v2 { font-size: 11px; font-weight: 600; padding: 6px 10px; border-radius: 8px; letter-spacing: 0.5px; }
-  .tag-v2.blue { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
-  .tag-v2.purple { background: #F5F3FF; color: #6D28D9; border: 1px solid #DDD6FE; }
-  .tag-v2.green { background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0; }
-  .author-v2 { font-size: 11px; font-weight: 500; color: var(--muted); display: flex; align-items: center; gap: 6px; }
-  .author-v2 img { width: 20px !important; height: 20px !important; border-radius: 50%; }
-  
-  .note-card-v2.shared { background: linear-gradient(145deg, #ffffff, #FAFAFD); }
-
   .how-it-works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .how-step { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); padding: 24px; text-align: center; }
   .how-step .step-number { font-size: 24px; font-weight: 700; color: var(--primary); background: #F3F2FF; width: 50px; height: 50px; line-height: 50px; border-radius: 50%; margin: 0 auto 16px; }
@@ -664,93 +469,489 @@
   .footer-links a { text-decoration: none; color: var(--muted); transition: color .2s; }
   .footer-links a:hover { color: var(--primary); }
   
+  .feature-header-upgrade h2{ max-width: 820px; margin-left: auto; margin-right: auto; }
+  .feature-header-upgrade p{ max-width: 720px; }
+  .feature-pin-upgrade .step h3{ align-items: flex-start; }
+  .feature-pill-row{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:18px; }
+  .feature-pill{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--border); background:rgba(255,255,255,.76); color:var(--muted); font-size:12px; font-weight:600; box-shadow:0 8px 20px rgba(30,31,36,.04); }
+  .feature-pill i{ color:var(--primary); }
+
+  .feature-visual-stage{ background: radial-gradient(circle at 18% 18%, rgba(182,165,215,.55), transparent 32%), radial-gradient(circle at 82% 14%, rgba(106,201,255,.38), transparent 30%), radial-gradient(circle at 50% 92%, rgba(111,108,255,.20), transparent 36%), linear-gradient(145deg,#FBFAFF 0%,#F7F7FA 56%,#EEF3FF 100%); }
+  .feature-visual-stage::before, .feature-visual-stage::after{ opacity:.28; }
+  .feature-scene{ width:100%; max-width:660px; min-height:520px; display:flex; align-items:center; justify-content:center; position:relative; isolation:isolate; }
+  .feature-scene::before{ content:''; position:absolute; inset:34px; border-radius:36px; background: linear-gradient(rgba(111,108,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(111,108,255,.07) 1px, transparent 1px); background-size:28px 28px; mask-image:radial-gradient(circle at 50% 50%, #000 0 52%, transparent 76%); -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 0 52%, transparent 76%); z-index:-2; animation:gridBreathe 9s ease-in-out infinite; }
+  .feature-card{ background:rgba(255,255,255,.88); border:1px solid rgba(255,255,255,.8); border-radius:26px; box-shadow:0 28px 70px rgba(30,31,36,.12), inset 0 1px 0 rgba(255,255,255,.8); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); }
+  
+  .mock-topbar{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px 18px; border-bottom:1px solid rgba(30,31,36,.06); }
+  .mock-title{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .mock-icon{ width:36px; height:36px; border-radius:14px; display:grid; place-items:center; background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; box-shadow:0 10px 22px rgba(111,108,255,.24); flex-shrink:0; }
+  .mock-title strong{ display:block; font-size:15px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .mock-title span{ display:block; color:var(--muted); font-size:11px; margin-top:2px; }
+  .mock-status{ display:inline-flex; align-items:center; gap:6px; color:var(--primary); background:#F3F2FF; border:1px solid #E4DFFF; padding:7px 10px; border-radius:999px; font-size:11px; font-weight:700; white-space:nowrap; }
+  
+  .status-dot{ width:8px; height:8px; border-radius:999px; background:#22C55E; box-shadow:0 0 0 4px rgba(34,197,94,.14); animation:statusPulse 1.9s ease-in-out infinite; }
+  .avatar-token{ width:34px; height:34px; border-radius:50%; display:grid; place-items:center; flex-shrink:0; font-size:12px; font-weight:800; color:#fff; background:linear-gradient(135deg,#6F6CFF,#B6A5D7); box-shadow:0 8px 18px rgba(111,108,255,.18); }
+  .avatar-token.alt{ background:linear-gradient(135deg,#6AC9FF,#8B7CFF); }
+  .avatar-token.warm{ background:linear-gradient(135deg,#F59E0B,#F472B6); }
+  .avatar-token.sm{ width:28px; height:28px; font-size: 10px; margin-left: -8px; border: 2px solid #fff; }
+  .avatar-token.cat{ position:relative; background:linear-gradient(135deg,#2E265F,#8B7CFF); }
+  .avatar-token.cat::before, .avatar-token.cat::after{ content:''; position:absolute; top:-4px; width:10px; height:10px; background:inherit; transform:rotate(45deg); border-radius:2px; }
+  .avatar-token.cat::before{ left:5px; } .avatar-token.cat::after{ right:5px; }
+
+  /* Notification visual */
+  .notify-phone{ width:min(430px,100%); min-height:500px; overflow:hidden; position:relative; }
+  .notify-wallpaper{ position:absolute; inset:74px 24px 24px; border-radius:24px; background: radial-gradient(circle at 20% 25%, rgba(111,108,255,.18), transparent 28%), radial-gradient(circle at 84% 58%, rgba(106,201,255,.20), transparent 30%), linear-gradient(150deg,#F9FAFF,#F3F2FF); border:1px solid rgba(111,108,255,.08); }
+  .class-card-mini{ position:relative; margin:24px 26px 14px; padding:16px; border-radius:22px; background:rgba(255,255,255,.72); border:1px solid rgba(255,255,255,.85); box-shadow:0 16px 38px rgba(30,31,36,.08); z-index:2; }
+  .class-card-mini small{ display:flex; align-items:center; gap:6px; color:var(--muted); font-weight:600; margin-bottom:8px; }
+  .class-card-mini h4{ margin:0 0 10px; font-size:18px; }
+  .room-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:13px; color:var(--muted); }
+  .room-badge{ color:var(--primary); background:#F3F2FF; padding:7px 10px; border-radius:12px; font-weight:800; }
+  .notify-stack{ position:relative; z-index:4; display:flex; flex-direction:column; gap:12px; padding:0 26px 24px; }
+  .notice-card{ display:grid; grid-template-columns:40px 1fr auto; align-items:center; gap:12px; padding:13px; border-radius:18px; background:rgba(255,255,255,.92); border:1px solid rgba(236,236,241,.9); box-shadow:0 14px 30px rgba(30,31,36,.08); transform:translateY(18px) scale(.96); opacity:0; }
+  .notice-icon{ width:40px; height:40px; border-radius:14px; display:grid; place-items:center; color:#fff; background:linear-gradient(135deg,var(--primary),var(--primary-2)); }
+  .notice-icon.warning{ background:linear-gradient(135deg,#F59E0B,#F97316); }
+  .notice-icon.danger{ background:linear-gradient(135deg,#EF4444,#F472B6); }
+  .notice-copy strong{ display:block; font-size:13px; margin-bottom:2px; }
+  .notice-copy span{ display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+  .notice-time{ font-size:10px; color:var(--muted); align-self:start; font-weight:700; }
+  .visual-content.active .notice-card:nth-child(1){ animation:notifyLoop1 6.6s ease-in-out infinite; }
+  .visual-content.active .notice-card:nth-child(2){ animation:notifyLoop2 6.6s ease-in-out infinite; }
+  .visual-content.active .notice-card:nth-child(3){ animation:notifyLoop3 6.6s ease-in-out infinite; }
+  .notify-bell{ position:absolute; right:42px; bottom:38px; width:58px; height:58px; border-radius:22px; display:grid; place-items:center; background:linear-gradient(135deg,#2E265F,var(--primary)); color:#fff; box-shadow:0 20px 38px rgba(111,108,255,.25); z-index:5; }
+  .visual-content.active .notify-bell{ animation:bellWiggle 2.2s ease-in-out infinite; }
+  .notify-bell::after{ content:'3'; position:absolute; top:-8px; right:-8px; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; background:var(--danger); color:#fff; font-size:11px; font-weight:800; border:3px solid #fff; }
+
+  /* Media chat visual (SPED UP) */
+  .chat-media-ui{ width:min(560px,100%); min-height:500px; overflow:hidden; display:flex; flex-direction:column; }
+  .mini-members{ display:flex; align-items:center; }
+  .chat-media-body{ flex:1; padding:18px; display:flex; flex-direction:column; gap:13px; background: radial-gradient(circle at 18% 22%, rgba(111,108,255,.08), transparent 28%), linear-gradient(#fff,#FBFAFF); }
+  .chat-row{ display:flex; gap:10px; max-width:86%; opacity:0; transform:translateY(12px) scale(.98); }
+  .chat-row.me{ align-self:flex-end; flex-direction:row-reverse; }
+  .chat-bubble{ padding:11px 13px; border-radius:16px; background:#F3F4F6; border-top-left-radius:5px; font-size:12px; line-height:1.45; box-shadow:0 6px 16px rgba(30,31,36,.04); }
+  .chat-row.me .chat-bubble{ background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; border-top-left-radius:16px; border-top-right-radius:5px; }
+  
+  /* Faster chat animations with shorter delays */
+  .visual-content.active .chat-row:nth-child(1){ animation:chatAppear 6s ease-in-out infinite 0.1s; }
+  .visual-content.active .chat-row:nth-child(2){ animation:chatAppear 6s ease-in-out infinite 0.4s; }
+  .visual-content.active .chat-row:nth-child(3){ animation:chatAppear 6s ease-in-out infinite 0.7s; }
+  .visual-content.active .chat-row:nth-child(4){ animation:chatAppear 6s ease-in-out infinite 1.0s; }
+  
+  .media-preview{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; width:210px; margin-top:8px; }
+  .media-thumb{ height:76px; border-radius:14px; overflow:hidden; position:relative; background: linear-gradient(135deg, rgba(111,108,255,.15), rgba(106,201,255,.22)), #EEF2FF; border:1px solid rgba(111,108,255,.12); }
+  .media-thumb::before{ content:''; position:absolute; left:16px; bottom:12px; width:42px; height:28px; border-radius:12px 12px 4px 4px; background:rgba(111,108,255,.55); }
+  .media-thumb::after{ content:''; position:absolute; right:15px; top:14px; width:18px; height:18px; border-radius:50%; background:#FBBF24; box-shadow:-26px 33px 0 13px rgba(34,197,94,.30); }
+  .file-preview{ display:flex; align-items:center; gap:10px; padding:10px; width:230px; border-radius:14px; background:#fff; border:1px solid var(--border); box-shadow:0 8px 18px rgba(30,31,36,.04); margin-top:8px; }
+  .file-preview i{ width:34px; height:34px; border-radius:12px; display:grid; place-items:center; background:#EEF2FF; color:var(--primary); font-size:18px; }
+  .file-preview strong{ display:block; font-size:12px; }
+  .file-preview span{ display:block; color:var(--muted); font-size:10px; }
+  .typing-live{ display:flex; align-items:center; gap:5px; width:max-content; padding:12px 14px; border-radius:16px; border-top-left-radius:5px; background:#F3F4F6; }
+  .typing-live span{ width:6px; height:6px; border-radius:50%; background:var(--muted); animation:typingDot 1.2s ease-in-out infinite; }
+  .typing-live span:nth-child(2){ animation-delay:.16s; }
+  .typing-live span:nth-child(3){ animation-delay:.32s; }
+  .composer-media{ display:flex; align-items:center; gap:10px; padding:14px 16px; border-top:1px solid rgba(30,31,36,.06); background:rgba(255,255,255,.78); }
+  .composer-action{ width:36px; height:36px; border-radius:14px; display:grid; place-items:center; background:#F3F2FF; color:var(--primary); flex-shrink:0; position:relative; }
+  .visual-content.active .composer-action:first-child::after{ content:''; position:absolute; inset:-5px; border:2px solid rgba(111,108,255,.18); border-radius:18px; animation:attachPulse 1.8s ease-in-out infinite; }
+  .composer-field{ flex:1; min-width:0; color:var(--muted); font-size:12px; background:#F7F7FA; border:1px solid var(--border); border-radius:999px; padding:10px 12px; }
+  .send-orb{ width:38px; height:38px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; box-shadow:0 10px 18px rgba(111,108,255,.24); }
+  .visual-content.active .send-orb{ animation:sendFly 2.8s ease-in-out infinite; }
+
+  /* --- NEW COLLABORATION DASHBOARD VISUAL --- */
+  .collab-ui { width:min(600px,100%); min-height:500px; overflow:hidden; display:flex; flex-direction:column; }
+  .collab-body-new { position: relative; flex:1; min-height: 420px; background: linear-gradient(145deg, #FFFFFF, #FBFAFF); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  
+  .collab-hub { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .hub-core { width: 80px; height: 80px; border-radius: 24px; background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #fff; font-size: 36px; display: grid; place-items: center; box-shadow: 0 20px 40px rgba(111,108,255,0.3); position: relative; }
+  .hub-label { text-align: center; font-weight: 800; font-size: 13px; color: var(--text); line-height: 1.3; }
+  .hub-ripple { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; border-radius: 24px; background: transparent; border: 2px solid rgba(111,108,255,0.4); animation: rippleOut 3s linear infinite; }
+  .hub-ripple.r2 { animation-delay: 1.5s; }
+  
+  .collab-node { position: absolute; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border: 1px solid rgba(236,236,241,0.9); padding: 12px 16px; border-radius: 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 25px rgba(30,31,36,0.06); z-index: 5; opacity: 0; }
+  .node-icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; }
+  .node-info strong { display: block; font-size: 13px; margin-bottom: 2px; }
+  .node-info span { display: block; font-size: 11px; color: var(--muted); }
+  
+  .collab-node.node-1 { top: 40px; left: 30px; }
+  .collab-node.node-2 { bottom: 40px; right: 30px; }
+  .collab-node.node-3 { bottom: 60px; left: 40px; }
+  
+  .visual-content.active .collab-node.node-1 { animation: floatNode1 4s ease-in-out infinite; }
+  .visual-content.active .collab-node.node-2 { animation: floatNode2 4.5s ease-in-out infinite 0.5s; }
+  .visual-content.active .collab-node.node-3 { animation: floatNode3 5s ease-in-out infinite 1s; }
+  
+  .live-cursor { position: absolute; display: flex; flex-direction: column; align-items: flex-start; pointer-events: none; z-index: 20; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); opacity: 0;}
+  .live-cursor i { font-size: 20px; transform: rotate(-15deg); margin-left: -5px; margin-top: -5px; }
+  .live-cursor span { color: #fff; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 8px; border-top-left-radius: 0; }
+  .live-cursor.cursor-1 i { color: #EC4899; }
+  .live-cursor.cursor-2 i { color: #3B82F6; }
+  
+  .visual-content.active .live-cursor.cursor-1 { animation: cursorMove1 6s ease-in-out infinite; }
+  .visual-content.active .live-cursor.cursor-2 { animation: cursorMove2 7s ease-in-out infinite 1s; }
+
+
+  /* Automatic schedule visual */
+  .auto-schedule-ui{ width:min(615px,100%); min-height:500px; overflow:hidden; }
+  .auto-schedule-body{ min-height:428px; padding:18px; background:linear-gradient(145deg,#FFFFFF,#FBFAFF); display:grid; grid-template-columns:190px 1fr; gap:14px; }
+  .mini-month-card, .timeline-card{ border-radius:22px; background:rgba(255,255,255,.86); border:1px solid var(--border); box-shadow:0 16px 36px rgba(30,31,36,.06); padding:15px; }
+  .mini-month-title{ display:flex; align-items:center; justify-content:space-between; font-size:13px; font-weight:800; margin-bottom:12px; }
+  .auto-cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:5px; text-align:center; font-size:10px; }
+  .auto-cal-grid span{ color:var(--muted); padding:4px 0; }
+  .auto-cal-grid b{ padding:6px 0; border-radius:8px; font-size:11px; }
+  .auto-cal-grid b.active{ color:#fff; background:var(--primary); box-shadow:0 8px 16px rgba(111,108,255,.20); }
+  .auto-cal-grid b.event{ color:var(--primary); background:#F3F2FF; }
+  .auto-reminder-card{ margin-top:14px; border-radius:18px; padding:13px; background:linear-gradient(135deg,#FEF3C7,#FFF7ED); border:1px solid #FDE68A; }
+  .auto-reminder-card strong{ display:flex; align-items:center; gap:7px; font-size:12px; margin-bottom:5px; color:#92400E; }
+  .auto-reminder-card span{ display:block; color:#92400E; font-size:10.5px; line-height:1.35; }
+  .timeline-card{ position:relative; overflow:hidden; }
+  .timeline-card h4{ margin:0 0 14px; font-size:14px; display:flex; align-items:center; gap:8px; }
+  .timeline-lines{ position:absolute; left:18px; right:18px; top:64px; bottom:18px; background:repeating-linear-gradient(to bottom, transparent, transparent 49px, var(--border) 50px); pointer-events:none; }
+  
+  /* NEW TIME INDICATOR */
+  .time-indicator-v2 { position: absolute; left: 0; right: 18px; height: 2px; background: var(--danger); z-index: 10; display: flex; align-items: center; opacity: 0; }
+  .time-indicator-v2::before { content: ''; position: absolute; left: 44px; width: 8px; height: 8px; border-radius: 50%; background: var(--danger); transform: translateX(-50%); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15); }
+  .time-indicator-v2 span { background: var(--danger); color: #fff; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 6px; position: absolute; left: 0; }
+  .visual-content.active .time-indicator-v2 { animation: timeLineMove 6s ease-in-out infinite forwards; }
+  
+  .smart-event{ position:relative; margin-left:44px; margin-bottom:11px; padding:11px 12px; border-radius:15px; border-left:4px solid var(--primary); background:#EFF6FF; box-shadow:0 8px 18px rgba(30,31,36,.05); opacity:0; transform:translateX(18px); }
+  .smart-event.purple{ background:#F5F3FF; border-color:#8B5CF6; }
+  .smart-event.yellow{ background:#FEFCE8; border-color:#F59E0B; }
+  .smart-event::before{ content:attr(data-time); position:absolute; left:-50px; top:13px; color:var(--muted); font-size:10px; font-weight:800; }
+  .smart-event strong{ display:block; font-size:13px; margin-bottom:3px; }
+  .smart-event span{ display:flex; align-items:center; gap:5px; color:var(--muted); font-size:10.5px; }
+  .visual-content.active .smart-event:nth-of-type(3){ animation:slideInRight .4s cubic-bezier(.2,.8,.2,1) .1s forwards, glowTask 3s ease-in-out infinite .5s; }
+  .visual-content.active .smart-event:nth-of-type(4){ animation:slideInRight .4s cubic-bezier(.2,.8,.2,1) .25s forwards, glowTask 3s ease-in-out infinite .7s; }
+  .visual-content.active .smart-event:nth-of-type(5){ animation:slideInRight .4s cubic-bezier(.2,.8,.2,1) .4s forwards, glowTask 3s ease-in-out infinite .9s; }
+
+  /* Shared notes visual */
+  .notes-hub-ui{ width:min(615px,100%); min-height:500px; overflow:hidden; }
+  .notes-hub-body{ min-height:428px; padding:18px; background: radial-gradient(circle at 80% 12%, rgba(111,108,255,.10), transparent 28%), linear-gradient(145deg,#FFFFFF,#FBFAFF); }
+  .notes-hub-toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:14px; }
+  .notes-hub-search{ flex:1; display:flex; align-items:center; gap:8px; min-width:0; padding:10px 12px; border-radius:14px; border:1px solid var(--border); background:#fff; color:var(--muted); font-size:12px; }
+  .notes-hub-filter{ padding:10px 12px; border-radius:14px; background:#211B46; color:#fff; font-size:11px; font-weight:800; white-space:nowrap; }
+  .note-grid-unified{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .note-sheet{ border-radius:20px; background:#fff; border:1px solid var(--border); padding:15px; box-shadow:0 14px 32px rgba(30,31,36,.06); opacity:0; transform:translateY(14px); position:relative; overflow:hidden; }
+  .note-sheet.featured{ grid-row:span 2; background:linear-gradient(145deg,#FFFFFF,#F8F7FF); }
+  .note-sheet::before{ content:''; position:absolute; top:12px; right:12px; width:30px; height:30px; background:linear-gradient(135deg, transparent 50%, rgba(111,108,255,.10) 50%); border-bottom-left-radius:8px; }
+  .note-sheet h4{ margin:0 0 8px; font-size:14px; line-height:1.35; }
+  .note-sheet p{ margin:0; color:var(--muted); font-size:11.5px; line-height:1.55; }
+  .note-meta-row{ margin-top:14px; padding-top:12px; border-top:1px solid rgba(30,31,36,.06); display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .note-tag-mini{ color:var(--primary); background:#F3F2FF; border:1px solid #DDD6FE; border-radius:999px; padding:5px 8px; font-size:10px; font-weight:800; white-space:nowrap; }
+  .note-author-mini{ display:flex; align-items:center; gap:5px; color:var(--muted); font-size:10px; font-weight:700; min-width:0; }
+  .note-author-mini .person-avatar{ width:20px; height:20px; border-width:1px; }
+  .visual-content.active .note-sheet:nth-child(1){ animation:popIn .4s cubic-bezier(.2,.8,.2,1) .1s forwards, floatLoop 5s ease-in-out infinite .5s; }
+  .visual-content.active .note-sheet:nth-child(2){ animation:popIn .4s cubic-bezier(.2,.8,.2,1) .25s forwards, floatLoop 4.8s ease-in-out infinite .65s; }
+  .visual-content.active .note-sheet:nth-child(3){ animation:popIn .4s cubic-bezier(.2,.8,.2,1) .4s forwards, floatLoop 5.2s ease-in-out infinite .8s; }
+
+  /* Meeting visual */
+  .meet-room{ width:min(590px,100%); min-height:500px; overflow:hidden; position:relative; }
+  .meet-body{ padding:18px; background:linear-gradient(145deg,#211B46,#2E265F 58%,#43328C); min-height:372px; position:relative; }
+  .meet-grid{ display:grid; grid-template-columns:1.25fr .9fr; grid-template-rows:174px 174px; gap:12px; }
+  .video-tile{ border-radius:22px; background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.16), transparent 22%), linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.06)); border:1px solid rgba(255,255,255,.16); position:relative; overflow:hidden; box-shadow:inset 0 1px 0 rgba(255,255,255,.16); }
+  .video-tile.large{ grid-row:span 2; }
+  .video-person{ position:absolute; left:50%; bottom:18px; transform:translateX(-50%); width:94px; height:112px; }
+  .video-person::before{ content:''; position:absolute; left:50%; top:0; transform:translateX(-50%); width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#F7C8A4,#F8DCC7); box-shadow:0 0 0 10px rgba(255,255,255,.05); }
+  .video-person::after{ content:''; position:absolute; left:0; right:0; bottom:0; height:70px; border-radius:34px 34px 16px 16px; background:linear-gradient(135deg,#8B7CFF,#6AC9FF); }
+  .video-label{ position:absolute; left:12px; bottom:12px; display:flex; align-items:center; gap:7px; padding:7px 10px; border-radius:999px; color:#fff; background:rgba(0,0,0,.28); backdrop-filter:blur(12px); font-size:11px; font-weight:700; }
+  .video-label i{ color:#86EFAC; }
+  .video-tile.speaking{ box-shadow:0 0 0 2px rgba(182,165,215,.8), 0 20px 50px rgba(111,108,255,.22); }
+  .visual-content.active .video-tile.speaking{ animation:speakerGlow 2s ease-in-out infinite; }
+  .wave-bars{ position:absolute; right:14px; top:14px; display:flex; align-items:flex-end; gap:4px; height:22px; }
+  .wave-bars span{ width:4px; border-radius:999px; background:#86EFAC; height:8px; animation:waveSpeak .9s ease-in-out infinite; }
+  .wave-bars span:nth-child(2){ animation-delay:.12s; }
+  .wave-bars span:nth-child(3){ animation-delay:.24s; }
+  .wave-bars span:nth-child(4){ animation-delay:.36s; }
+  .meet-controls{ display:flex; align-items:center; justify-content:center; gap:12px; padding:16px; background:rgba(255,255,255,.92); }
+  .meet-control{ width:42px; height:42px; display:grid; place-items:center; border-radius:16px; background:#F3F4F6; color:var(--muted); font-size:18px; }
+  .meet-control.primary{ background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; width:auto; padding:0 16px; gap:8px; display:flex; font-size:13px; font-weight:800; }
+  .meet-control.danger{ background:#FEF2F2; color:var(--danger); }
+  .meet-toast{ position:absolute; right:20px; top:78px; display:flex; align-items:center; gap:9px; padding:10px 12px; border-radius:16px; background:rgba(255,255,255,.94); border:1px solid rgba(255,255,255,.75); box-shadow:0 18px 40px rgba(30,31,36,.14); font-size:12px; font-weight:700; opacity:0; transform:translateY(-10px); }
+  .visual-content.active .meet-toast{ animation:toastJoin 5.4s ease-in-out infinite; }
+
+  /* PWA visual */
+  .pwa-stage{ width:min(610px,100%); min-height:500px; position:relative; display:grid; place-items:center; }
+  .device-cloud{ position:relative; width:100%; height:460px; }
+  .device{ position:absolute; background:rgba(255,255,255,.92); border:1px solid rgba(255,255,255,.85); border-radius:24px; box-shadow:0 24px 56px rgba(30,31,36,.11); overflow:hidden; }
+  .device .device-top{ height:34px; display:flex; align-items:center; gap:6px; padding:0 13px; border-bottom:1px solid rgba(30,31,36,.06); }
+  .device .device-top span{ width:7px; height:7px; border-radius:50%; background:#E5E7EB; }
+  .device .screen{ padding:14px; }
+  .desktop-device{ width:380px; height:250px; left:28px; top:40px; border-radius:28px; }
+  .tablet-device{ width:190px; height:244px; right:32px; top:94px; border-radius:28px; transform:rotate(4deg); }
+  .phone-device{ width:132px; height:238px; left:106px; bottom:18px; border-radius:30px; transform:rotate(-5deg); }
+  .phone-device::before{ content:''; position:absolute; top:8px; left:50%; transform:translateX(-50%); width:44px; height:5px; border-radius:999px; background:#E5E7EB; z-index:2; }
+  .app-shell{ display:grid; grid-template-columns:90px 1fr; gap:10px; height:100%; }
+  .sidebar-lines{ display:flex; flex-direction:column; gap:8px; }
+  .line{ height:10px; border-radius:999px; background:#EEF2FF; }
+  .line.short{ width:68%; } .line.mid{ width:82%; }
+  .content-cards{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .content-card{ border-radius:15px; background:linear-gradient(135deg,#F3F2FF,#FFFFFF); border:1px solid rgba(111,108,255,.10); min-height:54px; position:relative; overflow:hidden; }
+  .tablet-device .app-shell, .phone-device .app-shell{ grid-template-columns:1fr; }
+  .tablet-device .sidebar-lines{ display:grid; grid-template-columns:repeat(3,1fr); }
+  .tablet-device .content-cards{ grid-template-columns:1fr; }
+  .phone-device .screen{ padding:22px 10px 10px; }
+  .phone-device .content-cards{ grid-template-columns:1fr; gap:8px; }
+  .phone-device .content-card{ min-height:34px; border-radius:12px; }
+  .phone-device .sidebar-lines{ gap:6px; margin-bottom:8px; }
+  .visual-content.active .desktop-device{ animation:deviceFloat 5.8s ease-in-out infinite; }
+  .visual-content.active .tablet-device{ animation:deviceFloat 5.8s ease-in-out infinite .45s; }
+  .visual-content.active .phone-device{ animation:deviceFloat 5.8s ease-in-out infinite .9s; }
+  .install-card{ position:absolute; right:46px; bottom:32px; width:218px; padding:14px; border-radius:20px; z-index:4; transform:translateY(12px); opacity:0; }
+  .visual-content.active .install-card{ animation:installPop 5.8s ease-in-out infinite; }
+  .install-row{ display:flex; align-items:center; gap:10px; }
+  .install-icon{ width:42px; height:42px; border-radius:15px; display:grid; place-items:center; color:#fff; background:linear-gradient(135deg,var(--primary),var(--primary-2)); }
+  .install-row strong{ display:block; font-size:13px; }
+  .install-row span{ color:var(--muted); font-size:11px; }
+  .install-btn{ margin-top:12px; width:100%; border-radius:999px; padding:9px 12px; text-align:center; color:#fff; background:var(--text); font-size:12px; font-weight:800; }
+  .pwa-badges{ position:absolute; left:24px; bottom:40px; display:flex; flex-direction:column; gap:10px; }
+  .pwa-badge{ display:flex; align-items:center; gap:8px; padding:9px 11px; border-radius:999px; background:rgba(255,255,255,.88); border:1px solid rgba(255,255,255,.8); box-shadow:0 12px 28px rgba(30,31,36,.08); font-size:11px; font-weight:800; color:var(--text); }
+  .pwa-badge i{ color:var(--primary); }
+  .visual-content.active .pwa-badge:nth-child(1){ animation:badgeSlide 4.8s ease-in-out infinite; }
+  .visual-content.active .pwa-badge:nth-child(2){ animation:badgeSlide 4.8s ease-in-out infinite .35s; }
+  .visual-content.active .install-btn { animation: pulseButton 2s ease-in-out infinite; }
+
+  /* Misc utility visuals */
+  .person-avatar{ width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid #fff; background: #F3F2FF; box-shadow: 0 8px 18px rgba(30,31,36,.12); }
+  .person-avatar.sm{ width: 28px; height: 28px; }
+  .mini-members .person-avatar{ margin-left: -8px; }
+  .mini-members .person-avatar:first-child{ margin-left: 0; }
+  .chat-row .person-avatar{ width: 34px; height: 34px; margin-top: 2px; }
+  .chat-bubble strong.sender-name{ display:block; color: var(--muted); font-size: 11px; margin-bottom: 3px; }
+  .chat-row.me .chat-bubble strong.sender-name{ color: rgba(255,255,255,.78); text-align: right; }
+  .media-preview.simple-media-preview{ display:block; width:238px; }
+  .media-file-card{ display:flex; align-items:center; gap:10px; padding:10px; border-radius:14px; background:#fff; border:1px solid var(--border); box-shadow:0 8px 18px rgba(30,31,36,.04); }
+  .media-file-card i{ width:34px; height:34px; border-radius:12px; display:grid; place-items:center; color:#fff; background:linear-gradient(135deg,#6F6CFF,#8B7CFF); font-size:18px; flex-shrink:0; }
+  .media-file-card strong{ display:block; color:var(--text); font-size:12px; line-height:1.2; }
+  .media-file-card span{ display:block; color:var(--muted); font-size:10px; margin-top:2px; }
+  .chat-row.me .file-preview, .chat-row.me .file-preview strong{ color:var(--text); }
+  .chat-row.me .file-preview span{ color:var(--muted); }
+  .chat-row.me .file-preview i{ color:#fff; background:linear-gradient(135deg,#EF4444,#F97316); }
+  .video-avatar-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:saturate(1.03) contrast(1.03); transform:scale(1.02); }
+  .video-tile.with-photo::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.48)); pointer-events:none; }
+  .video-tile.with-photo .wave-bars, .video-tile.with-photo .video-label{ z-index:2; }
+  .video-placeholder{ position:absolute; inset:0; display:grid; place-items:center; color:#fff; font-size:44px; font-weight:800; background:linear-gradient(135deg, rgba(111,108,255,.95), rgba(182,165,215,.88)); }
+  .video-placeholder::before{ content:''; position:absolute; width:150px; height:150px; border-radius:50%; background:rgba(255,255,255,.12); filter:blur(4px); }
+  .video-placeholder span{ position:relative; z-index:1; }
+
+
+  /* KEYFRAMES */
+  @keyframes gridBreathe{ 0%,100%{ transform:scale(1); opacity:.7; } 50%{ transform:scale(1.05); opacity:1; } }
+  @keyframes statusPulse{ 0%,100%{ transform:scale(1); box-shadow:0 0 0 4px rgba(34,197,94,.14); } 50%{ transform:scale(.88); box-shadow:0 0 0 8px rgba(34,197,94,.08); } }
+  @keyframes notifyLoop1{ 0%,8%{ opacity:0; transform:translateY(18px) scale(.96); } 14%,82%{ opacity:1; transform:translateY(0) scale(1); } 92%,100%{ opacity:0; transform:translateY(-8px) scale(.98); } }
+  @keyframes notifyLoop2{ 0%,20%{ opacity:0; transform:translateY(18px) scale(.96); } 28%,82%{ opacity:1; transform:translateY(0) scale(1); } 92%,100%{ opacity:0; transform:translateY(-8px) scale(.98); } }
+  @keyframes notifyLoop3{ 0%,34%{ opacity:0; transform:translateY(18px) scale(.96); } 44%,82%{ opacity:1; transform:translateY(0) scale(1); } 92%,100%{ opacity:0; transform:translateY(-8px) scale(.98); } }
+  @keyframes bellWiggle{ 0%,100%{ transform:rotate(0deg) scale(1); } 10%{ transform:rotate(9deg) scale(1.03); } 20%{ transform:rotate(-8deg) scale(1.03); } 30%{ transform:rotate(5deg) scale(1.01); } 40%{ transform:rotate(0deg) scale(1); } }
+  @keyframes attachPulse{ 0%,100%{ transform:scale(.92); opacity:.2; } 50%{ transform:scale(1.08); opacity:1; } }
+  @keyframes sendFly{ 0%,100%{ transform:translateX(0) rotate(0); } 46%{ transform:translateX(0) rotate(0); } 58%{ transform:translate(8px,-5px) rotate(-12deg); } 70%{ transform:translateX(0) rotate(0); } }
+  @keyframes speakerGlow{ 0%,100%{ box-shadow:0 0 0 2px rgba(182,165,215,.50), 0 20px 50px rgba(111,108,255,.16); } 50%{ box-shadow:0 0 0 5px rgba(182,165,215,.86), 0 24px 60px rgba(111,108,255,.30); } }
+  @keyframes waveSpeak{ 0%,100%{ height:7px; opacity:.75; } 50%{ height:22px; opacity:1; } }
+  @keyframes toastJoin{ 0%,14%{ opacity:0; transform:translateY(-10px) scale(.98); } 22%,68%{ opacity:1; transform:translateY(0) scale(1); } 82%,100%{ opacity:0; transform:translateY(-8px) scale(.98); } }
+  @keyframes deviceFloat{ 0%,100%{ translate:0 0; } 50%{ translate:0 -8px; } }
+  @keyframes installPop{ 0%,18%{ opacity:0; transform:translateY(14px) scale(.96); } 28%,78%{ opacity:1; transform:translateY(0) scale(1); } 92%,100%{ opacity:0; transform:translateY(8px) scale(.98); } }
+  @keyframes badgeSlide{ 0%,18%{ opacity:0; transform:translateX(-14px); } 30%,82%{ opacity:1; transform:translateX(0); } 100%{ opacity:0; transform:translateX(-10px); } }
+  @keyframes pulseButton{ 0%,100%{ transform:scale(1); box-shadow:0 0 0 0 rgba(30,31,36,0.2); } 50%{ transform:scale(1.03); box-shadow:0 4px 15px rgba(30,31,36,0.15); } }
+  @keyframes timeLineMove{ 0%{ top:50px; opacity:0; } 10%{ opacity:1; top:75px; } 90%{ opacity:1; top:220px; } 100%{ top:240px; opacity:0; } }
+  @keyframes glowReminder{ 0%,100%{ box-shadow:0 0 0 0 rgba(245,158,11,0); } 50%{ box-shadow:0 4px 15px rgba(245,158,11,0.3); } }
+
+  /* Faster Chat Appearance Keyframe */
+  @keyframes chatAppear{
+    0%, 4% { opacity:0; transform:translateY(12px) scale(.98); }
+    10%, 90% { opacity:1; transform:translateY(0) scale(1); }
+    96%, 100% { opacity:0; transform:translateY(-8px) scale(.99); }
+  }
+
+  /* Live cursor & Floating Nodes Keyframes */
+  @keyframes rippleOut {
+      0% { width: 80px; height: 80px; opacity: 1; border-width: 3px; }
+      100% { width: 300px; height: 300px; opacity: 0; border-width: 1px; }
+  }
+  @keyframes floatNode1 {
+      0%, 100% { opacity: 0.9; transform: translateY(0) scale(1); }
+      50% { opacity: 1; transform: translateY(-10px) scale(1.05); box-shadow: 0 15px 35px rgba(111,108,255,0.12); }
+  }
+  @keyframes floatNode2 {
+      0%, 100% { opacity: 0.9; transform: translateY(0) scale(1); }
+      50% { opacity: 1; transform: translateY(-8px) scale(1.05); box-shadow: 0 15px 35px rgba(217,119,6,0.12); }
+  }
+  @keyframes floatNode3 {
+      0%, 100% { opacity: 0.9; transform: translateY(0) scale(1); }
+      50% { opacity: 1; transform: translateY(10px) scale(1.05); box-shadow: 0 15px 35px rgba(22,163,74,0.12); }
+  }
+  @keyframes cursorMove1 {
+      0% { top: 20%; left: 80%; opacity: 0; }
+      10% { opacity: 1; }
+      40% { top: 15%; left: 45%; }
+      60% { top: 20%; left: 40%; }
+      90% { top: 50%; left: 20%; opacity: 1; }
+      100% { top: 50%; left: 20%; opacity: 0; }
+  }
+  @keyframes cursorMove2 {
+      0% { bottom: 20%; left: 10%; opacity: 0; }
+      10% { opacity: 1; }
+      40% { bottom: 30%; left: 50%; }
+      60% { bottom: 25%; left: 60%; }
+      90% { bottom: 15%; right: 20%; opacity: 1; }
+      100% { bottom: 15%; right: 20%; opacity: 0; }
+  }
+  .visual-content.active .auto-reminder-card { animation: glowReminder 3s ease-in-out infinite; }
+
+
+  @media (prefers-reduced-motion: reduce){
+    .visual-content.active .notice-card, .visual-content.active .notify-bell, .visual-content.active .chat-row, .visual-content.active .send-orb,
+    .visual-content.active .composer-action:first-child::after, .visual-content.active .video-tile.speaking, .visual-content.active .meet-toast,
+    .visual-content.active .desktop-device, .visual-content.active .tablet-device, .visual-content.active .phone-device, .visual-content.active .install-card,
+    .visual-content.active .pwa-badge, .wave-bars span, .status-dot, .feature-scene::before, .visual-content.active .collab-node, .visual-content.active .live-cursor,
+    .visual-content.active .time-indicator-v2 {
+      animation:none !important; opacity:1 !important; transform:none !important;
+    }
+    .notice-card, .chat-row, .meet-toast, .install-card, .pwa-badge, .collab-node, .time-indicator-v2 { opacity:1 !important; transform:none !important; }
+  }
+
+  @media (max-width: 980px){
+    .feature-pill-row{ justify-content:flex-start; margin-top:14px; }
+    .feature-scene{ max-width:none; min-height:0; display:block; }
+    .feature-scene::before{ inset:8px; border-radius:22px; background-size:22px 22px; }
+    .step .notify-phone, .step .chat-media-ui, .step .meet-room, .step .pwa-stage, .step .collab-ui, .step .auto-schedule-ui, .step .notes-hub-ui{ width:100%; min-height:0; box-shadow:none; border:1px solid var(--border); border-radius:18px; overflow:hidden; background:#fff; }
+    .step .mock-topbar{ padding:12px; gap:8px; }
+    .step .mock-title strong{ font-size:13px; }
+    .step .mock-title span{ font-size:10px; }
+    .step .mock-icon{ width:32px; height:32px; border-radius:12px; }
+    .step .mock-status{ padding:5px 8px; font-size:10px; }
+
+    .step .notify-wallpaper{ inset:58px 14px 14px; border-radius:18px; }
+    .step .class-card-mini{ margin:14px 14px 10px; padding:13px; border-radius:16px; }
+    .step .class-card-mini h4{ font-size:15px; }
+    .step .room-row{ font-size:11px; }
+    .step .notify-stack{ padding:0 14px 14px; gap:8px; }
+    .step .notice-card{ grid-template-columns:34px 1fr auto; padding:10px; border-radius:14px; }
+    .step .notice-icon{ width:34px; height:34px; border-radius:12px; }
+    .step .notice-copy strong{ font-size:11px; }
+    .step .notice-copy span{ font-size:10px; }
+    .step .notify-bell{ width:44px; height:44px; border-radius:16px; right:18px; bottom:18px; }
+
+    .step .chat-media-body{ padding:12px; gap:10px; }
+    .step .chat-row{ max-width:94%; opacity:1; transform:none; }
+    .step .chat-bubble{ font-size:11px; padding:9px 10px; }
+    .step .media-preview{ width:170px; }
+    .step .media-thumb{ height:58px; }
+    .step .file-preview{ width:190px; padding:8px; }
+    .step .composer-media{ padding:10px; gap:8px; }
+    .step .composer-action,.step .send-orb{ width:32px; height:32px; border-radius:12px; }
+    .step .composer-field{ font-size:10px; padding:8px 10px; }
+    .step .media-preview.simple-media-preview{ width:190px; }
+    .step .media-file-card{ padding:8px; }
+
+    /* Awesome mobile collab hub */
+    .step .collab-body-new { display: flex; min-height: 280px; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 12px; }
+    .step .collab-hub { display: flex; transform: scale(0.75); }
+    .step .collab-node { position: absolute !important; padding: 10px 14px; width: max-content; margin: 0; box-shadow: 0 10px 25px rgba(30,31,36,0.06) !important; }
+    .step .collab-node.node-1 { top: 15px; left: -10px; }
+    .step .collab-node.node-2 { bottom: 15px; right: -10px; }
+    .step .collab-node.node-3 { bottom: 35px; left: 10px; }
+    .step .live-cursor { display: flex !important; transform: scale(0.8); }
+
+    /* Compact horizontal swipe for notes */
+    .step .notes-hub-body { padding: 12px; }
+    .step .note-grid-unified { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding-bottom: 8px; margin-bottom: -4px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .step .note-grid-unified::-webkit-scrollbar { display: none; }
+    .step .note-sheet { flex: 0 0 85%; scroll-snap-align: center; }
+    .step .note-sheet.featured { grid-row: auto; }
+    .step .notes-hub-toolbar { flex-direction: column; align-items: stretch; }
+    .step .notes-hub-filter { text-align: center; }
+
+    .step .meet-body{ padding:12px; min-height:290px; }
+    .step .meet-grid{ grid-template-columns:1fr 1fr; grid-template-rows:132px 132px; gap:8px; }
+    .step .video-tile.large{ grid-row:span 1; grid-column:span 2; }
+    .step .video-person{ width:70px; height:82px; bottom:12px; }
+    .step .video-person::before{ width:42px; height:42px; }
+    .step .video-person::after{ height:50px; }
+    .step .video-label{ font-size:9px; padding:5px 7px; left:8px; bottom:8px; }
+    .step .wave-bars{ right:10px; top:10px; }
+    .step .meet-ribbon{ font-size:10px; padding:6px 8px; left:12px; top:12px; }
+    .step .meet-toast{ right:12px; top:56px; font-size:10px; padding:8px 10px; }
+    .step .meet-controls{ padding:10px; gap:8px; }
+    .step .meet-control{ width:34px; height:34px; border-radius:12px; font-size:15px; }
+    .step .meet-control.primary{ padding:0 12px; font-size:11px; }
+
+    .step .pwa-stage{ display:block; min-height:390px; position:relative; }
+    .step .device-cloud{ height:390px; }
+    .step .desktop-device{ width:72%; height:185px; left:5%; top:22px; }
+    .step .tablet-device{ width:36%; height:178px; right:4%; top:80px; }
+    .step .phone-device{ width:30%; height:176px; left:16%; bottom:26px; }
+    .step .install-card{ right:5%; bottom:26px; width:52%; max-width:200px; padding:10px 11px; opacity:1; transform:none; }
+    .step .pwa-badges{ left:5%; bottom:14px; gap:7px; }
+    .step .pwa-badge{ font-size:9px; padding:7px 9px; }
+
+    .step .auto-schedule-body{ grid-template-columns:1fr; padding: 12px; }
+    .step .mini-month-card, .step .timeline-card{ box-shadow:none; border-radius:16px; margin-bottom:10px; padding:12px; }
+    .step .smart-event{ margin-left:44px; }
+    .step .person-avatar{ width:28px; height:28px; }
+    .step .video-avatar-img{ transform:none; }
+    .step .video-placeholder{ font-size:30px; }
+  }
+
+  /* Keyframes specific for mobile Collab Hub */
+  @keyframes floatNode1Mobile {
+    0%, 100% { opacity: 0.9; transform: scale(0.75) translateY(0); }
+    50% { opacity: 1; transform: scale(0.75) translateY(-5px); box-shadow: 0 10px 25px rgba(111,108,255,0.12); }
+  }
+  @keyframes floatNode2Mobile {
+    0%, 100% { opacity: 0.9; transform: scale(0.75) translateY(0); }
+    50% { opacity: 1; transform: scale(0.75) translateY(-4px); box-shadow: 0 10px 25px rgba(217,119,6,0.12); }
+  }
+  @keyframes floatNode3Mobile {
+    0%, 100% { opacity: 0.9; transform: scale(0.75) translateY(0); }
+    50% { opacity: 1; transform: scale(0.75) translateY(5px); box-shadow: 0 10px 25px rgba(22,163,74,0.12); }
+  }
+
+  @media (max-width: 980px) {
+    .visual-content.active .step .collab-node.node-1 { animation: floatNode1Mobile 4s ease-in-out infinite; }
+    .visual-content.active .step .collab-node.node-2 { animation: floatNode2Mobile 4.5s ease-in-out infinite 0.5s; }
+    .visual-content.active .step .collab-node.node-3 { animation: floatNode3Mobile 5s ease-in-out infinite 1s; }
+  }
+
+  @media (max-width: 520px){
+    .feature-pill-row{ justify-content:center; }
+    .feature-pill{ font-size:11px; padding:7px 10px; }
+    .mini-members .avatar-token:nth-child(3){ display:none; }
+    .step .mock-status{ display:none; }
+    .step .notice-time{ display:none; }
+    .step .room-badge{ padding:6px 8px; }
+    .step .meet-grid{ grid-template-rows:118px 118px; }
+    .step .meet-body{ min-height:262px; }
+    .step .meet-control.primary span{ display:none; }
+    .step .desktop-device{ width:80%; left:4%; }
+    .step .tablet-device{ width:40%; right:4%; top:118px; }
+    .step .phone-device{ width:34%; left:8%; }
+    .step .install-card{ width:58%; max-width:208px; right:4%; }
+    .install-row strong{ font-size:11px; line-height:1.2; }
+    .install-row span{ font-size:9px; line-height:1.25; }
+    .install-btn{ font-size:10px; padding:6px 10px; margin-top:9px; }
+  }
+
   /* --- STRICT MOBILE & TABLET RESPONSIVE STYLES --- */
   @media (max-width: 980px){
-    /* HARD LOCK for any horizontal overflowing elements */
-    html, body {
-      overflow-x: hidden !important;
-      width: 100vw;
-      max-width: 100%;
-    }
-    
-    .hero-content {
-      padding: 0 24px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-  
-    /* New Split Layout Adjustments for Mobile */
-    .hero-state-clarity {
-      flex-direction: column;
-      justify-content: center;
-      gap: 24px; /* Clean 24px gap between image and text block */
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    /* THE CRITICAL FIX: Removes the hidden state from the document flow so it stops silently stretching the container height down */
-    .hero:not(.clarity-mode) .hero-state-clarity {
-      position: absolute !important;
-    }
-    .hero.clarity-mode .hero-state-chaos {
-      position: absolute !important;
-    }
-
-    .clarity-image {
-      order: -1;
-      justify-content: center;
-      width: 100%;
-      max-width: 100%;
-      flex: auto;
-    }
-    .clarity-text {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      max-width: 100%;
-      width: 100%;
-      flex: auto;
-      box-sizing: border-box;
-      gap: 20px; /* Perfect mathematical gap for all text elements */
-    }
-    .clarity-text > * {
-      margin: 0 !important; /* Force reset margins */
-    }
-    .clarity-text h1 {
-      text-align: center;
-      font-size: clamp(28px, 6vw, 38px);
-      line-height: 1.25;
-    }
-    .clarity-text p {
-      text-align: center;
-      font-size: 15px;
-      line-height: 1.6;
-    }
+    html, body { overflow-x: hidden !important; width: 100vw; max-width: 100%; }
+    .hero-content { padding: 0 24px; width: 100%; box-sizing: border-box; }
+    .hero-state-clarity { flex-direction: column; justify-content: center; gap: 24px; width: 100%; box-sizing: border-box; }
+    .hero:not(.clarity-mode) .hero-state-clarity { position: absolute !important; }
+    .hero.clarity-mode .hero-state-chaos { position: absolute !important; }
+    .clarity-image { order: -1; justify-content: center; width: 100%; max-width: 100%; flex: auto; }
+    .clarity-text { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 100%; width: 100%; flex: auto; box-sizing: border-box; gap: 20px; }
+    .clarity-text > * { margin: 0 !important; }
+    .clarity-text h1 { text-align: center; font-size: clamp(28px, 6vw, 38px); line-height: 1.25; }
+    .clarity-text p { text-align: center; font-size: 15px; line-height: 1.6; }
     .hero-cta { justify-content: center; gap: 12px !important; width: 100%; }
     .chips { justify-content: center; gap: 10px !important; margin: 0 !important; }
-    
     .hero { height: auto; padding: 100px 0 60px; }
-    
-    /* Apply identical strict layout to Chaos state text */
-    .hero-state-chaos { 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-    .hero-state-chaos > * {
-      margin: 0 !important;
-    }
+    .hero-state-chaos { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .hero-state-chaos > * { margin: 0 !important; }
     .hero-state-chaos h1 { font-size: clamp(26px, 6vw, 34px); line-height: 1.25; }
     .hero-state-chaos p { font-size: 15px; line-height: 1.6; }
     .btn-organize { padding: 14px 28px; font-size: 16px; }
 
-    .pin-grid{grid-template-columns:1fr; height: auto; padding: 20px 0 40px;}
+    .pin-grid{grid-template-columns:1fr; padding: 20px 0 40px;}
     .how-it-works-grid { grid-template-columns: 1fr; }
     .pin-wrap { display: none; }
     
-    .steps { gap: 60px; position: relative; top: 0; padding: 20px 0; }
+    .steps { gap: 60px; padding: 20px 0; }
     
     .step {
         opacity: 1 !important; transform: none !important;
@@ -760,124 +961,18 @@
         box-shadow: none !important;
         border-radius: 0 !important;
         display: flex; flex-direction: column;
-        overflow: hidden; box-sizing: border-box; width: 100%;
+        overflow: hidden; box-sizing: border-box; width: 100%; min-height: auto;
     }
     
-    .step h3 { 
-        font-size: 20px; font-weight: 700; margin-bottom: 12px; 
-        color: var(--text); display: flex; align-items: center; gap: 12px; 
-    }
-    .step h3 i { 
-        color: var(--primary) !important; background: #F3F2FF;
-        width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-        border-radius: 12px; font-size: 20px;
-    }
-    .step p { 
-        font-size: 14px; margin-bottom: 24px; line-height: 1.6; color: var(--muted);
-    }
+    .step h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--text); display: flex; align-items: center; gap: 12px; }
+    .step h3 i { color: var(--primary) !important; background: #F3F2FF; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 20px; }
+    .step p { font-size: 14px; margin-bottom: 24px; line-height: 1.6; color: var(--muted); }
     
-    .step .mobile-visual-wrapper { 
-        background: #ffffff;
-        border-radius: 20px; 
-        border: 1px solid var(--border);
-        padding: 16px;
-        box-shadow: 0 10px 30px rgba(30, 31, 36, 0.05);
-        margin: 0;
-        width: 100%; box-sizing: border-box;
-    }
+    .step .mobile-visual-wrapper { background: #ffffff; border-radius: 20px; border: 1px solid var(--border); padding: 16px; box-shadow: 0 10px 30px rgba(30, 31, 36, 0.05); margin: 0; width: 100%; box-sizing: border-box; }
+    .step .visual-content { position: static !important; opacity: 1 !important; pointer-events: auto !important; transform: none !important; display: block; padding: 0; background: transparent; width: 100%; box-sizing: border-box; }
     
-    .step .visual-content {
-        position: static !important;
-        opacity: 1 !important; pointer-events: auto !important;
-        transform: none !important; display: block;
-        padding: 0; background: transparent;
-        width: 100%; box-sizing: border-box;
-    }
-    
-    .step .chat-ui-v2, .step .tasks-ui-wrapper, .step .tasks-ui-v2, 
-    .step .schedule-ui-wrapper, .step .notes-ui-wrapper, .step .schedule-ui-v2 { 
-        display: block; width: 100%; height: auto !important; max-height: none !important; 
-        background: transparent; border: none; box-shadow: none; backdrop-filter: none;
-        padding: 0; margin: 0; box-sizing: border-box;
-    }
-
-    .step .schedule-sidebar, .step .notes-topbar { display: none !important; }
-    
-    .step .chat-header-v2 { padding: 0 0 12px 0; background: transparent; border-bottom: 1px solid rgba(0,0,0,0.05); }
-    .step .chat-header-v2 h4 { font-size: 14px; }
-    .step .members-v2 img { width: 24px !important; height: 24px !important; }
-    .step .members-v2 span { font-size: 10px; padding: 2px 6px; }
-    .step .chat-messages-v2 { padding: 12px 0; gap: 10px; }
-    .step .message-v2 { max-width: 90%; }
-    .step .message-v2 img { width: 28px !important; height: 28px !important; }
-    .step .sender-v2 { font-size: 11px; margin-bottom: 4px; }
-    .step .bubble-v2 { padding: 10px 14px; font-size: 12px; line-height: 1.4; word-wrap: break-word; }
-    .step .chat-composer-v2 { padding: 12px 0 0 0; gap: 8px; background: transparent; border-top: 1px solid rgba(0,0,0,0.05); }
-    .step .chat-composer-inner { border: 1px solid var(--border); background: #fff; padding: 6px 12px; }
-    .step .chat-composer-inner input { font-size: 12px; margin-left: 6px; }
-    .step .btn-send { width: 32px; height: 32px; flex-shrink: 0; }
-    
-    .step .tasks-header-v2 { flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 12px; }
-    .step .tasks-header-v2 h4 { font-size: 16px; margin: 0; }
-    .step .tasks-header-v2 p { font-size: 11px; }
-    .step .due-badge-v2 { font-size: 10px; padding: 4px 8px; }
-    .step .task-progress-v2 { margin-bottom: 12px; }
-    .step .tasks-filter-v2 { padding-bottom: 8px; margin-bottom: 8px; }
-    .step .tf-btn { font-size: 11px; padding: 6px 12px; }
-    .step .task-list-v2 { gap: 8px; }
-    .step .task-v2 { padding: 10px 12px; margin-bottom: 0; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); font-size: 12px; border-radius: 10px; gap: 8px; }
-    .step .task-v2 i.checkbox { font-size: 20px; flex-shrink: 0; }
-    .step .task-v2 img { width: 24px !important; height: 24px !important; }
-    .step .task-tag { font-size: 9px; padding: 3px 6px; border-radius: 4px; }
-    
-    .step .schedule-header-v2 { padding: 0 0 10px 0; background: transparent; border-bottom: 1px solid rgba(0,0,0,0.05); gap: 4px; }
-    .step .date-display-v2 { padding: 6px 8px; }
-    .step .date-display-v2 .day-v2 { font-size: 10px; margin-bottom: 2px; }
-    .step .date-display-v2 .date-v2 { font-size: 14px; }
-    .step .schedule-body-v2 { 
-        --hr-size: 44px;
-        --pad-top: 12px;
-        padding: var(--pad-top) 0 12px 40px;
-        min-height: calc(var(--pad-top) + 6.5 * var(--hr-size));
-        background-size: 100% var(--hr-size); 
-    }
-    .step .time-labels { padding-top: 6px; }
-    .step .time-labels span { height: var(--hr-size); font-size: 10px; }
-    .step .time-indicator-v2 { left: 40px; }
-    .step .schedule-event-v2 { left: 48px; right: 4px; padding: 6px 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border-radius: 8px; }
-    .step .schedule-event-v2 strong { font-size: 12px; margin-bottom: 2px; }
-    .step .schedule-event-v2 span { font-size: 10px; }
-    .step .schedule-event-v2 .avatars { top: 6px; right: 8px; }
-    .step .schedule-event-v2 .avatars img { width: 18px !important; height: 18px !important; margin-left: -6px; }
-    
-    .step .notes-ui-v2 { padding: 0; column-count: 1; display: flex; flex-direction: column; gap: 10px; }
-    .step .note-card-v2 { padding: 16px; margin: 0; border: 1px solid var(--border); box-shadow: 0 2px 6px rgba(0,0,0,0.02); border-radius: 12px; }
-    .step .note-card-v2 h4 { font-size: 14px; margin-bottom: 6px; }
-    .step .note-card-v2 p { font-size: 12px; line-height: 1.5; }
-    .step .checklist-v2 { margin-top: 8px; gap: 6px; }
-    .step .checklist-v2 li { font-size: 11px; padding: 6px 8px; gap: 8px; border-radius: 6px; }
-    .step .checklist-v2 li i { font-size: 16px; }
-    .step .note-footer-v2 { margin-top: 12px; padding-top: 12px; }
-    .step .tag-v2 { font-size: 9px; padding: 4px 8px; }
-    .step .author-v2 { font-size: 10px; }
-    
-    .step .mobile-visual-wrapper .message-v2,
-    .step .mobile-visual-wrapper .task-v2,
-    .step .mobile-visual-wrapper .schedule-event-v2,
-    .step .mobile-visual-wrapper .note-card-v2 {
-        opacity: 1 !important;
-        transform: none !important;
-        animation: none !important;
-    }
-
-    .hero-image-wrapper {
-        justify-content: center;
-        transform: scale(0.9) translateY(-10px);
-        width: 100%; max-width: 100%; margin: 0; padding: 0;
-    }
-    .hero.clarity-mode .hero-image-wrapper {
-        transform: scale(1) translateY(0);
-    }
+    .hero-image-wrapper { justify-content: center; transform: scale(0.9) translateY(-10px); width: 100%; max-width: 100%; margin: 0; padding: 0; }
+    .hero.clarity-mode .hero-image-wrapper { transform: scale(1) translateY(0); }
     .hero-image { transform: none; max-width: 100%; width: 100%; }
   }
   
@@ -889,35 +984,17 @@
     .nav-links { display: flex; align-items: center; }
     .nav-links a:not(.cta-primary) { display: none; }
     .nav a.cta-primary { padding: 6px 12px; font-size: 13px; border-radius: 8px; }
-
     .hero { justify-content: flex-start; padding-top: 60px; }
-    
-    #chaos-container { 
-      position: relative; 
-      height: 230px; 
-      width: 100%; 
-      z-index: 1; 
-      transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
-      margin-bottom: 24px;
-      overflow: visible; /* Prevent any vertical clipping during float animations */
-    }
-    .hero.clarity-mode #chaos-container { 
-      height: 0; 
-      margin-bottom: 0;
-      overflow: hidden; 
-    }
-
+    #chaos-container { position: relative; height: 230px; width: 100%; z-index: 1; transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); margin-bottom: 24px; overflow: visible; }
+    .hero.clarity-mode #chaos-container { height: 0; margin-bottom: 0; overflow: hidden; }
     .how-it-works-grid { gap: 16px; }
-    
     .cta-box { padding: 32px 20px; }
     .cta-box h2 { font-size: 22px; }
-
     footer { margin-top: 40px; padding: 32px 0; }
     .footer-row { flex-direction: column-reverse; justify-content: center; gap: 16px; text-align: center; }
     .footer-links { gap: 16px; justify-content: center; flex-wrap: wrap; }
   }
 
-  /* Strip all individual margins and enforce flex-gap structure */
   body.mobile-optimized .hero { padding: 32px 0 40px !important; min-height: calc(100vh - 60px) !important; min-height: calc(100dvh - 60px) !important; justify-content: center !important; }
   body.mobile-optimized .hero-state-clarity { padding-top: 0px; }
   body.mobile-optimized .hero-content h1 { font-size: clamp(28px, 6vw, 34px); }
@@ -929,6 +1006,954 @@
   body.mobile-optimized .pin-grid { padding-bottom: 0 !important; padding-top: 16px !important; }
   body.mobile-optimized .section-header { margin-bottom: 20px !important; }
   body.mobile-optimized .how-it-works-grid { gap: 16px !important; }
+  /* =========================================================
+     MOBILE FEATURE VISUAL POLISH — desktop rules untouched
+     ========================================================= */
+  @media (max-width: 980px){
+    html, body{
+      width:100% !important;
+      max-width:100% !important;
+      overflow-x:hidden !important;
+    }
+
+    /* Allow every grid/flex child to actually shrink to the viewport. */
+    .pin-grid,
+    .steps,
+    .step,
+    .step .mobile-visual-wrapper,
+    .step .visual-content,
+    .step .feature-scene,
+    .step .feature-card,
+    .step .notify-phone,
+    .step .chat-media-ui,
+    .step .collab-ui,
+    .step .auto-schedule-ui,
+    .step .notes-hub-ui,
+    .step .meet-room,
+    .step .pwa-stage,
+    .step .mock-topbar,
+    .step .chat-media-body,
+    .step .composer-media,
+    .step .collab-body-new,
+    .step .auto-schedule-body,
+    .step .notes-hub-body,
+    .step .meet-body,
+    .step .meet-controls,
+    .step .device-cloud{
+      min-width:0 !important;
+      max-width:100% !important;
+      width:100% !important;
+      box-sizing:border-box !important;
+    }
+
+    .steps{
+      overflow:visible !important;
+      gap:56px !important;
+    }
+
+    .step{
+      overflow:visible !important;
+    }
+
+    .step h3{
+      white-space:normal !important;
+      overflow:visible !important;
+      text-overflow:clip !important;
+      line-height:1.35 !important;
+      margin-bottom:10px !important;
+    }
+
+    .step p{
+      margin-bottom:20px !important;
+    }
+
+    /* One consistent outer frame for every feature preview. */
+    .step .mobile-visual-wrapper{
+      position:relative;
+      margin:0 !important;
+      padding:10px !important;
+      border:1px solid rgba(111,108,255,.12) !important;
+      border-radius:24px !important;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(182,165,215,.22), transparent 34%),
+        radial-gradient(circle at 100% 100%, rgba(106,201,255,.15), transparent 32%),
+        linear-gradient(145deg,#FBFAFF,#F5F6FC) !important;
+      box-shadow:0 18px 42px rgba(30,31,36,.08) !important;
+      overflow:hidden !important;
+      isolation:isolate;
+    }
+
+    .step .mobile-visual-wrapper::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(111,108,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(111,108,255,.035) 1px, transparent 1px);
+      background-size:22px 22px;
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    .step .visual-content{
+      position:static !important;
+      display:block !important;
+      height:auto !important;
+      min-height:0 !important;
+      padding:0 !important;
+      opacity:1 !important;
+      transform:none !important;
+      pointer-events:auto !important;
+      overflow:hidden !important;
+      border-radius:18px !important;
+    }
+
+    .step .feature-scene{
+      display:flex !important;
+      align-items:stretch !important;
+      justify-content:stretch !important;
+      min-height:0 !important;
+      overflow:hidden !important;
+      border-radius:18px !important;
+    }
+
+    .step .feature-scene::before{
+      display:none !important;
+    }
+
+    /* One consistent inner application window. */
+    .step .feature-card,
+    .step .pwa-stage{
+      margin:0 !important;
+      border:1px solid rgba(30,31,36,.08) !important;
+      border-radius:18px !important;
+      background:#fff !important;
+      box-shadow:0 8px 22px rgba(30,31,36,.06) !important;
+      overflow:hidden !important;
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
+    }
+
+    .step .mock-topbar{
+      min-height:58px !important;
+      padding:11px 12px !important;
+      gap:8px !important;
+      background:rgba(255,255,255,.96) !important;
+    }
+
+    .step .mock-title{
+      flex:1 1 auto !important;
+      min-width:0 !important;
+      gap:9px !important;
+    }
+
+    .step .mock-title > div:last-child{
+      min-width:0 !important;
+    }
+
+    .step .mock-title strong,
+    .step .mock-title span{
+      max-width:100% !important;
+      overflow:hidden !important;
+      white-space:nowrap !important;
+      text-overflow:ellipsis !important;
+    }
+
+    .step .mock-title strong{ font-size:12px !important; }
+    .step .mock-title span{ font-size:9px !important; }
+    .step .mock-icon{
+      width:32px !important;
+      height:32px !important;
+      border-radius:11px !important;
+    }
+
+    .step .mock-status,
+    .step .mini-members,
+    .step .mock-avatars{
+      flex:0 0 auto !important;
+      min-width:0 !important;
+    }
+
+    .step .mock-status{
+      display:inline-flex !important;
+      padding:5px 7px !important;
+      font-size:8px !important;
+    }
+
+    .step .person-avatar,
+    .step .avatar-token{
+      flex-shrink:0 !important;
+    }
+
+    /* Discussion */
+    .step .chat-media-ui{
+      display:flex !important;
+      flex-direction:column !important;
+      min-height:430px !important;
+    }
+
+    .step .chat-media-body{
+      flex:1 1 auto !important;
+      min-height:305px !important;
+      padding:12px !important;
+      gap:9px !important;
+      overflow:hidden !important;
+    }
+
+    .step .chat-row{
+      max-width:94% !important;
+      min-width:0 !important;
+      gap:8px !important;
+    }
+
+    .step .chat-bubble{
+      min-width:0 !important;
+      max-width:100% !important;
+      overflow-wrap:anywhere !important;
+      font-size:10px !important;
+      padding:8px 9px !important;
+    }
+
+    .step .media-preview.simple-media-preview,
+    .step .file-preview{
+      width:min(188px,100%) !important;
+      max-width:100% !important;
+    }
+
+    .step .media-file-card,
+    .step .file-preview{
+      min-width:0 !important;
+      padding:8px !important;
+    }
+
+    .step .media-file-card strong,
+    .step .file-preview strong{
+      overflow-wrap:anywhere !important;
+    }
+
+    .step .composer-media{
+      padding:10px !important;
+      gap:7px !important;
+    }
+
+    .step .composer-action,
+    .step .send-orb{
+      width:31px !important;
+      height:31px !important;
+      flex:0 0 31px !important;
+    }
+
+    .step .composer-field{
+      min-width:0 !important;
+      padding:8px 9px !important;
+      font-size:9px !important;
+      overflow:hidden !important;
+      white-space:nowrap !important;
+      text-overflow:ellipsis !important;
+    }
+
+    /* Collaboration */
+    .step .collab-ui{
+      min-height:385px !important;
+    }
+
+    .step .collab-body-new{
+      min-height:325px !important;
+      padding:12px !important;
+      overflow:hidden !important;
+    }
+
+    .step .collab-hub{
+      transform:scale(.72) !important;
+      transform-origin:center !important;
+    }
+
+    .step .collab-node{
+      width:auto !important;
+      max-width:44% !important;
+      padding:8px 10px !important;
+      gap:8px !important;
+      border-radius:14px !important;
+      box-shadow:0 8px 20px rgba(30,31,36,.07) !important;
+    }
+
+    .step .collab-node.node-1{ top:14px !important; left:10px !important; right:auto !important; bottom:auto !important; }
+    .step .collab-node.node-2{ top:auto !important; left:auto !important; right:10px !important; bottom:14px !important; }
+    .step .collab-node.node-3{ top:auto !important; left:10px !important; right:auto !important; bottom:24px !important; }
+
+    .step .node-icon{
+      width:34px !important;
+      height:34px !important;
+      border-radius:10px !important;
+      font-size:16px !important;
+      flex:0 0 34px !important;
+    }
+
+    .step .node-info{
+      min-width:0 !important;
+    }
+
+    .step .node-info strong{
+      font-size:10px !important;
+      line-height:1.25 !important;
+      white-space:normal !important;
+    }
+
+    .step .node-info span{ font-size:8px !important; }
+    .step .live-cursor{ transform:scale(.72) !important; }
+
+    /* Schedule */
+    .step .auto-schedule-ui{
+      min-height:495px !important;
+    }
+
+    .step .auto-schedule-body{
+      min-height:435px !important;
+      padding:12px !important;
+      gap:10px !important;
+      grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr) !important;
+      align-items:stretch !important;
+    }
+
+    .step .mini-month-card,
+    .step .timeline-card{
+      min-width:0 !important;
+      margin:0 !important;
+      padding:11px !important;
+      border-radius:15px !important;
+      box-shadow:none !important;
+    }
+
+    .step .auto-cal-grid{ gap:3px !important; font-size:8px !important; }
+    .step .auto-cal-grid span{ padding:2px 0 !important; }
+    .step .auto-cal-grid b{ padding:4px 0 !important; font-size:9px !important; }
+    .step .auto-reminder-card{ padding:9px !important; margin-top:10px !important; }
+    .step .auto-reminder-card strong{ font-size:9px !important; }
+    .step .auto-reminder-card span{ font-size:8px !important; }
+    .step .timeline-card h4{ font-size:11px !important; margin-bottom:11px !important; }
+    .step .smart-event{
+      margin-left:34px !important;
+      margin-bottom:9px !important;
+      padding:9px 9px !important;
+      border-radius:12px !important;
+    }
+    .step .smart-event::before{ left:-39px !important; font-size:8px !important; }
+    .step .smart-event strong{ font-size:10px !important; }
+    .step .smart-event span{ font-size:8px !important; }
+    .step .time-indicator-v2{
+      display:flex !important;
+    }
+
+    /* Notifications */
+    .step .notify-phone{
+      min-height:430px !important;
+    }
+
+    .step .notify-wallpaper{
+      inset:58px 12px 12px !important;
+      border-radius:16px !important;
+    }
+
+    .step .class-card-mini{
+      margin:12px 12px 9px !important;
+      padding:12px !important;
+      border-radius:15px !important;
+    }
+
+    .step .class-card-mini h4{ font-size:14px !important; }
+    .step .room-row{ font-size:10px !important; }
+    .step .notify-stack{
+      padding:0 12px 14px !important;
+      gap:8px !important;
+    }
+
+    .step .notice-card{
+      grid-template-columns:32px minmax(0,1fr) auto !important;
+      gap:9px !important;
+      padding:9px !important;
+      border-radius:13px !important;
+    }
+
+    .step .notice-icon{
+      width:32px !important;
+      height:32px !important;
+      border-radius:10px !important;
+    }
+
+    .step .notice-copy{ min-width:0 !important; }
+    .step .notice-copy strong{ font-size:10px !important; }
+    .step .notice-copy span{ font-size:8px !important; }
+    .step .notice-time{ display:block !important; font-size:8px !important; }
+    .step .notify-bell{ right:16px !important; bottom:16px !important; }
+
+    /* Notes — preserve the complete desktop-style composition in one window. */
+    .step .notes-hub-ui{
+      min-height:455px !important;
+    }
+
+    .step .notes-hub-body{
+      min-height:395px !important;
+      padding:12px !important;
+      overflow:hidden !important;
+    }
+
+    .step .notes-hub-toolbar{
+      flex-direction:row !important;
+      align-items:center !important;
+      gap:8px !important;
+      margin-bottom:10px !important;
+    }
+
+    .step .notes-hub-search{
+      min-width:0 !important;
+      padding:8px 9px !important;
+      font-size:9px !important;
+    }
+
+    .step .notes-hub-filter{
+      flex:0 0 auto !important;
+      padding:8px 9px !important;
+      font-size:8px !important;
+    }
+
+    .step .note-grid-unified{
+      display:grid !important;
+      grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr) !important;
+      gap:9px !important;
+      overflow:visible !important;
+      padding:0 !important;
+      margin:0 !important;
+      scroll-snap-type:none !important;
+    }
+
+    .step .note-sheet{
+      width:auto !important;
+      min-width:0 !important;
+      flex:none !important;
+      padding:11px !important;
+      border-radius:14px !important;
+    }
+
+    .step .note-sheet.featured{
+      grid-row:span 2 !important;
+    }
+
+    .step .note-sheet h4{ font-size:10px !important; margin-bottom:6px !important; }
+    .step .note-sheet p{ font-size:8px !important; line-height:1.45 !important; }
+    .step .note-meta-row{ margin-top:9px !important; padding-top:8px !important; gap:5px !important; }
+    .step .note-tag-mini{ font-size:7px !important; padding:4px 6px !important; }
+    .step .note-author-mini{ font-size:7px !important; gap:3px !important; }
+    .step .note-author-mini .person-avatar{ width:16px !important; height:16px !important; }
+
+    /* Academeet */
+    .step .meet-room{
+      min-height:425px !important;
+    }
+
+    .step .meet-body{
+      min-height:330px !important;
+      padding:10px !important;
+      overflow:hidden !important;
+    }
+
+    .step .meet-grid{
+      width:100% !important;
+      min-width:0 !important;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+      grid-template-rows:150px 125px !important;
+      gap:8px !important;
+    }
+
+    .step .video-tile{
+      min-width:0 !important;
+      border-radius:15px !important;
+    }
+
+    .step .video-tile.large{
+      grid-row:span 1 !important;
+      grid-column:span 2 !important;
+    }
+
+    .step .video-label{
+      max-width:calc(100% - 16px) !important;
+      overflow:hidden !important;
+      white-space:nowrap !important;
+      text-overflow:ellipsis !important;
+    }
+
+    .step .meet-toast{
+      right:10px !important;
+      top:52px !important;
+      max-width:54% !important;
+      font-size:8px !important;
+      padding:7px 8px !important;
+    }
+
+    .step .meet-controls{
+      min-height:74px !important;
+      padding:10px !important;
+      gap:7px !important;
+      flex-wrap:nowrap !important;
+    }
+
+    .step .meet-control{
+      width:32px !important;
+      height:32px !important;
+      flex:0 0 32px !important;
+      border-radius:11px !important;
+      font-size:14px !important;
+    }
+
+    .step .meet-control.primary{
+      width:auto !important;
+      flex:0 1 auto !important;
+      min-width:0 !important;
+      padding:0 10px !important;
+      font-size:9px !important;
+    }
+
+    .step .meet-control.primary span{
+      display:inline !important;
+      white-space:nowrap !important;
+    }
+
+    /* PWA */
+    .step .pwa-stage{
+      min-height:405px !important;
+      display:block !important;
+      position:relative !important;
+    }
+
+    .step .device-cloud{
+      height:405px !important;
+      overflow:hidden !important;
+    }
+
+    .step .desktop-device{
+      width:73% !important;
+      height:185px !important;
+      left:3% !important;
+      top:22px !important;
+    }
+
+    .step .tablet-device{
+      width:37% !important;
+      height:178px !important;
+      right:3% !important;
+      top:83px !important;
+    }
+
+    .step .phone-device{
+      width:29% !important;
+      height:174px !important;
+      left:12% !important;
+      bottom:35px !important;
+    }
+
+    .step .install-card{
+      width:53% !important;
+      max-width:190px !important;
+      right:3% !important;
+      bottom:30px !important;
+      padding:10px !important;
+      border-radius:15px !important;
+    }
+
+    .step .install-icon{
+      width:36px !important;
+      height:36px !important;
+      flex:0 0 36px !important;
+    }
+
+    .step .install-row strong{ font-size:10px !important; }
+    .step .install-row span{ font-size:8px !important; }
+    .step .install-btn{ font-size:9px !important; padding:7px 8px !important; }
+
+    .step .pwa-badges{
+      left:3% !important;
+      bottom:8px !important;
+      gap:6px !important;
+      max-width:44% !important;
+    }
+
+    .step .pwa-badge{
+      min-width:0 !important;
+      width:max-content !important;
+      max-width:100% !important;
+      padding:6px 8px !important;
+      font-size:8px !important;
+      white-space:nowrap !important;
+    }
+  }
+
+  @media (max-width: 600px){
+    .step .auto-schedule-body{
+      grid-template-columns:1fr !important;
+      min-height:0 !important;
+    }
+
+    .step .auto-schedule-ui{ min-height:665px !important; }
+    .step .mini-month-card{ min-height:220px !important; }
+    .step .timeline-card{ min-height:360px !important; }
+
+    .step .collab-node{ max-width:46% !important; }
+
+    .step .mock-status{
+      max-width:72px !important;
+      overflow:hidden !important;
+      white-space:nowrap !important;
+      text-overflow:ellipsis !important;
+    }
+  }
+
+  @media (max-width: 390px){
+    .wrap{ padding-left:14px !important; padding-right:14px !important; }
+    .step .mobile-visual-wrapper{ padding:8px !important; border-radius:21px !important; }
+    .step .visual-content,
+    .step .feature-scene,
+    .step .feature-card,
+    .step .pwa-stage{ border-radius:16px !important; }
+    .step .mock-topbar{ padding:9px 10px !important; }
+    .step .mock-status{ display:none !important; }
+    .step .mini-members .avatar-token:nth-child(3){ display:grid !important; }
+    .step .meet-control.primary span{ display:none !important; }
+    .step .collab-node{ max-width:48% !important; padding:7px 8px !important; }
+    .step .node-icon{ width:30px !important; height:30px !important; flex-basis:30px !important; }
+    .step .pwa-badge{ font-size:7px !important; }
+  }
+
+
+
+  /* =========================================================
+     FINAL MOBILE VISUAL CONSISTENCY + LOOPED MOTION
+     Scoped to mobile only; desktop styling remains unchanged.
+     ========================================================= */
+  @media (max-width: 980px){
+    :root{
+      --mobile-feature-window-height: 430px;
+      --mobile-feature-frame-padding: 10px;
+    }
+
+    /* Every feature gets the exact same outer frame and inner window height. */
+    .step .mobile-visual-wrapper{
+      height:calc(var(--mobile-feature-window-height) + (var(--mobile-feature-frame-padding) * 2)) !important;
+      min-height:calc(var(--mobile-feature-window-height) + (var(--mobile-feature-frame-padding) * 2)) !important;
+      max-height:calc(var(--mobile-feature-window-height) + (var(--mobile-feature-frame-padding) * 2)) !important;
+      padding:var(--mobile-feature-frame-padding) !important;
+    }
+
+    .step .mobile-visual-wrapper > .visual-content,
+    .step .mobile-visual-wrapper > .visual-content > .feature-scene{
+      height:100% !important;
+      min-height:100% !important;
+      max-height:100% !important;
+    }
+
+    .step .feature-scene > .chat-media-ui,
+    .step .feature-scene > .collab-ui,
+    .step .feature-scene > .auto-schedule-ui,
+    .step .feature-scene > .notify-phone,
+    .step .feature-scene > .notes-hub-ui,
+    .step .feature-scene > .meet-room,
+    .step .feature-scene > .pwa-stage{
+      height:var(--mobile-feature-window-height) !important;
+      min-height:var(--mobile-feature-window-height) !important;
+      max-height:var(--mobile-feature-window-height) !important;
+    }
+
+    /* Discussion: fill the window exactly, without a blank lower tail. */
+    .step .chat-media-ui{
+      display:flex !important;
+      flex-direction:column !important;
+    }
+    .step .chat-media-body{
+      flex:1 1 auto !important;
+      height:auto !important;
+      min-height:0 !important;
+      max-height:none !important;
+    }
+    .step .composer-media{
+      flex:0 0 52px !important;
+      min-height:52px !important;
+    }
+
+    /* Collaboration: body consumes all remaining space after the topbar. */
+    .step .collab-ui{
+      display:flex !important;
+      flex-direction:column !important;
+    }
+    .step .collab-body-new{
+      flex:1 1 auto !important;
+      height:auto !important;
+      min-height:0 !important;
+      max-height:none !important;
+    }
+
+    /* Schedule: keep the desktop-like two-column composition at every phone width. */
+    .step .auto-schedule-ui{
+      display:flex !important;
+      flex-direction:column !important;
+    }
+    .step .auto-schedule-body{
+      flex:1 1 auto !important;
+      height:auto !important;
+      min-height:0 !important;
+      max-height:none !important;
+      grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr) !important;
+      align-items:stretch !important;
+    }
+    .step .mini-month-card,
+    .step .timeline-card{
+      height:100% !important;
+      min-height:0 !important;
+      max-height:100% !important;
+    }
+    .step .timeline-card{
+      display:flex !important;
+      flex-direction:column !important;
+    }
+    .step .smart-event{
+      flex:0 0 auto !important;
+    }
+
+    /* Notifications: distribute the cards through the available space. */
+    .step .notify-phone{
+      display:flex !important;
+      flex-direction:column !important;
+    }
+    .step .class-card-mini{
+      flex:0 0 auto !important;
+    }
+    .step .notify-stack{
+      flex:1 1 auto !important;
+      min-height:0 !important;
+      justify-content:space-evenly !important;
+      padding-bottom:54px !important;
+    }
+
+    /* Notes: compact two-column desktop composition, exactly filling the window. */
+    .step .notes-hub-ui{
+      display:flex !important;
+      flex-direction:column !important;
+    }
+    .step .notes-hub-body{
+      flex:1 1 auto !important;
+      height:auto !important;
+      min-height:0 !important;
+      max-height:none !important;
+      display:flex !important;
+      flex-direction:column !important;
+    }
+    .step .notes-hub-toolbar{
+      flex:0 0 auto !important;
+    }
+    .step .note-grid-unified{
+      flex:1 1 auto !important;
+      height:auto !important;
+      min-height:0 !important;
+      grid-template-rows:minmax(0,1fr) minmax(0,1fr) !important;
+      align-items:stretch !important;
+    }
+    .step .note-sheet{
+      height:100% !important;
+      min-height:0 !important;
+      overflow:hidden !important;
+    }
+
+    /* Academeet: video area and controls use the entire fixed-height window. */
+    .step .meet-room{
+      display:flex !important;
+      flex-direction:column !important;
+    }
+    .step .meet-body{
+      flex:1 1 auto !important;
+      height:auto !important;
+      min-height:0 !important;
+      max-height:none !important;
+    }
+    .step .meet-grid{
+      height:100% !important;
+      min-height:0 !important;
+      grid-template-rows:minmax(0,1.12fr) minmax(0,.88fr) !important;
+    }
+    .step .meet-controls{
+      flex:0 0 58px !important;
+      min-height:58px !important;
+    }
+
+    /* PWA visual: devices occupy the same exact visual window height. */
+    .step .pwa-stage,
+    .step .device-cloud{
+      height:var(--mobile-feature-window-height) !important;
+      min-height:var(--mobile-feature-window-height) !important;
+      max-height:var(--mobile-feature-window-height) !important;
+    }
+  }
+
+  /* Restore and strengthen looping mobile animations. */
+  @media (max-width: 980px) and (prefers-reduced-motion: no-preference){
+    .step .visual-content.active .chat-row:nth-child(1){ animation:chatAppear 6.8s ease-in-out infinite .05s !important; }
+    .step .visual-content.active .chat-row:nth-child(2){ animation:chatAppear 6.8s ease-in-out infinite .45s !important; }
+    .step .visual-content.active .chat-row:nth-child(3){ animation:chatAppear 6.8s ease-in-out infinite .85s !important; }
+    .step .visual-content.active .chat-row:nth-child(4){ animation:chatAppear 6.8s ease-in-out infinite 1.25s !important; }
+
+    .step .visual-content.active .notice-card:nth-child(1){ animation:notifyLoop1 6.6s ease-in-out infinite !important; }
+    .step .visual-content.active .notice-card:nth-child(2){ animation:notifyLoop2 6.6s ease-in-out infinite !important; }
+    .step .visual-content.active .notice-card:nth-child(3){ animation:notifyLoop3 6.6s ease-in-out infinite !important; }
+
+    .step .visual-content.active .smart-event:nth-of-type(3){ animation:mobileScheduleEvent 7s ease-in-out infinite .10s !important; }
+    .step .visual-content.active .smart-event:nth-of-type(4){ animation:mobileScheduleEvent 7s ease-in-out infinite .55s !important; }
+    .step .visual-content.active .smart-event:nth-of-type(5){ animation:mobileScheduleEvent 7s ease-in-out infinite 1s !important; }
+    .step .visual-content.active .time-indicator-v2{ animation:timeLineMove 6s ease-in-out infinite !important; }
+
+    .step .visual-content.active .note-sheet:nth-child(1){ animation:mobileNoteLoop 6.4s ease-in-out infinite .05s !important; }
+    .step .visual-content.active .note-sheet:nth-child(2){ animation:mobileNoteLoop 6.4s ease-in-out infinite .45s !important; }
+    .step .visual-content.active .note-sheet:nth-child(3){ animation:mobileNoteLoop 6.4s ease-in-out infinite .85s !important; }
+
+    .step .visual-content.active .collab-node.node-1{ animation:floatNode1 4s ease-in-out infinite !important; }
+    .step .visual-content.active .collab-node.node-2{ animation:floatNode2 4.5s ease-in-out infinite .5s !important; }
+    .step .visual-content.active .collab-node.node-3{ animation:floatNode3 5s ease-in-out infinite 1s !important; }
+
+    .step .visual-content.active .meet-toast{ animation:toastJoin 5.4s ease-in-out infinite !important; }
+    .step .visual-content.active .install-card{ animation:installPop 5.8s ease-in-out infinite !important; }
+    .step .visual-content.active .pwa-badge:nth-child(1){ animation:badgeSlide 4.8s ease-in-out infinite !important; }
+    .step .visual-content.active .pwa-badge:nth-child(2){ animation:badgeSlide 4.8s ease-in-out infinite .35s !important; }
+  }
+
+  @keyframes mobileScheduleEvent{
+    0%,7%{ opacity:0; transform:translateX(14px) scale(.985); }
+    15%,80%{ opacity:1; transform:translateX(0) scale(1); }
+    88%,100%{ opacity:0; transform:translateX(-7px) scale(.99); }
+  }
+
+  @keyframes mobileNoteLoop{
+    0%,7%{ opacity:0; transform:translateY(10px) scale(.985); }
+    15%,42%{ opacity:1; transform:translateY(0) scale(1); }
+    60%{ opacity:1; transform:translateY(-3px) scale(1); }
+    82%{ opacity:1; transform:translateY(0) scale(1); }
+    92%,100%{ opacity:0; transform:translateY(-5px) scale(.99); }
+  }
+
+  @media (max-width: 390px){
+    :root{
+      --mobile-feature-window-height: 410px;
+      --mobile-feature-frame-padding: 8px;
+    }
+
+    .step .auto-schedule-body{
+      grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr) !important;
+      gap:7px !important;
+      padding:9px !important;
+    }
+    .step .mini-month-card,
+    .step .timeline-card{ padding:8px !important; }
+    .step .smart-event{
+      margin-left:29px !important;
+      padding:7px !important;
+      margin-bottom:7px !important;
+    }
+    .step .smart-event::before{ left:-33px !important; }
+    .step .note-sheet{ padding:9px !important; }
+  }
+
+
+
+  /* Final fit pass: every item uses the fixed window instead of clipping or leaving a dead tail. */
+  @media (max-width: 980px){
+    /* Discussion content is compact enough for all four messages to remain inside the window. */
+    .step .chat-media-body{
+      padding:8px !important;
+      gap:5px !important;
+      justify-content:space-between !important;
+    }
+    .step .chat-row{
+      gap:6px !important;
+    }
+    .step .chat-row .person-avatar,
+    .step .chat-row > .avatar-token{
+      width:28px !important;
+      height:28px !important;
+      font-size:9px !important;
+      flex:0 0 28px !important;
+    }
+    .step .chat-bubble{
+      padding:6px 8px !important;
+      font-size:9px !important;
+      line-height:1.32 !important;
+      border-radius:13px !important;
+    }
+    .step .chat-bubble strong.sender-name{
+      font-size:9px !important;
+      margin-bottom:2px !important;
+    }
+    .step .media-preview.simple-media-preview{
+      width:min(172px,100%) !important;
+      margin-top:5px !important;
+    }
+    .step .media-file-card{
+      padding:6px !important;
+      gap:7px !important;
+      border-radius:12px !important;
+    }
+    .step .media-file-card i,
+    .step .file-preview i{
+      width:28px !important;
+      height:28px !important;
+      border-radius:9px !important;
+      font-size:15px !important;
+      flex:0 0 28px !important;
+    }
+    .step .media-file-card strong,
+    .step .file-preview strong{ font-size:10px !important; }
+    .step .media-file-card span,
+    .step .file-preview span{ font-size:8px !important; }
+    .step .file-preview{
+      width:min(172px,100%) !important;
+      padding:6px !important;
+      gap:7px !important;
+      margin-top:3px !important;
+      border-radius:12px !important;
+    }
+    .step .typing-live{
+      padding:7px 9px !important;
+      border-radius:12px !important;
+    }
+    .step .composer-media{
+      flex-basis:46px !important;
+      min-height:46px !important;
+      padding:7px !important;
+    }
+
+    /* Schedule cards intentionally fill the available vertical timeline. */
+    .step .mini-month-card{
+      display:flex !important;
+      flex-direction:column !important;
+    }
+    .step .auto-reminder-card{
+      flex:1 1 auto !important;
+      min-height:0 !important;
+      display:flex !important;
+      flex-direction:column !important;
+      justify-content:center !important;
+    }
+    .step .timeline-card .smart-event{
+      flex:1 1 0 !important;
+      min-height:0 !important;
+      display:flex !important;
+      flex-direction:column !important;
+      justify-content:center !important;
+    }
+
+    /* Notes use their whitespace deliberately, with metadata anchored to the bottom. */
+    .step .note-sheet{
+      display:flex !important;
+      flex-direction:column !important;
+    }
+    .step .note-meta-row{
+      margin-top:auto !important;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -937,12 +1962,13 @@
 <header class="nav">
   <div class="wrap nav-inner">
     <a href="#" class="brand">
-<img src="/icon/web-app-manifest-512x512.png" alt="Academate Logo" style="width: 34px; height: 34px; border-radius: 8px; object-fit: contain;">
+      <img src="/icon/web-app-manifest-512x512.png" alt="Academate Logo" style="width: 34px; height: 34px; border-radius: 8px; object-fit: contain;">
       Academate
     </a>
     <nav class="nav-links">
       <a class="cta" href="#features">Fitur</a>
       <a class="cta" href="#how-it-works">Cara Kerja</a>
+      <a class="cta" href="/documentation_ID">Panduan</a>
       <a class="cta cta-primary" href="/auth">Mulai Sekarang</a>
     </nav>
   </div>
@@ -970,11 +1996,7 @@
                 <div class="hero-cta">
                     <a class="btn btn-primary" href="/auth"><i class="ri-rocket-2-fill"></i>Mulai Gratis</a>
                     <a class="btn" href="#features"><i class="ri-play-circle-line"></i>Lihat Fitur</a>
-                </div>
-                <div class="chips">
-                    <div class="chip"><i class="ri-calendar-event-line" style="color: var(--primary);"></i> Jadwal Otomatis</div>
-                    <div class="chip"><i class="ri-task-line" style="color: var(--primary);"></i> Tugas Terpusat</div>
-                    <div class="chip"><i class="ri-file-copy-2-line" style="color: var(--primary);"></i> Catatan Bersama</div>
+                    <a class="btn" href="/documentation_ID" style="background: #F3F2FF; border-color: #E4DFFF; color: var(--primary);"><i class="ri-book-read-fill"></i> Baca Panduan</a>
                 </div>
             </div>
             
@@ -988,227 +2010,449 @@
   </section>
 
   <section id="features" class="wrap">
-    <div class="section-header">
-      <h2>Bukan Sekadar Aplikasi Agenda, Ini Basecamp Digital Kelasmu</h2>
-      <p>Academate adalah ruang kerja bersama di mana setiap anggota bisa berkontribusi, memastikan semua orang selalu di halaman yang sama.</p>
+    <div class="section-header feature-header-upgrade">
+      <h2>Fitur Lengkap untuk Kelas yang Lebih Teratur</h2>
+      <p>Academate menyatukan diskusi, kolaborasi, jadwal, tugas, catatan, meeting, dan pengalaman mobile dalam satu ruang kerja kelas yang rapi.</p>
+      <div class="feature-pill-row" aria-label="Daftar fitur Academate">
+        <span class="feature-pill"><i class="ri-chat-smile-3-line"></i> Diskusi kelas</span>
+        <span class="feature-pill"><i class="ri-group-2-line"></i> Kolaborasi</span>
+        <span class="feature-pill"><i class="ri-calendar-check-line"></i> Jadwal otomatis</span>
+        <span class="feature-pill"><i class="ri-notification-3-line"></i> Tugas & Reminder</span>
+        <span class="feature-pill"><i class="ri-file-edit-line"></i> Bank catatan</span>
+        <span class="feature-pill"><i class="ri-vidicon-line"></i> Academeet</span>
+        <span class="feature-pill"><i class="ri-smartphone-line"></i> PWA Responsive</span>
+      </div>
     </div>
-    <div class="pin-grid">
+    
+    <div class="pin-grid feature-pin-upgrade">
       <div class="pin-wrap">
         <div class="pin">
-          <div class="pin-visual">
-            
-            <div id="visual-chat" class="visual-content">
-                <div class="chat-ui-v2">
-                    <div class="chat-header-v2">
-                        <h4><i class="ri-hashtag" style="color:var(--muted)"></i> Statistika A3</h4>
-                        <div class="members-v2">
-                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="member" onerror="this.style.display='none'">
-                            <img src="https://i.pravatar.cc/150?img=11" alt="member" onerror="this.style.display='none'">
-                            <span>3 online</span>
-                        </div>
+          <div class="pin-visual feature-visual-stage">
+
+            <div id="visual-chat-media" class="visual-content">
+              <div class="feature-scene chat-media-scene" aria-hidden="true">
+                <div class="chat-media-ui feature-card">
+                  <div class="mock-topbar">
+                    <div class="mock-title">
+                      <div class="mock-icon"><i class="ri-chat-smile-3-fill"></i></div>
+                      <div>
+                        <strong>#Diskusi Statistika A3</strong>
+                        <span>Chat kelas, gambar, dan dokumen</span>
+                      </div>
                     </div>
-                    <div class="chat-messages-v2">
-                        <div class="day-divider-v2"><span>Hari Ini</span></div>
-                        <div class="message-v2 other">
-                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="avatar" onerror="this.style.display='none'">
-                            <div class="message-content-v2">
-                                <div class="sender-v2">Citra</div>
-                                <div class="bubble-v2">Guys, jangan lupa besok presentasi kelompok ya! Slide-nya udah di-upload di folder kelas.</div>
-                            </div>
-                        </div>
-                        <div class="message-v2 me">
-                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair1_wa8kag.webp" alt="avatar" onerror="this.style.display='none'">
-                            <div class="message-content-v2">
-                                <div class="sender-v2" style="text-align: right;">Ardan Ridho</div>
-                                <div class="bubble-v2">Aman, slide presentasiku sudah selesai. Aku barusan tambahin beberapa diagram.</div>
-                            </div>
-                        </div>
-                        <div class="message-v2 other">
-                            <img src="https://i.pravatar.cc/150?img=11" alt="avatar" onerror="this.style.display='none'">
-                            <div class="message-content-v2">
-                                <div class="sender-v2">Budi</div>
-                                <div class="typing-indicator"><span></span><span></span><span></span></div>
-                            </div>
-                        </div>
+                    <div class="mini-members">
+                      <img class="person-avatar sm" src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair1_wa8kag.webp" alt="Ardan" onerror="this.style.display='none'">
+                      <img class="person-avatar sm" src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="Citra" onerror="this.style.display='none'">
+                      <span class="avatar-token warm sm">BD</span>
                     </div>
-                    <div class="chat-composer-v2">
-                        <div class="chat-composer-inner">
-                            <i class="ri-add-line"></i>
-                            <input type="text" placeholder="Kirim pesan ke #Statistika-A3" readonly>
-                            <i class="ri-emoji-sticker-line"></i>
+                  </div>
+                  <div class="chat-media-body">
+                    <div class="chat-row">
+                      <img class="person-avatar" src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="Citra" onerror="this.style.display='none'">
+                      <div class="chat-bubble">
+                        <strong class="sender-name">Citra</strong>
+                        Aku kirim foto catatan papan tulis hari ini ya.
+                        <div class="media-preview simple-media-preview">
+                          <div class="media-file-card image-card">
+                            <i class="ri-image-2-fill"></i>
+                            <div>
+                              <strong>catatan-papan.jpg</strong>
+                              <span>Foto catatan • 1.8 MB</span>
+                            </div>
+                          </div>
                         </div>
-                        <button class="btn-send border-none cursor-pointer"><i class="ri-send-plane-fill"></i></button>
+                      </div>
                     </div>
+                    <div class="chat-row me">
+                      <img class="person-avatar" src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair1_wa8kag.webp" alt="Ardan" onerror="this.style.display='none'">
+                      <div class="chat-bubble"><strong class="sender-name">Ardan Ridho</strong>Mantap, aku tambahin PDF rangkuman kelompok.</div>
+                    </div>
+                    <div class="chat-row me">
+                      <img class="person-avatar" src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair1_wa8kag.webp" alt="Ardan" onerror="this.style.display='none'">
+                      <div class="chat-bubble">
+                        <div class="file-preview">
+                          <i class="ri-file-pdf-2-fill"></i>
+                          <div>
+                            <strong>Rangkuman_UAS.pdf</strong>
+                            <span>2.4 MB • siap dibuka</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="chat-row">
+                      <span class="avatar-token warm">BD</span>
+                      <div class="chat-bubble">
+                        <strong class="sender-name">Budi</strong>
+                        <div class="typing-live"><span></span><span></span><span></span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="composer-media">
+                    <div class="composer-action"><i class="ri-attachment-2"></i></div>
+                    <div class="composer-action"><i class="ri-image-add-line"></i></div>
+                    <div class="composer-field">Kirim pesan, gambar, atau file...</div>
+                    <div class="send-orb"><i class="ri-send-plane-fill"></i></div>
+                  </div>
                 </div>
+              </div>
             </div>
             
-            <div id="visual-tasks" class="visual-content">
-                <div class="tasks-ui-v2">
-                    <div class="tasks-header-v2">
-                        <div>
-                            <h4>Proyek Akhir UI/UX</h4>
-                            <p>Dibuat oleh Dosen Pengampu</p>
-                        </div>
-                        <span class="due-badge-v2"><i class="ri-timer-line"></i> 3 Hari Lagi</span>
+            <div id="visual-collaboration" class="visual-content">
+              <div class="feature-scene collaboration-scene" aria-hidden="true">
+                <div class="collab-ui feature-card">
+                  <div class="mock-topbar">
+                    <div class="mock-title">
+                      <div class="mock-icon"><i class="ri-group-2-fill"></i></div>
+                      <div>
+                        <strong>Satu Ruang Sinkronisasi</strong>
+                        <span>Semua anggota melihat informasi yang sama</span>
+                      </div>
                     </div>
-                    
-                    <div class="task-progress-v2">
-                        <div class="tp-header"><span>Progress Tim Terkini</span> <span>50%</span></div>
-                        <div class="tp-bar"><div style="width: 50%"></div></div>
+                    <div class="mock-avatars" style="display:flex; align-items:center;">
+                      <div class="status-dot" style="margin-right:8px;"></div>
+                      <img class="person-avatar sm" src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair1_wa8kag.webp" alt="Ardan">
+                      <img class="person-avatar sm" src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="Citra">
+                      <span class="avatar-token sm warm">BD</span>
+                    </div>
+                  </div>
+                  <div class="collab-body-new">
+                    <!-- Central Sync Hub -->
+                    <div class="collab-hub">
+                       <div class="hub-ripple"></div>
+                       <div class="hub-ripple r2"></div>
+                       <div class="hub-core">
+                           <i class="ri-share-forward-2-fill"></i>
+                       </div>
+                       <span class="hub-label">Academate<br>Live Sync</span>
                     </div>
 
-                    <div class="tasks-filter-v2">
-                        <div class="tf-btn active">Semua Tugas</div>
-                        <div class="tf-btn">Belum Selesai <span class="tf-badge">2</span></div>
-                        <div class="tf-btn">Selesai</div>
+                    <!-- Orbiting Interactive Nodes -->
+                    <div class="collab-node node-1">
+                        <div class="node-icon" style="background:#EEF2FF; color:#4F46E5;"><i class="ri-task-fill"></i></div>
+                        <div class="node-info">
+                            <strong>Tugas Diperbarui</strong>
+                            <span>Oleh Citra</span>
+                        </div>
+                    </div>
+                    <div class="collab-node node-2">
+                        <div class="node-icon" style="background:#FEFCE8; color:#D97706;"><i class="ri-calendar-event-fill"></i></div>
+                        <div class="node-info">
+                            <strong>Jadwal Diganti</strong>
+                            <span>Oleh Ardan</span>
+                        </div>
+                    </div>
+                    <div class="collab-node node-3">
+                        <div class="node-icon" style="background:#F0FDF4; color:#16A34A;"><i class="ri-file-edit-fill"></i></div>
+                        <div class="node-info">
+                            <strong>Catatan Baru</strong>
+                            <span>Oleh Budi</span>
+                        </div>
                     </div>
 
-                    <div class="task-list-v2">
-                        <div class="task-v2 done">
-                            <i class="ri-checkbox-circle-fill checkbox"></i>
-                            <p>Finalisasi riset pengguna</p>
-                            <span class="task-tag research">Riset</span>
-                            <img src="https://i.pravatar.cc/150?img=68" alt="user" onerror="this.style.display='none'">
-                        </div>
-                        <div class="task-v2 done">
-                            <i class="ri-checkbox-circle-fill checkbox"></i>
-                            <p>Membuat wireframe utama</p>
-                            <span class="task-tag design">Desain</span>
-                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="user" onerror="this.style.display='none'">
-                        </div>
-                        <div class="task-v2">
-                            <i class="ri-checkbox-blank-circle-line checkbox"></i>
-                            <p>Desain high-fidelity mockup</p>
-                            <span class="task-tag design">Desain</span>
-                            <img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair1_wa8kag.webp" alt="user" onerror="this.style.display='none'">
-                        </div>
-                        <div class="task-v2">
-                            <i class="ri-checkbox-blank-circle-line checkbox"></i>
-                            <p>Membuat prototipe interaktif</p>
-                            <img src="https://i.pravatar.cc/150?img=11" alt="user" onerror="this.style.display='none'">
-                        </div>
+                    <!-- Multiplayer Live Cursors -->
+                    <div class="live-cursor cursor-1">
+                        <i class="ri-cursor-fill"></i>
+                        <span>Citra</span>
                     </div>
+                    <div class="live-cursor cursor-2">
+                        <i class="ri-cursor-fill"></i>
+                        <span>Ardan</span>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-
+            
             <div id="visual-schedule" class="visual-content">
-                <div class="schedule-ui-wrapper">
-                    <div class="schedule-sidebar">
-                        <div class="mini-cal-month"><span>Mei 2026</span> <i class="ri-arrow-down-s-line"></i></div>
-                        <div class="mini-cal-grid">
-                            <div class="mini-cal-day">S</div><div class="mini-cal-day">S</div><div class="mini-cal-day">R</div><div class="mini-cal-day">K</div><div class="mini-cal-day">J</div><div class="mini-cal-day">S</div><div class="mini-cal-day">M</div>
-                            <div></div><div class="mini-cal-date">6</div><div class="mini-cal-date">7</div><div class="mini-cal-date active">8</div><div class="mini-cal-date has-event">9</div><div class="mini-cal-date">10</div><div class="mini-cal-date">11</div>
-                        </div>
-                        <div class="upcoming-events">
-                            <h5>Agenda Selanjutnya</h5>
-                            <div class="up-event">
-                                <h6>Struktur Data</h6>
-                                <span><i class="ri-time-line"></i> 08:00 WIB</span>
-                            </div>
-                            <div class="up-event yellow">
-                                <h6>Kuis Aljabar</h6>
-                                <span>Besok, 10:00 WIB</span>
-                            </div>
-                        </div>
+              <div class="feature-scene schedule-scene" aria-hidden="true">
+                <div class="auto-schedule-ui feature-card">
+                  <div class="mock-topbar">
+                    <div class="mock-title">
+                      <div class="mock-icon"><i class="ri-calendar-check-fill"></i></div>
+                      <div>
+                        <strong>Jadwal Cerdas & Otomatis</strong>
+                        <span>Kalender kelas langsung tersusun rapi</span>
+                      </div>
                     </div>
-                    <div class="schedule-ui-v2">
-                        <div class="schedule-header-v2">
-                            <div class="date-display-v2"><span class="day-v2">SEN</span><span class="date-v2">6</span></div>
-                            <div class="date-display-v2"><span class="day-v2">SEL</span><span class="date-v2">7</span></div>
-                            <div class="date-display-v2 active"><span class="day-v2">RAB</span><span class="date-v2">8</span></div>
-                            <div class="date-display-v2"><span class="day-v2">KAM</span><span class="date-v2">9</span></div>
-                            <div class="date-display-v2"><span class="day-v2">JUM</span><span class="date-v2">10</span></div>
-                        </div>
-                        <div class="schedule-body-v2">
-                            <div class="time-labels">
-                                <span>08:00</span><span>09:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span><span>14:00</span>
-                            </div>
-                            <div class="time-indicator-v2"></div>
-                            
-                            <div class="schedule-event-v2" style="--start: 0; --duration: 1.66; background: #EFF6FF; border-color: #3B82F6;">
-                                <strong>Struktur Data</strong>
-                                <span><i class="ri-map-pin-line"></i> R.401 • 08:00 - 09:40</span>
-                                <div class="avatars"><img src="https://i.pravatar.cc/150?img=68" alt="p"></div>
-                            </div>
-                            
-                            <div class="schedule-event-v2" style="--start: 2; --duration: 2.5; background: #F5F3FF; border-color: #8B5CF6;">
-                                <strong>Aljabar Linear</strong>
-                                <span><i class="ri-map-pin-line"></i> R.203 • 10:00 - 12:30</span>
-                                <div class="avatars"><img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="p"></div>
-                            </div>
-                            
-                            <div class="schedule-event-v2" style="--start: 5; --duration: 2; background: #FEFCE8; border-color: #F59E0B;">
-                                <strong>Bahasa Inggris</strong>
-                                <span><i class="ri-headphone-line"></i> Lab Bahasa • 13:00 - 15:00</span>
-                            </div>
+                    <div class="mock-status"><span class="status-dot"></span> Auto</div>
+                  </div>
+                  <div class="auto-schedule-body">
+                    <div class="mini-month-card">
+                      <div class="mini-month-title"><span>Mei 2026</span><i class="ri-arrow-down-s-line"></i></div>
+                      <div class="auto-cal-grid">
+                        <span>S</span><span>S</span><span>R</span><span>K</span><span>J</span><span>S</span><span>M</span>
+                        <b>4</b><b>5</b><b>6</b><b class="active">7</b><b class="event">8</b><b>9</b><b>10</b>
+                      </div>
+                      <div class="auto-reminder-card">
+                        <strong><i class="ri-sparkling-2-fill"></i> Auto reminder</strong>
+                        <span>Jadwal kelas, ruangan, dan deadline langsung jadi pengingat untuk semua anggota.</span>
+                      </div>
+                    </div>
+                    <div class="timeline-card">
+                      <h4><i class="ri-time-line" style="color:var(--primary)"></i> Hari ini</h4>
+                      <div class="timeline-lines"></div>
+                      
+                      <!-- Current Time Indicator Animation -->
+                      <div class="time-indicator-v2"><span>10:24</span></div>
 
-                        </div>
+                      <div class="smart-event" data-time="08:00">
+                        <strong>Struktur Data</strong>
+                        <span><i class="ri-map-pin-line"></i> R.401 • 08:00 - 09:40</span>
+                      </div>
+                      <div class="smart-event purple" data-time="10:00">
+                        <strong>Aljabar Linear</strong>
+                        <span><i class="ri-map-pin-line"></i> R.203 • 10:00 - 12:30</span>
+                      </div>
+                      <div class="smart-event yellow" data-time="13:00">
+                        <strong>Bahasa Inggris</strong>
+                        <span><i class="ri-headphone-line"></i> Lab Bahasa • 13:00 - 15:00</span>
+                      </div>
                     </div>
+                  </div>
                 </div>
+              </div>
+            </div>
+            
+            <div id="visual-notifications" class="visual-content">
+              <div class="feature-scene notify-scene" aria-hidden="true">
+                <div class="notify-phone feature-card">
+                  <div class="mock-topbar">
+                    <div class="mock-title">
+                      <div class="mock-icon"><i class="ri-notification-3-fill"></i></div>
+                      <div>
+                        <strong>Academate Alerts</strong>
+                        <span>Reminder kelas, tugas, dan deadline</span>
+                      </div>
+                    </div>
+                    <div class="mock-status"><span class="status-dot"></span> Live</div>
+                  </div>
+                  <div class="notify-wallpaper"></div>
+                  <div class="class-card-mini">
+                    <small><i class="ri-calendar-event-line"></i> Kelas berikutnya dimulai</small>
+                    <h4>Interaksi Manusia & Komputer</h4>
+                    <div class="room-row">
+                      <span><i class="ri-time-line"></i> 08:00 WIB • Hari ini</span>
+                      <span class="room-badge"><i class="ri-map-pin-2-fill"></i> R. 305</span>
+                    </div>
+                  </div>
+                  <div class="notify-stack">
+                    <div class="notice-card">
+                      <div class="notice-icon"><i class="ri-door-open-fill"></i></div>
+                      <div class="notice-copy">
+                        <strong>Reminder kelas</strong>
+                        <span>IMK mulai 10 menit lagi di Ruang 305.</span>
+                      </div>
+                      <span class="notice-time">baru</span>
+                    </div>
+                    <div class="notice-card">
+                      <div class="notice-icon warning"><i class="ri-task-fill"></i></div>
+                      <div class="notice-copy">
+                        <strong>Tugas baru masuk</strong>
+                        <span>Analisis UI aplikasi kampus ditambahkan.</span>
+                      </div>
+                      <span class="notice-time">1m</span>
+                    </div>
+                    <div class="notice-card">
+                      <div class="notice-icon danger"><i class="ri-alarm-warning-fill"></i></div>
+                      <div class="notice-copy">
+                        <strong>Deadline mendekat</strong>
+                        <span>Laporan praktikum dikumpulkan malam ini.</span>
+                      </div>
+                      <span class="notice-time">3m</span>
+                    </div>
+                  </div>
+                  <div class="notify-bell"><i class="ri-notification-4-fill"></i></div>
+                </div>
+              </div>
             </div>
             
             <div id="visual-notes" class="visual-content">
-                <div class="notes-ui-wrapper">
-                    <div class="notes-topbar">
-                        <div class="search-mockup"><i class="ri-search-line"></i> Cari catatan mata kuliah...</div>
-                        <div class="notes-filters">
-                            <div class="filter-btn active">Semua</div>
-                            <div class="filter-btn">Milikku</div>
-                            <div class="filter-btn">Dibagikan</div>
-                        </div>
+              <div class="feature-scene notes-scene" aria-hidden="true">
+                <div class="notes-hub-ui feature-card">
+                  <div class="mock-topbar">
+                    <div class="mock-title">
+                      <div class="mock-icon"><i class="ri-file-edit-fill"></i></div>
+                      <div>
+                        <strong>Bank Catatan Bersama</strong>
+                        <span>Materi, ide, dan rangkuman kelas tersimpan rapi</span>
+                      </div>
                     </div>
-                    <div class="notes-ui-v2">
-                        <div class="note-card-v2">
-                            <h4>Rangkuman Ujian Tengah Semester</h4>
-                            <p>Berikut poin-poin penting dari Bab 1 sampai 5 untuk persiapan ujian minggu depan, pastikan pelajari rumusnya...</p>
-                            <div class="note-footer-v2">
-                                <span class="tag-v2 blue">Struktur Data</span>
-                                <span class="author-v2">Oleh Budi</span>
-                            </div>
-                        </div>
-                        <div class="note-card-v2 shared">
-                            <h4>Ide Tugas Kelompok</h4>
-                            <p>Gimana kalau kita ambil tema A untuk proyek akhir? Sepertinya lebih mudah dapet datanya dan sesuai silabus.</p>
-                            <div class="note-footer-v2">
-                                <span class="tag-v2 purple">Pemrograman</span>
-                                <span class="author-v2"><img src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="p"> Citra</span>
-                            </div>
-                        </div>
-                        <div class="note-card-v2">
-                            <h4>Catatan Praktikum</h4>
-                            <ul class="checklist-v2">
-                                <li class="done"><i class="ri-checkbox-circle-fill"></i> Ambil sampel data</li>
-                                <li><i class="ri-checkbox-blank-circle-line"></i> Analisis hasil</li>
-                                <li><i class="ri-checkbox-blank-circle-line"></i> Buat laporan format PDF</li>
-                            </ul>
-                            <div class="note-footer-v2">
-                                <span class="tag-v2 green">Kimia Dasar</span>
-                            </div>
-                        </div>
+                    <div class="mock-status"><span class="status-dot"></span> Shared</div>
+                  </div>
+                  <div class="notes-hub-body">
+                    <div class="notes-hub-toolbar">
+                      <div class="notes-hub-search"><i class="ri-search-line"></i> Cari catatan mata kuliah...</div>
+                      <div class="notes-hub-filter">Dibagikan</div>
                     </div>
+                    <div class="note-grid-unified">
+                      <div class="note-sheet featured">
+                        <h4>Rangkuman Ujian Tengah Semester</h4>
+                        <p>Poin penting Bab 1 sampai 5, rumus yang sering keluar, dan contoh soal untuk belajar bareng sebelum ujian.</p>
+                        <div class="note-meta-row">
+                          <span class="note-tag-mini">Struktur Data</span>
+                          <span class="note-author-mini"><span class="avatar-token warm" style="width:20px;height:20px;font-size:8px;border-width:1px;">BD</span> Budi</span>
+                        </div>
+                      </div>
+                      <div class="note-sheet">
+                        <h4>Ide Tugas Kelompok</h4>
+                        <p>Draft tema proyek akhir, pembagian role, dan link referensi.</p>
+                        <div class="note-meta-row">
+                          <span class="note-tag-mini">Pemrograman</span>
+                          <span class="note-author-mini"><img class="person-avatar" src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="Citra" onerror="this.style.display='none'"> Citra</span>
+                        </div>
+                      </div>
+                      <div class="note-sheet">
+                        <h4>Checklist Praktikum</h4>
+                        <p>Ambil sampel data, analisis hasil, lalu export laporan PDF.</p>
+                        <div class="note-meta-row">
+                          <span class="note-tag-mini">Kimia</span>
+                          <span class="note-author-mini"><img class="person-avatar" src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair1_wa8kag.webp" alt="Ardan" onerror="this.style.display='none'"> Ardan</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
+            </div>
+            
+            <div id="visual-meeting" class="visual-content">
+              <div class="feature-scene meeting-scene" aria-hidden="true">
+                <div class="meet-room feature-card">
+                  <div class="mock-topbar">
+                    <div class="mock-title">
+                      <div class="mock-icon"><i class="ri-vidicon-fill"></i></div>
+                      <div>
+                        <strong>Academeet</strong>
+                        <span>Voice & video call langsung dari kelas</span>
+                      </div>
+                    </div>
+                    <div class="mock-status"><span class="status-dot"></span> 6 Online</div>
+                  </div>
+                  <div class="meet-body">
+                    <div class="meet-toast">
+                      <span class="avatar-token cat">M</span>
+                      Mita bergabung
+                    </div>
+                    <div class="meet-grid image-grid">
+                      <div class="video-tile large speaking with-photo">
+                        <img class="video-avatar-img" src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair1_wa8kag.webp" alt="Ardan" onerror="this.style.display='none'">
+                        <div class="wave-bars"><span></span><span></span><span></span><span></span></div>
+                        <div class="video-label"><i class="ri-mic-fill"></i> Ardan sedang bicara</div>
+                      </div>
+                      <div class="video-tile with-photo">
+                        <img class="video-avatar-img" src="https://res.cloudinary.com/ddrtdofqo/image/upload/v1759791019/pair2_edw4z5.webp" alt="Citra" onerror="this.style.display='none'">
+                        <div class="video-label"><i class="ri-mic-off-fill"></i> Citra</div>
+                      </div>
+                      <div class="video-tile">
+                        <div class="video-placeholder"><span>BD</span></div>
+                        <div class="video-label"><i class="ri-mic-fill"></i> Budi</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="meet-controls">
+                    <div class="meet-control"><i class="ri-mic-line"></i></div>
+                    <div class="meet-control"><i class="ri-camera-line"></i></div>
+                    <div class="meet-control primary"><i class="ri-group-line"></i><span>Ruang kelas aktif</span></div>
+                    <div class="meet-control"><i class="ri-computer-line"></i></div>
+                    <div class="meet-control danger"><i class="ri-phone-fill"></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div id="visual-pwa" class="visual-content">
+              <div class="feature-scene pwa-scene" aria-hidden="true">
+                <div class="pwa-stage">
+                  <div class="device-cloud">
+                    <div class="device desktop-device">
+                      <div class="device-top"><span></span><span></span><span></span></div>
+                      <div class="screen">
+                        <div class="app-shell">
+                          <div class="sidebar-lines">
+                            <div class="line"></div><div class="line mid"></div><div class="line short"></div><div class="line"></div>
+                          </div>
+                          <div class="content-cards">
+                            <div class="content-card"></div><div class="content-card"></div><div class="content-card"></div><div class="content-card"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="device tablet-device">
+                      <div class="device-top"><span></span><span></span><span></span></div>
+                      <div class="screen">
+                        <div class="app-shell">
+                          <div class="sidebar-lines">
+                            <div class="line"></div><div class="line mid"></div><div class="line short"></div>
+                          </div>
+                          <div class="content-cards">
+                            <div class="content-card"></div><div class="content-card"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="device phone-device">
+                      <div class="screen">
+                        <div class="app-shell">
+                          <div class="sidebar-lines">
+                            <div class="line"></div><div class="line mid"></div>
+                          </div>
+                          <div class="content-cards">
+                            <div class="content-card"></div><div class="content-card"></div><div class="content-card"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="install-card feature-card">
+                      <div class="install-row">
+                        <div class="install-icon"><i class="ri-download-cloud-2-fill"></i></div>
+                        <div>
+                          <strong>Install Academate</strong>
+                          <span>PWA siap di layar utama</span>
+                        </div>
+                      </div>
+                      <div class="install-btn">Tambah ke perangkat</div>
+                    </div>
+                    <div class="pwa-badges">
+                      <div class="pwa-badge"><i class="ri-window-line"></i> App-like experience</div>
+                      <div class="pwa-badge"><i class="ri-layout-masonry-line"></i> Fully responsive</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
           </div>
         </div>
       </div>
-      
+
       <div class="steps" id="steps">
-        <article class="step" data-visual="visual-chat">
-          <h3><i class="ri-group-2-line"></i>Diskusi Terpusat</h3>
-          <p>Setiap kelas punya ruang diskusi sendiri. Koordinasi tugas, tanya jawab materi, atau sekadar pengingat jadi lebih fokus dan tidak tenggelam dalam chat umum.</p>
+        <article class="step" data-visual="visual-chat-media">
+          <h3><i class="ri-chat-smile-3-line"></i>Diskusi Terpusat</h3>
+          <p>Semua percakapan kelas tetap rapi dalam satu ruang diskusi. Kirim pesan, foto catatan, screenshot, PDF, atau dokumen tugas tanpa pindah platform.</p>
         </article>
-        <article class="step" data-visual="visual-tasks">
-          <h3><i class="ri-user-add-line"></i>Informasi Gotong Royong</h3>
-          <p>Siapa pun di kelas bisa menambahkan tugas atau pengingat. Info dari dosen atau teman langsung masuk ke sistem. Nggak ada lagi yang namanya miskom atau "infonya di siapa?".</p>
+        <article class="step" data-visual="visual-collaboration">
+          <h3><i class="ri-group-2-line"></i>Kolaborasi Kelas</h3>
+          <p>Tugas, jadwal, catatan, dan pengingat bisa diperbarui bersama sehingga setiap anggota kelas melihat informasi yang sama dan selalu tersinkron.</p>
         </article>
         <article class="step" data-visual="visual-schedule">
-          <h3><i class="ri-calendar-check-line"></i>Jadwal Cerdas & Otomatis</h3>
-          <p>Bye-bye tabel jadwal manual. Cukup sekali info dimasukkan, jadwal kelas dan deadline tugas otomatis tersusun rapi di kalender interaktif untuk semua anggota.</p>
+          <h3><i class="ri-calendar-check-line"></i>Jadwal Otomatis</h3>
+          <p>Atur jadwal kelas lengkap dengan jam, ruang, dan agenda. Kalender membantu semua anggota tahu kelas berikutnya tanpa cari ulang di chat.</p>
+        </article>
+        <article class="step" data-visual="visual-notifications">
+          <h3><i class="ri-notification-3-line"></i>Reminder Real-Time</h3>
+          <p>Dapatkan pengingat kelas lengkap dengan info ruangan, notifikasi tugas baru, dan alarm deadline agar tidak ada informasi penting yang terlewat.</p>
         </article>
         <article class="step" data-visual="visual-notes">
-            <h3><i class="ri-file-edit-line"></i>Bank Catatan Anti-Pelit</h3>
-            <p>Ada yang rajin nyatet? Langsung share di Academate. Bangun "bank catatan" bersama sekelas untuk jadi bahan belajar andalan sebelum ujian.</p>
+          <h3><i class="ri-file-edit-line"></i>Bank Catatan</h3>
+          <p>Kumpulkan rangkuman, referensi, checklist praktikum, dan ide tugas kelompok dalam bank catatan bersama yang mudah dicari sebelum belajar atau ujian.</p>
+        </article>
+        <article class="step" data-visual="visual-meeting">
+          <h3><i class="ri-vidicon-line"></i>Academeet</h3>
+          <p>Mulai ruang meeting langsung dari kelas untuk diskusi kelompok, presentasi, atau belajar bareng dengan teman sekelas tanpa membuat link baru.</p>
+        </article>
+        <article class="step" data-visual="visual-pwa">
+          <h3><i class="ri-smartphone-line"></i>PWA Responsif</h3>
+          <p>Academate nyaman dipakai dari desktop, tablet, sampai layar HP kecil, lengkap dengan pengalaman PWA yang bisa dipasang ke perangkat.</p>
         </article>
       </div>
     </div>
@@ -1257,6 +2501,7 @@
       &copy; 2026 <a href="https://ardhan.my.id" target="_blank" rel="noopener noreferrer">Ardan Ridho</a>
     </div>
     <div class="footer-links">
+      <a href="/documentation_ID">Panduan</a>
       <a href="/legal#terms">Terms of Use</a>
       <a href="/legal#privacy">Privacy Policy</a>
     </div>
@@ -1363,8 +2608,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function runDesktopFeatures() {
     const steps = document.querySelectorAll('.step');
     const visualContents = document.querySelectorAll('.pin-visual .visual-content');
-    const pinGrid = document.querySelector('.pin-grid');
-    if (!pinGrid || steps.length === 0) return;
+    if (steps.length === 0) return;
 
     let currentStepIndex = -1;
     
@@ -1376,7 +2620,7 @@ document.addEventListener('DOMContentLoaded', function() {
         steps.forEach(s => s.classList.remove('active'));
         visualContents.forEach(v => {
             v.classList.remove('active');
-            void v.offsetWidth; 
+            void v.offsetWidth; // trigger reflow
         });
         
         steps[index].classList.add('active');
@@ -1384,38 +2628,52 @@ document.addEventListener('DOMContentLoaded', function() {
         const activeVisual = document.getElementById(visualId);
         if (activeVisual) activeVisual.classList.add('active');
     }
+    
+    // Set initial active state based on current scroll position
     setActiveStep(0);
 
-    steps.forEach((step, index) => {
-        step.addEventListener('click', () => {
-            const gridTop = pinGrid.offsetTop;
-            const scrollableDistance = pinGrid.scrollHeight - window.innerHeight;
-            const targetY = gridTop + (scrollableDistance * (index / (steps.length - 1)));
-            window.scrollTo({ top: targetY, behavior: 'smooth' });
-        });
-    });
-
+    // Mathematical Scrollytelling function guaranteeing equal scroll-space per step
     function onScroll() {
+        const pinGrid = document.querySelector('.pin-grid');
         const gridTop = pinGrid.offsetTop;
         const gridHeight = pinGrid.offsetHeight;
         const scrollY = window.scrollY;
         const windowHeight = window.innerHeight;
 
-        const startY = gridTop - (windowHeight / 3); 
+        const startY = gridTop - (windowHeight / 2);
         const endY = gridTop + gridHeight - windowHeight;
 
         let progress = (scrollY - startY) / (endY - startY);
         if (progress < 0) progress = 0;
         if (progress > 1) progress = 1;
 
-        let index = Math.floor(progress * steps.length);
-        if (index >= steps.length) index = steps.length - 1;
-
+        // Use Math.round to perfectly distribute the scroll space.
+        // E.g., progress 0 = item 0. progress 0.5 = middle item. progress 1 = last item.
+        let index = Math.round(progress * (steps.length - 1));
+        
         setActiveStep(index);
     }
 
+    // Scroll to exact mathematical position when clicking a step
+    steps.forEach((step, index) => {
+        step.addEventListener('click', () => {
+            const pinGrid = document.querySelector('.pin-grid');
+            const gridTop = pinGrid.offsetTop;
+            const gridHeight = pinGrid.offsetHeight;
+            const windowHeight = window.innerHeight;
+            
+            const startY = gridTop - (windowHeight / 2);
+            const endY = gridTop + gridHeight - windowHeight;
+            
+            const targetProgress = index / (steps.length - 1);
+            const targetY = startY + (targetProgress * (endY - startY));
+            
+            window.scrollTo({ top: targetY, behavior: 'smooth' });
+        });
+    });
+
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+    onScroll(); // Trigger calculation immediately
   }
 
   function runMobileFeatures() {

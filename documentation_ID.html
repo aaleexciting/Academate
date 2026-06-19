@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dokumentasi Academate</title>
+  <meta name="description" content="Panduan resmi Academate: dashboard, kelas, tugas, jadwal, catatan, Meet, notifikasi Telegram, akun, dan analisis nilai." />
+  <meta name="theme-color" content="#6F6CFF" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css">
+  <style>
+    :root{
+      --bg:#F7F7FA;
+      --bg-soft:#EFEFF8;
+      --surface:#FFFFFF;
+      --surface-2:#F3F2FF;
+      --text:#1E1F24;
+      --ink:var(--text);
+      --ink-soft:#3D3F4E;
+      --muted:#6C6F7F;
+      --faint:#8B8EA1;
+      --primary:#6F6CFF;
+      --primary-2:#8B7CFF;
+      --accent:#8B7CFF;
+      --accent-soft:#EFEEFF;
+      --border:#ECECF1;
+      --line:#E0E0EB;
+      --line-strong:#C9CADB;
+      --success:#16825D;
+      --warning:#F59E0B;
+      --danger:#EF4444;
+      --shadow:0 24px 70px rgba(30,31,36,.12);
+      --shadow-soft:0 14px 34px rgba(30,31,36,.09);
+      --radius:18px;
+      --radius-xl:30px;
+      --radius-lg:22px;
+      --radius-md:16px;
+      --sidebar:334px;
+      --topbar:74px;
+      --content:1200px;
+      --max:1200px;
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    html[data-theme="dark"]{
+      --bg:#10111F;
+      --bg-soft:#17182A;
+      --surface:#1B1C2F;
+      --surface-2:#23243A;
+      --text:#F6F7FF;
+      --ink:var(--text);
+      --ink-soft:#E1E3F1;
+      --muted:#B8BBCD;
+      --faint:#8F93A8;
+      --primary:#A8A6FF;
+      --primary-2:#BFB4FF;
+      --accent:#8B7CFF;
+      --accent-soft:#2C2D4B;
+      --border:#2C2E43;
+      --line:#34364E;
+      --line-strong:#4A4D69;
+      --success:#79D8B4;
+      --warning:#FBC979;
+      --danger:#FF8A9A;
+      --shadow:0 24px 80px rgba(0,0,0,.42);
+      --shadow-soft:0 16px 42px rgba(0,0,0,.30);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:96px}
+    body{margin:0;background:
+      radial-gradient(circle at top left, rgba(139,124,255,.20), transparent 34rem),
+      radial-gradient(circle at 82% 8%, rgba(111,108,255,.13), transparent 28rem),
+      linear-gradient(180deg,var(--bg),var(--bg-soft));color:var(--ink);font-family:var(--font);line-height:1.62;min-height:100vh}
+    body.no-scroll{overflow:hidden}
+    a{color:inherit;text-decoration:none}
+    a:hover{color:var(--primary)}
+    button,input,textarea{font:inherit}
+    ::selection{background:rgba(139,124,255,.34)}
+    .skip-link{position:fixed;top:12px;left:12px;background:var(--primary);color:#fff;padding:10px 14px;border-radius:12px;transform:translateY(-160%);z-index:2000;transition:.2s}
+    .skip-link:focus{transform:translateY(0)}
+    .progress{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,var(--primary),var(--primary-2));z-index:3000}
+    .app-shell{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);min-height:100vh}
+    .sidebar{position:sticky;top:18px;height:calc(100vh - 36px);margin-bottom:18px;background:rgba(255,255,255,.78);backdrop-filter:blur(22px);border:1px solid var(--line);border-left:0;border-radius:0 26px 26px 0;display:flex;flex-direction:column;z-index:90;transition:transform .28s ease;background-color:color-mix(in srgb,var(--surface) 86%,transparent);overflow:hidden}
+    .brand{height:82px;display:flex;align-items:center;gap:13px;padding:0 22px;border-bottom:1px solid var(--line)}
+    .brand-mark{width:44px;height:44px;border-radius:16px;background:linear-gradient(135deg,var(--primary),var(--primary-2));box-shadow:var(--shadow-soft);display:grid;place-items:center;color:#fff;font-weight:900;letter-spacing:.02em;flex:0 0 auto}
+    .brand-copy{min-width:0;transition:opacity .18s ease}
+    .brand-copy strong{display:block;font-size:1rem;letter-spacing:-.03em}
+    .brand-copy span{display:block;font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sidebar-actions{padding:18px 18px 14px;display:grid;gap:10px;border-bottom:1px solid var(--line)}
+    .open-app{display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;border-radius:15px;background:var(--primary);color:#fff;font-weight:750;box-shadow:var(--shadow-soft);padding:0 12px;white-space:nowrap;transition:.2s}
+    .open-app:hover{color:#fff;transform:translateY(-1px)}
+    .search-trigger{display:flex;align-items:center;gap:10px;min-height:42px;border-radius:15px;border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:0 12px;cursor:pointer;text-align:left;width:100%;transition:.2s}
+    .search-trigger:hover{border-color:var(--line-strong);color:var(--ink);transform:translateY(-1px)}
+    .keycap{margin-left:auto;font-size:.72rem;color:var(--faint);border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:2px 6px}
+    .nav-wrap{overflow:auto;padding:16px 14px 24px;scrollbar-width:thin}
+    .nav-group{margin-bottom:8px;border-radius:17px}
+    .nav-group summary{list-style:none;cursor:pointer;border-radius:17px;display:grid;grid-template-columns:34px minmax(0,1fr) 18px;gap:10px;align-items:center;padding:10px 10px;color:var(--ink);transition:.2s}
+    .nav-group summary::-webkit-details-marker{display:none}
+    .nav-group summary:hover{background:var(--accent-soft)}
+    .nav-ico{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--line);font-size:1rem;flex:0 0 auto}
+    .nav-title{font-weight:780;letter-spacing:-.025em;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav-sub{display:block;color:var(--muted);font-size:.74rem;line-height:1.25;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .chev{color:var(--faint);font-size:.9rem;transform:rotate(0);transition:.2s}
+    .nav-group[open] .chev{transform:rotate(90deg)}
+    .subnav{padding:0 6px 8px 54px;display:grid;gap:2px}
+    .subnav a{display:block;padding:8px 10px;border-left:2px solid var(--line);border-radius:0 12px 12px 0;color:var(--muted);font-size:.86rem;line-height:1.25;transition:.18s}
+    .subnav a:hover,.subnav a.active{color:var(--primary);border-left-color:var(--primary);background:var(--accent-soft)}
+    .sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding:12px 16px;display:grid;gap:8px}
+    .icon-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);height:40px;border-radius:14px;display:inline-grid;place-items:center;cursor:pointer;transition:.2s}
+    .icon-btn:hover{border-color:var(--line-strong);transform:translateY(-1px)}
+    .side-row{display:grid;grid-template-columns:1fr 42px;gap:8px;align-items:center}
+    .small-note{font-size:.76rem;color:var(--muted);line-height:1.35;transition:opacity .18s ease}
+    .main{min-width:0}
+    .topbar{position:sticky;top:0;z-index:80;height:var(--topbar);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 clamp(16px,3vw,36px);background:color-mix(in srgb,var(--bg) 76%,transparent);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .mobile-menu{display:none}
+    .breadcrumb{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.9rem;min-width:0}
+    .breadcrumb strong{color:var(--ink);font-weight:780;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .top-actions{display:flex;gap:8px;align-items:center}
+    .pill-link{height:40px;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:0 14px;font-weight:700;font-size:.88rem;color:var(--ink);transition:.2s;white-space:nowrap}
+    .pill-link:hover{border-color:var(--line-strong);transform:translateY(-1px)}
+    .hero{max-width:var(--content);margin:0 auto;padding:76px clamp(18px,4vw,44px) 32px}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--primary);background:var(--accent-soft);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-weight:800;font-size:.82rem;letter-spacing:.02em}
+    .hero h1{font-size:clamp(2.6rem,6.2vw,6.7rem);line-height:.92;letter-spacing:-.075em;margin:24px 0 22px;max-width:980px}
+    .hero-lead{font-size:clamp(1.08rem,2.2vw,1.45rem);color:var(--ink-soft);max-width:850px;margin:0 0 30px;line-height:1.58}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin:30px 0 38px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:16px;min-height:48px;padding:0 18px;border:1px solid transparent;font-weight:820;transition:.2s;cursor:pointer}
+    .btn.primary{background:var(--primary);color:#fff;box-shadow:var(--shadow-soft)}
+    .btn.primary:hover{color:#fff;transform:translateY(-2px)}
+    .btn.secondary{background:var(--surface);border-color:var(--line);color:var(--ink)}
+    .btn.secondary:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+    .hero-strip{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:stretch;margin-top:22px}
+    .product-map{background:linear-gradient(140deg,var(--surface),var(--surface-2));border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--shadow);padding:24px;position:relative;overflow:hidden;min-height:320px}
+    .product-map:before{content:"";position:absolute;inset:-40% 45% auto auto;width:360px;height:360px;border-radius:50%;background:rgba(139,124,255,.22);filter:blur(6px)}
+    .map-title{position:relative;font-size:1.05rem;font-weight:850;letter-spacing:-.025em;margin-bottom:18px}
+    .orbit{position:relative;height:238px;display:grid;place-items:center}
+    .hub{width:132px;height:132px;border-radius:36px;background:var(--primary);color:#fff;display:grid;place-items:center;text-align:center;font-weight:900;line-height:1.1;box-shadow:0 22px 70px rgba(111,108,255,.28);z-index:2}
+    .node{position:absolute;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-soft);border-radius:999px;padding:9px 12px;font-size:.82rem;font-weight:800;white-space:nowrap}
+    .node:nth-child(2){top:2px;left:9%}.node:nth-child(3){top:18px;right:7%}.node:nth-child(4){left:2%;bottom:74px}.node:nth-child(5){right:1%;bottom:74px}.node:nth-child(6){bottom:4px;left:22%}.node:nth-child(7){bottom:14px;right:20%}
+    .orbit svg{position:absolute;inset:0;width:100%;height:100%;opacity:.45;color:var(--primary)}
+    .launch-panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-xl);padding:24px;box-shadow:var(--shadow-soft);display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+    .launch-panel h2{font-size:1.25rem;margin:0;letter-spacing:-.035em}
+    .launch-panel p{color:var(--muted);margin:.35rem 0 0}
+    .url-list{display:grid;gap:9px}
+    .url-item{display:grid;grid-template-columns:28px minmax(0,1fr);align-items:center;gap:8px;color:var(--ink-soft);font-size:.9rem;border-bottom:1px dashed var(--line);padding-bottom:9px}
+    .url-item code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;color:var(--primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .content{max-width:var(--content);margin:0 auto;padding:28px clamp(18px,4vw,44px) 120px}
+    .doc-section{padding:54px 0;border-top:1px solid var(--line)}
+    .doc-section:first-child{border-top:0}
+    .section-kicker{font-size:.82rem;text-transform:uppercase;letter-spacing:.16em;font-weight:900;color:var(--primary);margin-bottom:10px}
+    .section-head{display:grid;grid-template-columns:minmax(0,880px);gap:14px;align-items:start;margin-bottom:30px;max-width:980px}
+    .section-head h2{font-size:clamp(2rem,4vw,3.3rem);line-height:1;letter-spacing:-.06em;margin:0}
+    .section-head p{margin:0;color:var(--muted);font-size:1.02rem}
+    .section-body{display:grid;gap:28px}
+    h3{font-size:clamp(1.35rem,2.4vw,2rem);letter-spacing:-.045em;line-height:1.12;margin:22px 0 12px}
+    h4{font-size:1.04rem;letter-spacing:-.02em;margin:18px 0 8px}
+    p{margin:0 0 1rem}
+    .lead{font-size:1.12rem;color:var(--ink-soft)}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+    .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .feature-list{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+    .feature-list li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line)}
+    .feature-list li:last-child{border-bottom:0}
+    .tick{width:30px;height:30px;border-radius:12px;background:var(--accent-soft);display:grid;place-items:center;color:var(--primary);font-weight:900}
+    .editorial-block{border-left:4px solid var(--primary);padding:4px 0 4px 22px;margin:10px 0;color:var(--ink-soft);font-size:1.08rem}
+    .soft-panel{background:linear-gradient(145deg,var(--surface),var(--surface-2));border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-soft)}
+    .plain-panel{border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;background:color-mix(in srgb,var(--surface) 65%,transparent)}
+    .ribbon{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);background:linear-gradient(90deg,var(--accent-soft),transparent);border-radius:var(--radius-lg);padding:18px 20px;color:var(--ink-soft)}
+    .ribbon strong{color:var(--ink)}
+    .process{counter-reset:step;display:grid;gap:0;border-top:1px solid var(--line)}
+    .process li{list-style:none;counter-increment:step;display:grid;grid-template-columns:58px minmax(0,1fr);gap:18px;padding:20px 0;border-bottom:1px solid var(--line)}
+    .process li:before{content:counter(step);width:42px;height:42px;border-radius:16px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:900;box-shadow:var(--shadow-soft)}
+    .process h4{margin:0 0 4px}.process p{margin:0;color:var(--muted)}
+    .matrix{width:100%;border-collapse:collapse;border-spacing:0;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-soft)}
+    .matrix th,.matrix td{text-align:left;vertical-align:top;padding:15px 16px;border-bottom:1px solid var(--line)}
+    .matrix th{background:var(--surface-2);font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:var(--primary)}
+    .matrix tr:last-child td{border-bottom:0}
+    .matrix td:first-child{font-weight:800;color:var(--ink);width:30%}
+    .caption{font-size:.83rem;color:var(--muted);margin-top:8px}
+    .screenshot-slot{border:1.5px dashed var(--line-strong);background:repeating-linear-gradient(135deg, color-mix(in srgb,var(--accent-soft) 72%,transparent), color-mix(in srgb,var(--accent-soft) 72%,transparent) 12px, transparent 12px, transparent 24px);border-radius:var(--radius-xl);min-height:240px;display:grid;place-items:center;padding:24px;text-align:center;position:relative;overflow:hidden}
+    .screenshot-slot:before{content:"";position:absolute;inset:18px;border:1px solid var(--line);border-radius:20px;background:color-mix(in srgb,var(--surface) 58%,transparent);z-index:0}
+    .shot-content{position:relative;z-index:1;max-width:520px}
+    .shot-label{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-weight:850;color:var(--primary);margin-bottom:12px}
+    .shot-content h4{margin:4px 0 8px;font-size:1.2rem}.shot-content p{margin:0;color:var(--muted)}
+    .route-box{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:12px 14px;overflow:hidden;margin:8px 0}
+    .route-box code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--primary);font-size:.87rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 10px;font-size:.83rem;font-weight:750;color:var(--ink-soft)}
+    .timeline{position:relative;display:grid;gap:18px;margin-top:8px}
+    .timeline:before{content:"";position:absolute;left:16px;top:8px;bottom:8px;width:2px;background:var(--line)}
+    .timeline-item{position:relative;display:grid;grid-template-columns:48px minmax(0,1fr);gap:14px;align-items:start}
+    .timeline-dot{width:34px;height:34px;border-radius:14px;background:var(--surface);border:2px solid var(--primary);display:grid;place-items:center;color:var(--primary);font-weight:900;z-index:1}
+    .timeline-item h4{margin:0 0 4px}.timeline-item p{margin:0;color:var(--muted)}
+    .accordion{display:grid;gap:10px}
+    .accordion details{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-soft)}
+    .accordion summary{list-style:none;cursor:pointer;padding:17px 18px;font-weight:850;display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .accordion summary::-webkit-details-marker{display:none}
+    .accordion summary:after{content:"+";width:28px;height:28px;border-radius:10px;background:var(--accent-soft);display:grid;place-items:center;color:var(--primary)}
+    .accordion details[open] summary:after{content:"−"}
+    .accordion .answer{padding:0 18px 18px;color:var(--muted)}
+    .comparison{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;background:var(--surface);box-shadow:var(--shadow-soft)}
+    .comparison > div{padding:24px}.comparison > div:first-child{border-right:1px solid var(--line);background:var(--surface-2)}
+    .mini-heading{display:flex;align-items:center;gap:9px;font-weight:900;color:var(--primary);margin-bottom:12px}
+    .quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;background:var(--surface);box-shadow:var(--shadow-soft)}
+    .quick-item{padding:16px 18px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(160px,.7fr) minmax(0,1.3fr);gap:14px}
+    .quick-item:nth-child(odd){border-right:1px solid var(--line)}
+    .quick-item:nth-last-child(-n+2){border-bottom:0}
+    .quick-item strong{color:var(--ink)}.quick-item span{color:var(--muted)}
+    .glossary{columns:2;column-gap:24px}
+    .glossary div{break-inside:avoid;border-bottom:1px solid var(--line);padding:10px 0}.glossary dt{font-weight:900;color:var(--ink)}.glossary dd{margin:2px 0 0;color:var(--muted)}
+    mark.search-mark{background:#ffe78a;color:#2b2100;border-radius:5px;padding:0 2px}
+    .target-flash{animation:flash 1.5s ease}
+    @keyframes flash{0%{box-shadow:0 0 0 0 rgba(139,124,255,.60)}100%{box-shadow:0 0 0 18px transparent}}
+    .search-modal{position:fixed;inset:0;z-index:2000;display:none;align-items:flex-start;justify-content:center;padding:7vh 18px;background:rgba(17,14,26,.48);backdrop-filter:blur(8px)}
+    .search-modal.open{display:flex}
+    .search-panel{width:min(860px,100%);background:var(--surface);border:1px solid var(--line);box-shadow:0 40px 120px rgba(0,0,0,.32);border-radius:28px;overflow:hidden}
+    .search-head{display:grid;grid-template-columns:42px minmax(0,1fr) 42px;gap:10px;align-items:center;padding:16px;border-bottom:1px solid var(--line)}
+    .search-head input{width:100%;height:48px;border:0;background:transparent;color:var(--ink);outline:0;font-size:1.1rem;font-weight:700}
+    .search-head input::placeholder{color:var(--faint)}
+    .search-icon{width:42px;height:42px;border-radius:14px;background:var(--accent-soft);display:grid;place-items:center;color:var(--primary)}
+    .search-close{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;cursor:pointer;color:var(--ink)}
+    .search-meta{padding:10px 18px;color:var(--muted);font-size:.86rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .search-results{max-height:min(60vh,620px);overflow:auto;padding:10px}
+    .result-item{display:grid;gap:6px;width:100%;text-align:left;background:transparent;border:0;border-radius:18px;padding:14px 16px;cursor:pointer;color:var(--ink);transition:.18s;border:1px solid transparent}
+    .result-item:hover,.result-item.active{background:var(--surface-2);border-color:var(--line)}
+    .result-path{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:var(--primary)}
+    .result-title{font-weight:900;font-size:1.02rem;letter-spacing:-.02em}
+    .result-subtitle{color:var(--muted);font-size:.9rem;line-height:1.35;white-space:normal;overflow:visible;text-overflow:clip}
+    .result-snippet{color:var(--ink-soft);font-size:.9rem;line-height:1.48}
+    .result-snippet mark,.result-title mark,.result-subtitle mark{background:#ffe78a;color:#2b2100;border-radius:4px;padding:0 2px}
+    .empty-search{padding:34px;text-align:center;color:var(--muted)}
+    .footer{border-top:1px solid var(--line);padding:36px clamp(18px,4vw,44px);max-width:var(--content);margin:0 auto 30px;color:var(--muted);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .footer a{color:var(--primary);font-weight:850}
+    i[class^="ri-"],i[class*=" ri-"]{line-height:1;display:inline-block}
+    .btn i,.pill-link i,.search-trigger i,.search-icon i,.icon-btn i{font-size:1.08rem}
+    .nav-ico i{font-size:1.06rem}
+    .url-item i,.route-box i,.tick i,.shot-label i{font-size:1.02rem}
+    .pill-label{display:inline}
+    .url-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .url-item{min-height:46px;border:1px solid var(--line);border-radius:16px;padding:10px 12px;background:color-mix(in srgb,var(--surface) 78%,transparent);transition:.2s}
+    .url-item:hover{border-color:var(--line-strong);background:var(--surface);transform:translateY(-1px);box-shadow:var(--shadow-soft)}
+    .url-item span{width:30px;height:30px;border-radius:12px;background:var(--accent-soft);color:var(--primary);display:grid;place-items:center}
+    .route-box{color:var(--ink-soft);transition:.2s}
+    .route-box:hover{border-color:var(--line-strong);background:var(--surface-2);transform:translateY(-1px)}
+    .route-box i{width:30px;height:30px;border-radius:12px;background:var(--accent-soft);color:var(--primary);display:grid;place-items:center;flex:0 0 auto}
+    .section-head{display:grid;grid-template-columns:minmax(0,880px);gap:14px;align-items:start;margin-bottom:30px;max-width:980px}
+    .section-head p{max-width:760px;line-height:1.7}
+    .launch-panel{position:relative;overflow:hidden}
+    .launch-panel:before{content:"";position:absolute;right:-80px;top:-100px;width:220px;height:220px;border-radius:50%;background:rgba(139,124,255,.16);pointer-events:none}
+    .launch-panel>*{position:relative}
+    .search-trigger i:first-child{color:var(--primary)}
+    .print-only{display:none}
+    @media (max-width:1100px){
+      .hero-strip,.section-head,.two-col{grid-template-columns:1fr}.three-col{grid-template-columns:1fr 1fr}.quick-grid{grid-template-columns:1fr}.quick-item:nth-child(odd){border-right:0}.quick-item:nth-last-child(-n+2){border-bottom:1px solid var(--line)}.quick-item:last-child{border-bottom:0}.comparison{grid-template-columns:1fr}.comparison>div:first-child{border-right:0;border-bottom:1px solid var(--line)}
+    }
+    @media (max-width:880px){
+      .app-shell{display:block}
+      .sidebar{position:fixed;left:0;top:0;bottom:0;width:min(88vw,340px);height:100vh;margin:0;transform:translateX(-105%);box-shadow:var(--shadow);border-radius:0;border-left:0;border-top:0;border-bottom:0}
+      .sidebar.open{transform:translateX(0)}
+      .brand{height:68px;padding-inline:18px}
+      .sidebar-actions{padding:12px 14px}
+      .mobile-menu{display:inline-grid}
+      .breadcrumb span{display:none}
+      .pill-link.docs-home{display:none}
+      .hero{padding-top:48px}
+      .hero h1{letter-spacing:-.06em}
+      .topbar{height:66px}
+      .hero-strip{grid-template-columns:1fr;margin-top:10px}
+      .product-map{min-height:292px}
+      .orbit{height:230px}
+      .node{font-size:.75rem}
+      .node:nth-child(2){left:4%;top:4px}.node:nth-child(3){right:3%;top:18px}.node:nth-child(4){left:2%;bottom:78px}.node:nth-child(5){right:2%;bottom:78px}.node:nth-child(6){left:18%;bottom:8px}.node:nth-child(7){right:18%;bottom:16px}
+      .three-col{grid-template-columns:1fr}
+      .glossary{columns:1}
+      .matrix{display:block;overflow:auto}
+      .section-head{gap:12px;max-width:100%}
+      .doc-section{padding:42px 0}
+      .search-modal{padding-top:3vh}
+      .search-results{max-height:70vh}
+    }
+    @media (max-width:580px){
+      .topbar{padding-inline:12px;gap:8px}
+      .top-actions{gap:6px}
+      .top-actions .pill-link{width:40px;padding:0;justify-content:center}
+      .top-actions .pill-label{display:none}
+      .breadcrumb{gap:6px;min-width:0}
+      .breadcrumb strong{max-width:116px}
+      .hero{padding-inline:16px;padding-bottom:26px}
+      .content{padding-inline:16px;padding-bottom:82px}
+      .hero h1{font-size:clamp(2.45rem,13vw,4rem)}
+      .hero-actions .btn{width:100%}
+      .product-map{padding:18px;border-radius:24px;min-height:304px;overflow:hidden}
+      .map-title{font-size:1rem;margin-bottom:12px}
+      .orbit{height:236px;display:grid;place-items:center;padding:0}
+      .orbit svg{display:block;transform:scale(.96)}
+      .hub{width:104px;height:104px;border-radius:28px;font-size:.88rem}
+      .node{position:absolute;margin:0;font-size:.69rem;padding:7px 9px;max-width:104px;text-align:center;overflow:hidden;text-overflow:ellipsis}
+      .node:nth-child(2){left:0;top:4px}.node:nth-child(3){right:0;top:24px}.node:nth-child(4){left:0;bottom:82px}.node:nth-child(5){right:0;bottom:82px}.node:nth-child(6){left:12%;bottom:8px}.node:nth-child(7){right:12%;bottom:20px}
+      .launch-panel{padding:18px;border-radius:24px;gap:16px}
+      .url-list{grid-template-columns:1fr}
+      .quick-item{grid-template-columns:1fr}
+      .process li{grid-template-columns:48px 1fr;gap:12px}
+      .matrix th,.matrix td{padding:12px}
+      .screenshot-slot{min-height:210px}
+      .footer{display:grid;margin-bottom:16px;padding-inline:16px}
+      .search-panel{border-radius:22px}
+      .search-head{grid-template-columns:36px minmax(0,1fr) 36px;padding:12px}
+      .search-head input{font-size:1rem}
+    }
+    @media print{
+      .sidebar,.topbar,.search-modal,.progress,.hero-actions,.sidebar-bottom{display:none!important}.app-shell{display:block}.hero,.content,.footer{max-width:none;padding:20px}.doc-section{page-break-inside:avoid}.screenshot-slot{min-height:160px}.print-only{display:block}.no-print{display:none!important}body{background:#fff;color:#000}.soft-panel,.plain-panel,.matrix,.screenshot-slot{box-shadow:none}.hero h1{font-size:44px}.section-head h2{font-size:30px}.section-head{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Lewati ke konten</a>
+  <div class="progress" id="progress"></div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Navigasi dokumentasi">
+      <div class="brand">
+        <div class="brand-mark">A</div>
+        <div class="brand-copy">
+          <strong>Academate</strong>
+          <span>Panduan Publik</span>
+        </div>
+      </div>
+      <div class="sidebar-actions">
+        <button class="search-trigger" data-open-search type="button" aria-label="Cari dokumentasi"><i class="ri-search-line" aria-hidden="true"></i><span>Cari dokumentasi</span><kbd class="keycap">Ctrl K</kbd></button>
+      </div>
+      <nav class="nav-wrap" id="toc"></nav>
+    </aside>
+
+    <main class="main" id="main">
+      <header class="topbar">
+        <div class="breadcrumb">
+          <button class="icon-btn mobile-menu" id="mobileMenu" type="button" aria-label="Buka menu"><i class="ri-menu-line" aria-hidden="true"></i></button>
+          <span>Academate</span><span>›</span><strong id="currentSection">Dokumentasi</strong>
+        </div>
+        <div class="top-actions">
+          <button class="pill-link" data-open-search type="button"><i class="ri-search-line" aria-hidden="true"></i><span class="pill-label">Cari</span></button>
+          <button class="pill-link" id="themeToggle" type="button"><i class="ri-contrast-2-line" aria-hidden="true"></i><span class="pill-label">Tema</span></button>
+          <a class="pill-link lang-switch" href="documentation_EN" aria-label="Beralih ke versi bahasa Inggris"><i class="ri-translate-2" aria-hidden="true"></i><span class="pill-label">EN</span></a>
+          <a class="pill-link docs-home" href="https://academate.ardhan.my.id/" target="_blank" rel="noopener"><i class="ri-external-link-line" aria-hidden="true"></i><span class="pill-label">Buka</span></a>
+        </div>
+      </header>
+
+      <section class="hero" id="home" data-title="Beranda Dokumentasi" data-subtitle="Panduan resmi untuk mahasiswa dan admin kelas">
+        <div class="eyebrow">Dokumentasi Academate</div>
+        <h1>Semua kebutuhan kelasmu, dijelaskan dengan jelas dan gampang diikuti.</h1>
+        <p class="hero-lead">Academate menggabungkan kelas, deadline, diskusi, file, catatan, jadwal, Meet, dan profil akademik dalam satu workspace yang rapi. Panduan ini membantu mahasiswa dan admin kelas memakai setiap fitur dengan percaya diri, dari login pertama sampai koordinasi kelas selama satu semester.</p>
+        <div class="hero-actions no-print">
+          <a class="btn primary" href="https://academate.ardhan.my.id/" target="_blank" rel="noopener">Buka Academate <i class="ri-external-link-line" aria-hidden="true"></i></a>
+          <button class="btn secondary" data-open-search type="button"><i class="ri-search-line" aria-hidden="true"></i>Cari dalam dokumentasi ini</button>
+          <a class="btn secondary" href="#quick-reference">Lihat panduan cepat</a>
+        </div>
+        <div class="hero-strip">
+          <div class="product-map" aria-label="Feature map Academate">
+            <div class="map-title">Cara Academate menjaga satu kelas tetap terhubung</div>
+            <div class="orbit">
+              <svg viewBox="0 0 520 250" aria-hidden="true"><ellipse cx="260" cy="125" rx="222" ry="82" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="8 10"/><ellipse cx="260" cy="125" rx="140" ry="110" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="7 9" transform="rotate(26 260 125)"/></svg>
+              <div class="hub">Workspace<br/>Kelas</div>
+              <div class="node">Dashboard</div><div class="node">Tugas</div><div class="node">Jadwal</div><div class="node">Catatan</div><div class="node">File</div><div class="node">Meet</div>
+            </div>
+          </div>
+          <div class="launch-panel">
+            <div>
+              <h2>Akses resmi</h2>
+              <p>Gunakan domain resmi dan link halaman di bawah ini saat mengarahkan pengguna ke Academate.</p>
+            </div>
+            <div class="url-list">
+              <a class="url-item" href="https://academate.ardhan.my.id/" target="_blank" rel="noopener"><span><i class="ri-home-5-line" aria-hidden="true"></i></span><code>Beranda</code></a>
+              <a class="url-item" href="https://academate.ardhan.my.id/dashboard" target="_blank" rel="noopener"><span><i class="ri-dashboard-3-line" aria-hidden="true"></i></span><code>/dashboard</code></a>
+              <a class="url-item" href="https://academate.ardhan.my.id/classes" target="_blank" rel="noopener"><span><i class="ri-graduation-cap-line" aria-hidden="true"></i></span><code>/classes</code></a>
+              <a class="url-item" href="https://academate.ardhan.my.id/task" target="_blank" rel="noopener"><span><i class="ri-checkbox-circle-line" aria-hidden="true"></i></span><code>/task</code></a>
+              <a class="url-item" href="https://academate.ardhan.my.id/schedule" target="_blank" rel="noopener"><span><i class="ri-calendar-schedule-line" aria-hidden="true"></i></span><code>/schedule</code></a>
+              <a class="url-item" href="https://academate.ardhan.my.id/notes" target="_blank" rel="noopener"><span><i class="ri-sticky-note-line" aria-hidden="true"></i></span><code>/notes</code></a>
+              <a class="url-item" href="https://academate.ardhan.my.id/account" target="_blank" rel="noopener"><span><i class="ri-user-settings-line" aria-hidden="true"></i></span><code>/account</code></a>
+              <a class="url-item" href="https://academate.ardhan.my.id/grades" target="_blank" rel="noopener"><span><i class="ri-bar-chart-box-line" aria-hidden="true"></i></span><code>/grades</code></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="content">
+        <section class="doc-section" id="what-academate-is" data-title="Tentang Academate" data-subtitle="Mengenal Academate dan tujuan pembuatannya">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Tentang Academate</div>
+              <h2>Apa itu Academate?</h2>
+            </div>
+            <p>Academate adalah basecamp digital untuk aktivitas perkuliahan. Setiap kelas punya satu tempat yang jelas untuk menyimpan info penting, deadline, materi, aktivitas anggota, dan kolaborasi real-time.</p>
+          </div>
+          <div class="section-body">
+            <div class="editorial-block">Tujuannya sederhana: setiap kelas punya satu tempat bersama untuk tahu apa yang sedang berlangsung, tugas apa yang harus dikumpulkan, materi apa yang sudah dibagikan, dan di mana kerja bareng bisa dilanjutkan.</div>
+            <div class="two-col">
+              <div>
+                <h3>Yang ditawarkan</h3>
+                <ul class="feature-list">
+                  <li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Mengurangi info kelas yang tercecer di chat, reminder pribadi, link file, dan dokumen terpisah.</span></li>
+                  <li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Membantu anggota kelas tetap satu arah lewat workspace kelas, tracking tugas, jadwal, diskusi, file, dan catatan.</span></li>
+                  <li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Membuat kerja bareng untuk urusan akademik terasa ringan, ramah, dan tetap teratur tanpa sistem yang ribet.</span></li>
+                  <li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Bisa dipakai untuk cek harian maupun koordinasi sepanjang semester.</span></li>
+                </ul>
+              </div>
+              <div class="soft-panel">
+                <h3>Apa yang membuatnya berbeda?</h3>
+                <p>Academate bukan sekadar task list atau ruang chat. Informasi kelas—anggota, deadline, catatan, media, Meet, dan jadwal—dibuat saling terhubung, jadi mahasiswa bisa langsung lanjut kerja tanpa kehilangan konteks.</p>
+                <div class="chips"><span class="chip">Berpusat pada kelas</span><span class="chip">Ramah dipakai mahasiswa</span><span class="chip">Kolaboratif</span><span class="chip">Responsif</span></div>
+              </div>
+            </div>
+            <table class="matrix">
+              <thead><tr><th>Masalah yang sering terjadi</th><th>Cara Academate membantu</th></tr></thead>
+              <tbody>
+                <tr><td>Informasi kelas tersebar di mana-mana</td><td>Setiap kelas punya workspace sendiri untuk diskusi, tugas, file, catatan, anggota, dan Meet.</td></tr>
+                <tr><td>Deadline mudah terlewat</td><td>Semua tugas terkumpul di satu tempat, dikelompokkan per kelas, muncul di Dashboard, dan terhubung dengan Jadwal.</td></tr>
+                <tr><td>Jadwal sulit dipahami</td><td>Hari dan jam kelas otomatis dibentuk menjadi blok jadwal yang mudah dibaca.</td></tr>
+                <tr><td>Catatan penting hanya tersimpan sendiri</td><td>Catatan bisa tetap pribadi atau dibagikan ke workspace kelas sebagai referensi bersama.</td></tr>
+                <tr><td>Informasi anggota kurang jelas</td><td>Profil dapat menampilkan display name, universitas, jurusan, semester, link sosial, dan banner.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="doc-section" id="who-uses-academate" data-title="Untuk Siapa?" data-subtitle="Pengguna yang cocok menggunakan Academate">
+          <div class="section-head"><div><div class="section-kicker">Untuk Siapa?</div><h2>Academate dibuat untuk siapa?</h2></div><p>Academate terutama dibuat untuk mahasiswa dan kelompok belajar, tetapi tetap fleksibel untuk admin kelas, tim proyek, study club, dan komunitas akademik.</p></div>
+          <div class="section-body">
+            <div class="three-col">
+              <div class="plain-panel"><h3>Mahasiswa</h3><p>Cek kelas, tugas, jadwal, catatan, deadline, profil, dan aktivitas akademik harian dari satu tempat.</p></div>
+              <div class="plain-panel"><h3>Admin kelas</h3><p>Buat kelas, bagikan kode, kelola anggota, update detail kelas, dan koordinasikan tugas atau catatan.</p></div>
+              <div class="plain-panel"><h3>Tim proyek</h3><p>Gunakan diskusi, file bersama, Meet, progress tugas, dan catatan untuk mengatur kerja kelompok.</p></div>
+            </div>
+            <div class="ribbon"><strong>Posisi Academate:</strong><span>Academate adalah hub kolaborasi berbasis mahasiswa. Platform ini melengkapi sistem resmi kampus dengan membantu koordinasi harian yang biasanya terjadi di luar portal akademik.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="how-it-connects" data-title="Cara Kerja" data-subtitle="Hubungan antara kelas, tugas, catatan, dan jadwal">
+          <div class="section-head"><div><div class="section-kicker">Cara Kerja</div><h2>Cara semua fitur saling terhubung</h2></div><p>Cara paling gampang memahami Academate adalah melihat setiap kelas sebagai satu hub. Dari sana, informasinya ditarik ke Dashboard, Tugas, Jadwal, dan Catatan.</p></div>
+          <div class="section-body">
+            <table class="matrix">
+              <thead><tr><th>Objek</th><th>Data yang terhubung</th></tr></thead>
+              <tbody>
+                <tr><td>Pengguna</td><td>Kelas yang diikuti, detail profil, pilihan banner, koneksi Telegram, catatan bersama yang disembunyikan, dan data Analisis Nilai.</td></tr>
+                <tr><td>Kelas</td><td>Anggota, creator/admin kelas, kode kelas, dosen, ruangan, SKS, hari dan jam kuliah, pesan diskusi, tugas, catatan bersama, file, dan aktivitas Meet.</td></tr>
+                <tr><td>Tugas</td><td>Kelas terkait, judul, deskripsi, deadline, pembuat tugas, status urgensi, serta anggota yang sudah menyelesaikannya.</td></tr>
+                <tr><td>Pesan diskusi</td><td>Kelas terkait, pengirim, isi pesan, lampiran opsional, timestamp, serta status pesan kalau dihapus atau ditarik.</td></tr>
+                <tr><td>Catatan</td><td>Catatan pribadi atau bersama berisi judul, isi, excerpt, tag, dan konteks kelas tempat catatan dibagikan.</td></tr>
+                <tr><td>Blok jadwal</td><td>Dibuat otomatis dari hari kuliah, jam mulai, jam selesai, dan deadline tugas.</td></tr>
+              </tbody>
+            </table>
+            <div class="editorial-block">Intinya, data kelas menjadi sumber utama untuk fitur lain. Kalau Dashboard, Tugas, atau Jadwal terlihat salah, cek detail kelasnya dulu.</div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="navigation-layout" data-title="Navigasi" data-subtitle="Tata letak, halaman, dan pengalaman perangkat">
+          <div class="section-head"><div><div class="section-kicker">Navigasi</div><h2>Pengalaman desktop dan mobile</h2></div><p>Academate memakai pola navigasi yang konsisten di setiap halaman. Di desktop, pengguna berpindah lewat sidebar; di mobile, navigasinya dibuat lebih ringkas supaya nyaman di layar kecil.</p></div>
+          <div class="section-body">
+            <table class="matrix">
+              <thead><tr><th>Label</th><th>Untuk apa</th></tr></thead>
+              <tbody>
+                <tr><td>Dashboard</td><td>Halaman utama untuk melihat sapaan, carousel kelas, kelas terdekat, penanda kalender, profil, dan deadline mendatang.</td></tr>
+                <tr><td>Kelas</td><td>Untuk membuat, join, mencari, pin, membuka, dan membagikan kelas.</td></tr>
+                <tr><td>Tugas</td><td>Tempat mengelola tugas dari semua kelas, lengkap dengan tab aktif/selesai, search, filter, dan ringkasan progress.</td></tr>
+                <tr><td>Jadwal</td><td>Jadwal mingguan otomatis dari jam kuliah dan deadline tugas.</td></tr>
+                <tr><td>Catatan</td><td>Catatan pribadi dan bersama dengan rich text editor, filter, note card, dan fitur berbagi ke kelas.</td></tr>
+                <tr><td>Akun</td><td>Untuk edit profil, mengelola keanggotaan kelas, menghubungkan Telegram, logout, dan menghapus akun.</td></tr>
+                <tr><td>Analisis Nilai</td><td>Analisis nilai dan transkrip opsional untuk IPK, SKS, tabel mata kuliah, chart, dan tren akademik.</td></tr>
+              </tbody>
+            </table>
+            <div class="comparison">
+              <div><div class="mini-heading">Pengalaman desktop</div><p>Gunakan sidebar untuk membuka bagian utama aplikasi. Banyak halaman menyediakan search di bagian atas, sedangkan workspace kelas memakai layout lebar: diskusi di satu sisi dan panel pendukung di sisi lain.</p></div>
+              <div><div class="mini-heading">Pengalaman mobile</div><p>Gunakan navigasi mobile untuk berpindah antarbagian. Di workspace kelas, konten bisa dibagi ke beberapa tab agar chat, file, catatan, dan tugas tetap nyaman dipakai tanpa double scroll.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="getting-started" data-title="Memulai" data-subtitle="Login dan lengkapi profil">
+          <div class="section-head"><div><div class="section-kicker">Memulai</div><h2>Login dan siapkan akunmu</h2></div><p>Academate memakai login Google supaya onboarding tetap praktis. Setelah login, kamu bisa melengkapi profil akademik, lalu join atau membuat kelas pertama.</p></div>
+          <div class="section-body">
+            <a class="route-box" href="https://academate.ardhan.my.id/" target="_blank" rel="noopener"><i class="ri-link-m" aria-hidden="true"></i><code>https://academate.ardhan.my.id/</code></a>
+            <ol class="process">
+              <li><div><h4>Buka Academate</h4><p>Buka domain resmi Academate di browser, lalu pilih opsi login.</p></div></li>
+              <li><div><h4>Lanjutkan dengan Google</h4><p>Pilih akun Google yang ingin kamu pakai untuk Academate.</p></div></li>
+              <li><div><h4>Masuk ke Dashboard</h4><p>Setelah login, kamu akan masuk ke Dashboard.</p></div></li>
+              <li><div><h4>Lengkapi profil</h4><p>Buka Akun untuk mengatur display name, universitas, jurusan, semester, link sosial, banner profil, dan koneksi Telegram.</p></div></li>
+              <li><div><h4>Gabung atau buat kelas</h4><p>Sebagian besar fitur akan terasa berguna setelah kamu join minimal satu kelas.</p></div></li>
+            </ol>
+            <table class="matrix">
+              <thead><tr><th>Pengaturan awal</th><th>Mengapa ini penting</th></tr></thead>
+              <tbody>
+                <tr><td>Atur display name</td><td>Ini membantu teman sekelas mengenalimu di diskusi, daftar anggota, tugas, dan profil.</td></tr>
+                <tr><td>Tambahkan universitas dan jurusan</td><td>Profil anggota menjadi lebih jelas dan informatif.</td></tr>
+                <tr><td>Tambahkan semester</td><td>Teman sekelas jadi lebih mudah memahami konteks akademikmu.</td></tr>
+                <tr><td>Hubungkan Telegram</td><td>Kamu bisa menerima reminder dan notifikasi tugas lewat Telegram meskipun sedang tidak membuka browser.</td></tr>
+                <tr><td>Gabung atau buat kelas</td><td>Kelas adalah pintu masuk ke workflow kolaborasi utama Academate.</td></tr>
+              </tbody>
+            </table>
+            <div class="ribbon"><strong>Catatan akun:</strong><span>Email Google menjadi identitas akun dan tidak bisa diubah dari dalam Academate. Untuk memakai email lain, login dengan akun Google yang berbeda.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="dashboard" data-title="Dashboard" data-subtitle="Ringkasan harian kelas dan deadline">
+          <div class="section-head"><div><div class="section-kicker">Dashboard</div><h2>Ringkasan harian aktivitas akademikmu</h2></div><p>Dashboard adalah tempat pertama untuk cek kegiatan harian. Di sini kamu bisa melihat kelas terdekat, kalender, profil, dan deadline yang perlu diperhatikan.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Tampilan Dashboard</h4><p>Ganti area ini dengan screenshot resmi yang menampilkan sapaan, carousel kelas, kelas terdekat, kalender, card profil, dan deadline.</p></div></div>
+            <a class="route-box" href="https://academate.ardhan.my.id/dashboard" target="_blank" rel="noopener"><i class="ri-link-m" aria-hidden="true"></i><code>https://academate.ardhan.my.id/dashboard</code></a>
+            <div class="two-col">
+              <div>
+                <h3>Yang bisa kamu lihat</h3>
+                <ul class="feature-list">
+                  <li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Sapaan sesuai waktu dengan display name kamu.</span></li>
+                  <li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Carousel untuk membuka kelas yang kamu ikuti dengan cepat.</span></li>
+                  <li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Info kelas terdekat yang akan dimulai.</span></li>
+                  <li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Card profil berisi banner, avatar, dan informasi universitas.</span></li>
+                  <li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Penanda kalender untuk hari kuliah.</span></li>
+                  <li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Daftar deadline tugas dengan label seperti Hari Ini, Besok, atau jumlah hari tersisa.</span></li>
+                </ul>
+              </div>
+              <div>
+                <h3>Cara memakai Dashboard sehari-hari</h3>
+                <ol class="process">
+                  <li><div><h4>Cek yang paling perlu diperhatikan</h4><p>Mulai dari kelas terdekat dan deadline tugas.</p></div></li>
+                  <li><div><h4>Gunakan search</h4><p>Cari kelas, dosen, ruangan, atau tugas lewat search.</p></div></li>
+                  <li><div><h4>Buka kelas yang dibutuhkan</h4><p>Pilih card kelas untuk lanjut ke diskusi, tugas, file, atau catatan.</p></div></li>
+                </ol>
+              </div>
+            </div>
+            <div class="editorial-block">Dashboard hanya menampilkan ringkasan. Untuk menambah atau mengubah data, buka halaman yang sesuai: Kelas, Tugas, Jadwal, Catatan, atau Akun.</div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="classes" data-title="Kelas" data-subtitle="Buat, gabung, cari, pin, dan bagikan kelas">
+          <div class="section-head"><div><div class="section-kicker">Kelas</div><h2>Kelas dan keanggotaan</h2></div><p>Halaman Kelas dipakai untuk membuat, join, mencari, pin, membuka, dan membagikan kelas.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Halaman Kelas</h4><p>Ganti dengan screenshot resmi yang menampilkan card kelas, search, tombol Buat Kelas, Gabung Kelas, Pin, Bagikan, dan Buka.</p></div></div>
+            <a class="route-box" href="https://academate.ardhan.my.id/classes" target="_blank" rel="noopener"><i class="ri-link-m" aria-hidden="true"></i><code>https://academate.ardhan.my.id/classes</code></a>
+            <table class="matrix">
+              <thead><tr><th>Aksi</th><th>Fungsi</th></tr></thead>
+              <tbody>
+                <tr><td>Buat Kelas</td><td>Membuat workspace kelas baru dan menjadikan kamu sebagai creator/admin kelas.</td></tr>
+                <tr><td>Gabung Kelas</td><td>Memasukkan kode seperti ABCD-1234 untuk join ke kelas yang sudah ada.</td></tr>
+                <tr><td>Cari</td><td>Memfilter card berdasarkan nama kelas, dosen, ruangan, atau hari.</td></tr>
+                <tr><td>Pin</td><td>Memindahkan kelas penting ke posisi paling atas di perangkatmu.</td></tr>
+                <tr><td>Bagikan</td><td>Membuka opsi berbagi untuk menyalin kode kelas atau link undangan.</td></tr>
+                <tr><td>Buka</td><td>Membuka workspace kelas lengkap berisi diskusi, tugas, file, catatan, dan Meet.</td></tr>
+              </tbody>
+            </table>
+            <div class="plain-panel"><h3>Informasi pada card kelas</h3><p>Card kelas dapat menampilkan ikon, nama mata kuliah, dosen, hari, ruangan, progress tugas, jumlah tugas selesai, jadwal kelas berikutnya, dan avatar anggota.</p></div>
+            <div class="ribbon"><strong>Saat belum memiliki kelas:</strong><span>Jika muncul pesan “Anda Belum Memiliki Kelas”, berarti kamu belum join ke kelas mana pun. Buat kelas baru atau minta kode kelas/link undangan dari teman.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="creating-class" data-title="Buat Kelas" data-subtitle="Menyiapkan workspace kelas baru">
+          <div class="section-head"><div><div class="section-kicker">Buat Kelas</div><h2>Siapkan kelas dengan benar</h2></div><p>Saat membuat kelas, kamu otomatis menjadi creator/admin kelas. Peran ini bisa mengedit pengaturan, mengeluarkan anggota, dan menghapus kelas.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Modal Buat Kelas</h4><p>Ganti dengan screenshot resmi yang menampilkan form Buat Kelas dan field jadwal yang wajib diisi.</p></div></div>
+            <table class="matrix">
+              <thead><tr><th>Kolom</th><th>Cara mengisi</th></tr></thead>
+              <tbody>
+                <tr><td>Ikon kelas</td><td>Gunakan emoji atau simbol singkat yang mewakili mata kuliah.</td></tr>
+                <tr><td>Nama Mata Kuliah</td><td>Gunakan nama mata kuliah resmi atau nama yang paling umum dikenal.</td></tr>
+                <tr><td>Nama Dosen</td><td>Masukkan nama dosen agar kelas mudah dikenali.</td></tr>
+                <tr><td>Ruang Kelas</td><td>Masukkan ruang kelas, lab, ruang online, atau lokasi Meet.</td></tr>
+                <tr><td>SKS</td><td>Masukkan jumlah SKS mata kuliah, biasanya antara 1–6 SKS.</td></tr>
+                <tr><td>Hari</td><td>Pilih Senin, Selasa, Rabu, Kamis, Jumat, Sabtu, atau Minggu.</td></tr>
+                <tr><td>Waktu</td><td>Atur jam mulai kelas.</td></tr>
+                <tr><td>Waktu Selesai</td><td>Atur jam selesai kelas.</td></tr>
+              </tbody>
+            </table>
+            <ol class="process">
+              <li><div><h4>Buka Kelas</h4><p>Mulai dari halaman Kelas.</p></div></li>
+              <li><div><h4>Klik Buat Kelas</h4><p>Buka form pembuatan kelas.</p></div></li>
+              <li><div><h4>Isi detail dengan benar</h4><p>Hari dan jam akan digunakan untuk membuat Jadwal otomatis, jadi pastikan datanya benar.</p></div></li>
+              <li><div><h4>Buat lalu bagikan</h4><p>Setelah kelas dibuat, bagikan kode kelas atau link undangan ke teman sekelas.</p></div></li>
+            </ol>
+            <div class="editorial-block">Data jadwal harus akurat karena halaman Jadwal memakai hari, jam mulai, dan jam selesai untuk membuat blok kelas otomatis.</div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="joining-sharing-class" data-title="Gabung dan Bagikan" data-subtitle="Menggunakan kode kelas dan link undangan">
+          <div class="section-head"><div><div class="section-kicker">Gabung dan Bagikan</div><h2>Undang teman sekelas</h2></div><p>Pengguna bisa join lewat kode kelas atau link undangan. Prosesnya cepat, tapi kelas tetap hanya bisa diakses oleh orang yang punya undangan.</p></div>
+          <div class="section-body">
+            <div class="two-col">
+              <div class="plain-panel"><h3>Gabung dengan kode kelas</h3><ol class="process"><li><div><h4>Buka Kelas</h4><p>Buka halaman Kelas.</p></div></li><li><div><h4>Klik Gabung Kelas</h4><p>Masukkan kode kelas sesuai yang dibagikan.</p></div></li><li><div><h4>Konfirmasi</h4><p>Jika kodenya valid, kelas akan muncul di daftar Kelas.</p></div></li></ol></div>
+              <div class="plain-panel"><h3>Gabung melalui link undangan</h3><p>Link undangan sudah membawa kode kelas. Saat dibuka, Academate akan mengisi kodenya otomatis sehingga pengguna cukup konfirmasi.</p><h3>Bagikan kelas</h3><p>Klik tombol Bagikan pada card kelas, salin kode atau link undangan, lalu kirim lewat aplikasi chat yang biasa dipakai.</p></div>
+            </div>
+            <div class="ribbon"><strong>Troubleshooting:</strong><span>Jika kode tidak berfungsi, salin ulang tanpa spasi tambahan, pastikan link undangannya yang terbaru, dan cek apakah pengguna sudah menjadi anggota.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="class-workspace" data-title="Workspace Kelas" data-subtitle="Diskusi, file, tugas, catatan, anggota, dan Meet">
+          <div class="section-head"><div><div class="section-kicker">Workspace Kelas</div><h2>Pusat kolaborasi kelas</h2></div><p>Workspace kelas menggabungkan diskusi, file bersama, tugas khusus kelas, catatan bersama, profil anggota, pengaturan kelas, dan Meet dalam satu tempat.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Tampilan workspace kelas</h4><p>Ganti dengan screenshot resmi yang menampilkan header kelas, avatar anggota, tombol Meet, area diskusi, serta panel Media & File, Tugas, dan Catatan Bersama.</p></div></div>
+            <a class="route-box" href="https://academate.ardhan.my.id/classes" target="_blank" rel="noopener"><i class="ri-link-m" aria-hidden="true"></i><code>https://academate.ardhan.my.id/classes</code></a>
+            <div class="two-col">
+              <div>
+                <h3>Bagian header</h3>
+                <ul class="feature-list"><li><span class="tick"><i class="ri-arrow-left-line" aria-hidden="true"></i></span><span>Tombol kembali untuk balik ke halaman sebelumnya atau Kelas.</span></li><li><span class="tick"><i class="ri-graduation-cap-line" aria-hidden="true"></i></span><span>Ikon kelas dan nama kelas.</span></li><li><span class="tick"><i class="ri-user-voice-line" aria-hidden="true"></i></span><span>Dosen, hari, waktu mulai, dan waktu selesai.</span></li><li><span class="tick"><i class="ri-group-line" aria-hidden="true"></i></span><span>Stack avatar anggota yang bisa diklik untuk membuka daftar anggota.</span></li><li><span class="tick"><i class="ri-video-on-line" aria-hidden="true"></i></span><span>Tombol Meet untuk memulai video call atau voice call.</span></li><li><span class="tick"><i class="ri-settings-3-line" aria-hidden="true"></i></span><span>Tombol pengaturan yang hanya tersedia untuk creator/admin kelas.</span></li></ul>
+              </div>
+              <div>
+                <h3>Panel di workspace</h3>
+                <table class="matrix"><tbody><tr><td>Diskusi Kelas</td><td>Chat kelas secara real-time dengan dukungan teks, lampiran, tarik pesan, dan tombol untuk langsung menuju pesan terbaru.</td></tr><tr><td>Media & File</td><td>Galeri otomatis yang mengumpulkan gambar dan dokumen dari chat kelas.</td></tr><tr><td>Tugas</td><td>Daftar tugas khusus kelas dengan opsi tambah, tandai selesai, buka detail, dan hapus sesuai permission.</td></tr><tr><td>Catatan Bersama</td><td>Catatan bersama yang terhubung ke kelas dan dapat dibuka melalui halaman Catatan.</td></tr></tbody></table>
+              </div>
+            </div>
+            <div class="ribbon"><strong>Aturan akses:</strong><span>Workspace kelas hanya bisa diakses oleh anggota. Jika seseorang membuka URL kelas tanpa menjadi anggota, Academate akan menolak akses dan menampilkan pesan error.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="discussion-files-media" data-title="Diskusi dan File" data-subtitle="Pesan, lampiran, preview, dan galeri media">
+          <div class="section-head"><div><div class="section-kicker">Diskusi dan File</div><h2>Berkomunikasi dan berbagi materi</h2></div><p>Diskusi kelas membantu koordinasi harian lewat chat, lampiran, preview, galeri media, dan fitur tarik pesan.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Diskusi dan berbagi file</h4><p>Ganti dengan screenshot resmi yang menampilkan chat box, tombol lampiran, preview gambar, item dokumen, dan panel Media & File.</p></div></div>
+            <div class="two-col">
+              <div>
+                <h3>Mengirim pesan</h3>
+                <ul class="feature-list"><li><span class="tick">1</span><span>Buka workspace kelas.</span></li><li><span class="tick">2</span><span>Gunakan kolom Diskusi Kelas yang bertuliskan Ketik pesan.</span></li><li><span class="tick">3</span><span>Tekan Enter untuk mengirim. Gunakan Shift+Enter jika ingin membuat baris baru.</span></li><li><span class="tick">4</span><span>Klik Terbaru untuk langsung menuju pesan paling baru.</span></li></ul>
+              </div>
+              <div>
+                <h3>Melampirkan file</h3>
+                <ul class="feature-list"><li><span class="tick"><i class="ri-attachment-2" aria-hidden="true"></i></span><span>Klik tombol lampiran di samping kolom pesan.</span></li><li><span class="tick"><i class="ri-image-line" aria-hidden="true"></i></span><span>Gambar akan dikompresi otomatis sebelum dikirim.</span></li><li><span class="tick"><i class="ri-file-text-line" aria-hidden="true"></i></span><span>Ukuran dokumen dibatasi sekitar 750 KB.</span></li><li><span class="tick"><i class="ri-puzzle-line" aria-hidden="true"></i></span><span>Format yang didukung meliputi PDF, Word, Excel, PowerPoint, TXT, dan ZIP.</span></li></ul>
+              </div>
+            </div>
+            <div class="plain-panel"><h3>Menghapus atau menarik pesan</h3><p>Kamu bisa menarik pesanmu sendiri. Creator/admin kelas juga bisa menyembunyikan atau menarik pesan sebagai tindakan admin. Pesan yang ditarik tetap meninggalkan penanda seperti “Pesan ditarik” atau “Pesan ditarik oleh admin” agar alur chat tetap jelas.</p></div>
+            <div class="editorial-block">Gunakan diskusi untuk koordinasi cepat. Untuk informasi yang lebih rapi dan perlu dibuka lagi nanti, gunakan Catatan Bersama.</div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="tasks" data-title="Tugas" data-subtitle="Membuat, memantau, memfilter, dan menyelesaikan tugas">
+          <div class="section-head"><div><div class="section-kicker">Tugas</div><h2>Pantau tugas lintas kelas</h2></div><p>Tugas tersedia di setiap workspace kelas dan juga di halaman Tugas. Kamu bisa fokus pada satu kelas atau melihat semua tugas sekaligus.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Halaman Tugas</h4><p>Ganti dengan screenshot resmi yang menampilkan ringkasan progress, tab Aktif dan Selesai, task card, filter, dan search.</p></div></div>
+            <a class="route-box" href="https://academate.ardhan.my.id/task" target="_blank" rel="noopener"><i class="ri-link-m" aria-hidden="true"></i><code>https://academate.ardhan.my.id/task</code></a>
+            <div class="comparison"><div><div class="mini-heading">Panel Tugas di workspace kelas</div><p>Gunakan panel ini saat menambahkan atau memeriksa tugas untuk kelas yang sedang dibuka.</p></div><div><div class="mini-heading">Halaman Tugas utama</div><p>Gunakan halaman ini untuk melihat tugas dari semua kelas yang diikuti, search, filter berdasarkan kelas, dan berpindah antara tugas aktif dan selesai.</p></div></div>
+            <table class="matrix"><thead><tr><th>Informasi tugas</th><th>Deskripsi</th></tr></thead><tbody><tr><td>Judul</td><td>Nama tugas atau pengingat.</td></tr><tr><td>Kelas terkait</td><td>Kelas tempat tugas dibuat.</td></tr><tr><td>Deskripsi</td><td>Instruksi, link, atau detail tambahan yang opsional.</td></tr><tr><td>Tanggal dan waktu deadline</td><td>Deadline yang digunakan untuk label urgensi dan konteks jadwal.</td></tr><tr><td>Daftar yang sudah selesai</td><td>Menampilkan anggota yang sudah menandai tugas sebagai selesai.</td></tr><tr><td>Label urgensi</td><td>Menampilkan label seperti Lewat, Hari Ini, Besok, atau jumlah hari tersisa.</td></tr></tbody></table>
+          </div>
+        </section>
+
+        <section class="doc-section" id="creating-completing-tasks" data-title="Kelola Tugas" data-subtitle="Buat, selesaikan, batalkan, filter, dan cari tugas">
+          <div class="section-head"><div><div class="section-kicker">Kelola Tugas</div><h2>Buat dan selesaikan tugas</h2></div><p>Workflow tugas membantu pengguna mencatat tugas dengan jelas, memantau progress secara jujur, dan menghindari deadline yang terlewat.</p></div>
+          <div class="section-body">
+            <div class="two-col">
+              <div class="plain-panel"><h3>Buat dari halaman Tugas</h3><ol class="process"><li><div><h4>Buka Tugas</h4><p>Buka halaman Tugas utama.</p></div></li><li><div><h4>Klik Tambah Tugas</h4><p>Buka modal Tambah Tugas.</p></div></li><li><div><h4>Isi detail tugas</h4><p>Masukkan judul, pilih kelas, atur tanggal dan waktu deadline, lalu tambahkan deskripsi jika diperlukan.</p></div></li><li><div><h4>Simpan</h4><p>Tugas akan terlihat oleh anggota kelas dan muncul di tampilan tugas terkait.</p></div></li></ol></div>
+              <div class="plain-panel"><h3>Buat dari workspace kelas</h3><ol class="process"><li><div><h4>Buka kelas tujuan</h4><p>Gunakan Buka dari halaman Kelas atau card kelas.</p></div></li><li><div><h4>Gunakan panel Tugas</h4><p>Klik Tambah pada panel Tugas di dalam workspace kelas.</p></div></li><li><div><h4>Simpan detail</h4><p>Tambahkan judul, deadline, dan petunjuk opsional.</p></div></li></ol><h3>Tandai selesai atau batalkan</h3><p>Klik checkbox pada tugas untuk menandainya selesai. Klik lagi untuk membatalkan. Avatar penyelesaian membantu kelompok melihat progress.</p></div>
+            </div>
+            <div class="ribbon"><strong>Status Terlambat:</strong><span>Terlambat berarti deadline sudah lewat dan tugas belum ditandai selesai. Status ini tidak otomatis menghapus atau mengunci tugas.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="schedule" data-title="Jadwal" data-subtitle="Jadwal kelas otomatis dan konteks deadline">
+          <div class="section-head"><div><div class="section-kicker">Jadwal</div><h2>Jadwal mingguan otomatis</h2></div><p>Jadwal adalah tampilan schedule otomatis. Fitur ini mengubah info kelas dan deadline tugas menjadi timetable visual tanpa perlu membuat blok kalender secara manual.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Jadwal otomatis</h4><p>Ganti dengan screenshot resmi yang menampilkan weekly grid, blok kelas, chip tugas sepanjang hari, dan indikator waktu saat ini.</p></div></div>
+            <a class="route-box" href="https://academate.ardhan.my.id/schedule" target="_blank" rel="noopener"><i class="ri-link-m" aria-hidden="true"></i><code>https://academate.ardhan.my.id/schedule</code></a>
+            <table class="matrix"><thead><tr><th>Data sumber</th><th>Cara muncul di Jadwal</th></tr></thead><tbody><tr><td>Hari kelas</td><td>Menentukan kolom hari untuk blok kelas.</td></tr><tr><td>Waktu mulai kelas</td><td>Menentukan posisi awal blok pada grid jam.</td></tr><tr><td>Waktu selesai kelas</td><td>Menentukan tinggi dan durasi blok kelas.</td></tr><tr><td>Nama kelas, dosen, ruangan</td><td>Ditampilkan sebagai informasi yang mudah dibaca di dalam atau di dekat blok.</td></tr><tr><td>Deadline tugas</td><td>Ditampilkan sebagai reminder sepanjang hari atau deadline, tergantung tampilan.</td></tr><tr><td>Waktu saat ini</td><td>Ditampilkan dengan indikator waktu saat ini saat relevan.</td></tr></tbody></table>
+            <div class="two-col"><div><h3>Cara menggunakan Jadwal</h3><ul class="feature-list"><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Buka Jadwal untuk melihat susunan kelas dalam satu minggu.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Gunakan navigasi tanggal untuk berpindah antar-minggu atau bulan, tergantung ukuran layar.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Lihat blok kelas untuk mengetahui waktu berlangsungnya setiap kelas.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Gunakan chip tugas atau area sepanjang hari untuk melihat kepadatan deadline.</span></li></ul></div><div><h3>Perbaiki data jadwal yang salah</h3><p>Jangan drag blok secara manual di Jadwal. Buka workspace kelas, lalu minta creator/admin kelas update hari, waktu mulai, atau waktu selesai melalui pengaturan kelas. Refresh Jadwal setelah perubahan.</p></div></div>
+            <table class="matrix"><thead><tr><th>Masalah yang terlihat</th><th>Kemungkinan penyebab dan cara memperbaiki</th></tr></thead><tbody><tr><td>Kelas muncul pada hari yang salah</td><td>Field Hari pada pengaturan kelas salah. Minta creator/admin kelas memperbaruinya.</td></tr><tr><td>Blok kelas terlalu pendek atau terlalu panjang</td><td>Jam mulai atau selesai belum tepat. Update Waktu dan Waktu Selesai.</td></tr><tr><td>Kelas tidak muncul</td><td>Kamu mungkin belum join ke kelas tersebut, atau field jadwal kelas belum lengkap.</td></tr><tr><td>Pengingat tugas muncul secara tidak terduga</td><td>Periksa deadline tugas di halaman Tugas atau panel tugas kelas.</td></tr><tr><td>Garis waktu sekarang terlihat salah</td><td>Periksa waktu dan timezone perangkat, lalu refresh halaman.</td></tr></tbody></table>
+          </div>
+        </section>
+
+        <section class="doc-section" id="notes" data-title="Catatan" data-subtitle="Catatan pribadi dan catatan bersama">
+          <div class="section-head"><div><div class="section-kicker">Catatan</div><h2>Tulis, atur, dan bagikan catatan</h2></div><p>Catatan mendukung rich text editor, note card visual, excerpt, tag, filter, catatan pribadi, dan catatan bersama kelas.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Halaman Catatan</h4><p>Ganti dengan screenshot resmi yang menampilkan tab pribadi/bersama, filter, tombol tambah catatan, grid catatan, chip tag, dan akses ke editor.</p></div></div>
+            <a class="route-box" href="https://academate.ardhan.my.id/notes" target="_blank" rel="noopener"><i class="ri-link-m" aria-hidden="true"></i><code>https://academate.ardhan.my.id/notes</code></a>
+            <div class="two-col"><div><h3>Untuk apa catatan</h3><ul class="feature-list"><li><span class="tick"><i class="ri-edit-2-line" aria-hidden="true"></i></span><span>Ringkasan materi setelah kelas.</span></li><li><span class="tick"><i class="ri-search-line" aria-hidden="true"></i></span><span>Referensi proyek dan hasil Meet.</span></li><li><span class="tick"><i class="ri-checkbox-circle-line" aria-hidden="true"></i></span><span>Checklist ujian dan materi persiapan.</span></li><li><span class="tick"><i class="ri-hand-heart-line" aria-hidden="true"></i></span><span>Ringkasan penting yang dibagikan kembali ke workspace kelas.</span></li><li><span class="tick"><i class="ri-lock-2-line" aria-hidden="true"></i></span><span>Materi belajar pribadi yang terpisah dari diskusi kelas.</span></li></ul></div><div><h3>Elemen utama</h3><table class="matrix"><tbody><tr><td>Card tambah catatan</td><td>Untuk membuat catatan baru.</td></tr><tr><td>Card catatan</td><td>Menampilkan judul, excerpt, tag, waktu update, atau konteks berbagi.</td></tr><tr><td>Filter</td><td>Memfilter catatan berdasarkan kelas, tag, atau kepemilikan jika tersedia.</td></tr><tr><td>Rich text editor</td><td>Mendukung pemformatan teks di dalam catatan.</td></tr><tr><td>Indikator shared</td><td>Menandai catatan yang terhubung atau dibagikan ke kelas.</td></tr></tbody></table></div></div>
+            <div class="editorial-block">Catatan berbeda dari chat. Gunakan diskusi untuk percakapan cepat, dan Catatan untuk materi terstruktur yang perlu dibuka lagi nanti.</div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="sharing-notes" data-title="Buat dan Bagikan Catatan" data-subtitle="Tulis catatan pribadi dan bagikan referensi kelas yang bisa dipakai kembali">
+          <div class="section-head"><div><div class="section-kicker">Buat dan Bagikan Catatan</div><h2>Ubah informasi penting menjadi referensi yang mudah dipakai lagi</h2></div><p>Workflow catatan yang baik mencakup membuat catatan, menulis isi yang berguna, mengorganisirnya, lalu membagikannya ke kelas jika perlu.</p></div>
+          <div class="section-body">
+            <div class="timeline">
+              <div class="timeline-item"><div class="timeline-dot">1</div><div><h4>Buat catatan pribadi</h4><p>Buka Catatan, klik card tambah catatan, tulis judul yang jelas, isi catatannya, gunakan formatting, atur dengan tag atau konteks kelas jika tersedia, lalu simpan.</p></div></div>
+              <div class="timeline-item"><div class="timeline-dot">2</div><div><h4>Edit catatan</h4><p>Buka card catatan, update judul atau isi, lalu simpan sebelum keluar jika editor tidak terlihat autosave.</p></div></div>
+              <div class="timeline-item"><div class="timeline-dot">3</div><div><h4>Bagikan catatan ke kelas</h4><p>Dari workspace kelas, buka Catatan Bersama lalu pilih Tambah. Buat atau pilih catatan yang ingin dibagikan agar anggota kelas bisa membukanya dari workspace.</p></div></div>
+              <div class="timeline-item"><div class="timeline-dot">4</div><div><h4>Hapus atau sembunyikan catatan bersama</h4><p>Aksi hapus atau tutup akan mencoba menghapus catatan bersama. Jika permission tidak mengizinkan penghapusan penuh, catatan tersebut bisa saja hanya disembunyikan dari daftar yang kamu lihat.</p></div></div>
+            </div>
+            <div class="ribbon"><strong>Saran:</strong><span>Tulis Catatan Bersama sebagai referensi yang bisa dipakai ulang. Catatan yang baik tetap mudah dipahami meskipun dibuka teman sekelas beberapa hari kemudian.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="account" data-title="Akun" data-subtitle="Profil, keanggotaan, Telegram, logout, dan keamanan akun">
+          <div class="section-head"><div><div class="section-kicker">Akun</div><h2>Kelola profil akademikmu</h2></div><p>Akun mengatur profil akademik publikmu di Academate. Halaman ini juga mengelola keanggotaan kelas, koneksi Telegram, logout, dan penghapusan akun.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Halaman Akun</h4><p>Ganti dengan screenshot resmi yang menampilkan field profil, pilihan banner, keanggotaan kelas, integrasi Telegram, dan Danger Zone.</p></div></div>
+            <a class="route-box" href="https://academate.ardhan.my.id/account" target="_blank" rel="noopener"><i class="ri-link-m" aria-hidden="true"></i><code>https://academate.ardhan.my.id/account</code></a>
+            <table class="matrix"><thead><tr><th>Kolom</th><th>Catatan</th></tr></thead><tbody><tr><td>Foto Profil</td><td>Diambil dari profil Google atau placeholder, lalu tampil di chat, daftar anggota, dan card profil.</td></tr><tr><td>Nama Tampilan</td><td>Nama yang bisa diedit dan ditampilkan di dalam aplikasi.</td></tr><tr><td>Email</td><td>Email akun dari Google yang bersifat read-only.</td></tr><tr><td>Universitas</td><td>Muncul di card profil dan konteks profil pada Dashboard.</td></tr><tr><td>Jurusan</td><td>Ditampilkan pada card profil anggota.</td></tr><tr><td>Semester</td><td>Ditampilkan sebagai konteks akademik.</td></tr><tr><td>Instagram</td><td>Link profil opsional yang akan terlihat setelah ditambahkan.</td></tr><tr><td>Spotify</td><td>Link profil opsional yang akan terlihat setelah ditambahkan.</td></tr><tr><td>Banner Profil</td><td>Banner yang bisa dipilih untuk card profil.</td></tr></tbody></table>
+            <div class="two-col"><div><h3>Simpan perubahan profil</h3><ol class="process"><li><div><h4>Buka Akun</h4><p>Buka halaman Akun.</p></div></li><li><div><h4>Update field</h4><p>Ubah detail yang ingin di-update dan pilih banner profil jika diperlukan.</p></div></li><li><div><h4>Klik Simpan</h4><p>Tunggu sampai status tersimpan atau pesan konfirmasi muncul.</p></div></li></ol></div><div><h3>Privasi profil</h3><p>Profilmu membantu teman sekelas mengenalimu. Tambahkan link Instagram atau Spotify hanya jika kamu nyaman saat teman sekelas membukanya dari profilmu.</p></div></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="leaving-account-safety" data-title="Keanggotaan dan Keamanan" data-subtitle="Keluar dari kelas dan menghapus akun">
+          <div class="section-head"><div><div class="section-kicker">Keanggotaan dan Keamanan</div><h2>Keluar dari kelas dengan hati-hati</h2></div><p>Aksi keanggotaan kelas dan Danger Zone bisa mencabut akses atau menghapus data akun secara permanen, jadi gunakan dengan hati-hati.</p></div>
+          <div class="section-body">
+            <div class="comparison"><div><div class="mini-heading">Keluar dari kelas</div><ol class="process"><li><div><h4>Buka Akun</h4><p>Temukan bagian Keanggotaan Kelas.</p></div></li><li><div><h4>Pilih Tinggalkan</h4><p>Baca dialog konfirmasi dengan teliti.</p></div></li><li><div><h4>Konfirmasi keluar</h4><p>Kelas akan hilang dari daftar kelas yang kamu ikuti dan aksesnya dicabut jika memungkinkan.</p></div></li></ol></div><div><div class="mini-heading">Hapus akun</div><ol class="process"><li><div><h4>Buka Danger Zone</h4><p>Cari bagian penghapusan akun.</p></div></li><li><div><h4>Klik Hapus Akun</h4><p>Baca peringatan dan konfirmasikan hanya jika kamu benar-benar ingin menghapus akun secara permanen.</p></div></li><li><div><h4>Lakukan autentikasi ulang jika diperlukan</h4><p>Google mungkin meminta login ulang sebelum penghapusan selesai.</p></div></li></ol></div></div>
+            <table class="matrix"><thead><tr><th>Setelah keluar dari kelas</th><th>Dampaknya</th></tr></thead><tbody><tr><td>Akses</td><td>Kamu kehilangan akses ke workspace kelas.</td></tr><tr><td>Daftar</td><td>Kelas tidak lagi muncul di daftar Kelas, Dashboard, Tugas, maupun Jadwal.</td></tr><tr><td>Konten sebelumnya</td><td>Pesan atau konten lama mungkin tetap tersimpan di data kelas bagi anggota yang masih join.</td></tr><tr><td>Join kembali</td><td>Kamu hanya bisa join kembali jika masih punya kode atau link undangan yang valid.</td></tr></tbody></table>
+            <div class="ribbon"><strong>Penting:</strong><span>Penghapusan akun bersifat permanen. Kalau kamu hanya ingin keluar dari satu kelas, gunakan Tinggalkan, bukan Hapus Akun.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="admin-controls" data-title="Kontrol Admin Kelas" data-subtitle="Pengaturan kelas dan anggota khusus creator/admin kelas">
+          <div class="section-head"><div><div class="section-kicker">Kontrol Admin Kelas</div><h2>Kelola kelas dengan bertanggung jawab</h2></div><p>Creator/admin kelas punya opsi tambahan di dalam workspace kelas. Kontrol ini memengaruhi semua anggota, jadi sebaiknya digunakan secara transparan.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Pengaturan kelas dan anggota</h4><p>Ganti dengan screenshot resmi yang menampilkan pengaturan khusus creator/admin, form detail kelas, daftar anggota, dan kontrol untuk mengeluarkan anggota.</p></div></div>
+            <div class="two-col"><div><h3>Edit detail kelas</h3><ul class="feature-list"><li><span class="tick">1</span><span>Buka workspace kelas.</span></li><li><span class="tick">2</span><span>Klik tombol pengaturan pada header.</span></li><li><span class="tick">3</span><span>Update ikon, nama kelas, dosen, ruangan, SKS, hari, waktu mulai, atau waktu selesai.</span></li><li><span class="tick">4</span><span>Simpan pengaturan dan refresh data kelas jika diperlukan.</span></li></ul></div><div><h3>Keluarkan anggota</h3><p>Buka stack avatar anggota dari header kelas, cari anggota, lalu gunakan Keluarkan jika tersedia. Creator/admin tidak bisa mengeluarkan dirinya sendiri melalui kontrol ini.</p><h3>Hapus kelas</h3><p>Buka pengaturan kelas, baca peringatan penghapusan, lalu konfirmasi hanya jika kelas memang tidak lagi diperlukan atau semua anggota sudah setuju.</p></div></div>
+            <div class="ribbon"><strong>Etika admin:</strong><span>Beri tahu anggota sebelum menghapus kelas, mengubah jadwal, atau mengeluarkan seseorang dari kelas.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="Meets" data-title="Meet" data-subtitle="Video call dan voice call untuk satu kelas">
+          <div class="section-head"><div><div class="section-kicker">Meet</div><h2>Mulai call langsung dari workspace kelas</h2></div><p>Fitur Meet membuat anggota bisa pindah dari diskusi ke voice call atau video call tanpa keluar dari konteks kelas.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Tampilan Meet</h4><p>Ganti dengan screenshot resmi yang menampilkan tombol Meet kelas, tampilan Meet, status peserta, dan kontrol keluar.</p></div></div>
+            <ol class="process"><li><div><h4>Buka workspace kelas</h4><p>Klik Buka pada card kelas atau gunakan URL kelas yang dapat kamu akses.</p></div></li><li><div><h4>Klik Meet</h4><p>Antarmuka Meet akan terbuka dengan konteks kelas.</p></div></li><li><div><h4>Izinkan akses</h4><p>Izinkan akses kamera dan mikrofon saat browser memintanya.</p></div></li><li><div><h4>Keluar dari call</h4><p>Gunakan tombol keluar atau tutup sesi Meet. Refresh halaman kelas jika status live terlihat belum update.</p></div></li></ol>
+            <div class="plain-panel"><h3>Status Live</h3><p>Saat Meet sedang berjalan, tombolnya dapat menampilkan status seperti “Live (3)” agar anggota lain tahu jumlah peserta aktif.</p></div>
+            <div class="ribbon"><strong>Etika saat Meet:</strong><span>Gunakan headphone jika memungkinkan, mute saat tidak berbicara, lalu rangkum hasil Meet di diskusi atau Catatan Bersama.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="telegram" data-title="Notifikasi Telegram" data-subtitle="Pengingat kelas dan tugas di luar aplikasi">
+          <div class="section-head"><div><div class="section-kicker">Notifikasi Telegram</div><h2>Terima reminder tanpa membuka browser</h2></div><p>Hubungkan Academate ke Telegram agar kamu tetap menerima reminder kelas dan tugas meskipun sedang tidak membuka browser.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Prompt koneksi Telegram</h4><p>Ganti dengan screenshot resmi yang menampilkan prompt di Dashboard, bagian Integrasi Telegram di Akun, status terhubung, dan opsi Hubungkan Ulang.</p></div></div>
+            <div class="two-col"><div><h3>Di mana fitur Telegram muncul</h3><ul class="feature-list"><li><span class="tick"><i class="ri-dashboard-3-line" aria-hidden="true"></i></span><span>Dashboard dapat menampilkan prompt Telegram jika akun belum terhubung.</span></li><li><span class="tick"><i class="ri-user-3-line" aria-hidden="true"></i></span><span>Halaman Akun menampilkan bagian Integrasi Telegram lengkap dengan status koneksinya.</span></li><li><span class="tick"><i class="ri-loop-right-line" aria-hidden="true"></i></span><span>Setelah terhubung, tombolnya dapat berubah menjadi Hubungkan Ulang.</span></li></ul></div><div><h3>Cara menghubungkan Telegram</h3><ol class="process"><li><div><h4>Buka Akun</h4><p>Cari bagian Integrasi Telegram.</p></div></li><li><div><h4>Klik Hubungkan</h4><p>Telegram akan terbuka dan mengarahkanmu ke bot Academate.</p></div></li><li><div><h4>Mulai bot</h4><p>Ikuti petunjuk di Telegram, lalu kembali ke Academate. Refresh halaman jika status belum berubah.</p></div></li></ol></div></div>
+            <div class="plain-panel"><h3>Untuk apa Telegram</h3><p>Telegram bisa mengirim reminder kelas, deadline tugas, dan notifikasi tugas baru supaya info penting tidak mudah terlewat.</p></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="grades" data-title="Analisis Nilai" data-subtitle="IPK, SKS, chart, dan ringkasan transkrip">
+          <div class="section-head"><div><div class="section-kicker">Analisis Nilai</div><h2>Pantau perkembangan akademik</h2></div><p>Analisis Nilai berada di luar workflow utama kolaborasi kelas, tetapi berguna untuk memantau nilai dan perkembangan akademik secara pribadi.</p></div>
+          <div class="section-body">
+            <div class="screenshot-slot"><div class="shot-content"><div class="shot-label">Placeholder screenshot</div><h4>Halaman Analisis Nilai</h4><p>Ganti dengan screenshot resmi yang menampilkan ringkasan IPK, SKS, jumlah mata kuliah, chart, tabel nilai, dan area import transkrip.</p></div></div>
+            <a class="route-box" href="https://academate.ardhan.my.id/grades" target="_blank" rel="noopener"><i class="ri-link-m" aria-hidden="true"></i><code>https://academate.ardhan.my.id/grades</code></a>
+            <div class="two-col"><div><h3>Informasi yang dapat ditampilkan</h3><ul class="feature-list"><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Ringkasan IPK atau GPA.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Total SKS.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Jumlah mata kuliah.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Indikator tren dan chart.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Tabel nilai yang sudah di-import.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Area untuk import data transkrip.</span></li></ul></div><div><h3>Cara menggunakan Analisis Nilai</h3><ol class="process"><li><div><h4>Buka Analisis Nilai</h4><p>Buka melalui menu navigasi jika tersedia.</p></div></li><li><div><h4>Import teks transkrip</h4><p>Paste atau masukkan data nilai pada area yang tersedia.</p></div></li><li><div><h4>Tinjau hasil</h4><p>Periksa angka ringkasan, chart, dan tabel hasil analisis.</p></div></li></ol></div></div>
+            <div class="ribbon"><strong>Penting:</strong><span>Gunakan Analisis Nilai sebagai overview pribadi, bukan catatan akademik resmi. Selalu cocokkan data penting dengan sistem resmi kampus sebelum mengambil keputusan.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="common-workflows" data-title="Alur Penggunaan" data-subtitle="Contoh alur untuk semester, proyek, dan ujian">
+          <div class="section-head"><div><div class="section-kicker">Alur Penggunaan</div><h2>Jadikan Academate bagian dari kebiasaan kelas</h2></div><p>Cara paling efektif menggunakan Academate bukan memakai semua fitur sekaligus, tetapi membiasakan info penting disimpan dalam bentuk yang rapi, mudah dicari, dan bisa dibagikan.</p></div>
+          <div class="section-body">
+            <div class="three-col">
+              <div class="plain-panel"><h3>Persiapan semester baru</h3><ul class="feature-list"><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Login lalu lengkapi profil di Akun.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Buat setiap mata kuliah dengan data ruang, SKS, hari, dan jam yang akurat.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Bagikan kode kelas sejak awal.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Periksa Jadwal untuk memastikan blok kelas sudah benar.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Tambahkan tugas dan catatan segera setelah ada pengumuman baru.</span></li></ul></div>
+              <div class="plain-panel"><h3>Proyek kelompok</h3><ul class="feature-list"><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Gunakan diskusi untuk membagi peran.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Buat task untuk setiap bagian pekerjaan.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Lampirkan referensi di diskusi.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Gunakan Catatan Bersama untuk ringkasan Meet dan outline akhir.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Gunakan Meet saat chat mulai kurang efektif.</span></li></ul></div>
+              <div class="plain-panel"><h3>Minggu ujian</h3><ul class="feature-list"><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Buka Dashboard untuk melihat deadline terdekat.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Gunakan filter Aktif di Tugas.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Buat checklist ujian di Catatan.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Bagikan ringkasan yang rapi dan berkualitas ke kelas.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Gunakan Jadwal agar tidak salah waktu.</span></li></ul></div>
+            </div>
+            <div class="editorial-block">Setiap kali ada info penting di chat, ubah menjadi tugas, Catatan Bersama, atau update kelas agar tidak tenggelam.</div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="troubleshooting" data-title="Troubleshooting" data-subtitle="Solusi untuk masalah akses, jadwal, tugas, file, Meet, dan Telegram">
+          <div class="section-head"><div><div class="section-kicker">Troubleshooting</div><h2>Saat ada fitur yang tidak berjalan</h2></div><p>Gunakan bagian ini kalau data tidak muncul, tidak tersimpan, atau fitur tidak berjalan seperti seharusnya.</p></div>
+          <div class="section-body">
+            <div class="accordion">
+              <details open><summary>Tidak dapat login</summary><div class="answer">Izinkan pop-up, pastikan kamu menggunakan akun Google, refresh halaman, lalu coba lagi. Jika pop-up tertutup, ulangi proses login.</div></details>
+              <details><summary>Kode kelas tidak ditemukan</summary><div class="answer">Cek kode, hapus spasi berlebih, minta creator/admin mengirim ulang, atau gunakan link undangan.</div></details>
+              <details><summary>Kelas belum muncul setelah join</summary><div class="answer">Refresh halaman Kelas, atau buka Akun lalu pilih Muat Ulang di bagian keanggotaan.</div></details>
+              <details><summary>Jadwal tidak sesuai</summary><div class="answer">Minta creator/admin kelas update hari, jam mulai, atau jam selesai. Jadwal dibuat otomatis dari data kelas.</div></details>
+              <details><summary>Tugas tidak ditemukan</summary><div class="answer">Cek tab Aktif/Selesai, filter kelas, keyword search, dan pastikan kamu join ke kelas yang tepat.</div></details>
+              <details><summary>Upload file gagal</summary><div class="answer">Untuk dokumen, kecilkan ukuran file hingga di bawah sekitar 750 KB. Untuk gambar, coba pakai ukuran lebih kecil jika kompresi masih gagal.</div></details>
+              <details><summary>Meet tidak berfungsi</summary><div class="answer">Izinkan akses kamera dan mikrofon, gunakan browser modern, refresh halaman kelas, lalu coba kembali.</div></details>
+              <details><summary>Telegram belum terhubung</summary><div class="answer">Buka Akun, klik Hubungkan atau Hubungkan Ulang, mulai bot, lalu refresh halaman Akun.</div></details>
+              <details><summary>Tidak dapat mengeluarkan anggota</summary><div class="answer">Hanya creator/admin kelas yang bisa mengeluarkan anggota.</div></details>
+              <details><summary>Tidak dapat mengedit atau menghapus kelas</summary><div class="answer">Hanya creator/admin kelas yang bisa melihat dan menggunakan pengaturan kelas serta opsi hapus.</div></details>
+              <details><summary>Tidak dapat menghapus akun</summary><div class="answer">Google mungkin meminta login ulang. Selesaikan autentikasi lewat pop-up, lalu coba lagi.</div></details>
+            </div>
+            <div class="plain-panel"><h3>Langkah pengecekan umum</h3><ul class="feature-list"><li><span class="tick">1</span><span>Refresh halaman.</span></li><li><span class="tick">2</span><span>Periksa koneksi internet.</span></li><li><span class="tick">3</span><span>Pastikan kamu login dengan akun Google yang benar.</span></li><li><span class="tick">4</span><span>Pastikan kamu sudah menjadi anggota kelas yang ingin dibuka.</span></li><li><span class="tick">5</span><span>Minta creator/admin kelas memeriksa pengaturan jika ada informasi kelas yang terlihat salah.</span></li></ul></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="privacy" data-title="Privasi dan Penggunaan yang Bertanggung Jawab" data-subtitle="Aturan visibilitas dan cara berbagi dengan aman">
+          <div class="section-head"><div><div class="section-kicker">Privasi dan Penggunaan yang Bertanggung Jawab</div><h2>Pahami apa saja yang bisa dilihat anggota kelas</h2></div><p>Academate adalah ruang kolaborasi. Anggap semua yang dibagikan di dalam kelas dapat dilihat oleh seluruh anggota, kecuali tampilan menjelaskan sebaliknya.</p></div>
+          <div class="section-body">
+            <div class="comparison"><div><div class="mini-heading">Visibilitas profil</div><ul class="feature-list"><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Display name dan avatar digunakan di diskusi, daftar anggota, status penyelesaian tugas, dan profil.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Universitas, jurusan, dan semester dapat muncul di profil anggota.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Link Instagram dan Spotify hanya muncul jika kamu menambahkannya.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Email bisa muncul di detail profil dan informasi pengguna dalam Meet, tergantung konteks.</span></li></ul></div><div><div class="mini-heading">Visibilitas konten kelas</div><ul class="feature-list"><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Pesan Diskusi Kelas hanya untuk anggota kelas.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>File yang dibagikan akan terkumpul di Media & File.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Catatan yang dibagikan dapat dibuka melalui Catatan Bersama.</span></li><li><span class="tick"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span><span>Status tugas dapat menampilkan siapa saja yang sudah menandainya selesai.</span></li></ul></div></div>
+            <div class="ribbon"><strong>Bagikan dengan bijak:</strong><span>Jangan upload dokumen pribadi yang tidak seharusnya dilihat teman sekelas, jangan tambahkan URL sosial milik orang lain, jangan hapus data kelas tanpa pemberitahuan, dan jangan gunakan Meet untuk menekan atau mengejutkan teman sekelas.</span></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="best-practices" data-title="Praktik Terbaik" data-subtitle="Kebiasaan yang disarankan untuk creator/admin kelas, anggota, dan tim proyek">
+          <div class="section-head"><div><div class="section-kicker">Praktik Terbaik</div><h2>Buat workspace yang rapi dan bisa diandalkan</h2></div><p>Academate akan jauh lebih berguna jika satu kelas punya kebiasaan sederhana yang disepakati bersama. Fiturnya membantu, tetapi konsistensi anggota yang membuat workspace tetap rapi dan bisa diandalkan.</p></div>
+          <div class="section-body">
+            <div class="three-col">
+              <div class="plain-panel"><h3>Untuk creator/admin kelas</h3><ul class="feature-list"><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Gunakan nama kelas yang jelas dan konsisten.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Masukkan hari dan jam dengan benar.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Bagikan kode kelas sejak awal.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Pastikan pengaturan kelas selalu update.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Catat deadline melalui Tugas, jangan hanya menuliskannya di chat.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Beri tahu anggota sebelum melakukan aksi admin yang penting.</span></li></ul></div>
+              <div class="plain-panel"><h3>Untuk anggota</h3><ul class="feature-list"><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Lengkapi profil.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Tandai tugas selesai hanya kalau benar-benar sudah dikerjakan.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Periksa Media & File sebelum meminta file yang pernah dibagikan.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Gunakan judul dan isi yang jelas saat share catatan.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Rangkum hasil Meet ke catatan atau pesan.</span></li></ul></div>
+              <div class="plain-panel"><h3>Untuk tim proyek</h3><ul class="feature-list"><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Pecah tugas besar menjadi beberapa task kecil.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Attach file pendukung di diskusi.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Gunakan Catatan Bersama sebagai single source of truth untuk keputusan kelompok.</span></li><li><span class="tick"><i class="ri-check-line" aria-hidden="true"></i></span><span>Gunakan Meet langsung ketika diskusi teks mulai tidak efektif.</span></li></ul></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="quick-reference" data-title="Panduan Cepat" data-subtitle="Langkah cepat untuk tindakan umum">
+          <div class="section-head"><div><div class="section-kicker">Panduan Cepat</div><h2>Jawaban cepat untuk aksi yang sering dipakai</h2></div><p>Bagian ini untuk pengguna yang sudah paham Academate dan hanya butuh langkah cepat.</p></div>
+          <div class="section-body">
+            <div class="quick-grid">
+              <div class="quick-item"><strong>Buat kelas</strong><span>Kelas → Buat Kelas → isi detail → Buat Kelas.</span></div>
+              <div class="quick-item"><strong>Gabung ke kelas</strong><span>Kelas → Gabung Kelas → masukkan kode → Gabung.</span></div>
+              <div class="quick-item"><strong>Bagikan kelas</strong><span>Kelas → tombol bagikan pada card kelas → salin kode atau link.</span></div>
+              <div class="quick-item"><strong>Buka workspace kelas</strong><span>Kelas → Buka pada card kelas.</span></div>
+              <div class="quick-item"><strong>Kirim file</strong><span>Workspace kelas → Diskusi Kelas → tombol lampiran → pilih file.</span></div>
+              <div class="quick-item"><strong>Buat tugas</strong><span>Tugas → Tambah Tugas, atau Workspace kelas → Tugas → Tambah.</span></div>
+              <div class="quick-item"><strong>Tandai tugas selesai</strong><span>Klik checkbox pada card tugas.</span></div>
+              <div class="quick-item"><strong>Lihat jadwal</strong><span>Buka Jadwal. Halaman ini dibuat otomatis dari jam kelas dan deadline tugas.</span></div>
+              <div class="quick-item"><strong>Buat catatan</strong><span>Catatan → kartu tambah catatan → tulis → simpan.</span></div>
+              <div class="quick-item"><strong>Bagikan catatan ke kelas</strong><span>Workspace kelas → Catatan Bersama → Tambah.</span></div>
+              <div class="quick-item"><strong>Edit profil</strong><span>Akun → perbarui kolom → Simpan.</span></div>
+              <div class="quick-item"><strong>Keluar dari kelas</strong><span>Akun → Keanggotaan Kelas → Tinggalkan.</span></div>
+              <div class="quick-item"><strong>Edit detail kelas</strong><span>Workspace kelas → tombol pengaturan. Khusus creator/admin kelas.</span></div>
+              <div class="quick-item"><strong>Hapus kelas</strong><span>Workspace kelas → pengaturan → hapus kelas. Khusus creator/admin kelas.</span></div>
+              <div class="quick-item"><strong>Mulai Meet</strong><span>Workspace kelas → Meet.</span></div>
+              <div class="quick-item"><strong>Hubungkan Telegram</strong><span>Akun → Integrasi Telegram → Hubungkan.</span></div>
+            </div>
+            <div class="editorial-block">Saat bingung, tentukan dulu data apa yang ingin dikelola: profil, kelas, tugas, jadwal, catatan, atau diskusi. Setelah itu, buka halaman yang sesuai.</div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="glossary" data-title="Glosarium" data-subtitle="Istilah yang digunakan di Academate">
+          <div class="section-head"><div><div class="section-kicker">Glosarium</div><h2>Istilah yang digunakan di Academate</h2></div><p>Istilah berikut sering muncul di interface Academate dan panduan ini.</p></div>
+          <div class="section-body">
+            <dl class="glossary">
+              <div><dt>Dashboard</dt><dd>Halaman utama untuk melihat ringkasan kegiatan.</dd></div>
+              <div><dt>Kelas</dt><dd>Halaman untuk membuat, join, membuka, pin, mencari, dan membagikan kelas.</dd></div>
+              <div><dt>Tugas</dt><dd>Halaman yang menampilkan tugas dari semua kelas.</dd></div>
+              <div><dt>Jadwal</dt><dd>Halaman schedule otomatis dari data kelas.</dd></div>
+              <div><dt>Catatan</dt><dd>Halaman untuk catatan pribadi dan Catatan Bersama.</dd></div>
+              <div><dt>Akun</dt><dd>Halaman Akun untuk profil, keanggotaan kelas, Telegram, logout, dan penghapusan akun.</dd></div>
+              <div><dt>Kode kelas</dt><dd>Kode undangan untuk join ke kelas, biasanya berisi kombinasi huruf dan angka.</dd></div>
+              <div><dt>Creator/admin kelas</dt><dd>Pengguna yang membuat kelas dan punya akses untuk mengatur kelas, mengeluarkan anggota, dan menghapus kelas.</dd></div>
+              <div><dt>CompletedBy</dt><dd>Daftar anggota yang sudah menandai suatu tugas sebagai selesai.</dd></div>
+              <div><dt>Catatan bersama</dt><dd>Catatan yang dibagikan ke kelas dan dapat dibuka melalui Catatan Bersama.</dd></div>
+              <div><dt>Media & File</dt><dd>Galeri file dan media yang dikirim melalui Diskusi Kelas.</dd></div>
+              <div><dt>Meet</dt><dd>Fitur video call dan voice call untuk anggota kelas.</dd></div>
+              <div><dt>Bot Telegram</dt><dd>Saluran notifikasi eksternal untuk menerima pengingat dari Academate.</dd></div>
+            </dl>
+          </div>
+        </section>
+      </div>
+
+      <footer class="footer">
+        <div><strong>Dokumentasi Academate</strong><br/>Panduan publik untuk mahasiswa, anggota, dan admin kelas.</div>
+        <div>© 2026 Academate. Hak cipta oleh <a href="https://ardhan.my.id/" target="_blank" rel="noopener">Ardan Ridho</a>.</div>
+      </footer>
+    </main>
+  </div>
+
+  <div class="search-modal" id="searchModal" role="dialog" aria-modal="true" aria-label="Cari dokumentasi">
+    <div class="search-panel">
+      <div class="search-head">
+        <div class="search-icon"><i class="ri-search-line" aria-hidden="true"></i></div>
+        <input id="searchInput" type="search" autocomplete="off" placeholder="Cari dashboard, kode kelas, Telegram, tugas..." />
+        <button class="search-close" id="searchClose" type="button" aria-label="Tutup search"><i class="ri-close-line" aria-hidden="true"></i></button>
+      </div>
+      <div class="search-meta"><span id="searchCount">Ketik untuk mencari di dokumentasi.</span><span>Enter membuka hasil pertama • Esc menutup search</span></div>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
+
+  <script>
+    const body = document.body;
+    const html = document.documentElement;
+    const sidebar = document.getElementById('sidebar');
+    const toc = document.getElementById('toc');
+    const currentSection = document.getElementById('currentSection');
+    const progress = document.getElementById('progress');
+    const searchModal = document.getElementById('searchModal');
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const searchCount = document.getElementById('searchCount');
+
+    const navGroups = [
+      {icon:'ri-sparkling-2-line', title:'Mulai dari Sini', subtitle:'Gambaran umum dan dasar penggunaan', links:[
+        ['home','Beranda Dokumentasi'], ['what-academate-is','Tentang Academate'], ['who-uses-academate','Untuk Siapa?'], ['how-it-connects','Cara Kerja'], ['navigation-layout','Navigasi']
+      ]},
+      {icon:'ri-rocket-2-line', title:'Persiapan', subtitle:'Login dan langkah awal', links:[
+        ['getting-started','Memulai'], ['dashboard','Dashboard'], ['classes','Kelas'], ['creating-class','Buat Kelas'], ['joining-sharing-class','Gabung dan Bagikan']
+      ]},
+      {icon:'ri-team-line', title:'Kolaborasi Kelas', subtitle:'Workspace, chat, dan materi', links:[
+        ['class-workspace','Workspace Kelas'], ['discussion-files-media','Diskusi dan File'], ['tasks','Tugas'], ['creating-completing-tasks','Kelola Tugas']
+      ]},
+      {icon:'ri-book-open-line', title:'Fitur Akademik', subtitle:'Jadwal, catatan, profil, dan nilai', links:[
+        ['schedule','Jadwal'], ['notes','Catatan'], ['sharing-notes','Buat dan Bagikan Catatan'], ['account','Akun'], ['leaving-account-safety','Keanggotaan dan Keamanan'], ['grades','Analisis Nilai']
+      ]},
+      {icon:'ri-settings-3-line', title:'Pengelolaan', subtitle:'Admin, Meet, dan notifikasi', links:[
+        ['admin-controls','Kontrol Admin Kelas'], ['meetings','Meet'], ['telegram','Notifikasi Telegram']
+      ]},
+      {icon:'ri-checkbox-multiple-line', title:'Panduan Tambahan', subtitle:'Troubleshooting dan praktik terbaik', links:[
+        ['common-workflows','Alur Penggunaan'], ['troubleshooting','Troubleshooting'], ['privacy','Privasi dan Penggunaan yang Bertanggung Jawab'], ['best-practices','Praktik Terbaik'], ['quick-reference','Panduan Cepat'], ['glossary','Glosarium']
+      ]}
+    ];
+
+    function buildToc(){
+      toc.innerHTML = navGroups.map((group, index) => `
+        <details class="nav-group" ${index < 3 ? 'open' : ''}>
+          <summary title="${group.title}">
+            <span class="nav-ico"><i class="${group.icon}" aria-hidden="true"></i></span>
+            <span><span class="nav-title">${group.title}</span><span class="nav-sub">${group.subtitle}</span></span>
+            <span class="chev"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span>
+          </summary>
+          <div class="subnav">
+            ${group.links.map(([id,label]) => `<a href="#${id}" data-nav-id="${id}">${label}</a>`).join('')}
+          </div>
+        </details>
+      `).join('');
+      toc.querySelectorAll('a').forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+    }
+    buildToc();
+
+    const sections = [...document.querySelectorAll('[data-title]')];
+    const navLinks = [...document.querySelectorAll('[data-nav-id]')];
+    const sectionObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          const id = entry.target.id;
+          navLinks.forEach(a => a.classList.toggle('active', a.dataset.navId === id));
+          currentSection.textContent = entry.target.dataset.title || 'Dokumentasi';
+        }
+      });
+    }, {rootMargin:'-35% 0px -58% 0px', threshold:.01});
+    sections.forEach(section => sectionObserver.observe(section));
+
+    function updateProgresss(){
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = height > 0 ? `${Math.min(100, (scrollTop / height) * 100)}%` : '0%';
+    }
+    window.addEventListener('scroll', updateProgresss, {passive:true}); updateProgresss();
+
+    document.getElementById('mobileMenu').addEventListener('click', () => sidebar.classList.add('open'));
+    document.addEventListener('click', e => {
+      if(window.matchMedia('(max-width:880px)').matches && sidebar.classList.contains('open')){
+        const isInside = sidebar.contains(e.target) || e.target.id === 'mobileMenu';
+        if(!isInside) sidebar.classList.remove('open');
+      }
+    });
+
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('academate-docs-theme');
+    if(savedTheme) html.dataset.theme = savedTheme;
+    themeToggle.addEventListener('click', () => {
+      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('academate-docs-theme', html.dataset.theme);
+    });
+
+    function cleanText(text){ return text.replace(/\s+/g,' ').trim(); }
+    function getSectionText(section){
+      return cleanText([...section.querySelectorAll('h2,h3,h4,p,li,td,dd,summary,.answer,.editorial-block,.ribbon,.quick-item')]
+        .map(el => el.textContent).join(' '));
+    }
+    const searchIndex = sections.map(section => ({
+      id: section.id,
+      title: section.dataset.title || section.querySelector('h2')?.textContent || 'Bagian',
+      subtitle: section.dataset.subtitle || '',
+      heading: section.querySelector('h2')?.textContent || section.dataset.title || 'Bagian',
+      text: getSectionText(section),
+      element: section
+    }));
+
+    function escapeRegExp(value){ return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+    function tokenize(query){ return [...new Set(cleanText(query.toLowerCase()).split(/[^a-z0-9\u00C0-\uFFFF]+/).filter(Boolean).filter(w => w.length > 1))]; }
+    function highlightHTML(text, terms){
+      let safe = text.replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+      terms.forEach(term => {
+        safe = safe.replace(new RegExp(`(${escapeRegExp(term)})`, 'ig'), '<mark>$1</mark>');
+      });
+      return safe;
+    }
+    function makeSnippet(text, terms){
+      const sentences = cleanText(text).match(/[^.!?。！？]+[.!?。！？]?/g) || [text];
+      const lowerTerms = terms.map(t => t.toLowerCase());
+      let sentence = sentences.find(s => lowerTerms.some(t => s.toLowerCase().includes(t))) || sentences[0] || '';
+      sentence = cleanText(sentence);
+      if(sentence.length > 260){
+        const lower = sentence.toLowerCase();
+        const pos = Math.max(0, Math.min(...lowerTerms.map(t => { const i = lower.indexOf(t); return i < 0 ? 999999 : i; })) - 90);
+        let start = pos;
+        while(start > 0 && /\S/.test(sentence[start-1])) start--;
+        let end = Math.min(sentence.length, start + 260);
+        while(end < sentence.length && /\S/.test(sentence[end])) end++;
+        sentence = (start > 0 ? '…' : '') + sentence.slice(start,end).trim() + (end < sentence.length ? '…' : '');
+      }
+      return sentence;
+    }
+    function scoreItem(item, terms){
+      const title = item.title.toLowerCase();
+      const heading = item.heading.toLowerCase();
+      const subtitle = item.subtitle.toLowerCase();
+      const text = item.text.toLowerCase();
+      let score = 0;
+      terms.forEach(term => {
+        if(title.includes(term)) score += 14;
+        if(heading.includes(term)) score += 10;
+        if(subtitle.includes(term)) score += 7;
+        const count = (text.match(new RegExp(escapeRegExp(term),'g')) || []).length;
+        score += Math.min(count, 8);
+      });
+      if(terms.every(term => text.includes(term) || title.includes(term) || subtitle.includes(term))) score += 8;
+      return score;
+    }
+    function removeContentMarks(){
+      document.querySelectorAll('mark.search-mark').forEach(mark => {
+        const text = document.createTextNode(mark.textContent);
+        mark.replaceWith(text);
+      });
+    }
+    function highlightSection(section, terms){
+      removeContentMarks();
+      const walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT, {
+        acceptNode(node){
+          if(!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          const parent = node.parentElement;
+          if(!parent || ['SCRIPT','STYLE','MARK','INPUT','TEXTAREA','BUTTON'].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
+          return terms.some(term => node.nodeValue.toLowerCase().includes(term.toLowerCase())) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+      const nodes = [];
+      while(walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.slice(0, 80).forEach(node => {
+        let frag = document.createDocumentFragment();
+        const pattern = new RegExp(`(${terms.map(escapeRegExp).join('|')})`, 'ig');
+        node.nodeValue.split(pattern).forEach(part => {
+          if(!part) return;
+          if(terms.some(t => part.toLowerCase() === t.toLowerCase())){
+            const mark = document.createElement('mark'); mark.className='search-mark'; mark.textContent=part; frag.appendChild(mark);
+          } else frag.appendChild(document.createTextNode(part));
+        });
+        node.replaceWith(frag);
+      });
+    }
+    function performSearch(query){
+      const terms = tokenize(query);
+      if(!terms.length){
+        searchResults.innerHTML = '<div class="empty-search">Mulai ketik nama fitur, menu, aksi, atau masalah yang ingin dicari.</div>';
+        searchCount.textContent = 'Ketik untuk mencari di dokumentasi.';
+        removeContentMarks();
+        return;
+      }
+      const results = searchIndex.map(item => ({...item, score: scoreItem(item, terms)})).filter(item => item.score > 0).sort((a,b) => b.score - a.score).slice(0, 12);
+      searchCount.textContent = results.length ? `${results.length} hasil ditemukan untuk “${query}”.` : `Tidak ada hasil untuk “${query}”.`;
+      if(!results.length){ searchResults.innerHTML = '<div class="empty-search">Tidak ada bagian yang cocok. Coba kata seperti Dashboard, Tugas, Telegram, kode kelas, Jadwal, atau Catatan.</div>'; return; }
+      searchResults.innerHTML = results.map((item, index) => `
+        <button class="result-item ${index === 0 ? 'active' : ''}" data-result-id="${item.id}" type="button">
+          <span class="result-path">${highlightHTML(item.title, terms)}</span>
+          <span class="result-title">${highlightHTML(item.heading, terms)}</span>
+          <span class="result-subtitle">${highlightHTML(item.subtitle, terms)}</span>
+          <span class="result-snippet">${highlightHTML(makeSnippet(item.text, terms), terms)}</span>
+        </button>
+      `).join('');
+      searchResults.querySelectorAll('[data-result-id]').forEach(btn => {
+        btn.addEventListener('click', () => openSearchResult(btn.dataset.resultId, terms));
+      });
+    }
+    function openSearch(){
+      searchModal.classList.add('open'); body.classList.add('no-scroll');
+      setTimeout(() => { searchInput.focus(); searchInput.select(); }, 30);
+      performSearch(searchInput.value);
+    }
+    function closeSearch(){ searchModal.classList.remove('open'); body.classList.remove('no-scroll'); }
+    function openSearchResult(id, terms){
+      closeSearch();
+      const target = document.getElementById(id);
+      if(!target) return;
+      target.scrollIntoView({behavior:'smooth', block:'start'});
+      highlightSection(target, terms);
+      target.classList.remove('target-flash');
+      requestAnimationFrame(() => target.classList.add('target-flash'));
+      history.replaceState(null, '', `#${id}`);
+    }
+    document.querySelectorAll('[data-open-search]').forEach(btn => btn.addEventListener('click', openSearch));
+    document.getElementById('searchClose').addEventListener('click', closeSearch);
+    searchModal.addEventListener('click', e => { if(e.target === searchModal) closeSearch(); });
+    searchInput.addEventListener('input', e => performSearch(e.target.value));
+    document.addEventListener('keydown', e => {
+      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){ e.preventDefault(); openSearch(); }
+      if(e.key === 'Escape' && searchModal.classList.contains('open')) closeSearch();
+      if(e.key === 'Enter' && searchModal.classList.contains('open')){
+        const active = searchResults.querySelector('.result-item.active') || searchResults.querySelector('.result-item');
+        if(active) active.click();
+      }
+    });
+    performSearch('');
+  </script>
+</body>
+</html>
